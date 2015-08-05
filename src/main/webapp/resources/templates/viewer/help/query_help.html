@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+<meta name="author" content="Rishi.Chugh">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title>Query Builder</title>
+<style type="text/css">
+body {background-color:#ffffff;color:#000000;}
+p,li,h1,h2,h3,h4,h5,table {text-align:justify;line-height:normal;}
+a:link{color:#ffff00;}
+.Balloon_Text {font-size:8pt;font-family:'Tahoma';}
+.Caption {font-weight:bold;}
+.List_Continue {margin-left:18pt;margin-bottom:6pt;}
+.List_Paragraph {margin-left:5pt;}
+h1 {text-indent:-7pt;margin-left:7pt;margin-top:0pt;margin-bottom:0pt;font-weight:bold;font-size:14pt;font-family:'Cambria';color:#1f497d;}
+h2 {text-indent:-22pt;margin-left:26pt;margin-top:0pt;margin-bottom:0pt;font-weight:bold;font-size:13pt;font-family:'Cambria';color:#000000;}
+h3 {text-indent:-25pt;margin-left:40pt;margin-top:0pt;margin-bottom:0pt;font-weight:bold;font-size:12pt;font-family:'Cambria';color:#000000;}
+h4 {text-indent:-18pt;margin-left:18pt;margin-bottom:auto;font-weight:bold;font-size:11pt;font-family:'Arial';color:#632423;}
+p, li {margin-left:14pt;margin-top:0pt;margin-bottom:0pt;font-weight:normal;font-size:11pt;font-family:'Calibri';color:#000000;}
+ol, ul {margin:0 0 0 20pt;padding:0;list-style-position:outside;}
+li p {margin:0;padding:0;text-indent:0;}
+li, li div {margin:0;padding:0;}
+ol.L2_1{margin-left:20pt;}
+ol.L3_1{margin-left:20pt;}
+ol.L4_1{margin-left:20pt;}
+ol.L1_1{margin-left:20pt;}
+ol.L5_1{margin-left:20pt;}
+</style>
+</head>
+<body>
+<h3 style="text-indent:0;margin-left:0;margin-top:12pt;"><a name="_Toc323143051">Query Builder</a><a name="_Toc322010818"> </a></h3>
+<br>
+<p style="margin-left:0;font-size:10pt;">Query Builder <img alt="" border="0" width="30" height="29" src="query/help_query1.png"> functionality allows users to query features according to the attributes values with the help of some operators. To query on layer, user have to zoom to at least max scale limit of layer i.e. layer should be visible on map.</p><br>
+<ol class="L2_1">
+<li><div class="List_Paragraph" style="font-size:10pt;">Click on the query builder tool, application opens a new tab ‘Query’ in left panel. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">This tab consists of two buttons: ‘Help’ and ‘Close’ in upper right corner, </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Below of them one drop down list box ‘Select Layer’ is there. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Then it has three drop-down list boxes: ‘Fields’, ‘Operators’ and ‘Values’. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Below to Values list box ‘<b>See More’</b> link is there. The Values list box can have a list of 100 values at a time so to add more values to it one has to click on the see more link. It adds hundred more values for the selected attributes. On every click on that link it adds 100 mor values until all attribute values are not added. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">A drop down box ‘Load Query’ is there. This list box consists of the list queries saved by the user earlier. User can select a query from the list. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Query tab has a text box ‘Where Clause’ in which user can see the query and the selected fields, operators and field’s values will be updated here automatically while selecting from &nbsp;respective list available above.</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Above this text box a link ‘<b>Clear</b>’ is there to clear all the selected details. &nbsp;</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Below to where clause text box a link ‘Save Query’ is there to save a query of user for future use. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">As user clicks on this link it expands with two text boxes: ‘Query Name’ and ‘Query Description’. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">At bottom, query tab has two buttons: ‘Save Query’ and ‘Run Query’. ‘Save Query’ button is used with the ‘Save Query’ link to save the query details. And ‘Run Query’ button is used to run the query which is shown in where clause. </div></li></ol><br>
+<p style="margin-left:0pt;font-weight:bold;font-style:italic;font-size:10pt;">Note: ‘Not’ operator should be used before the field name (for example: NOT objected=10, it will select the result which has not object as 10).</p><br>
+<ol class="L3_1">
+<li><h4 style="margin-top:auto;"><a name="_Toc322010819">Run Query</a> &nbsp;</h4></li></ol><br>
+<p style="margin-left:0;font-size:10pt;">To simply run a query:</p><br>
+<ol class="L4_1">
+<li><div class="List_Paragraph" style="font-size:10pt;">Select layer from the drop- down list on which query is desired. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Select field from ‘Fields’ list box. &nbsp;</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Select operator from ‘Operators’ list box, also select the field value from ‘Values’ drop-down list. User can create a query in which more than one field and more than an operator is used.</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">User can see the whole query in ‘Where Clause’ text box. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">If the query is all correct then click on ‘Run Query’ button. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Application will pops-up the result panel with queried features’ details on it. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Now user can clear the where clause text box by clicking on clear link.</div></li></ol>
+<br>
+<p style="text-indent:22pt;margin-left:0pt;"><img alt="" border="1" width="1000" height="500" src="query/help_query2.png"></p><br><br>
+
+<ol class="L3_1" start="2">
+<li><h4 style="margin-top:auto;"><a name="_Toc322010820"> Save Query</a></h4></li></ol><br>
+<p style="margin-left:0;font-size:10pt;">A query can be saved for future use. To save a query: </p>
+<br>
+<ol class="L1_1">
+<li><div class="List_Paragraph" style="font-size:10pt;">Select layer, fields, operators and fields’ values.</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;"> Click on ‘Save Query’ link. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Enter query name in ‘Query Name’ text box and enter description of query in ‘Description’ text box.</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Click on ‘Save Query’ button. Application will shows a pop-up message on successfully saving the query to the server.</div></li></ol>
+<br>
+<p style="text-indent:22pt;margin-left:0pt;"><img alt="" border="1" width="385" height="635" src="query/help_query3.png"></p><br><br>
+<ol class="L3_1" start="3">
+<li><h4 style="margin-top:auto;"><a name="_Toc322010821"> Load Query</a> </h4></li></ol><br>
+<p style="margin-left:0;font-size:10pt;">Load query allows user to load a saved query. To run a Saved query: </p>
+<br>
+<ol class="L5_1">
+<li><div class="List_Paragraph" style="font-size:10pt;">Select layer for which query is saved.</div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Select saved query from the drop-down list from ‘Load Query’ list box, application shows query name in Load Query drop-down and query in where clause. </div></li>
+<li><div class="List_Paragraph" style="font-size:10pt;">Click on ‘Run Query’ button. The results will be shown in results panel. </div></li></ol><br>
+</body>
+</html>

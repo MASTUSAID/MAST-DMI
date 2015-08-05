@@ -1,0 +1,88 @@
+<!--Query Builder popup -->
+<div id="querycontent"  title="Query Builder" class="dialog-v">	
+	<div id="queryTmpl" class="lab-int">
+		<div id="span-close" class="span-c" onclick="javascript:closeDialog('querycontent');"></div>
+		<div id="span-help" class="span-h"></div>
+		<div class="lineBreak05p"></div>
+		<div class="formPattern" style="border:1px solid red;">
+		<div class="Querytoplayer styleForm"> 
+		<label id="qrybldr_selectlayer">Select Layer :</label>
+			<select name="layers" id="layers" class="selectlong">
+			</select>
+		</div>
+        <div class="Querytoplayer formStyle">
+		<label>Select Type:</label>
+			<select name="select2" id="select2" class="selectlong">
+                <option value='new selection'>Create new query</option>
+                <option value='current selection'>Select from existing selection</option>
+            </select>	
+        </div>
+		<div class="mainQuery">
+		<div class="queryleft">
+			<div class="querytitleshort">Fields</div>
+			<select name="fields_1" id="fields_1" size="8" class="queryselect"></select>
+		</div>
+		<div class="queryright">
+			<div class="querytitleshort">Values</div>
+            <select name="values" id="values" size="8" class="queryselect"></select>
+			<!--div class="buttonlayer" align="center">
+				<input name="" type="button" class="buttonlarge" value="Get Unique Value"/>
+			</div-->
+            <div id='displayValues' style="position: relative; float:left; width: 65px; height: 20px; 
+                margin-left: 70px; overflow : hidden; cursor: pointer;font-weight:bold;color: rgb(35,71,216);" 
+                onclick='fetchMoreValues();'>
+			    see more ..
+		    </div>
+		</div>
+     
+		<div class="clear"></div>
+		<div class="pad5px"></div>
+		<div class="querybottom">
+			<div class="querytitle">Operators</div>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn"  value="="/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="<"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value=">"/>
+			<!-- <input name="" type="button" onclick = "ButtonClick(this.value)" class="buttonshort" value="LINK"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="buttonshort" value="%"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="buttonshort" value="IN"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="buttonlong" value="NOTIN"/>-->
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn"  value="<="/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value=">="/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="!="/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="LIKE"/>
+            <input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="BETWEEN"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="AND"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="OR"/>
+			<input name="" type="button" onclick = "ButtonClick(this.value)" class="btn" value="NOT"/>
+		</div>
+
+        <div class="pad5px"></div>
+		<div class="querybottom">
+			<div class="querytitlelong">Load Query</div>
+            <div class="pad5px"></div>
+            <div align = "left">
+				<select name="selectQuery" id="selectQuery" class="queryselect">				
+				</select>
+            </div>
+		</div>
+
+		<div class="pad5px"></div>
+		<div class="querybottom">
+			<div class="querytitlelong">Where Clause</div>
+			<textarea spellcheck="false" name="whereClause" id = "whereClause" rows="3" class="querybox" ></textarea>
+		</div>
+		</div>
+				
+		<div align="center">
+		<input name="btnClear" id="btnClear" type="button" class="shortbtn" onclick = "clearText();"  value="Clear"/>
+		<input name="" type="button" class="shortbtn"  value="Test" onclick = "validateQuery();"/>
+		<input name="" type="button" onclick="displayFeature()" class="shortbtn"  value="Ok"/>
+		<input name="" type="button" onclick="saveQuery()" class="shortbtn"  value="Save"/>
+		<input name="" type="button" class="shortbtn"  value="Cancel" onclick="cancelDialog();"/>
+		</div>
+		<div class="pad5px"></div>
+	</div>
+	</div>
+</div>
+		
+<!--Query Builder -->

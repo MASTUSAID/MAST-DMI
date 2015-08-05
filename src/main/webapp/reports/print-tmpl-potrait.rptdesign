@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.6.2.r262_v20110209 Build &lt;2.6.2.v20110214-1523></property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="imgurl" id="10">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="desc" id="39">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="legendurl" id="40">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="title" id="64">
+            <property name="valueType">static</property>
+            <property name="isRequired">false</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">potrait</property>
+            <property name="showHeaderOnFirst">false</property>
+            <property name="showFooterOnLast">false</property>
+            <property name="headerHeight">0in</property>
+            <property name="footerHeight">0in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <grid id="11">
+            <property name="borderBottomColor">#000000</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderLeftColor">#000000</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderRightColor">#000000</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderTopColor">#000000</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="height">11.041666666666666in</property>
+            <property name="width">7.739583333333333in</property>
+            <column id="12">
+                <property name="width">7.739583333333333in</property>
+            </column>
+            <row id="88">
+                <property name="height">0.6354166666666666in</property>
+                <cell id="89">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="paddingTop">0pt</property>
+                    <property name="paddingBottom">0pt</property>
+                    <image id="90">
+                        <property name="marginLeft">380pt</property>
+                        <property name="height">0.5208333333333334in</property>
+                        <property name="width">2.28125in</property>
+                        <property name="source">embed</property>
+                        <property name="imageName">logo.png</property>
+                    </image>
+                </cell>
+            </row>
+            <row id="14">
+                <property name="height">8.416666666666666in</property>
+                <cell id="15">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="paddingTop">0pt</property>
+                    <property name="paddingBottom">0pt</property>
+                    <image name="mapimage" id="7">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="marginTop">3pt</property>
+                        <property name="marginLeft">3pt</property>
+                        <property name="marginBottom">2pt</property>
+                        <property name="marginRight">3pt</property>
+                        <property name="height">790px</property>
+                        <property name="width">720px</property>
+                        <method name="onRender"><![CDATA[var imgwidth=this.width.substring(0,3);
+var imgheight=this.height.substring(0,3);
+var wmsurl= params["imgurl"];
+var myurl=wmsurl + "&amp;WIDTH="+ imgwidth +"&amp;HEIGHT=" + imgheight;
+//this.URL= myurl; 
+this.URL= wmsurl;]]></method>
+                        <property name="source">url</property>
+                        <expression name="uri" type="constant">""</expression>
+                    </image>
+                </cell>
+            </row>
+            <row id="65">
+                <property name="height">1.9895833333333333in</property>
+                <cell id="66">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="paddingTop">0pt</property>
+                    <property name="paddingBottom">0pt</property>
+                    <grid id="68">
+                        <property name="height">2.4895833333333335in</property>
+                        <property name="width">7.625in</property>
+                        <column id="69">
+                            <property name="width">1.9479166666666667in</property>
+                        </column>
+                        <column id="70">
+                            <property name="width">2.75in</property>
+                        </column>
+                        <column id="71">
+                            <property name="width">0.5625in</property>
+                        </column>
+                        <column id="72">
+                            <property name="width">2.3645833333333335in</property>
+                        </column>
+                        <row id="73">
+                            <property name="height">2.4895833333333335in</property>
+                            <cell id="74">
+                                <property name="colSpan">2</property>
+                                <property name="rowSpan">1</property>
+                                <property name="borderRightColor">#000000</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="paddingLeft">2pt</property>
+                                <grid id="78">
+                                    <property name="height">1.90625in</property>
+                                    <property name="width">4.583333333333333in</property>
+                                    <column id="79">
+                                        <property name="width">4.583333333333333in</property>
+                                    </column>
+                                    <row id="80">
+                                        <property name="height">0.625in</property>
+                                        <cell id="81">
+                                            <label id="26">
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <property name="marginTop">2pt</property>
+                                                <property name="marginLeft">4pt</property>
+                                                <property name="marginBottom">2pt</property>
+                                                <property name="marginRight">2pt</property>
+                                                <property name="paddingTop">1pt</property>
+                                                <property name="paddingLeft">1pt</property>
+                                                <property name="paddingBottom">20pt</property>
+                                                <method name="onRender"><![CDATA[var title= params["title"];
+
+this.text=title;]]></method>
+                                                <text-property name="text"></text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                    <row id="82">
+                                        <property name="height">1.28125in</property>
+                                        <cell id="83">
+                                            <text id="38">
+                                                <property name="color">#000000</property>
+                                                <property name="borderBottomColor">#000000</property>
+                                                <property name="borderBottomStyle">solid</property>
+                                                <property name="borderBottomWidth">thin</property>
+                                                <property name="borderLeftColor">#000000</property>
+                                                <property name="borderLeftStyle">solid</property>
+                                                <property name="borderLeftWidth">thin</property>
+                                                <property name="borderRightColor">#000000</property>
+                                                <property name="borderRightStyle">solid</property>
+                                                <property name="borderRightWidth">thin</property>
+                                                <property name="borderTopColor">#000000</property>
+                                                <property name="borderTopStyle">solid</property>
+                                                <property name="borderTopWidth">thin</property>
+                                                <property name="marginTop">2pt</property>
+                                                <property name="marginLeft">4pt</property>
+                                                <property name="marginBottom">1pt</property>
+                                                <property name="marginRight">2pt</property>
+                                                <property name="paddingTop">1pt</property>
+                                                <property name="paddingBottom">50pt</property>
+                                                <method name="onRender"><![CDATA[var desc= params["desc"];
+
+this.text=desc;]]></method>
+                                                <property name="contentType">auto</property>
+                                                <text-property name="content"><![CDATA[kkk]]></text-property>
+                                            </text>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                            <cell id="76">
+                                <property name="colSpan">2</property>
+                                <property name="rowSpan">1</property>
+                                <property name="paddingBottom">1pt</property>
+                                <grid id="84">
+                                    <property name="height">2.1041666666666665in</property>
+                                    <column id="85"/>
+                                    <row id="86">
+                                        <property name="height">2.1041666666666665in</property>
+                                        <cell id="87">
+                                            <property name="paddingLeft">1pt</property>
+                                            <property name="paddingRight">1pt</property>
+                                            <label id="62">
+                                                <property name="fontWeight">bold</property>
+                                                <property name="paddingTop">0pt</property>
+                                                <property name="paddingLeft">5pt</property>
+                                                <property name="paddingBottom">0pt</property>
+                                                <property name="paddingRight">0pt</property>
+                                                <text-property name="text">Legends</text-property>
+                                            </label>
+                                            <image id="63">
+                                                <property name="marginLeft">5pt</property>
+                                                <method name="onRender"><![CDATA[
+var imgwidth=32;
+//this.width.substring(0,1);
+var imgheight=32;
+//this.height.substring(0,1);
+var legendurl= params["legendurl"];
+var myurl=legendurl;
+this.URL= myurl; ]]></method>
+                                                <property name="source">embed</property>
+                                                <property name="imageName">close.png</property>
+                                            </image>
+                                        </cell>
+                                    </row>
+                                </grid>
+                            </cell>
+                        </row>
+                    </grid>
+                </cell>
+            </row>
+        </grid>
+    </body>
+    <list-property name="images">
+        <structure>
+            <property name="name">close.png</property>
+            <property name="type">image/png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lD
+                Q1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQ
+                SoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfA
+                CAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH
+                /w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBb
+                lCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7
+                AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKB
+                NA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl
+                7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7i
+                JIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k
+                4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAA
+                XkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv
+                1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRR
+                IkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQ
+                crQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXA
+                CTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPE
+                NyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJA
+                caT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgX
+                aPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZ
+                D5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2ep
+                O6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2q
+                qaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau
+                7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6fe
+                eb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYP
+                jGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFos
+                tqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuu
+                tm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPj
+                thPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofc
+                n8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw3
+                3jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5
+                QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz
+                30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7
+                F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgq
+                TXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+
+                xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2
+                pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWF
+                fevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaq
+                l+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7
+                vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRS
+                j9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtb
+                Ylu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh
+                0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L15
+                8Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89Hc
+                R/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfy
+                l5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz
+                /GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAihJREFUeNq0
+                1s2LjWEYBvDfewxT1CiJTCyIfGTBzj9gSyg1hGSeDtIgC8piMoqmCCU13SNfS5GSko3/wJQVYaOMjyRf
+                iWY4Ns+RjjnvmRyuzVtv733dX8/1XG9Rq9WUIaVUYDWWoTu/HsUjjEREKUHRLEFKaQ4OY3Mm/o4fqKHA
+                FLzEdQxGxJuJeCpNyA/gKfrwADuwCgswH8uxDvewHU9yTHkHKaVOXMRW3MbBiHjWYoSzcqe7c8yuiPjW
+                rINh9GA/1rcih4h4hyPYhLWZ488OUkoHcRo7I+KKv0BKaQ3u4lhEnPmVIC/0KS5HRJ82kFLaiwGsiIg3
+                9REdxjcc1T6G8SpzKnp7ews8x4WIOPkPEkgp7UQ/FnZkEc3FrWYB1Wr1A7ry+a+jBkNDQ8UEIfdxHqsr
+                WIoxPCkpqut30t+ezfAC41haySp9GxHjZYpvrLykehExhvforkxAMJkkk4npqAttFLNTStNaBDSOpVat
+                VpstuRNzMFrBY0zF4hLyH63G1YCVuYPHFYzgNTaUJPjcQN5qPBvzokfqSj6dL7glEfGpTQ3MzLoajohD
+                9SUPYnqWeLs4kTsc/HWbZrPox76U0tY2qu/BHvTXDajRD65lB9uXW6xNkrjAFgRuRMS2Zn7Qmy1wCNdT
+                SgsmQd6Fc7iEm5mj3JOz/Q1gGm7gKh7iY/5kBuZl6zyERTgeEWf/1vTn4Su+5LPfkU3/Be7gVDPTL/73
+                b8vPAQD9Ida6qOU/egAAAABJRU5ErkJggg==
+            </property>
+        </structure>
+        <structure>
+            <property name="name">logo.png</property>
+            <property name="type">image/png</property>
+            <property name="data">
+                iVBORw0KGgoAAAANSUhEUgAAAOkAAAAyCAYAAAC5zvwPAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
+                ZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/
+                IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6
+                bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8w
+                Mi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9y
+                Zy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIg
+                eG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJo
+                dHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0
+                dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRp
+                ZDpEQkFDRjRGMzA5Q0ZFMDExQjg3MDg5QUI3OURGNjU2QSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRp
+                ZDo1NUE2QjNFN0Q3QUQxMUUwOUFFODlCMDExREJGQTJBOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlp
+                ZDo1NUE2QjNFNkQ3QUQxMUUwOUFFODlCMDExREJGQTJBOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQ
+                aG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0i
+                eG1wLmlpZDpCQzE1NkE4NjgyRDdFMDExQTk4RDgwNEQ1RTJGQkIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0i
+                eG1wLmRpZDpEQkFDRjRGMzA5Q0ZFMDExQjg3MDg5QUI3OURGNjU2QSIvPiA8L3JkZjpEZXNjcmlwdGlv
+                bj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Ppb9HekAAAfNSURBVHja
+                7F09jBNHFF7DRRBAKA5VRJHTRkpBhWSU+gpfkS6NTRkqW0oR0dnpoLMbcl3kq46ScxGob6U4UkpWnJQ2
+                WNehK5A5dPzpBJeZ01uYe8yfd8d7Bn+ftPJ5PTv7duZ98743M/ZVDg8PIwAA5hcVkBQAQFIAAEBSAABJ
+                AQAASQEAAEkBACQFAAAkBQCQFACAuSRppVJBa5SIzXv3YvES09tx8/r18ef8vAgGIGlQ8lx68uS3c/v7
+                l+X7sy9e/HPm1as/rqytTQLeoyNeeux0VxC1/xm257J4uSGOZ+LYFseIPlqhI8OOOJbZ5fLcBv19k/6W
+                9USNZnNhfHIJtDxO0K93dx9/s7Ojnv5RHFfF0UQL5UJGUkmwW/R+WSHpSFN+RSFndu53+ntt0RoQJD2O
+                xsWnT7Xn0TSFsEMEjSgSXqW/R8r5SImwy+y8JPnfFE1B0s8w71MJNhGSch2cOZFoukbkHJHs/YnIt6LI
+                2W3D9Vm5+4boC5J+whiIo86IKydpEkP58asLF6ILe3vHJz0qlW3wrBCeEcF2lCiaRdINJdrqIMn8LZX7
+                iggLki4qBHmH9+/evb10cPDz2ZcvL1YODw8qb98+PPP69a9oncIkHbEomhHTRThJyttUTpL0T4q6z0DS
+                BcX3jx7d0uRJQHG5e0vJN0cUUVeUth5F5kmkGwopHxDJN0DSD/JQlYupiDa5liKKrgsyOyKLZD2p/Heu
+                7ZvRM1fFS83xzNtEsogkb5Y6bDBS7ijlbyoReIVFzZsUURcG2nVS0fgt8dJSO0DN28QxFEc/I6woL8vJ
+                tb8qlVmX0pE+a9BnvK6U6hhaSN2inLJmsD+le60r18my2RpkTbFJvcY40Jzf27t4aXf38hdv3nwp3787
+                deq/88+f/3JlbS0NYR9dq10npfId1tZ914Am6usxG/r03C1WV1c3yBLZesogeqwPNWUz/4h9nxmbGQJF
+                UuqATT7ZwhArhGzTOVm+wepKaOLGtHwhnWpTlPtoEZ+cruNhv6xjQIPKKjlg3WF/zVbhuf39iC3D/ED1
+                pYHsc5Xntk+IwCaCNjS2JIZ2GNJnuvu2NOeH7F6y3JZm4NM9s7SrmVd5AR9wir0fOByck9WEKnWmz/pi
+                jzpUjTKdKZ+jpolMs5J4s7RPFzFdbVj3rKfoc/sQlNu1BYoFJKlmTVEdxVfp6KoRxeGUtSnssDnwhEb0
+                Lh19gxO2SAmUPXJPa58RJC+5/TERxJekE1MKUTD33NQQVN6nqfgGt71GgxoQSO7qRuwuyy2kVOrTJInv
+                iJpQPSkNBD3NvaQjNpiTZvnYusZp+jRKc+ety/JyLVQhf82Q+5mw5UHK3PZxCWmQmC3NdakhusU2iRoI
+                uvxTPrsqwxNhj2yLx8w3WjRwASFyUotD8hHfd+ZSTiC0leukYzdFZz7WdLp0uGFGMts9ZJ5DDjHQSfDs
+                WlFGZ39qq/uvO3ciR7QrbJ/HoNbSSN6+pxROZkRSHq27lufuaJRACrqFyUk5Og6pZY0IKkE5eW0TOp6D
+                wIl9tWuW9hkkb41UiIuks5C6sWZwSRyDjLFvgWKRdKjJDWXjPqSZ2uGU+15TdGRuDF3RtESpq+uXCV8X
+                dpSvoksDkFRKUcqlOobJiTotPfRJxuaeoKH81NmRNOubTULFnnKxNMzQPh/JW5bUjQ3ytwX6nIDcpTzD
+                Fi2zRe+HBWSwl/NT3rpJg0Z9ngg6a/s8Je/MpS4wpzkp5ZGrjlFZOsuma0khJwFa5PzxPDZYifYNTTlo
+                iVI3BCZzbNsnl5PyiZGEnKFB0qaqIWqu6XVDFB4r29M41iknTpQ6Sl8sL9k+m+QtS+qaMPVPvRw28cMW
+                QUmq5o7iJaVctadxmppDGptg2iXT0Fw3T7/9U5p9UrrSElJVI3nzSt1qjr5KPfNUoCy5a3AY0/5RW+d2
+                SBpGhokHXSSoejrJSaFs+3TE6xSQunWDqhlMSdLGLFIdwEFSOUJbSGVyUNcM74BvCxPvB4aROLHkv76y
+                M5ejFkRo+7iM1ualHuV07dlSl04USV51DNCpxheczyf9Sd2XDRSXu7Ixe0Qq2ekJyV3baOsTRXpE/nGk
+                /+pYlN3LsGAvr5+wr771Iv/dO3VNhK8q9kwsmy50kjykfS4Fk9IWx9gyWI6zfvKwVWJL1Jl6pCt8EBgY
+                CL/O/CBbksq2jiaYOAqfk2b7ayPNWiaPor6bG1xriH1LHna0udthyzRSjcvtZArShLbPV/J2ppTEma1j
+                Q7vXNH2ZGKJ0thWyrvk8jkr69hHkrp905Z3q+n7k0LPONttm156CgH0HqZIo/KxnMPsK5KW+n7d9+9JD
+                FbVztiW+TxqKpLTlr+vRqLLcNYPE4k76ncWJjjbb862GJBtXLXLtaBJLlLumKaOzvelw5GOO93Zp6V9x
+                vH//7vTpA/U+gewbM1snpvqonU32D239QIOUzdZE6cuJrV3kgCyOVSKrT5ozpkGqDZoVg+nnU2qa/PFo
+                Ocbw8xvWf5tA9fHfSnKOyprrxpS/Tj06U76rfsVuQnXl3qgf0r5Zg+RqjRG8yLPH0YftkHxw/ug3rPDz
+                KYFJmqPDFuZ/mwD5AJKGyUkBAABJAQAASQEAJAUAACQFAOA9gv2n70X79/LAdMDsbgCSAgAAkgIAAJIC
+                AEgKAEDJ+F+AAQChO8E8KIHC8wAAAABJRU5ErkJggg==
+            </property>
+        </structure>
+    </list-property>
+</report>

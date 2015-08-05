@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">
+<meta name="author" content="Rishi.Chugh">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title>Thematic</title>
+<style type="text/css">
+body {background-color:#ffffff;color:#000000;}
+p,li,h1,h2,h3,h4,h5,table {text-align:justify;line-height:normal;}
+a:link{color:#ffff00;}
+.Balloon_Text {font-size:8pt;font-family:'Tahoma';}
+.Caption {font-weight:bold;}
+.List_Continue {margin-left:18pt;margin-bottom:6pt;}
+h1 {text-indent:-7pt;margin-left:7pt;margin-top:0pt;margin-bottom:0pt;font-weight:bold;font-size:14pt;font-family:'Cambria';color:#1f497d;}
+h2 {text-indent:-22pt;margin-left:26pt;margin-top:0pt;margin-bottom:0pt;font-weight:bold;font-size:13pt;font-family:'Cambria';color:#000000;}
+h3 {text-indent:-25pt;margin-left:40pt;margin-top:0pt;margin-bottom:0pt;font-weight:bold;font-size:14pt;font-family:'Cambria';color:#000000;}
+h4 {text-indent:-18pt;margin-left:18pt;margin-bottom:auto;font-weight:bold;font-size:11pt;font-family:'Arial';color:#632423;}
+p, li {margin-left:14pt;margin-top:0pt;margin-bottom:0pt;font-weight:normal;font-size:11pt;font-family:'Calibri';color:#000000;}
+ol, ul {margin:0 0 0 20pt;padding:0;list-style-position:outside;}
+li p {margin:0;padding:0;text-indent:0;}
+li, li div {margin:0;padding:0;}
+ol.L12_1{margin-left:20pt;}
+ol.L8_1{margin-left:30pt;list-style-type:lower-roman;}
+ol.L2_1{margin-left:40pt;}
+ol.L13_1{margin-left:30pt;}
+ol.L4_1{margin-left:15pt;}
+</style>
+</head>
+<body>
+<h3 style="text-indent:0;margin-left:0;margin-top:12pt;"><a name="_Toc323143059">Thematic</a><a name="_Toc322010828"> &nbsp;</a></h3>
+<br>
+<p style="margin-left:0;font-size:10pt;">Thematic <img alt="" border="0" width="29" height="28" src="thematic/thematic_img1.png"> functionality allows users to set symbolic and colour thematic representation of active layer. </p>
+<br>
+<ol class="L12_1">
+<li><div style="font-size:10pt;margin-left:5pt;">Click on the thematic tool, application will show ‘Thematic’ tab in the left panel. </div></li>
+<li><div style="font-size:10pt;margin-left:5pt;">This tab has three parts: ‘Classification’, ‘Style’ and ‘Class Interval’. </div></li>
+<li><div style="font-size:10pt;margin-left:5pt;">Application shows options in the thematic tab according to the feature type. &nbsp;</div></li>
+<li><div style="font-size:10pt;margin-left:5pt;">In classification part of the tab application provides three drop-down list boxes and a text box: </div></li></ol>
+<br>
+<ol class="L8_1">
+<li><div style="font-size:10pt;"><b>Symbol Type:</b> It has only option ‘Graduated Symbol’.</div></li>
+<li><div style="font-size:10pt;"><b>Mode:</b> It has two values:</div></li></ol>
+<br>
+<ol class="L2_1">
+<li><b>Equal Interval</b>: &nbsp;<span style="font-size:10pt;">In this, features will be classified into specified intervals according to attribute values. For example if a layer has 200 polygon features with ‘Area’ attribute. And it has value for that attribute ranging from 1 to 2000 square meter. For that layer if equal interval is selected with 5 intervals, it will be classified in 5 intervals like 1-400 (80 polygons), 401-800(10 polygons), 801-1200 (60 polygons), 1201-1600(5 polygons) and 1601-2000 (45 polygons) irrespective of the numbers of features in each interval.</span></li></ol>
+<br>
+<ol class="L2_1" start="2">
+<li><b>Qunatiles</b>: <span style="font-size:10pt;">In this mode, features will be classified into specified intervals according to numbers of attributes. For the above example suppose the layer contains 200 polygons having area from 1 to 2000 square meter. Then for ‘Quantiles’ mode, layer will be classified in 5 intervals in such a way that every interval will have 40 numbers of polygon like 1-50 (40 polygons), 51-350 (40 polygon), 351-900 (40 polygons), 901-1700 (40 polygons) and 1701-2000 (40 polygon). The classification will be made irrespective of attribute values.</span></li></ol>
+<br>
+<ol class="L8_1" start="3">
+<li><div style="font-size:10pt;"><b>Classification Field:</b>  This list box contains the attribute fields of the active layer.</div></li>
+<li><div style="font-size:10pt;"><b>Interval:</b>  In this text box user can specify the number of classification intervals. </div></li></ol>
+<br>
+<p style="margin-left:0;font-size:10pt;">Below to classification part, tab has ‘Style’ part which generally contains the colour choices and symbol choices according to the feature type (point, line and polygon). </p>
+<br>
+<ol class="L12_1">
+<li><div style="font-weight:bold;font-size:10pt;color:#2e0663;">Point features: &nbsp;</div></li></ol><br>
+<ol class="L13_1">
+<li><div style="font-size:10pt;">It has a drop-down list box ‘Symbol’ which contains the list of symbols. </div></li><br>
+<p style="text-indent:20pt;margin-left:40pt;"><img alt="" border="1" width="400" height="200" src="thematic/thematic_img8.png"></p>
+<p class="Caption" style="margin-left:158pt;font-size:10pt;"> Colour Picker Box</p><br>
+<li><div style="font-size:10pt;">Then it has a colour picker with ‘Colour’ caption. As users clicks on the colour box application opens a colour picker from which user can select required colour. User can pick the colour by using interactive slider and the colour box or user can pick the colour by specifying RGB (Red, Green and Blue) value or HSB (Height for the slider and Side and Bottom value for the colour box) or the hexadecimal value of the colour . To close the colour-picker, click on the button in bottom- right corner.</div></li>
+<li><div style="font-size:10pt;">Size text box is for point size.</div></li></ol>
+<br>
+<p style="text-indent:20pt;margin-left:80pt;"><img alt="" border="1" width="338" height="75" src="thematic/thematic_img2.png"></p>
+<p class="Caption" style="margin-left:158pt;font-size:10pt;"> Style for point features</p><br>
+<ol class="L12_1" start="2">
+<li><div style="font-weight:bold;font-size:10pt;color:#2e0663;">Line feature: &nbsp;</div></li></ol><br>
+<ol class="L13_1">
+<li><div style="font-size:10pt;">For line feature the style part of the tab contains a drop-down list box ‘Outline’ which has a list of symbols (like solid, dotted, dashed) for line features.</div></li>
+<li><div style="font-size:10pt;">Two colour boxes ‘Start’ for the starting colour of the classification and ‘End’ for the ending colour of the intervals. </div></li>
+<li><div style="font-size:10pt;">Size text box is for width of the line.</div></li></ol>
+<br>
+<p style="text-indent:20pt;margin-left:80pt;"><img alt="" border="1" width="339" height="72" src="thematic/thematic_img3.png"></p>
+<p class="Caption" style="margin-left:158pt;font-size:10pt;">Styles for line features</p>
+<br>
+<ol class="L12_1" start="3">
+<li><div style="font-weight:bold;font-size:10pt;color:#2e0663;">Polygon features:</div></li></ol><br>
+<ol class="L13_1">
+<li><div style="font-size:10pt;">For polygon features style part has a drop-down box ‘Fill’ in which user can select the fill style for polygon.</div></li>
+<li><div style="font-size:10pt;">Two colour boxes ‘Start’ and ‘End’. In start user can pick the starting colour for the intervals and in End colour box user can pick the ending colour of classification. </div></li></ol>
+<br>
+<p style="text-indent:20pt;margin-left:80pt;"><img alt="" border="1" width="339" height="158" src="thematic/thematic_img4.png"></p>
+<p class="Caption" style="margin-left:158pt;font-size:10pt;">Styles for polygon features</p>
+<br>
+<ol class="L13_1" start="3">
+<li><div style="font-size:10pt;">From the ‘Outline’ list box user can select style for the outline of polygons </div></li>
+<li><div style="font-size:10pt;">With colour box user can select outline colour for polygons </div></li>
+<li><div style="font-size:10pt;">In the ‘Width’ text box users can enter the width of the outline of polygons. </div></li>
+<li><div style="font-size:10pt;">Below this, style part has ‘Opacity’ slider by user can set the opacity level for the fill of polygons.</div></li></ol>
+<br>
+<p style="margin-left:0;font-size:10pt;">Below style, thematic tab has ‘Class Interval’ part in which a box is there with three buttons: ‘Classify’, ‘Delete Class’ and ‘Apply’. In the box user will be able to see the preview of the classification. </p>
+<br>
+<ol class="L12_1">
+<li><div style="font-size:10pt;">To add the preview to that box, click on the ‘Classify’ button. </div></li>
+<li><div style="font-size:10pt;">To remove a preview from that box, click on ‘Delete Class’ button.</div></li>
+<li><div style="font-size:10pt;">To apply the classification to the map features, click on ‘Apply’ button. </div></li>
+<li><div style="font-size:10pt;">To remove the thematic view, click on ‘Clear’ tool.</div></li></ol><br>
+<ol class="L4_1">
+<li><h4 style="margin-top:auto;"><a name="_Toc322010829">Thematic for point layer</a></h4></li></ol><br>
+<p style="margin-left:0;font-size:10pt;">To apply colour thematic on a layer of point features:</p><br>
+<ol class="L12_1">
+<li><div style="font-size:10pt;">Make that layer active. </div></li>
+<li><div style="font-size:10pt;">In classification part, ‘Symbol Type’ is by default ‘Graduated Symbol’. </div></li>
+<li><div style="font-size:10pt;">Select mode as ‘Quantiles’ or ‘Equal Interval’ from drop- down list. </div></li>
+<li><div style="font-size:10pt;">Select classification field from the drop- down list according which colour thematic will be applied to that layer. </div></li></ol>
+<br>
+<p> &nbsp; <img alt="" border="1" width="1010" height="543" src="thematic/thematic_img5.png"></p>
+<p class="Caption" style="text-indent:22pt;margin-left:300pt;font-size:10pt;"> Thematic representation of point features</p>
+<br>
+<ol class="L12_1" start="5">
+<li><div style="font-size:10pt;">Enter the numbers of intervals in ‘Interval’ text box. </div></li>
+<li><div style="font-size:10pt;">In style part select the symbol type, select and colour, enter the size of the point. </div></li>
+<li><div style="font-size:10pt;">In Class interval part, click on classify, the preview will be shown in the box in specified numbers of intervals. </div></li>
+<li><div style="font-size:10pt;">Click on ‘Apply’ button. Application will apply the classification to the layer in specified intervals on map canvas.</div></li>
+<li><div style="font-size:10pt;">The point will be classified in given intervals according to the symbol size. The specified size will be the limit (maximum size).</div></li></ol><br>
+<ol class="L4_1" start="2">
+<li><h4 style="margin-top:auto;"><a name="_Toc322010830"> Thematic for Line layer</a></h4></li></ol><br>
+<ol class="L12_1">
+<li><div style="font-size:10pt;">Select the mode as ‘Equal Interval’ or ‘Quantiles’ as required. </div></li>
+<li><div style="font-size:10pt;">Select classification field from the list and enter the value of intervals required. </div></li>
+<li><div style="font-size:10pt;">Select the outline style from the list. </div></li>
+<li><div style="font-size:10pt;">Select start and end colours of intervals. </div></li>
+<li><div style="font-size:10pt;">Specify the size of the line. Click on classify button. The preview will be shown in the box and click on apply button.</div></li>
+<li><div style="font-size:10pt;">The line features will be classified in the given number of intervals with specified colour and size. </div></li>
+<li><div style="font-size:10pt;">To remove the colour thematic, click on clear tool. </div></li>
+<li><div style="font-size:10pt;">User can delete the classification preview by clicking on Delete Class button. </div></li></ol>
+<br>
+<p> &nbsp; <img alt="" border="1" width="1010" height="543" src="thematic/thematic_img6.png"></p>
+<p class="Caption" style="text-indent:22pt;margin-left:300pt;font-size:10pt;">Thematic representation of line features<a name="_Toc322010831"></a></p><br>
+<ol class="L4_1" start="3">
+<li><h4 style="margin-top:auto;"><a name="_Toc323143062">Thematic representation for Polygon layer</a></h4></li></ol><br>
+<ol class="L12_1">
+<li><div style="font-size:10pt;">Same as for the point and line layer, for polygon layer ‘Symbol Type’ is ‘Graduated Symbol’. And user has to select the mode from ‘Quantile’ or ‘Equal Interval’. </div></li>
+<li><div style="font-size:10pt;">Select the classification field from the attributes list.</div></li>
+<li><div style="font-size:10pt;">Specify the numbers of intervals in ‘Interval’ text box.</div></li>
+<li><div style="font-size:10pt;"> In style part, select the fill type from the drop-down list.</div></li>
+<li><div style="font-size:10pt;"> Then select start and end colour for the fill of polygons. </div></li>
+<li><div style="font-size:10pt;">Select outline style from the drop-down list for polygon.</div></li>
+<li><div style="font-size:10pt;">Select fill colour and specify the width of the outline in ‘Width’ text box. </div></li>
+<li><div style="font-size:10pt;">Set the opacity of the polygon fill by using the opacity slider. </div></li>
+<li><div style="font-size:10pt;">After filling and specifying all the details, click ‘Classify’ button. A preview of classification will be shown in the ‘Class Interval’ box. </div></li>
+<li><div style="font-size:10pt;">User can delete this preview by clicking on ‘Delete Class’ button. </div></li>
+<li><div style="font-size:10pt;">And to apply this classification on map canvas, click on ‘Apply’ button. The polygon layer will be classified according in given details like number of intervals, the selected colour and styles. </div></li>
+<li><div style="font-size:10pt;">To remove the colour thematic from polygons, click on ‘Clear’ tool.</div></li></ol>
+<br>
+<p>&nbsp; <img alt="" border="1" width="1010" height="543" src="thematic/thematic_img7.png"></p>
+<p class="Caption" style="text-indent:22pt;margin-left:300pt;font-size:10pt;"> &nbsp; &nbsp;Thematic representation for Polygon features</p>
+<br>
+</body> 
+</html>

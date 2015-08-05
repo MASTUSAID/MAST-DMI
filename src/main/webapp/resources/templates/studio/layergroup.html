@@ -1,0 +1,223 @@
+<div id="LayergroupFormDiv" style="visibility: hidden">
+<style type="text/css">
+/* label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+
+        tr.layerDragClass td {
+color: yellow;
+background-color: black; */
+ }
+</style>
+
+<form class="cmxform" id="layergroupForm" action="" onsubmit="return false;">
+<div class="topmenu top-alt">
+<a id="layergroup_btnNew" class="btn02" onclick="javascript:createEditLayergroup();"><span class="NewBTN">New</span></a>
+</div>
+<div class="topmenu">
+<a id="layergroup_btnSave" class="btn02" onclick="javascript:saveLayergroup();"><span class="saveBTN">Save</span></a>
+<a id="layergroup_btnBack" class="btn02" onclick="javascript:displayLayergroup();"><span class="BackBTN">Back</span></a>
+</div>
+
+
+<table id="layergroupTable"  class="tablesorter" cellpadding="0" cellspacing="0">
+    <thead>
+        
+        <tr>
+            <td colspan="4" class="project_cellpadtwo">
+            	<table width="100%" cellpadding="0" cellspacing="0" class="project_table_adjust">
+                	<tr>
+                    	<td class="project_cell_adjust styleForm">
+						<label class="searchLbl">Search:</label>&nbsp;
+						<input id="layergroup_txtSearch" value="" maxlength="30" size="30" type="text" />
+						<button value="Submit" onclick="displayRefreshedLayergroup();">Clear</button>
+						</td>
+                       </tr>
+                </table>
+            </td>
+        </tr>
+        
+        <tr>
+             <th>
+                Name
+            </th>
+            <th>
+                Alias
+            </th>
+			<!--th>
+                Project
+            </th-->
+            <th class="no-sort">&nbsp;</th>
+			<th class="no-sort">&nbsp;</th>
+        </tr>
+    </thead>
+	<tbody id="LayergroupRowData">
+        
+    </tbody>
+    
+    
+    <tfoot>
+
+	    <tr class="tblFooter" id="layergroup_pagerDiv">
+	        <td colspan="4">
+            	<table cellpadding="1" cellspacing="1"  class="cell_margin">
+                	<tr>
+                    	<td width="100%" class="cell_color">
+                        	<table cellpadding="1" cellspacing="1" class="table_adjust">
+                                	<tr>
+                                    	<td class="cell_adjust" >
+                                        	<img src="resources/scripts/tablesorter/addons/pager/icons/first.png" title="First" class="first"/>
+                                        </td>   
+                                        <td class="cell_adjust" >
+                                        	<img src="resources/scripts/tablesorter/addons/pager/icons/prev.png" title="Previous" class="prev"/>
+                                        </td>   
+                                        <td class="cell_adjustone">
+                                        	<input type="text" class="pagedisplay" readonly="readonly"/>
+                                        </td>   
+                                       <td class="cell_adjust" >
+                                        	 <img src="resources/scripts/tablesorter/addons/pager/icons/next.png" title="Next" class="next"/>
+                                        </td> 
+                                        <td class="cell_adjust" >
+                                        	<img src="resources/scripts/tablesorter/addons/pager/icons/last.png" title="Last" class="last"/>
+                                        </td>  
+                                        <td class="cell_adjustone">
+                                        	<select class="pagesize">
+                                                <option selected="selected"  value="10">10</option>
+                                                <option value="20">20</option>
+                                            </select>
+                                        </td>                        
+                                    </tr>                                
+                                </table>
+                            </td>
+                        </tr>                    
+                    </table>
+                </td>
+	    </tr>
+	</tfoot>
+    
+    
+    </table>
+  
+    <div id="layergroup_accordion">
+		<h3><a href="#">General</a></h3>
+		<div style="height:260px">   
+	     <table id="layergroupDetails" >
+			<tbody id="layergroupGeneralBody">
+        		
+    		</tbody>
+		</table>
+	</div>
+
+<h3><a href="#">Layers</a></h3>
+	<div style="height:250px">	
+	<table>
+	<tbody id="layergroupLayerBody">
+	
+	</tbody>
+	</table>
+	</div>
+	
+</div>
+ 
+
+
+<script id="LayergroupTemplate" type="text/x-jquery-tmpl">
+        <tr>
+              
+			<td>
+            ${name}
+                
+            </td>           
+            <td>
+             ${alias}
+            </td>
+			<!--td>			                                 
+	
+
+			{{each layergroupProjects}}
+				${$value},
+			{{/each}}		
+			</td-->
+			
+           <td align="center">
+				<a href="javascript:createEditLayergroup('${name}');"><img src="resources/images/studio/edit.png" title="Edit"/></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteLayergroup('${name}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>
+           <!--td align="center">
+				<a href="javascript:openProjectMapTab('${name}');"><img src="../Content/images/admin/map_preview.png" /></a>
+           </td-->
+        </tr>
+        </script>
+
+<script id="LayergroupTemplateForm" type="text/x-jquery-tmpl">
+    <tr>
+    <td>
+        Name
+    </td>
+    <td>
+        <input type="textbox" name="name" id="name" value="${name}" />
+			
+    </td>    
+    <td>
+        Alias
+    </td>
+    <td>
+        <input type="textbox" name="alias" id="alias" value="${alias}" />
+    </td>
+     
+</tr>
+
+</script>
+
+
+<script id="LayergroupTemplateLayer" type="text/x-jquery-tmpl">
+
+   <tr>
+	<td colspan="4">
+        <table width="100%">
+    		<tr>
+		         <td width="35%">
+		            
+		                <select id="layerList" name="layerList" style="width:280px; height:160px;" multiple="multiple" >
+						
+						 
+						</select>	
+					
+		        </td>
+		    
+		         <td width="10%" align="center">
+		            <br/><br/><br/><br/><br/>
+		            <input id="addLayer" type="button" value=">>" /><br/><br/>
+			        
+			        <input id="removeLayer"  type="button" value="<<" />
+			        
+		        </td>
+		    
+		         <td width="35%" align="right">
+		            <select id="addedLayerList" name="selectedLayers" style="width:280px; height:160px;" multiple="multiple" >
+		            </select>	
+		        </td>
+		              
+		
+		         <td width="10%" align="center">
+		           <br/><br/><br/><br/><br/>
+					
+					<input id="upLayer" type="button" value="Up" /><br/><br/>
+			        
+			       	<input id="downLayer" type="button" value="Down" />
+		
+		        </td>
+
+    		</tr>
+		</table>
+  	</td>
+</tr>
+
+
+</script>
+
+
+</form>
+
+
+</div>

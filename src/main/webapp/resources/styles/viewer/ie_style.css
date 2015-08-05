@@ -1,0 +1,63 @@
+@charset "utf-8";
+/* CSS Document */
+
+.value_three {
+    padding:2px 0px 2px 2px; height:17px;width:100%;
+}
+
+.shiftinput_thematic{
+	padding:2px 0px 2px 2px; height:17px;
+}
+.shiftinput_thematic_one{
+	 padding:2px 0px 2px 2px; height:17px;
+}
+.shiftinput_thematic_symbol{
+	padding:2px 0px 2px 2px; height:17px;
+}
+.shiftinput_thematic_outline{
+	padding:2px 0px 2px 2px; height:20px;
+}
+.value_one_linecap{
+	padding:2px 0px 2px 2px; height:25px;font-family:OpenSansLight;width:100%;
+}
+.value_one{
+	padding:2px 0px 2px 2px; height:18px;font-family:OpenSansLight; width:100%;
+}
+.slt{
+	font-family:OpenSansLight;
+}
+.lab-int DL DD{
+	padding-bottom:3px;
+}
+.btn-holder-w{
+	padding-top:5px;
+}
+.fill_opacity_css{
+	font-family:OpenSansLight;
+}
+.value_thematic{
+	padding:2px 0px 2px 2px; height:25px;font-family:OpenSansLight; font-size:14px;
+}
+/*.layer-td input {
+	border: 0px solid #eeeeee;
+    font-family: inherit;
+}
+*/
+.value_pointmp{
+	padding:2px 0px 2px 2px; height:25px;font-family:OpenSansLight; width:100%;
+}
+.layer_legent_check{
+	margin-top:0px;
+}
+input {
+	
+	border-radius: 3px 3px 3px 3px;
+}
+/*-------------------------*/
+.value_one_linemp{
+	padding:2px 0px 2px 2px; height:23px;font-family:OpenSansLight; width:100%;
+}
+/*----------------------------*/
+.select_fix_width{
+	width:330px;
+}

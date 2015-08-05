@@ -1,0 +1,208 @@
+<!--Query Builder popup -->
+<div id="querycontent"  class="dialog-v">	
+	<div id="queryTmpl" class="lab-int">		
+		<div id="span-close" class="span-c" title="Close"  onclick="javascript:closeDialog('querycontent');"></div>
+		<div id="query-help" class="span-h" title="Help for Query Builder" onclick="javascript:openHelpWindow('query_help');" ></div>
+		<div class="lineBreak05p"></div>
+		
+        
+        <!--start:query from layer-->
+        <div class="formPattern styleForm">
+        
+		<label id="qrybldr_selectlayer">Select layer</label>
+                  <select name="layers" id="layers" class="int"></select>
+        
+             <div class="pad5px"></div>
+             <div >
+             	<table width="100%" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td width="40%" class="subhead_qb qb_lineh" id="qry_fields">
+                        	Fields
+                        </td>
+                        <td width="30%" class="subhead_qb qb_lineh" id="qry_operators">
+                        	Operators
+                        </td>
+                        <td width="30%" class="subhead_qb qb_lineh" id="qry_values">
+                        	Values
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td class="subhead_grey_bg" align="center">
+                        	<select name="fields_1" id="fields_1" class="select_fix_width_one">
+								<option value=''>Select</option>
+							</select>
+                        </td>
+                        <td class="subhead_grey_bg">
+                        	<select name="operator_1" id="operator_1" >
+                                <option value=''>Select</option>
+                                <option value='='>=</option>
+                                <option value='<'>&lt;</option>
+                                <option value='>'>&gt;</option>
+                                <option value='<='>&lt;=</option>
+                                <option value='>='>&gt;=</option>
+                                <option value='!='>!=</option>
+                                <option value='LIKE'>LIKE</option>
+                                <option value='BETWEEN'>BETWEEN</option>
+                                <option value='AND'>AND</option>
+                                <option value='OR'>OR</option>
+                                <option value='NOT'>NOT</option>
+							</select>
+                        </td>
+                       <td class="subhead_grey_bg ">
+                        	<select name="values" id="values" class="select_fix_width_one">
+                                <option value=''>Select</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>   
+                <div id='displayValues' style="position: relative; float:right; width: 70px; height: 20px; 
+		                margin-left: 30px; overflow : hidden; cursor: pointer;font-weight:regular;color: rgb(35,71,216);" 
+		                onclick='fetchMoreValues();'>
+					    see more..
+				    </div>      
+             </div>
+     
+        <!--end:query from layer-->
+        
+        
+        <!--<div class="pad5px"></div>
+        	<div class="search-options-m" id="relate" align="left">
+				<a id="options-s-t" href="#" value="Relate" id="relate" onclick='toggle();'>Relate</a>
+			</div>-->
+		
+        <!--start:toggle option-->
+        	<div id="spatialRelateDiv" style="display:none;">
+            	<table width="100%" cellpadding="2" cellspacing="2" class="bgcolor_one">
+                	<tr>
+                    	<td class="subhead_qb_one" colspan="2">
+                        	<form>
+                                <!--<input type="radio" id="operator" name="operator" value="within">&nbsp;Within&nbsp; <input type="text" id="distance" class="qb_int">-->
+                                 <label>Within&nbsp;</label><input type="text" id="distance" class="qb_int"> KM
+                                <!--<input type="radio" id="operator" name="operator" value="intersects">Intersects-->
+                            </form>
+                        	
+                        </td>
+                        </tr>
+                        <tr>
+                        <td class="subhead_qb_one">
+                        	Select Layer
+                        </td>
+                         <td class="subhead_qb_two">
+                        	Count
+                        </td>
+                        </tr>
+                        <tr>
+                       <td class="subhead_qb_one">
+                        	<select name="relateLayer" id="relateLayer" class="slt"></select>
+                        </td>
+                        <td class="subhead_qb_one">
+                        	<select name="resultCount" id="resultCount" class="qb_slt">
+                                <option value='10'>Top 10</option>
+                                <option value='25'>Top 25</option>
+                                <option value='50'>Top 50</option>
+                                <option value='100'>Top 100</option>
+                                <option value='All'>All</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+        	</div>
+		<!--end:toggle option-->
+        <div class="pad5px"></div>
+        <!--start:load query-->
+   
+        
+            	<label id="qry_loadquery">Load Query</label>
+				<select name="selectQuery" id="selectQuery" class="int"></select>
+
+           
+        <!--end:load query-->
+        <div class="pad5px"></div>
+        <!--start:where clause-->
+		
+            			<label id="qry_whereclause">Where Clause</label>
+						<div class="search-options-m" id="relate" align="right">
+								<a href="#" value="Relate" id="btnClear" onclick="clearText();">Clear</a>
+							</div>	
+						
+						<textarea spellcheck="false" name="whereClause" id = "whereClause" rows="3" class="qb_querybox" ></textarea>
+            	
+ 
+
+        	
+          
+              
+
+     
+        <!--end:where clause-->
+        <!--Save Query -->
+		
+		 <div class="pad5px"></div>
+		
+		
+        <div class="search-options-m blueSwitch pad05" id="saveQueryDiv" align="left">
+				<a href="#" value="Save Query" id="saveQueryLnk" onclick='toggleSaveQuery();'>Save Query</a>
+		
+        <div id="saveQuery" style="display:none;">
+		 <div class="pad5px"></div>
+        	<form class="cmxform" id="frmSaveQry" action="" onsubmit="return false;">
+        	
+		        	<label id="lblqryName">
+		            	Query Name
+		            </label>
+		                  <input type = "text" value = "" id = "qryName" class="qb_querybox"/>
+		                   <!-- <img src="resources/images/viewer/layouts/search_button.png"  onclick="javascript:queryNameExists($('#qryName').val());"/>-->
+		  
+		        <div class="pad5px"></div>
+		   
+		        	
+		            	
+		                	<label id="qryDesc">Description</label>
+		            		<textarea spellcheck="false" name="querydesc" id = "querydesc" rows="3" class="qb_querybox" ></textarea>
+            	
+        	  
+		        <div align="center">
+		            <input id="Name" type="hidden" name="Name" />
+		            <input id="WhereExpression" type="hidden" name="WhereExpression" />
+		            <input id="Description" type="hidden" name="Description" value="" />
+		            <input id="Layer" type="hidden" name="Layer" value="" />
+		            <input id="Project" type="hidden" name="Project" value="" />
+		            <!--<input id="btnSearch" class="submit" type="submit" value="Save" onclick="javascript:Save();" />
+		            <input id="btnClose" class="submit" type="button" value="Close" onclick="javascript:hideDiv();" />
+		             -->
+		        </div>    
+       		</form>
+        </div>
+		
+		
+			</div>
+        <!--end:Save Query -->
+		
+		
+			</div>
+        
+                                 	<div class="buttons btn-holder-float">
+									<span class="lesserbtn"><input name="" type="submit" value="Save Query" id="btnSaveQry" onclick="saveQuery();"/></span>
+									<span class="lesserbtn"><input name="" type="submit" value="Run Query" id="btnRunQry" onclick="displayFeature();"/></span>
+                                   <!-- <input name="" type="button" onclick="saveQuery()" class="shortbtn"  value="Save"/>-->
+								</div>    
+                       
+                          
+                            	
+                           
+        </div>
+        
+        
+		
+        
+        
+        
+		
+		
+
+	
+	
+	</div>
+
+		
+<!--Query Builder -->

@@ -1,0 +1,83 @@
+<div id="exportmapdiv" class="dialog-v">
+	<form id="exportmapForm" method="post" action="" target="_blank" onsubmit="return false;">
+	<div id="exportmapdivTmpl" class="lab-int">
+		<div id="span-close" title="Close"  class="span-c"
+			onclick="javascript:closeDialog('exportmapdiv');"></div>
+		<div id="exportmap-help" class="span-h" title="This is Search help for Export Map"  ></div>
+		<div class="lineBreak05p"></div>
+		<input type="hidden" id="lyrurl" name="lyrurl" value="">
+		<input type="hidden" id="xmlText" name="xmlText" value="">
+		<input type="hidden" id="bbox" name="bbox" value="">
+		
+		
+		<dl>
+			<dd>
+				<label for="Name">Export Type</label>
+			</dd>
+			<dd>
+				<table width="100%" cellpadding="1" cellspacing="1">
+                    	<tr>
+                        	<td width="4%" ><input type="radio" id="export_wmc" name="exportType" value="wmc" checked="checked"/></td><td width="46%">Web Map Context	</td>
+                            <td width="4%" ><input type="radio" id="export_img" name="exportType" value="img"/></td><td width="46%">Image	</td>
+                        </tr>
+                    </table>
+				
+			</dd>
+			
+			<!--dd>
+				<label for="Name">Name</label>
+			</dd>
+			<dd>
+				<input type="text" value="" class="int" id="exportName"
+					name="exportName" />
+			</dd>
+
+
+		</dl>
+		<dl>
+			<dd>
+				<label for="Email">Email</label>
+			</dd>
+			<dd>
+				<input type="text" value="" class="int" id="exportEmail"
+					name="exportEmail" />
+			</dd>
+
+
+		</dl-->
+		
+			<div class="lineBreak05p"></div>
+				
+				<div id="imgdiv">		
+                	
+					
+					
+                    	<dl>
+                        	<dd width="4%" ><label for="height">Height</label></dd>
+							
+							<dd width="46%"><input type="text" id="img-height" name="img-height"/> &nbsp; PX</dd>
+                         </dl>
+						<dl>
+						
+							<dd width="4%" ><label for="width">Width</label></dd>
+							<dd width="46%"><input type="text" id="img-width" name="img-width"/> &nbsp; PX </dd>
+                        </dl>
+                  			
+										
+									
+				</div>
+		
+		
+		<dl>
+			<dd>
+				<div class="btn-holder-w">
+					<input id="btnExportMap" class="btn-w" type="submit" value="Export" />
+				</div>						
+			</dd>
+		</dl>
+	
+	</div>
+	
+
+</form>
+</div>

@@ -1,0 +1,312 @@
+
+<script>
+
+		$(function() 
+		{
+			
+
+			$("#masterAttr_btnNew").on("click", function() 
+			{
+				attrDialog=$("#attribute-dialog-form").dialog({
+				height : 550,
+				width : 500,
+				resizable : false,
+				modal : true,
+				buttons : {
+					"Add" : function() {
+						
+						savemasterAttr();
+					},
+					"Cancel" : function() {
+						
+						cancelMasterAttr();
+					
+					}
+				},
+				close : function() {
+					cancelMasterAttr();
+				}
+				});
+				
+			});
+		
+			$("#masterAttr_category").on("change", function() {
+				var attrcategory = $("#masterAttr_category").val();
+				
+				attrDialog.dialog("close");
+				displayRefreshedMasterAttr(attrcategory);
+				
+			});
+
+		});
+	</script>
+
+<div id="masterAttrFormDiv" style="visibility: hidden">
+	<!-- <style type="text/css">
+label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+</style> -->
+
+
+	<form class="cmxform" id="masterAttrForm1" action=""
+		onsubmit="return false;">
+
+		<div class="topmenu top-alt">
+			<a id="masterAttr_btnNew" class="btn02"><span class="NewBTN">New</span></a>
+			<!-- <a id="masterAttr_btnSave" class="btn02" onclick="javascript:savemasterAttr();"><span class="saveBTN">Save</span></a>
+<a id="masterAttr_btnBack" class="btn02" onclick="javascript:displaymasterAttr();"><span class="BackBTN">Back</span></a> -->
+		</div>
+
+
+
+		<table width="100%" id="masterAttrTable" class="tablesorter"
+			cellpadding="0" cellspacing="0">
+
+			<thead>
+
+				<tr>
+
+					<td colspan="1">
+						<div class="project_cell_adjust styleForm">
+							<label class="searchLbl">Category :</label>&nbsp; <select
+								name="category_sel" id="category_sel"
+								onchange="displayCategory(this);">
+								
+
+
+							</select>
+						</div>
+					</td>
+
+
+					<td colspan="6">
+						<div class="project_cell_adjust styleForm">
+							<label class="searchLbl">Search:</label>&nbsp; <input
+								id="masterAttr_txtSearch" value="" maxlength="30" size="30"
+								type="text" />
+							<button value="Submit" onclick="displayRefreshedMasterAttr();">Clear</button>
+						</div>
+					</td>
+
+
+				</tr>
+
+				<tr colspan="7">
+					<th>Alias</th>
+					<th>Alias Other Language</th>
+
+					<th>Field Name</th>
+
+					<th>Type</th>
+
+					<th>Size</th>
+
+					<th class="no-sort">Edit</th>
+					<th class="no-sort">Delete</th>
+
+
+				</tr>
+			</thead>
+			<tbody id="masterAttrsRowData">
+
+			</tbody>
+
+			<tfoot>
+			<tfoot>
+
+				<tr class="tblFooter" id="masterAttr_pagerDiv">
+					<td colspan="10">
+						<table cellpadding="0" cellspacing="0" class="cell_margin">
+							<tbody>
+								<tr>
+									<td width="100%" class="cell_color">
+										<table cellpadding="1" cellspacing="1" class="table_adjust">
+											<tbody>
+												<tr>
+													<td class="cell_adjust"><img
+														src="resources/scripts/tablesorter/addons/pager/icons/first.png"
+														class="first" title="First"></td>
+													<td class="cell_adjust"><img
+														src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
+														class="prev" title="Previous"></td>
+													<td class="cell_adjustone"><input type="text"
+														class="pagedisplay" readonly="readonly"></td>
+													<td class="cell_adjust"><img
+														src="resources/scripts/tablesorter/addons/pager/icons/next.png"
+														class="next" title="Next"></td>
+													<td class="cell_adjust"><img
+														src="resources/scripts/tablesorter/addons/pager/icons/last.png"
+														class="last" title="Last"></td>
+													<td class="cell_adjustone"><select class="pagesize">
+															<option selected="selected" value="10">10</option>
+															<option value="20" style="padding-top: 4px;">20</option>
+													</select></td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tfoot>
+			</tfoot>
+
+
+		</table>
+
+
+		<div id="masterAttr_accordion">
+			<h3>
+				<a href="#">General</a>
+			</h3>
+			<div style="height: 250px">
+				<table id="masterAttrDetails">
+					<tbody id="masterAttrDetailBody">
+
+					</tbody>
+				</table>
+			</div>
+
+
+		</div>
+
+
+
+
+
+		<script id="masterAttrTemplate" type="text/x-jquery-tmpl">
+       <tr>
+            <td>
+                ${alias}
+            </td> 
+			<td>
+                ${alias_second_language}
+            </td>                      
+			<td>
+                ${fieldname}
+            </td>           
+            <td>
+                ${datatypeIdBean.datatype}
+            </td>
+			<td>
+                ${size}
+            </td>  
+
+{{if (!master_attrib)}}
+       <td align="center">
+				<a href="javascript:editmasterAttr('${id}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteAttribute('${id}','${alias}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
+           </td>	
+			{{/if}}
+			
+			{{if (master_attrib)}}
+       <td align="center">
+				&nbsp;
+            </td>
+           <td align="center">
+				&nbsp;
+           </td>	
+			{{/if}}
+			
+        </tr>
+         
+</script>
+
+		<script id="masterAttrTemplateForm" type="text/x-jquery-tmpl">        
+ <tr>
+ <td>FieldName
+<input type="hidden" name="hid_fieldNameId" id="hid_fieldNameId" value="${hid_fieldNameId}" /> 
+
+</td>
+
+ <td>
+    <input type="textbox" name="fieldName" id="fieldName" value="${fieldname}"/>    	
+    </td>  
+
+<td>Alias</td>
+ <td><input type="textbox" name="alias"  id="alias" value="${alias}"/></td>
+
+<td>Alias Other Language</td>
+ <td><input type="textbox" name="alias_other"  id="alias_other" value="${alias_other}"/></td>
+
+
+<td>Type</td>
+ <td><input type="textbox" name="type"  id="type" value="${datatypeIdBean.datatype}"/></td>
+
+
+<td>Size</td>
+ <td><input type="textbox" name="size"  id="size" value="${size}"/></td>
+
+ </tr>
+ 
+ </script>
+
+
+	</form>
+</div>
+
+
+
+<div id="attribute-dialog-form" title="Add Attribute"
+	style="display: none;">
+	<!--p class="validateTips">All form fields are required.</p-->
+
+
+	<form class="cmxform" id="addAttributeformID" action=""
+		onsubmit="return false;">
+
+		<fieldset>
+
+
+			<input type="hidden" name="primeryky" id="primeryky"> <label
+				for="email">Alias </label> <input type="text" name="alias"
+				id="alias" value="" class="text ui-widget-content ui-corner-all">
+				<br>
+
+			<label for="email">Alias Other Language </label> <input type="text"
+				name="alias_other" id="alias_other" value=""
+				class="text ui-widget-content ui-corner-all">
+				<br>
+				 <label
+				for="email">Field Name</label> <input type="text" name="fieldName"
+				id="fieldName" value="" class="text ui-widget-content ui-corner-all">
+				<br>
+
+			<label for="email">Data Type</label> <br> <select name="type"
+				id="type"><br><br>
+				<option value="" class="text ui-widget-content ui-corner-all">Please
+					Select</option><br>
+					
+			
+			</select> <br> <label for="email">Size</label> <input type="text"
+				name="size" id="size" value=""
+				class="text ui-widget-content ui-corner-all">
+				<br> <label
+				for="email">Category</label> <br> <select name="category"
+				id="category"><br><br>
+				<option value="" class="text ui-widget-content ui-corner-all">Please
+					Select</option><br>
+
+			</select> <br><label for="email">Mandatory</label>&nbsp; <input
+				type="checkbox" id="mandatory" name="mandatory" value="${mandatory}"
+				onClick="changeMandatoryValue(this);" />
+
+
+		</fieldset>
+	</form>
+</div>
+
+
+<Script>
+
+
+function displayCategory(sel)
+{
+	
+	displaySelectedCategory(sel.value);
+} 
+
+</Script>

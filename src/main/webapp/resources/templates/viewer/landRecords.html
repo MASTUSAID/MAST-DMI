@@ -1,0 +1,1523 @@
+<script>
+	$(function() {
+		$("#tabs").tabs();
+	});
+
+	$(function() {
+		$("#tab-natural").tabs();
+	});
+
+	$(function() {
+		$("#tab-nonnatural").tabs();
+	});
+
+
+/* 	$(function() {
+		$("#tab-admin").tabs();
+	});
+ */
+	$(function() {
+		$("#tab-tenure").tabs();
+	});
+
+	$(function() {
+		$("#tab-multimedia").tabs();
+	});
+
+	$(function() {
+		$(".datepicker").datepicker();
+		$(".datepicker").live('click', function() {
+			$(this).datepicker('destroy').datepicker({
+				dateFormat : 'yy-mm-dd'
+			}).focus();
+		});
+	});
+</script>
+<div class="container-fluid">
+
+	<div id="landRecordsFormdiv" style="visibility: hidden">
+
+		<div class="cmxform">
+
+
+			<div class="tab-pane " id="land-record">
+				<div class="project-details">
+					<div class="project-details-label">
+						<div class="row-fluid">
+							<div class="span2 project-details-block">
+								<span class="deatails-label">Project Name</span> <span
+									class="deatails-label-value" id="projectName"></span>
+							</div>
+							<div class="span2 project-details-block">
+								<span class="deatails-label">Country</span> <span
+									class="deatails-label-value" id="country"></span>
+
+							</div>
+							<div class="span2 project-details-block">
+								<span class="deatails-label">Region</span> <span
+									class="deatails-label-value" id="region"></span>
+							</div>
+
+							<div class="span2 project-details-block">
+								<span class="deatails-label">District</span> <span
+									class="deatails-label-value" id="district"></span>
+							</div>
+							<div class="span2 project-details-block">
+								<span class="deatails-label">Village</span> <span
+									class="deatails-label-value" id="village"></span>
+							</div>
+							<div id="hamlet_sel" class="span2">
+								<span class="deatails-label">Hamlet</span> <span
+									class="deatails-label-value" id="hamlet"></span>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="gray-panel">
+					<form id="landrecordsform" action="" onsubmit="return false;">
+						<div class="filter-details">
+							<div class="row-fluid">
+
+								<div class="span2">
+									<label>USIN ID</label> <input type="text" name="usinstr_id"
+										id="usinstr_id" value="" class="input-medium">
+
+								</div>
+								<div class="span2">
+									<label>UKA ID</label> <input type="text" name="uka_id"
+										id="uka_id" value="" class="input-medium">
+
+								</div>
+
+								<div class="span2">
+									<label>Status</label> <select name="status_id" id="status_id"
+										value="" class="input-medium">
+
+									</select>
+								</div>
+								<div class="span2">
+									<label>From</label> <input type="text" name="from_id"
+										id="from_id" value="" class="input-medium datepicker"
+										readonly="readonly" style="background: none;">
+								</div>
+								<div class="span2">
+									<label>To</label> <input type="text" name="to_id" id="to_id"
+										value="" class="input-medium datepicker" readonly="readonly"
+										style="background: none;">
+								</div>
+								<div class="span2">
+
+									<button class="btn1 v-top-18" onclick="javascript:search();">Search</button>
+									<button class="btn v-top-24"
+										onclick="LandRecords('landRecords');">Clear</button>
+										<!-- <button class="btn1 v-top-18" onclick="javascript:autogenerateUKA();">Generate UKA</button> -->
+								</div>
+							</div>
+						</div>
+
+					</form>
+
+
+				</div>
+
+				<div class="scrollbarxy">
+					<table class="tablesorter" id="landRecordsTable" cellpadding="0"
+						cellspacing="0">
+
+						<thead>
+
+							<tr>
+								<th>USIN</th>
+								<th>UKA</th>
+								<th>Status</th>
+								<th>Collector</th>
+								<th>Date</th>
+								<th class="no-sort">Actions</th>
+
+							</tr>
+						</thead>
+						<tbody id="landRecordsRowData">
+
+						</tbody>
+
+
+						<tfoot>
+
+							<tr class="tblFooter" id="landrecords_pagerDiv">
+								<td colspan="6">
+									<div id="spatialunitDiv">
+										<a href="javascript:previousRecords();"><img
+											class="img-prev" src="resources/images/studio/previous.png"
+											title="Previous" /></a>
+										<!-- <button  onclick="javascript:previousRecords();">Previous</button> -->
+										<input type="text" readonly="readonly" name="records_from"
+											id="records_from" value="" class="input-medium"> To <input
+											type="text" name="records_to" id="records_to" value=""
+											class="input-medium" readonly="readonly"> Of <input
+											type="text" name="records_all" id="records_all" value=""
+											class="input-medium" readonly="readonly"><a
+											href="javascript:nextRecords();"><img class="img-next"
+											src="resources/images/studio/next.png" title="Next" /></a>
+										<!-- <button class="btn" onclick="javascript:nextRecords();">Next</button> -->
+									</div>
+								</td>
+							</tr>
+						</tfoot>
+
+
+						<!-- 				<tfoot>
+
+							<tr class="tblFooter" id="landrecords_pagerDiv">
+								<td colspan="6">
+									<table cellpadding="0" cellspacing="0" class="cell_margin">
+										<tbody>
+											<tr>
+												<td width="100%" class="cell_color">
+													<table cellpadding="1" cellspacing="1" class="table_adjust"
+														style="display: block; padding-left: 450px;">
+														<tbody>
+															<tr>
+																<td class="cell_adjust"><img
+																	src="resources/scripts/tablesorter/addons/pager/icons/first.png"
+																	class="first" title="First"></td>
+																<td class="cell_adjust"><img
+																	src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
+																	class="prev" title="Previous"></td>
+																<td class="cell_adjustone"><input type="text"
+																	class="pagedisplay" readonly="readonly"></td>
+																<td class="cell_adjust"><img
+																	src="resources/scripts/tablesorter/addons/pager/icons/next.png"
+																	class="next" title="Next"></td>
+																<td class="cell_adjust"><img
+																	src="resources/scripts/tablesorter/addons/pager/icons/last.png"
+																	class="last" title="Last"></td>
+																<td class="cell_adjustone"><select class="pagesize">
+																		<option selected="selected" value="10">10</option>
+																		<option value="20" style="padding-top: 4px;">20</option>
+																</select></td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tfoot> -->
+
+
+					</table>
+				</div>
+
+			</div>
+
+			<script id="landRecordsAttrTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${usinStr}
+            </td> 
+	
+		<td>
+                ${propertyno}
+            </td>                      
+			<td>
+                ${status.workflowStatus}
+            </td>           
+            <td>
+                ${user.name}
+            </td>
+			<td>
+                ${surveyDate}
+            </td>    
+			   
+									<td><div class="actions-btn">
+									<a href="#" title="Update UKA Number" class="id-checked" onclick="updateUKA(${usin},'${status.workflowStatusId}');" ></a>  
+                                    <a href="#" title="Edit Attributes" class="ea" onclick="editAttributeNew('${usin}','${status.workflowStatusId}');" ></a> 		
+                    				<a href="#" class="correct" title="Approve Status" onclick="updateStatus('${usin}','${status.workflowStatusId}');"></a>
+									<a href="#" title="Reject Status" class="cross" onclick="rejectStatus('${usin}','${status.workflowStatusId}');"></a> 
+									<a href="#" title="Adjudicate Spatial Unit" class="adj" onclick="adjudicateStatus('${usin}','${status.workflowStatusId}');"></a> 
+									<a href="#" title="Show on Map" class="map-viewer" onclick="showOnMap('${usin}','${status.workflowStatusId}');"></a> 
+									<a href="#" title="Finalize Data" class="reviewed" onclick="updatefinal('${usin}','${status.workflowStatusId}');" ></a>
+									<a href="#" title="Upload Document" onclick="javascript:uploadDocuments(${usin})" class="upload"></a>
+									<a href="#" title="Generate Adjudication Form" onclick="javascript:adjudicationFormDialog('${usin}','${status.workflowStatusId}');" class="ga"></a>
+									<a href="#" title="Generate CCRO Certification" onclick="javascript:get_Usin_detail('${usin}','${status.workflowStatusId}');" class="ccro"></a>
+								
+				
+										</div></td>
+     </tr>
+              
+        
+</script>
+
+			<div id="upload-dialog-form" title="Web Upload"
+				style="display: none;">
+				<!--p class="validateTips">All form fields are required.</p-->
+
+				<form class="cmxform landrecords22" id="uploaddocumentformID"
+					action="" onsubmit="return false;">
+
+
+					<fieldset>
+
+						<label for="email">Document Name </label> <input type="text"
+							name="document_name" id="document_name" value=""
+							class="text ui-widget-content ui-corner-all"> <br> <label
+							for="email">Comments</label> <input type="text"
+							name="document_comments" id="document_comments" value=""
+							class="text ui-widget-content ui-corner-all"> <input
+							name="Usin_Upload" id="Usin_Upload" type="hidden" /> <br>
+
+
+
+						<!-- <form id="form2" method="post" onSubmit="return false;"> -->
+						<label class="searchLbl"
+							style="margin-top: -3px; margin-right: 5px;">Select File:</label>
+						<input name="ProjectName_upload" id="ProjectName_upload"
+							type="hidden" /> <input name="file2" id="fileUploadWeb"
+							type="file" /> <label style="color: #0088cc">Eg:-.jpeg
+							,.png,.pdf ,.xls,.doc</label> <br>
+					</fieldset>
+				</form>
+			</div>
+
+			<div id="attribute-dialog-form" title="Update UKA Number"
+				style="display: none;">
+
+
+
+				<form class="cmxform" id="addAttributeformID" action=""
+					onsubmit="return false;">
+
+					<fieldset>
+
+						<input type="hidden" name="primeryky" id="primeryky" value="">
+						<label for="email">UKA Number </label> <input type="text"
+							name="uka_no" id="uka_no" value=""
+							class="text ui-widget-content ui-corner-all">
+
+					</fieldset>
+				</form>
+			</div>
+
+			<div id="adjudication-dialog-form" title="Language Prefrence"
+				style="display: none;">
+
+
+
+				<form class="cmxform" id="adjudicationformID" action=""
+					onsubmit="return false;">
+
+					<fieldset>
+
+
+						<p>
+							<label for="email">Please select a language</label>
+						</p>
+						<div id="radioLang">
+							<input class="selectlang" name="lang" type="radio" value="En"
+								id="pre-english" /><label for="pre-english">English</label> <input
+								class="selectlang" name="lang" type="radio" value="Sw"
+								id="pre-swahili" /><label for="pre-swahili">Swahili</label>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+
+			<div id="editattribute-dialog-form" title="Edit Attribute"
+				style="display: none;">
+
+				<form class="cmxform" id="editAttributeformID" action=""
+					onsubmit="return false;">
+					<input type="hidden" name="usinStr_key" id="usinStr_key" value="">
+					<input type="hidden" name="general_length" id="general_length"
+						value=""> <input type="hidden" name="projectname_key1"
+						id="projectname_key1" value=""> <input type="hidden"
+						name="workflow_status" id="workflow_status" value=""> <input
+						type="hidden" name="project_key" id="project_key" value="">
+					<input type="hidden" name="type_name" id="type_name" value="">
+					<input type="hidden" name="perimeter" id="perimeter" value="">
+					<input type="hidden" name="house_shape" id="house_shape" value="">
+					<input type="hidden" name="area" id="area" value=""> <input
+						type="hidden" name="measurement_unit" id="measurement_unit"
+						value=""> <input type="hidden" name="uka_no_gen"
+						id="uka_no_gen" value=""> <input type="hidden"
+						name="imei_no" id="imei_no" value=""> <input type="hidden"
+						name="usertable_id" id="usertable_id" value=""> <input
+						type="hidden" name="type" id="type" value=""> <input
+						type="hidden" name="house_type" id="house_type" value="">
+					<input type="hidden" name="landowner" id="landowner" value="">
+					<input type="hidden" name="identity" id="identity" value="">
+					<input type="hidden" name="person_type" id="person_type" value="">
+
+					<div id="tabs">
+						<ul>
+							<li><a href="#tabs-1">General Info</a></li>
+							<li><a href="#tabs-2a"> Natural Person</a></li>
+							<li><a href="#tabs-2b"> Non Natural Person</a></li>
+							<!-- <li><a href="#tabs-2c"> Administrator</a></li> -->
+							<li><a href="#tabs-3">Tenure Info</a></li>
+							<li><a href="#tabs-4">Multimedia</a></li>
+							<!-- <li><a href="#tabs-5">Custom</a></li> -->
+						</ul>
+
+						<div id="tabs-1">
+							<div class="tab-pane landrecords22" id="land-record">
+
+
+
+								<div style="margin: 0 10px;">
+									<div class="project-details in">
+										<div class="project-details-label">
+											<div class="row-fluid">
+												<div class="span6 project-details-block">
+
+													<span class="deatails-label" style="color: #0088cc">Spatial
+														Unit Id</span> <span class="deatails-label-value" id="spatialid"></span>
+													<input type="hidden" name="primary" id="primary" value="">
+
+												</div>
+												<div class="span6 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Project
+														Name</span> <span class="deatails-label-value" id="projname"></span>
+
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<table style="width: 100%" class="landrecords22 ">
+										<!--<tr>
+														<div class="project-details" style=" overflow: hidden;">
+														
+															<td><div style="margin: 10px 0; overflow: hidden;">
+																	<span class="deatails-label" style="color: #0088cc">Spatial
+																		Unit Id</span> <span class="deatails-label-value"
+																		id="spatialid"></span> <input type="hidden"
+																		name="primary" id="primary" value="">
+																</div></td>
+															<td><div style="margin: 10px 0; overflow: hidden;">
+																	<span class="deatails-label" style="color: #0088cc">Project
+																		Name</span> <span class="deatails-label-value" id="projname"></span>
+
+																</div></td>
+
+                                                            </div>
+														</tr>
+														-->
+
+										<tr>
+
+											<td><label for="email">Number of Household </label> <input
+												type="text" name="household" id="household" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+
+
+											<td><label for="email">Geometry type </label> <input
+												type="text" name="gtype" id="gtype" value=""
+												class="text ui-widget-content ui-corner-all justread">
+											<td>
+										</tr>
+
+										<tr>
+											<td><label for="email">Existing Use</label> <select
+												name="existing_use" id="existing_use" class="gendisable"></select></td>
+											<td><label for="email">Proposed Use</label> <select
+												name="proposed_use" id="proposed_use" class="gendisable">
+											</select></td>
+										</tr>
+
+										<tr>
+											<td><label for="email">Quality of Soil</label> <select
+												name="soil_quality" id="soil_quality" class="gendisable"></select></td>
+											<td><label for="email">Slope</label> <select
+												name="slope" id="slope" class="gendisable">
+											</select></td>
+										</tr>
+
+
+										<tr>
+											<td><label for="email">Land Type</label> <select
+												name="land_type" id="land_type" class="gendisable"></select></td>
+											<td><label for="email">Captured Date </label> <input
+												type="text" name="survey_date" id="survey_date" value=""
+												class="text ui-widget-content ui-corner-all" readonly></td>
+										</tr>
+
+
+										<tr>
+
+											<td><label for="email">Address 1 </label> <input
+												type="text" name="address_1" id="address_1" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+											<td><label for="email">Address 2 </label> <input
+												type="text" name="address_2" id="address_2" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+										</tr>
+										<tr>
+											<td><label for="email">Postal Code </label> <input
+												type="text" name="postal_code" id="postal_code" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+											<td><label for="email">Comments </label> <input
+												type="text" name="comments" id="comments" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+										</tr>
+										<tr>
+											<td><label for="email">Neighbour North </label> <input
+												type="text" name="neighbor_north" id="neighbor_north"
+												value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+											<td><label for="email">Neighbour South</label> <input
+												type="text" name="neighbor_south" id="neighbor_south"
+												value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+										</tr>
+
+										<tr>
+											<td><label for="email">Neighbour East </label> <input
+												type="text" name="neighbor_east" id="neighbor_east" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+											<td><label for="email">Neighbour West </label> <input
+												type="text" name="neighbor_west" id="neighbor_west" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+										</tr>
+
+
+										<tr>
+											<td><label for="email">Witness 1</label> <input
+												type="text" name="witness_1" id="witness_1" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+											<td><label for="email">Witness 2 </label> <input
+												type="text" name="witness_2" id="witness_2" value=""
+												class="text ui-widget-content ui-corner-all justread"></td>
+
+										</tr>
+
+										<tr>
+											<td><div style="margin: 10px 0; overflow: hidden;">
+													<span class="deatails-label" style="color: #0088cc">Custom
+														Attributes</span>
+												</div></td>
+
+										</tr>
+										<tr>
+											<td>
+												<div id="customgeneral-div"></div>
+
+											</td>
+										</tr>
+
+									</table>
+
+								</div>
+
+							</div>
+						</div>
+						<div id="tabs-2a">
+							<div class="row-fluid">
+								<div class="hidenatTable">
+									<table id="naturalTable" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Name</th>
+												<th>Gender</th>
+												<th>Education</th>
+												<th>Tenure</th>
+												<th class="showNatural">Edit</th>
+												<th class="showNatural delHide">Delete</th>
+												<th class="hideNatural">View</th>
+												<th class="showNatural">Upload Image</th>
+											</tr>
+										</thead>
+										<tbody id="naturalpersonRowData">
+
+										</tbody>
+									</table>
+								</div>
+								<table id="associatedNaturalTable" class="table table-bordered">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Name</th>
+											<th>Gender</th>
+											<th>Education</th>
+											<th>Tenure</th>
+											<th class="showAssociate">Edit</th>
+
+											<th class="hideAssociate">View</th>
+										</tr>
+									</thead>
+									<tbody id="associatedNaturalRowData">
+
+									</tbody>
+								</table>
+								<!-- <div>
+									<a href="#" class="showNonAddPerson personadd"
+										onclick="javascript:addNaturalPerson();"><img
+										src="resources/images/studio/addPerson.png"
+										style="padding: right" title="Add Person" /></a>
+								</div> -->
+								<div
+									style="margin-bottom: 10px; float: right; margin-top: -10px;">
+									<!-- <button onclick="javascript:addPerson();">Add Person</button> -->
+									<span>
+										<button class="btn1 padding0 hideNew"
+											onclick="javascript:addNewNaturalPerson();">
+											<i class="fa fa-plus"></i>New Person
+										</button>
+										<button class="btn padding1 hideNew"
+											onclick="javascript:addNaturalPerson();">
+											<i class="fa fa-user"></i>Existing Person
+										</button>
+									</span>
+								</div>
+
+
+							</div>
+						</div>
+
+						<div id="tabs-2b">
+							<div class="row-fluid">
+								<div class="hidenonTable">
+									<table id="non_naturalTable" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Institution Name</th>
+												<th>Address</th>
+												<th>Phone Number</th>
+												<th class="showNon">Edit</th>
+												<th class="showNon">Delete</th>
+												<th class="hideNon">View</th>
+
+											</tr>
+										</thead>
+										<tbody id="non_naturalpersonRowData">
+
+										</tbody>
+									</table>
+								</div>
+								<div
+									style="margin-bottom: 10px; float: right; margin-top: -10px;">
+
+									<button class="btn padding1 showNonAddPerson personadd"
+										onclick="javascript:addNonNaturalPerson();">
+										<i class="fa fa-user"></i>Existing Person
+									</button>
+								</div>
+
+							</div>
+						</div>
+
+
+					<!-- 	<div id="tabs-2c">
+							<div class="row-fluid ">
+								<div id="hideTable">
+									<table id="adminTable" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>First Name</th>
+												<th>Last Name</th>
+												<th>Citizenship</th>
+												<th>Gender</th>
+												<th>Phone Number</th>
+												<th class="showadmin">Edit</th>
+												<th class="showadmin">Delete</th>
+												<th class="hideadmin">View</th>
+												<th class="showadmin">Upload Image</th>
+											</tr>
+										</thead>
+										<tbody id="adminRowData">
+
+										</tbody>
+									</table>
+								</div>
+								<div class="hideButton "
+									style="margin-bottom: 10px; float: right; margin-top: 10px;">
+
+									<span>
+										<button class="btn1 padding0 hideNew"
+											onclick="javascript:editAdminData(0);">
+											<i class="fa fa-plus"></i>New Admin
+										</button>
+										<button class="btn padding1 hideNew"
+											onclick="javascript:addExistingAdmin();">
+											<i class="fa fa-user"></i>Existing Admin
+										</button>
+									</span>
+								</div>
+
+							</div>
+						</div> -->
+						<div id="tabs-3">
+							<div class="row-fluid">
+								<div class="hidetenureTable">
+									<table id="tenureTable" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Share</th>
+												<th>Tenure Class</th>
+												<th>Occupancy Type</th>
+												<th>Duration</th>
+												<th class="showTenure">Edit</th>
+												<th class="showTenure">Delete</th>
+												<th class="hideTenure">View</th>
+											</tr>
+										</thead>
+										<tbody id="tenureRowData">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div id="tabs-4">
+							<div class="row-fluid">
+
+								<div class="hidemulTable">
+									<table id="multimediaTable" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Document Name</th>
+												<th>Recordation</th>
+												<th>Inventory Type</th>
+												<th>Comments</th>
+												<th class="showMul">Edit</th>
+												<th class="showMul">Delete</th>
+												<th>View Document</th>
+												<th class="hideMul">View</th>
+
+											</tr>
+										</thead>
+										<tbody id="multimediaRowData">
+
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<script id="naturalpersonTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.alias}
+            </td>           
+            <td>
+               {{if person_gid.gender}} ${person_gid.gender.gender}{{/if}}
+            </td>
+
+			<td>
+ 			{{if person_gid.education}} ${person_gid.education.educationLevel}{{/if}}
+			</td>
+			<td>
+                ${person_gid.tenure_Relation}
+            </td>    
+			  
+			<td align="center">
+				<a href="javascript:editNaturalData('${person_gid.person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteNatural('${person_gid.person_gid}','${person_gid.alias}' );"><img src="resources/images/studio/delete.png"
+ 					title="Delete" /></a>
+           </td>
+		<td align="center">
+				<a href="javascript:editNaturalData('${person_gid.person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>	
+
+	    </td>
+		<td align="center">
+				<a href="javascript:naturalPersonImage('${person_gid.person_gid}',0);"><img src="resources/images/studio/uploadImage.png" title="View" /></a>
+            </td>	  
+								
+     </tr>
+              
+        
+
+
+</script>
+
+			<script id="naturalpersonTemplate_2" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid}
+            </td> 
+	         
+			<td>
+                ${alias}
+            </td>           
+            <td>
+			{{if gender}}  ${gender.gender}{{/if}}
+            
+            </td>
+
+			<td>
+			{{if education}}  ${education.educationLevel}{{/if}}
+ 			
+			</td>
+			<td>
+                ${tenure_Relation}
+            </td>    
+			  
+			<td align="center" >
+				<a href="javascript:editNaturalData('${person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           
+				<td align="center" >
+				<a href="javascript:editNaturalData('${person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>
+		
+     </tr>
+              
+        
+</script>
+
+
+			<script id="non_naturalpersonTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.institutionName}
+            </td>           
+            <td>
+                ${person_gid.address}
+            </td>
+			<td>
+                ${person_gid.phoneNumber}
+            </td>  
+  
+			  
+			<td align="center">
+				<a href="javascript:editNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteNonNatural('${person_gid.person_gid}','${person_gid.institutionName}' );"><img src=
+				"resources/images/studio/delete.png" title="Delete" /></a>
+           </td>
+			<td align="center">
+				<a href="javascript:editNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>
+			 
+								
+     </tr>
+              
+        
+</script>
+
+			<script id="tenureinfoTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${gid}
+            </td>     
+ 
+          <td>{{if share_type}}${share_type.shareType}{{/if}}</td> 
+
+          <td>
+
+ 			{{if tenureclass_id}}${tenureclass_id.tenureClass}{{/if}}
+			</td>
+
+			<td>
+           {{if occupancy_type_id}} ${occupancy_type_id.description}{{/if}}
+             </td>
+			   
+			<td>
+                ${tenure_duration}
+            </td>   
+
+			<td align="center">
+				<a href="javascript:editTenure('${gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteTenure('${gid}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>	
+
+			<td align="center">
+				<a href="javascript:editTenure('${gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td> 
+								
+     </tr>
+              
+        
+</script>
+
+
+			<script id="multimediaTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${gid}
+            </td> 
+	         
+			<td>
+                ${scanedSourceDoc}
+            </td>
+			<td>
+                ${recordation}
+            </td>    
+			  
+<td>
+                ${socialTenureInvantoryType}
+            </td>   
+<td>
+                ${comments}
+            </td>   
+
+			<td align="center">
+				<a href="javascript:editMultimedia('${gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteMultimedia('${gid}','${scanedSourceDoc}' );"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>	 
+				<td align="center">
+				<a href="javascript:viewMultimedia('${gid}');"><img src="resources/images/studio/document-image-view.png" title="View Document" /></a>
+            </td>	
+		<td align="center">
+				<a href="javascript:editMultimedia('${gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>			
+     </tr>
+              
+        
+</script>
+
+
+			<div id="naturalperson-dialog-form" title="Natural Person"
+				style="display: none;">
+
+				<fieldset>
+
+					<div id="tab-natural">
+						<ul>
+							<li><a href="#tabs-1">Master Attribute</a></li>
+							<li><a href="#tabs-2"> Custom</a></li>
+						</ul>
+
+						<form class="cmxform" id="editNaturalPersonformID" action=""
+							onsubmit="return false;">
+							<div id="tabs-1" style="margin: 10px;">
+								<div class="tab-pane landrecords22" id="land-record">
+								<input type="hidden" name="natural_usin" id="natural_usin"
+										value="">
+									<input type="hidden" name="natual_length" id="natual_length"
+										value=""><input type="hidden" name="projectname_key"
+										id="projectname_key" value=""> <input type="hidden"
+										name="natural_key" id="natural_key" value=""> <input
+										type="hidden" name="occ_age" id="occ_age" value="">
+									<div class="hidden_alias">
+										<label for="email">Alias </label> <input type="text"
+											name="name" id="name" value=""
+											class="text ui-widget-content ui-corner-all justread">
+									</div>
+									<label for="email">First Name </label> <input type="text"
+										name="fname" id="fname" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Middle Name </label> <input type="text"
+										name="mname" id="mname" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Last Name </label> <input type="text"
+										name="lname" id="lname" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Mobile Number </label> <input type="text"
+										name="mobile_natural" id="mobile_natural" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Age </label> <input type="text" name="age"
+										id="age" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Gender</label> <select name="gender"
+										class="justdisable" id="gender">
+									</select>
+
+									<!-- <option value="" class="text ui-widget-content ui-corner-all">Please Select</option> -->
+
+									<label for="email">Occupation </label> <input type="text"
+										name="occ" id="occ" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Education</label> <select name="edu"
+										id="edu" class="justdisable">
+									</select> <label for="email">Marital Status</label> <select
+										name="marital_status" id="marital_status" class="justdisable"></select>
+									<label for="email">Tenure </label> <input type="text"
+										name="tenure" id="tenure" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Owner</label> <select name="owner_nat"
+										id="owner_nat" class="justdisable"></select> <label
+										for="email">Resident Of Village</label> <select
+										name="resident" id="resident" class="justdisable"></select> <label
+										for="email">Administator </label> <input type="text"
+										name="administrator" id="administrator" value=""
+										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Citizenship </label> <input type="text"
+										name="citizenship" id="citizenship" value=""
+										class="text ui-widget-content ui-corner-all justread">
+								</div>
+							</div>
+							<div id="tabs-2" style="margin: 10px;">
+								<div class="tab-pane landrecords22">
+
+									<div id="customnatural-div"></div>
+									<div id="customnewnatural-div"></div>
+								</div>
+							</div>
+						</form>
+
+
+
+					</div>
+
+				</fieldset>
+
+			</div>
+
+			<!-- <div id="admin-dialog-form" title="Administrator"
+				style="display: none;">
+
+				<fieldset>
+
+					<div id="tab-admin">
+
+						<form class="cmxform" id="editadminformID" action=""
+							onsubmit="return false;">
+							<div class="tab-pane landrecords22" id="land-record">
+								<input type="hidden" name="admin_usin" id="admin_usin">
+								<input type="hidden" name="admin_length" id="admin_length"
+									value=""> <input type="hidden" name="projectname_key"
+									id="projectname_key" value=""> <input type="hidden"
+									name="adminId" id="adminId" value=""> <label
+									for="email">First Name </label> <input type="text"
+									name="admin_fname" id="admin_fname" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+
+								<label for="email">Middle Name </label> <input type="text"
+									name="admin_mname" id="admin_mname" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+								<label for="email">Last Name </label> <input type="text"
+									name="admin_lname" id="admin_lname" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+								<label for="email">Gender</label> <select name="admin_gender"
+									class="disableAdmin" id="admin_gender">
+								</select> <label for="email">Age </label> <input type="text"
+									name="admin_age" id="admin_age" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+
+								<label for="email">Marital Status</label> <select
+									name="admin_marital_status" id="admin_marital_status"
+									class="disableAdmin"></select> <label for="email">Citizenship
+								</label> <input type="text" name="admin_citizenship"
+									id="admin_citizenship" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+								<label for="email">Address</label> <input type="text"
+									name="admin_address" id="admin_address" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+								<label for="email">Resident Of Village</label> <select
+									name="admin_resident" id="admin_resident" class="disableAdmin"></select>
+								<label for="email">Mobile Number </label> <input type="text"
+									name="admin_mobile" id="admin_mobile" value=""
+									class="text ui-widget-content ui-corner-all readAdmin">
+
+							</div>
+						</form>
+						<div></div>
+					</div>
+
+				</fieldset>
+
+			</div> -->
+
+			<div id="non_naturalperson-dialog-form" title="Non Natural Person"
+				style="display: none;">
+
+				<form class="cmxform" id="editNonNaturalPersonformID" action=""
+					onsubmit="return false;">
+					<fieldset>
+
+						<div id="tab-nonnatural">
+							<ul>
+								<li><a href="#tabs-3">Master Attribute</a></li>
+								<li><a href="#tabs-4"> Custom</a></li>
+							</ul>
+							<div id="tabs-3" style="margin: 10px;">
+								<div class="tab-pane landrecords22" id="land-record">
+									<input type="hidden" name="projectname_key2"
+										id="projectname_key2" value=""> <input type="hidden"
+										name="nonnatual_length" id="nonnatual_length" value="">
+									<input type="hidden" name="non_natural_key"
+										id="non_natural_key" value=""> <input type="hidden"
+										name="poc_id" id="poc_id" value=""> <input
+										type="hidden" name="mobileGroupId" id="mobileGroupId" value="">
+									<label for="email">Institution Name </label> <input type="text"
+										name="institution" id="institution" value=""
+										class="text ui-widget-content ui-corner-all read-non">
+									<label for="email">Mobile No. </label> <input type="text"
+										name="mobile_no" id="mobile_no" value=""
+										class="text ui-widget-content ui-corner-all read-non">
+									<label for="email">Address </label> <input type="text"
+										name="address" id="address" value=""
+										class="text ui-widget-content ui-corner-all read-non">
+									<label for="email">Group Type</label> <select name="group_type"
+										id="group_type" class="disablenon"></select>
+								</div>
+							</div>
+
+							<div id="tabs-4" style="margin: 10px;">
+								<div class="tab-pane landrecords22">
+
+									<div id="customnonnatural-div"></div>
+								</div>
+							</div>
+						</div>
+
+
+					</fieldset>
+
+
+				</form>
+			</div>
+
+
+			<div id="tenureinfo-dialog-form" title="Tenure Info"
+				style="display: none;">
+
+				<form class="cmxform" id="edittenureinfoformID" action=""
+					onsubmit="return false;">
+
+					<fieldset>
+
+						<div id="tab-tenure">
+							<ul>
+								<li><a href="#tabs-5">Master Attribute</a></li>
+								<li><a href="#tabs-6"> Custom</a></li>
+							</ul>
+							<div id="tabs-5" style="margin: 10px;">
+								<div class="tab-pane landrecords22" id="land-record">
+									<input type="hidden" name="projectname_key3"
+										id="projectname_key3" value=""> <input type="hidden"
+										name="tenure_key" id="tenure_key" value=""> <label
+										for="email">Type</label> <select name="tenure_type"
+										id="tenure_type" class="read-tenure"></select> <input
+										type="hidden" class="datepicker" name="start_date"
+										id="start_date" value=""
+										class="text ui-widget-content ui-corner-all read-tenure">
+									<input type="hidden" class="datepicker" name="end_date"
+										id="end_date" value=""
+										class="text ui-widget-content ui-corner-all read-tenure">
+									<input type="hidden" name="usin" id="usin" value=""> <input
+										type="hidden" name="person_gid" id="person_gid" value="">
+									<input type="hidden" name="tenure_length" id="tenure_length"
+										value=""> <label for="email">Occupancy Type</label> <select
+										name="occtype_id" id="occtype_id" class="read-tenure"></select>
+									<label for="email">Tenure Class</label> <select
+										name="tenureclass_id" id="tenureclass_id" class="read-tenure"></select>
+									<div class="hide_duration">
+										<label for="email">Tenure Duration</label> <input type="text"
+											name="tenureDuration" id="tenureDuration" value=""
+											class="text ui-widget-content ui-corner-all read-tenure">
+									</div>
+								</div>
+							</div>
+
+							<div id="tabs-6" style="margin: 10px;">
+								<div class="tab-pane landrecords22">
+									<div id="customtenure-div"></div>
+								</div>
+							</div>
+						</div>
+
+					</fieldset>
+
+				</form>
+			</div>
+
+			<div id="multimedia-dialog-form" title="Multimedia"
+				style="display: none;">
+
+				<form class="cmxform landrecords22" id="editmultimediaformID"
+					action="" onsubmit="return false;">
+
+					<fieldset>
+
+						<div id="tab-multimedia">
+							<ul>
+								<li><a href="#tabs-7">Master Attribute</a></li>
+								<li><a href="#tabs-8"> Custom</a></li>
+							</ul>
+							<div id="tabs-7" style="margin: 10px;">
+								<div class="tab-pane landrecords22" id="land-record">
+
+									<input type="hidden" name="primary_key" id="primary_key"
+										value=""> <input type="hidden"
+										name="multimedia_length" id="multimedia_length" value="">
+									<input type="hidden" name="multimedia_id" id="multimedia_id"
+										value=""> <input type="hidden" name="person_gidk"
+										id="person_gidk" value=""> <input type="hidden"
+										name="usink" id="usink" value=""> <input type="hidden"
+										name="social_gid" id="social_gid" value=""> <label
+										for="email">Entity Name </label> <input type="text"
+										name="entity_name" id="entity_name" value=""
+										class="text ui-widget-content ui-corner-all read-mul">
+									<label for="email">Scanned Source Document </label> <input
+										type="text" name="scanned_srs" id="scanned_srs" value=""
+										class="text ui-widget-content ui-corner-all " readonly>
+									<input type="hidden" name="quality_type" id="quality_type"
+										value="" class="text ui-widget-content ui-corner-all read-mul">
+									<input type="hidden" name="source_path" id="source_path"
+										value=""> <label for="email">Recordation </label> <input
+										type="Date" name="recordation" id="recordation" value=""
+										class="text ui-widget-content ui-corner-all" readonly>
+									<label for="email">Social Tenure Inverntory Type</label> <input
+										type="text" name="inventory_type" id="inventory_type" value=""
+										class="text ui-widget-content ui-corner-all read-mul">
+									<label for="email">Comments</label> <input type="text"
+										name="comments_multimedia" id="comments_multimedia" value=""
+										class="text ui-widget-content ui-corner-all read-mul">
+									<input type="hidden" name="projectname_multimedia_key"
+										id="projectname_multimedia_key" value="">
+								</div>
+							</div>
+							<div id="tabs-8" style="margin: 10px;">
+								<div class="tab-pane landrecords22">
+									<div id="custommultimedia-div"></div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
+				</form>
+			</div>
+
+
+			<div id="deletednat-dialog-form" title="Add Natural Person"
+				style="display: none;">
+
+
+				<fieldset>
+					<table id="" class="table table-bordered">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Gender</th>
+								<th>Education</th>
+								<th>Tenure</th>
+								<th>Add</th>
+							</tr>
+						</thead>
+						<tbody id="deletedNaturalpersonRowData">
+
+						</tbody>
+					</table>
+				</fieldset>
+
+			</div>
+
+			<div id="deletedadmin-dialog-form" title="Admin Info"
+				style="display: none;">
+
+
+				<fieldset>
+					<table id="" class="table table-bordered">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>First Name</th>
+								<th>Last Name</th>
+								<th>Citizenship</th>
+								<th>Gender</th>
+								<th>Phone Number</th>
+								<th>Add</th>
+
+
+							</tr>
+						</thead>
+						<tbody id="deletedAdminRowData">
+
+						</tbody>
+					</table>
+				</fieldset>
+
+			</div>
+
+			<script id="naturalpersonTemplate_add" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.alias}
+            </td>           
+            <td>
+			{{if person_gid.gender}}  ${person_gid.gender.gender}{{/if}}
+            
+            </td>
+
+			<td>
+			{{if person_gid.education}}  ${person_gid.education.educationLevel}{{/if}}
+ 			
+			</td>
+			<td>
+                ${person_gid.tenure_Relation}
+            </td>    
+			  
+			
+           </td>	 
+				<td align="center" >
+				<a href="javascript:addDeletedNatural('${person_gid.person_gid}');"><img src="resources/images/studio/add.png" title="Add Person" /></a>
+            </td>
+		
+     </tr>
+              
+        
+</script>
+
+			<div id="deletednon-dialog-form" title="Add Non Natural Person"
+				style="display: none;">
+
+
+				<fieldset>
+					<table id="" class="table table-bordered">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Institution Name</th>
+								<th>Address</th>
+								<th>Phone Number</th>
+								<th>Add</th>
+
+							</tr>
+						</thead>
+						<tbody id="deletedNonNaturalpersonRowData">
+
+						</tbody>
+					</table>
+				</fieldset>
+
+			</div>
+
+
+			<script id="nonnaturalpersonTemplate_add" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.institutionName}
+            </td>           
+            <td>
+                ${person_gid.address}
+            </td>
+			<td>
+                ${person_gid.phoneNumber}
+            </td>  
+				<td align="center" >
+				<a href="javascript:addDeletedNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/add.png" title="Add Person" /></a>
+            </td>
+		
+     </tr>
+              
+        
+</script>
+
+
+			<div id="upload-natural-Image" title="Web Upload"
+				style="display: none;">
+				<!--p class="validateTips">All form fields are required.</p-->
+
+				<form class="cmxform landrecords22" id="uploadNaturalImage"
+					action="" onsubmit="return false;">
+
+
+					<fieldset>
+
+						<div id="naturalImage-div"></div>
+						<br> <strong><span id="check_img"></span></strong> <br>
+						<label for="email">Document Name </label> <input type="text"
+							name="document_natural" id="document_natural" value=""
+							class="text ui-widget-content ui-corner-all" />
+						<!-- <form id="form2" method="post" onSubmit="return false;"> -->
+						<label class="searchLbl"
+							style="margin-top: -3px; margin-right: 5px;">Select File:</label>
+						<input name="natural_image" id="natural_image" type="file" /> <label
+							style="color: #0088cc">Eg:-.jpeg ,.png</label> <br>
+					</fieldset>
+				</form>
+			</div>
+
+
+
+
+			<script id="adminTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${adminid}
+            </td> 
+	         
+			<td>
+                ${firstname}
+            </td>           
+            <td>
+			${lastname}
+            
+            </td>
+				
+		
+			<td>
+                ${citizenship}
+            </td>    
+			  	<td>
+				{{if gender}}  ${gender.gender}{{/if}}
+ 			
+			</td>
+	<td>
+			${phonenumber}
+ 			
+			</td>
+			
+           </td>	 
+				<td align="center">
+				<a href="javascript:editAdminData('${adminid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteAdmin('${adminid}','${firstname}' );"><img src="resources/images/studio/delete.png"
+ 					title="Delete" /></a>
+           </td>
+		<td align="center">
+				<a href="javascript:editAdminData('${adminid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>	
+		
+<td align="center">
+				<a href="javascript:naturalPersonImage(0,'${adminid}');"><img src="resources/images/studio/uploadImage.png" title="View" /></a>
+            </td>	
+     </tr>
+              
+        
+</script>
+
+
+			<script id="deletedAdminTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${adminid}
+            </td> 
+	         
+			<td>
+                ${firstname}
+            </td>           
+            <td>
+			${lastname}
+            
+            </td>
+				
+		
+			<td>
+                ${citizenship}
+            </td>    
+			  	<td>
+				{{if gender}}  ${gender.gender}{{/if}}
+ 			
+			</td>
+			<td>
+			${phonenumber}
+ 			
+			</td>
+		
+		<td align="center">
+				<a href="javascript:addExisitingAdmin('${adminid}');"><img src="resources/images/studio/add.png" title="Add Administrator" /></a>
+            </td>	
+		
+     </tr>
+              
+        
+</script>
+
+
+			<!-- <div id="add_person-dialog-form" title="Add Person"
+				style="display: none;">
+
+
+
+				<form class="cmxform" action="" onsubmit="return false;">
+
+					<fieldset>
+						
+					</fieldset>
+				</form>
+			</div> -->
+
+			<div id="add_admin-dialog-form" title="Add Admin"
+				style="display: none;">
+
+
+
+				<form class="cmxform" action="" onsubmit="return false;">
+
+					<fieldset>
+						<span>
+							<button class="btn" onclick="javascript:editAdminData(0);">
+								New Person</button>
+							<button class="btn" onclick="javascript:addExistingAdmin();">
+								Existing Person</button>
+						</span>
+					</fieldset>
+				</form>
+			</div>
+
+			<!-- 	<div id="newnaturalperson-dialog-form" title="Natural Person"
+				style="display: none;">
+ -->
+
+		</div>
+	</div>
+</div>
+

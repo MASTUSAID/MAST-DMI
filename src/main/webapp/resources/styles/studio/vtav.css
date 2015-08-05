@@ -1,0 +1,100 @@
+img {
+	border: none;
+}
+
+#vtab {
+	margin: 10px 0 0 7px;
+	width: 99%;
+	height: 100%;
+	font-family: "OpenSansLight";
+	font-size: 12px;
+}
+
+#vtab>ul>li {
+	border-right: medium none;
+	color: #666666;
+	display: block;
+	font-size: 12pt;
+	font-weight: bold;
+	height: 35px;
+	list-style-type: none;
+	margin: auto;
+	padding: 15px 10px 0 20px;
+	position: relative;
+	text-align: left;
+	width: 262px;
+	background:#e1e8f0;
+	cursor:pointer;
+	border-bottom:1px solid #b6bac3;
+}
+
+#vtab>ul>li>img {
+	float: left;
+	padding-right: 10px;
+	margin-top: -5px;
+}
+
+#vtab > ul > li.selected {
+	background:#0460e7 url('../../images/studio/bg-Selected-blue.png') left top repeat-x; 
+    border: 1px solid #02294c;
+    color: #fff;
+    height: 35px;
+    opacity: 1;
+    position: relative;
+    width: 262px;
+    *width: 231px;
+    z-index: 10;
+}
+
+#vtab>ul {
+float: left;
+width: 240px;
+height: 35px;
+text-align: left;
+display: block;
+margin: auto 0;
+padding: 0;
+position: relative;
+background: #e1e8f0;
+height: 526px;
+/* top: 10px; */
+}
+
+#vtab>div {
+	background-color: #ffffff;
+	border: 1px solid #b5bcc2;
+	margin-left: 231px;
+	min-height: 500px;
+	padding: 12px;
+	position: relative;
+	z-index: 11;
+}
+
+#vtab>div>h4 {
+	color: #800;
+	font-size: 1.2em;
+	border-bottom: 1px dotted #800;
+	padding-top: 5px;
+	margin-top: 0;
+}
+
+#loginForm label {
+	float: left;
+	width: 100px;
+	text-align: right;
+	clear: left;
+	margin-right: 15px;
+}
+
+#loginForm fieldset {
+	border: none;
+}
+
+#loginForm fieldset>div {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+#loginForm #login {
+	margin-left: 115px;
+}

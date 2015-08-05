@@ -1,0 +1,223 @@
+<div id="dbconnFormDiv" title="DB Connection" style="visibility: hidden;">
+
+
+<form class="cmxform" id="dbconnfrm" action="" onsubmit="return false;">
+
+<div class="topmenu">
+<input id="btn_DbconnNew" class="btn" type="button" value="New" onclick="createEditConnectionRecord();"/>
+<input id="btn_DbconnSave" class="btn" type="button" value="Save" onclick="javascript:saveConnection();" />
+<input id="btn_DbconnBack" class="btn" type="button" value="Back" onclick="javascript:reloadConnectionList();" />
+</div>
+
+
+
+<table id="dbconnTable" class="tablesorter" cellpadding="0" cellspacing="0">
+    <thead>
+    	<tr>
+            <td colspan="8" class="project_cellpadtwo">
+            	<table width="100%" cellpadding="1" cellspacing="2" class="project_table_adjust">
+                	<tr>
+                    	<td width="99%" class="project_cell_adjust">Search:&nbsp;</td>
+                        <td width="1%" class="project_cell_adjust"><input id="dbconn_txtSearch" value="" maxlength="30" size="30" type="text" />
+                       </td>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Database
+            </th> 
+			<th>
+                Schema
+            </th> 
+            <th>
+                Server Name
+            </th>
+             <th>
+                Server Port
+            </th>  		
+        </tr>
+    </thead>
+    <tbody id="DbConnRowData">
+        
+     </tbody>
+     <tfoot>
+	    <tr id="dbconn_pagerDiv">
+	       <td colspan="8" >
+            	<table cellpadding="1" cellspacing="1" class="cell_margin">
+                	<tr>
+                    	<td width="100%" class="cell_color">
+                        	<table cellpadding="1" cellspacing="1" class="table_adjust">
+                            	<tr>
+                                	 <td class="cell_adjust" >
+                                    	<img src="resources/scripts/tablesorter/addons/pager/icons/first.png" title="First" class="first"/>
+                                    </td>
+                                    <td class="cell_adjust" >
+                                    	 <img src="resources/scripts/tablesorter/addons/pager/icons/prev.png" title="Previous" class="prev"/>
+                                    </td>
+                                   <td class="cell_adjustone">
+                                    	 <input type="text" class="pagedisplay" readonly="readonly"/>
+                                    </td>
+                                   <td class="cell_adjust" >
+                                    	<img src="resources/scripts/tablesorter/addons/pager/icons/next.png" title="Next" class="next"/>
+                                    </td>
+                                    <td class="cell_adjust" >
+                                     	<img src="resources/scripts/tablesorter/addons/pager/icons/last.png" title="Last" class="last"/>
+                                     </td>
+                                    <td class="cell_adjustone">
+                                     	<select class="pagesize">
+                                            <option selected="selected"  value="10">10</option>                    
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option  value="40">40</option>
+                                        </select>
+                                     </td>
+                                </tr>                            
+                            </table>
+                        </td>
+                    </tr>                
+                </table>
+            </td>
+	    </tr>
+	</tfoot>
+  </table>
+
+
+  <div id="dbconn_accordion">
+	<h3><a href="#">General</a></h3>
+	<div style="height:250px">   
+
+	<table id="dbconnDetails">
+		<tbody id="dbconnGeneralBody">
+			
+		</tbody>
+	</table>
+	</div>
+</div>
+
+  <script id="DBConnTemplate" type="text/x-jquery-tmpl">
+        <tr>
+            <td>
+                ${connectionName}
+            </td>           
+            <td>
+                ${databaseType}
+            </td>
+			<td>
+                ${databaseName}
+            </td>
+            <td>
+                ${serverName}
+            </td>
+			<td>
+                ${serverPort}
+            </td>
+			    <td align="center">
+				<a href="javascript:createEditConnectionRecord('${connectionName}');"><img src="resources/images/studio/edit.png" title="Edit"/></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteConnectionRecord('dbconnection/delete/${connectionName}', '${connectionName}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>	
+        </tr>
+	</script> 
+	
+	<script id="DBConnTemplateForm" type="text/x-jquery-tmpl">
+	<tr>
+		<td>
+			Name
+		</td>
+		<td>
+			{{if ($item.action == 'Create')}}                
+                	<input type="textbox" name="name" id="name" value="${connectionName}" />
+					
+             	{{else}}
+                	<input type="textbox" name="name" id="name" value="${connectionName}" DISABLED/>
+                	<input type="hidden" name="_hidname" id="_hidname" value="${connectionName}" />
+        		{{/if}}
+		</td>
+		<td>
+			Database
+		</td>
+		<td>
+				{{if ($item.action == 'Create')}}
+					<select name="dbType" id = "dbType">
+            			<option  value="">Please Select</option>  
+        			</select>
+				{{else}}
+                	<!--<input type="textbox" name="dbType" id="dbType" value="${databaseType}"/>-->
+                	<!--<input type="hidden" name="_hiddbType" id="_hiddbType" value="${databaseType}" />-->
+					<select name="dbType" id = "dbType" onchange="javascript:setCheckValidation(false);">
+            			<option  value="">Please Select</option>  
+        			</select>
+        		{{/if}}
+		</td>		
+	</tr>
+	
+	<tr>
+		<td>
+			Schema
+		</td>
+		<td>
+			<input type="textbox" name="database" id="database" value="${databaseName}" onchange="javascript:setCheckValidation(false);"  />
+		</td>
+		<td>
+			Server Name
+		</td>
+		<td>
+			{{if ($item.action == 'Create')}}      
+					<input type="textbox" name="server" id="server" value="${serverName}"/>
+				{{else}}
+                	<input type="textbox" name="server" id="server" value="${serverName}" onchange="javascript:setCheckValidation(false);"/>
+                	<!--<input type="hidden" name="_hidserver" id="_hidserver" value="${serverName}" />-->
+        		{{/if}}
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			Server Port
+		</td>
+		<td>
+				<input type="textbox" name="port" id="port" value="${serverPort}" onchange="javascript:setCheckValidation(false);"/>
+		</td>
+		<td>
+			User Id
+		</td>
+		<td>
+			<input type="textbox" name="userid" id="userid" value="${userId}" onchange="javascript:setCheckValidation(false);"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			&nbsp;
+		</td>
+		<td>
+			&nbsp;
+		</td>
+		<td>
+			Password
+		</td>
+		<td>
+			<input type="password" name="password" id="password" value="${password}" onchange="javascript:setCheckValidation(false);"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			&nbsp;
+		</td>
+		<td>
+			&nbsp;
+		</td>
+		<td>
+			&nbsp;
+		</td>
+		<td align = "right">
+			<input id="btn_connValidate" class="btn" type="button" value="Validate" onclick="javascript:validateConnection('${connectionName}');" />
+		</td>
+	</tr>
+	</script>
+</form>
+</div>

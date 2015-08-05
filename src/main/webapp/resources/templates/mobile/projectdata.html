@@ -1,0 +1,146 @@
+
+
+<div id="projectDataFormDiv" style="visibility: hidden ">
+<form id="form2" method="post" onSubmit="return false;">
+	<table  width="100%" id="projectDataTable1"   cellpadding="0" cellspacing="0">
+	
+	<thead>
+        
+        <tr>
+			<td class="project_cell_adjust styleForm">
+						<label class="searchLbl">Select Project:</label>&nbsp;
+						
+						<select name="category_sel" id="category_sel" onchange="displayCategory(this);">
+			        
+						</select>
+						
+					</td>
+					
+						<td class="project_cell_adjust styleForm">
+			<label class="searchLbl">Alias</label>&nbsp;
+						<input id="alias" value="" maxlength="30" size="30" type="text" />
+						
+					
+						</td>
+					
+            
+			     	<td class="project_cell_adjust styleForm">
+						
+						
+			
+				
+<label class="searchLbl" style="margin-top:-3px; margin-right: 5px;">Select File:</label>
+                  	<input name="ProjectID" id="ProjectID" type="hidden" />
+					<input name="file2" id="fileUploadSpatial" type="file" />
+					
+					
+				
+						</td >
+						
+						
+					
+						<td class="project_cell_adjust styleForm">
+						<button value="Submit" onclick="uploadFile();">Upload</button>
+						</td>
+					
+               
+                      
+			
+        </tr>
+		  </thead>
+</table>
+</form>
+
+<table class="tablesorter" id="projectDataTable">
+<thead>
+        <tr>
+							<th>Alias</th>
+							<th>File</th>
+							<th>Size(in Kb)</th>
+							<th>Project</th>
+							<th class="no-sort">Action</th>
+
+        </tr>
+  </thead>
+    <tbody id="AttchFileListBody">
+        
+    </tbody>
+    
+    <tfoot>
+
+	   <tr class="tblFooter" id="projectData_pagerDiv" >
+        	<td colspan="5">
+            	<table cellpadding="0" cellspacing="0" class="cell_margin">
+                	<tbody><tr>
+                    	<td width="100%" class="cell_color">
+                        	<table cellpadding="1" cellspacing="1" class="table_adjust">
+                            	<tbody><tr>
+                                	 <td class="cell_adjust">
+                                    	<img src="resources/scripts/tablesorter/addons/pager/icons/first.png" class="first" title="First">
+                                    </td>
+                                    <td class="cell_adjust">
+                                        <img src="resources/scripts/tablesorter/addons/pager/icons/prev.png" class="prev" title="Previous">
+                                    </td>
+                                    <td class="cell_adjustone">
+                                        <input type="text" class="pagedisplay" readonly="readonly">
+                                    </td>
+                                   <td class="cell_adjust">
+                                        <img src="resources/scripts/tablesorter/addons/pager/icons/next.png" class="next" title="Next">
+                                    </td>
+                                   <td class="cell_adjust">
+                                        <img src="resources/scripts/tablesorter/addons/pager/icons/last.png" class="last" title="Last">
+                                    </td>
+                                   <td class="cell_adjustone">
+                                        <select class="pagesize">
+                                            <option selected="selected" value="10">10</option>
+                                            <option value="20" style="padding-top:4px;">20</option>
+                                        </select>
+                                    </td>
+                                </tr>                            
+                            </tbody></table>                        
+                        </td>
+                    </tr>
+                </tbody></table>
+           </td>
+       </tr>
+	</tfoot>
+	
+	
+
+    
+    </table>
+
+		</div>	
+	
+
+<script id="projectDataTemplate" type="text/x-jquery-tmpl">
+<tr>
+<td>
+	${alias}
+</td>
+<td>
+	${fileName}
+</td>
+<td>
+	${size}
+</td>
+<td>
+	${name}
+</td>
+ <td align="center">
+				<a href="javascript:deleteProjectData('${id}','${alias}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
+ </td>	
+
+</tr>
+</script>		
+
+<Script>
+
+
+function displayCategory(sel)
+{
+	
+	displaySelectedCategory(sel.value);
+} 
+
+</Script>

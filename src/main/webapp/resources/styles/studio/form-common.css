@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* CSS Document */
+
+#sidebar{
+	width:378px; margin-top:100px; margin-left:100px; height:auto;
+}
+#inputArea
+{
+	font-family: Arial, Sans-Serif;
+	font-size: 13px;
+	padding:10px 0px 10px 0px;
+	width:100%;
+}
+.form_div{
+	padding:0px 10px 0px 10px;
+}
+#inputArea input, #inputArea textarea
+{
+	font-family: Arial, Sans-Serif;
+	font-size: 13px;
+	margin-bottom: 5px;
+	display: block;
+	padding: 4px;
+	width: 95%;
+}
+#inputArea select
+{
+	font-family: Arial, Sans-Serif;
+	font-size: 13px;
+	margin-bottom: 5px;
+	display: block;
+	padding: 4px;
+	width: 100%;
+}
+.activeField
+{
+	background-image: none;
+    background-color: #ffffff;
+    border: solid 1px #9e9c9c;
+}
+.idle
+{
+	border: solid 1px #dddada;
+	background-image: url( '../images/blue_bg.png' );
+	background-repeat: repeat-x;
+	background-position: top;
+}
+fieldset{
+	border: solid 1px #dddada;
+	width:96%;
+}
+.formselectset{
+	padding:0px 10px;
+}
+.gap{
+	height:8px; line-height:8px;
+}

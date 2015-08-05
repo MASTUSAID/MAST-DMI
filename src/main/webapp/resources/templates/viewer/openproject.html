@@ -1,0 +1,109 @@
+<div id="openprojectdiv" class="dialog-v">
+	<div id="openprojectTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close"  onclick="javascript:closeDialog('openprojectdiv');"></div>
+		<div id="openproject-help" class="span-h" title="This is Search help for Open Project"  ></div>
+		<div class="lineBreak05p"></div>
+		<!--<div style="text-align: right;">
+		<input type="text" size="30" maxlength="30" value="" id="txtSearch" name="txtSearch">&nbsp;
+		<img id="imgSearch" src="resources/images/viewer/cancelsearch.png" alt="Cancel Search" title="Cancel Search" style="width:150px;width:14px;height:14px;" />
+		</div>-->
+        
+        <div>
+        	<table class="dynaltable" cellpadding="1" width="100%" cellspacin="1">
+            	<tr>
+                	<td width="90%">
+                    	<input type="text" class="value_dyna" value="" id="txtSearch" name="txtSearch">
+                    </td>
+                    <td width="10%">
+                    	<img id="imgSearch" src="resources/images/viewer/cancelsearch.png" alt="Cancel Search" title="Cancel Search"  />
+                    </td>
+                </tr>            
+            </table>        
+        </div>
+		
+		<div id="ownerProjectBody"></div>
+		
+		<div id="userProjectBody"></div>
+		
+		
+	<script id="userProjectTemplate" type="text/x-jquery-tmpl">
+	       
+		{{each(key,userProject) $item.projectsList}}  
+			{{if ($item.type=='owner' && userProject.owner==$item.useremail)}} 
+				<table  id="table-${userProject.name}" width="100%" border="0" cellspacing="0" cellpadding="0" class="cellcolor_dynalayer openProjectSearch">
+				<tr>
+					<td class="topalign" width="64">
+											
+				   </td>
+					<td class="topalign_dynal">
+						<div align="left" class="pojName">
+							<h3 class="heading_dynalayer">
+								${userProject.name}  
+								
+							</h3>
+						</div>
+						<div class="content_dynalayer pojName">
+								${userProject.description}  
+						 </div>
+						<div class="add_dynal">
+							<table width="100%" cellspacing="1" cellpadding="1">
+								<tr>
+									<td align="left" width="49%"> 
+																				
+											<a href="#" onclick="javascript:deleteUserProject('${userProject.name}');">Delete</a>										
+										
+									</td>
+									<td align="right" width="49%">
+										<a href="#" onclick="javascript:openProject('${userProject.name}');">Open</a>							
+									</td>
+								</tr>						
+							</table>
+						</div>	
+						
+					</td>
+				</tr>
+			</table>
+			
+		{{/if}} 
+		
+		{{if ($item.type=='user' && userProject.owner!=$item.useremail)}} 
+				<table  id="table-${userProject.name}" width="100%" border="0" cellspacing="0" cellpadding="0" class="cellcolor_dynalayer openProjectSearch">
+				<tr>
+					<td class="topalign" width="64">
+											
+				   </td>
+					<td class="topalign_dynal">
+						<div align="left" class="pojName">
+							<h3 class="heading_dynalayer">
+								${userProject.name}  
+								
+							</h3>
+						</div>
+						<div class="content_dynalayer pojName">
+								${userProject.description}  
+						 </div>
+						<div class="add_dynal">
+							<table width="100%" cellspacing="1" cellpadding="1">
+								<tr>
+									<td align="left" width="49%"> 
+																																					
+										
+									</td>
+									<td align="right" width="49%">
+										<a href="#" onclick="javascript:openProject('${userProject.name}');">Open</a>							
+									</td>
+								</tr>						
+							</table>
+						</div>	
+						
+					</td>
+				</tr>
+			</table>
+			
+		{{/if}} 
+		
+	{{/each}} 
+			
+ 	</script>
+	</div>	
+</div>

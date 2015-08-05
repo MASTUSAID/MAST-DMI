@@ -1,0 +1,69 @@
+
+.dropdown {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #DBF4FF;
+    left: 89px;
+    position: absolute;
+    top: 31px;
+    width: 125px;
+	display:none;
+	z-index: 1;
+}
+.dropdown ul
+{
+margin:0px;
+padding:0px;
+}
+.dropdown ul li
+{
+list-style:none;
+}
+.dropdown ul li a
+{
+text-decoration:none;
+display:block;
+font-weight:bold;
+}
+
+
+.selectThumbnailImgame { background-color:#BFDBFF; color:#ffffff;}
+
+
+.ddGrid{width:140px;height:100px; overflow-x: hidden; overflow-y: scroll;}
+#ddGrid, #ddGrid UL, #ddGrid UL LI{float:left;}
+#ddGrid UL LI{margin:2px; border:1px solid #d9d9d9;}
+#ddGrid UL LI:hover{border-color:#666; cursor:pointer;}
+#ddGrid UL LI .active{border-color:#f90;}
+#ddGrid{overflow:auto;}
+
+.inputdd{
+    background: none repeat scroll 0 0 #f2f2f2;
+    border: 2px solid #C3C3C3;
+    cursor: default;
+    height: 16px;	
+    margin: 0 0.5em;
+    overflow: hidden;
+    padding: 3px;
+	width:50px;	
+	height:16px;
+    text-indent: 0;
+
+}
+
+.inputdd span.arrow {
+    background: url("../img/dd_arrow.gif") no-repeat scroll 0 0 transparent;
+	cursor: pointer;
+    display: inline-block;
+    float: right;
+    height: 16px;
+    width: 16px;
+}
+
+.inputdd span.imgdd{
+	cursor: pointer;
+    display: inline-block;
+    float: left;
+    height: 16px;
+    width: 16px;
+
+}

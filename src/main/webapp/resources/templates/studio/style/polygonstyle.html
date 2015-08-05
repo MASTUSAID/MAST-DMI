@@ -1,0 +1,116 @@
+<script type="text/javascript">
+        $(document).ready(function(){		
+			
+	    $("input, textarea, select").addClass("idle");
+            $("input, textarea, select").focus(function(){
+                $(this).addClass("activeField").removeClass("idle");
+	    }).blur(function(){
+                $(this).removeClass("activeField").addClass("idle");
+	    });
+        });
+    </script>
+
+
+<div id="sidebar">
+	<div id="inputArea">
+        <!--start:form-->
+		<form>
+        	<div class="form_div">
+            	<table width="90%" cellpadding="1" cellspacing="1">
+                	<tr>
+                    	<td>
+                        	Name:
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td>
+                        	<input id="Text16" type="text" />
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td>&nbsp;
+                        	
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td>
+                        	<fieldset>
+                            	<legend>Fill</legend>
+                                <table width="90%" cellpadding="1" cellspacing="1" class="tablepad">
+                                	<tr>
+                                    	<td>
+                                        	Color:
+                                        </td>
+                                        <td>
+                                        	<input id="Text16" type="text" style="background-color:#900; background-image:none; " />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    	<td>
+                                        	Opacity:
+                                        </td>
+                                        <td>
+                                        	<input id="Text16" type="text" />
+                                        </td>
+                                    </tr>
+                                </table>                            
+                            </fieldset>
+                        
+                        </td>
+                    </tr>  
+                     <tr>
+                    	<td>&nbsp;
+                        	
+                        </td>
+                    </tr> 
+                    <tr>
+                    	<td>
+                        	<fieldset>
+                            	<legend>Stroke</legend>
+                                <table width="90%" cellpadding="1" cellspacing="1" class="tablepad">
+                                	<tr>
+                                    	<td>
+                                        	Style:
+                                        </td>
+                                        <td>
+                                        	<select>
+                                            	<option>Solid</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    	<td>
+                                        	Color:
+                                        </td>
+                                        <td>
+                                        	<input id="Text16" type="text" style="background-color:#000; background-image:none; "/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    	<td>
+                                        	Width:
+                                        </td>
+                                        <td>
+                                        	<input id="Text16" type="text" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                    	<td>
+                                        	Opacity:
+                                        </td>
+                                        <td>
+                                        	<input id="Text16" type="text" />
+                                        </td>
+                                    </tr>
+                                </table>                            
+                            </fieldset>
+                        
+                        </td>
+                    </tr>                                 
+                </table>
+            </div>
+        </form>       
+        <!--end:form-->
+	</div>
+</div>
+

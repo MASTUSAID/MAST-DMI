@@ -1,0 +1,147 @@
+<div id="unitFormDiv" style="visibility: hidden">
+<!-- <style type="text/css">
+label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+</style> -->
+
+
+<form class="cmxform" id="unitForm" action="" onsubmit="return false;">
+
+<div class="topmenu">
+<input id="btnNew" class="btn" type="button" value="New" onclick="javascript:CreateEditUnit();"/>
+<input id="btnSave" class="btn" type="button" value="Save"  onclick="javascript:saveUnit();"/>
+<input id="btnBack" class="btn" type="button" value="Back" onclick="javascript:new Unit('unit');"/>
+</div>
+
+<table id="tableList" class="tablesorter">
+    <thead>        
+        <tr>
+            <td colspan="4" style="text-align: right;">
+                Search: <input id="txtSearch" value="" maxlength="30" size="30" type="text" />
+                <!-- img id="filterClearOne" src="_assets/img/cross.png" title="Click to clear filter." alt="Clear Filter Image" /-->
+            </td>
+        </tr> 	
+        
+        
+        <tr>
+            <th>
+                Name
+            </th>
+            
+            <th>
+                Description
+            </th> 
+            <!-- <th>
+                Edit
+            </th>
+            <th>
+                Delete
+            </th>     -->       
+        </tr>
+    </thead>
+    <tbody id="tableRowData">
+        
+    </tbody>
+    	<tfoot>
+
+	    <tr id="pagerDiv">
+	        <td colspan="4" style="text-align: center;">
+		          <img src="resources/scripts/tablesorter/addons/pager/icons/first.png" class="first"/>
+		            <img src="resources/scripts/tablesorter/addons/pager/icons/prev.png" class="prev"/>
+		            <input type="text" class="pagedisplay" readonly="readonly"/>
+		            <img src="resources/scripts/tablesorter/addons/pager/icons/next.png" class="next"/>
+		            <img src="resources/scripts/tablesorter/addons/pager/icons/last.png" class="last"/>
+		            <select class="pagesize">
+			        <option selected="selected"  value="10">10</option>
+
+			        <option value="20">20</option>
+		        	</select>
+		            
+		            <!-- <input type="hidden" class="pagesize" value="10" /> -->
+		        
+		    </td>
+	    </tr>
+	</tfoot>
+    
+    
+    
+    
+    
+    
+   </table>
+       
+    <table id="tableDetails" >
+	<tbody id="detailData">
+     		
+ 		</tbody>
+	</table>   
+     
+<script id="UnitTemplate" type="text/x-jquery-tmpl">
+        <tr>
+            <td>
+                ${name}
+            </td>           
+            <td>
+                ${description}
+            </td>
+			<td  align="center">
+				<a href="javascript:CreateEditUnit('${name}');"><img src="resources/images/studio/edit.png" /></a>
+            </td>
+           <td  align="center">
+				<a href="javascript:deleteUnit('${name}');"><img src="resources/images/studio/delete.png" /></a>
+           </td>		
+			
+           
+        </tr>
+</script>  
+   
+<script id="UnitTemplateForm" type="text/x-jquery-tmpl">
+        <tr>
+    <td>
+        Name
+    </td>
+    <td>        
+	<input type="textbox" name="name" id="name" value="${name}" />
+    </td>    
+    <td>
+        Description
+    </td>
+    <td>
+        <input type="textbox" name="description" id="description" value="${description}" />
+    </td>
+</tr>
+
+        </script>    
+     
+</form>
+<script type="text/javascript">
+		
+		
+		//$("#btnSave").click(function(){		
+			
+			/*
+			$("#unitform").validate({
+		
+		rules: {
+			name:"required",
+			description: "required"
+		},
+		messages: {
+			name: "Please enter Name",
+			description: "Please enter  Description"
+		}	
+				
+	});
+			
+			if($("#unitform").valid())	{						
+				SaveUnit();
+			
+			}
+			*/			
+		
+		//	saveUnit();
+		
+		//});
+	
+			
+</script>
+</div>

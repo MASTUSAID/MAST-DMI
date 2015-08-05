@@ -1,0 +1,58 @@
+<div id="zoomtoxydiv" class="dialog-v">
+	<div id="zoomtoxyTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('zoomtoxydiv');"></div>
+		<div id="zoomtoxy-help" class="span-h" title="Help for Zoom" onclick="javascript:openHelpWindow('zoomtoXY_help');" ></div>		
+		<div class="lineBreak05p"></div>
+		
+		<!--
+		<div class="formPattern">
+		 
+		<dl class="styleForm">
+			<dd>
+				<label for="lon1" id="osref">OS Grid Reference</label>
+			</dd>
+			<dd>				
+				<input type="text" value="" class="int" id="osgridref" name="osgridref" />
+			</dd>		
+		</dl>
+			
+		</div>
+		<div class="btn-holder-w buttons">
+				<span class="lesserbtn">
+		<input id="btnCalLatLong" type="submit" value="Calculate" onclick="javascript:calculateLatLong();"/>   
+		</span>		
+		</div>
+		 -->
+		<div class="formPattern">
+		
+		<dl class="styleForm">
+			
+			<dd>
+				<label for="lon" id="longitude">Easting</label>
+			</dd>
+			<dd>				
+				<input type="text" value="" class="int" id="LonX" name="LonX" />
+			</dd>
+
+			<dd>
+				<label for="lat" id="latitude">Northing</label>
+			</dd>
+
+			<dd>
+				<input type="text" value="" class="int" id="LatY" name="LatY" />
+			</dd>
+		</dl>
+			
+			</div>
+			
+		</div> 
+	</br>
+	<div class="btn-holder-w buttons">
+				<span class="lesserbtn">
+		<input id="btnZoom_To" type="submit" value="Zoom To" onclick="javascript:Zoom($('#LonX').val(),$('#LatY').val());"/>   
+		</span>
+		<span class="lesserbtn">
+        <input id="btnPan_To"  type="submit" value="Pan To"  onclick="javascript:Pan($('#LonX').val(),$('#LatY').val());"/>   
+		</span>
+	</div>
+</div>

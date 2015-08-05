@@ -1,0 +1,136 @@
+<div id="textstylediv" class="dialog-v">
+	<div id="textstyleTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close"  onclick="javascript:closeDialog('textstylediv');">
+        </div>
+		<div id="textstyle-help" class="span-h" title="" onclick="javascript:openHelpWindow('textstyle_help');">
+        </div>
+		<div class="lineBreak05p">
+        </div>
+        
+       
+       <div class="formPattern styleForm">
+        <!--start:options-->
+        	 <!--start:suboptions-->
+                        
+                          <label id="text_column">Column</label>
+                        
+                         <select id="fields" name="fields" class="value_pointmp">
+							<option value="">Please Select</option>
+							</select>
+                        
+              <!--end:suboptions-->  
+             <div class="cellclear"></div>
+
+         <!--end:options-->
+         
+         
+           <!--start:options-->
+		   <div class="blueSwitch">
+        <div class="form_subhead" id="text_font">
+        		Font
+        	</div>  
+            <!--start:suboptions-->
+                        <div class="celladjust_one" id="text_fontname">
+                          Name
+                        </div>
+                        <div class="subcelladjust">
+                          <select id="label_font_names" class="value_pointmp"></select>
+                        </div>
+              <!--end:suboptions--> 
+              
+              <!--start:suboptions-->
+                <div class="cell_width_textstyle">
+                
+                	<table width="100%" cellpadding="1" cellspacing="1">
+                            	<!--start:option-->
+                            	<!--start:option-->
+                            	<tr>
+                                	<td width="45%" align="left" class="weightfont" id="text_color">
+                                    	 Color
+                                    </td>
+                                    <td width="10%">&nbsp;</td>
+                                   <td width="45%" align="left" class="weightfont" id="text_size">
+                                    	 Size                              
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<!--start:Color-->
+                                	<td  align="left">
+                                    	 <input id="label_color" value="#000000" type="text" class="colorboxinput_2" />
+                                    </td>
+                                    <!--end:Color-->
+                                    <td >&nbsp;</td>
+                                    <!--start:Size  -->
+                                   <td  align="left">
+                                    	 <input id="label_size" "10" type="text" class="textstylevalue" />                                
+                                    </td>
+                                    <!--end:Size  -->
+                                </tr>                                                   
+                            </table>          
+                
+                
+                	
+                	<div class="cellclear"></div>
+                </div>    
+
+
+
+<div class="form_subhead" id="text_halo">
+        		Halo
+        	</div>  
+           
+              <!--start:suboptions-->
+                <div class="cell_width_textstyle">
+                	<table width="100%" cellpadding="1" cellspacing="1" style="padding-top:10px;">
+                    	<tr>
+                        	<td class="weightfont" id="text_radius">
+                            	Radius
+                            </td>
+                            <td class="weightfont" style="width:30%;" id="text_fill">
+                            	Fill
+                            </td>
+                            <td class="text_thematic_one" id='opacity' style="width:30%;">
+                            	Opacity
+                            </td>
+                        </tr>
+                        <tr>
+                        	<td class="textshift_style">
+                            	<input id="label_halo_radius" value="3" type="text" class="textstylevalue" />
+                            </td>
+                            <td class="textshift_style">
+                            	<input id="label_halo_fillcolor" value="#ffff00" type="text" class="colorboxinput_2" />
+                            </td>
+                            <td class="textshift_style">
+                            	<div id="sliderDiv" ></div>     
+                            </td>
+                        </tr>
+                    
+                    
+                    </table>
+                </div>
+								
+
+
+					</div>
+                <!--end:suboptions-->
+         <!--end:options-->
+         
+          <!--start:options-->
+		  
+		 
+        
+		
+                
+                
+                <div class="cellclear"></div>
+			
+                
+        </div> 
+		<div class="btn-holder-w buttons">
+				<span class="lesserbtn">
+				<input id="textstyle_apply" type="submit" value="Apply" />  
+				</span>
+		
+			</div>
+	</div>		
+</div>

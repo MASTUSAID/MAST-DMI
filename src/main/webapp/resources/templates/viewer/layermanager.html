@@ -1,0 +1,140 @@
+<div id="layerSwitcherContent" class="dialog-v">
+
+		<!--start:heading-->
+                <div class="head_layerm">
+                    
+                </div>            
+         <!--end:heading-->
+		
+		<table id="layermanagerBody" cellspacing="0" cellpadding="0"  class="tablelayer_layerm">
+						
+		</table>
+
+
+	<script id="layermanagerTemplate" type="text/x-jquery-tmpl">
+        <tbody id="overlaysBody">
+			<tr>
+				<th id="overlays" class="rowhead" > Overlays
+				
+				
+				</th>
+				
+				<th class="rowhead">
+				<span class="layer_legent_check">
+					<input type="checkbox" id="grpVisibility__overlays" name="grpVisibility__overlays" 
+					value="overlays" onClick="manageLyrGrp(this);" /> 
+				</span>
+				</th>
+			</tr>
+			
+			<tr>
+				<td   width="100%" class=" rowcolor" colspan="2">
+					<table width="100%">
+
+						<tr id="tr-cosmetic">
+							<td id='Cosmetic' width="100%">
+								<table width="100%" cellspacing="1" cellpadding="1">
+									<tr>
+										<td width="71%" class="leftshift" id="cosmetic">Cosmetic</td> 
+										<td class="layerwidth_cross">&nbsp;</td>
+										<td>
+														 <div class="slider-c"></div>
+										</td>
+										
+										<td align="center" class="layer-td-one">	
+										<input type="checkbox" id="Visibility__Cosmetic" name="Visibility" class="overlays"
+										value="Cosmetic" checked onClick="manageLayer(this);"/> 
+										</td>
+										
+									</tr>
+								</table>
+							</td>
+							
+							
+						</tr>
+					</table>
+				</td>
+			</tr>
+			
+		</tbody>
+		{{each(i,layergroupList) $item.projectLayergroup}}  
+		<tbody>
+			
+			<tr>
+				<th id="${layergroupList.layergroups.name}" class="rowhead" > ${layergroupList.layergroups.alias}
+					
+					</th>
+					
+					<th class="rowhead">
+					<span class="layer_legent_check">
+					<input type="checkbox" id="grpVisibility__${layergroupList.layergroups.name}" 
+					name="grpVisibility__${layergroupList.layergroups.name}" 
+					value="${layergroupList.layergroups.name}" checked onClick="manageLyrGrp(this);" /> 
+					</span>
+					
+					</th>
+			</tr>
+		
+
+			{{each(j,layerList) layergroupList.layergroups.layers}}	
+						{{if (layerList.displayInLyrMgr)}} 	
+						<tr>
+						<td  width="100%" class=" rowcolor" colspan="2">
+						<table width="100%" cellspacing="0" cellpadding="0">
+						<tr>
+							<td id='${layerList.layer}' width="100%" class="layerTR">
+								<table width="100%">
+									<tr>
+										<td width="40%" class="leftshift">
+
+											{{each(key,val) $item.layerDispNameList}} 																				
+		
+											{{if (key==layerList.layer)}} 													
+													${val} 	
+											{{/if}} 
+												
+											{{/each}}
+
+										</td>
+										
+										<td align="center" class="layer-td">
+											<img  class="layer_info" id='${layerList.layer}_editable'src=""> </img>&nbsp;
+											<img  class="layer_info" id='${layerList.layer}_selectable'src=""> </img>&nbsp;
+											<img  class="layer_info" id='${layerList.layer}_queryable'src=""> </img>&nbsp;
+											<img  class="layer_info" id='${layerList.layer}_exportable'src=""> </img>
+										</td>
+										<td>
+											 <div id="SliderSingle__${layerList.layer}"  title="${layerList.layer}" class="slider-c"></div>
+										</td>
+										
+									</tr>
+								</table>
+							</td>
+							
+							<td id='chk-${layerList.layer}'align="center" class="layer-td layerTR">	
+										<input type="checkbox" id="Visibility__${layerList.layer}" name="Visibility" class="${layergroupList.layergroups.name}"
+										value="${layerList.layer}" checked onClick="manageLayer(this);" /> 
+							</td>
+						</tr>
+						</table>	
+						</td>	
+						</tr>
+						
+							
+						<tr>
+						<td class="leftshift rowcolor_two" colspan="2">	
+							<img  id='${layerList.layer}_legend'src=""> </img>
+						</tr>						
+			{{/if}} 	
+			{{/each}}
+
+
+		</tbody>	
+		{{/each}} 
+			
+ 
+ </script>
+
+ 
+</div>
+

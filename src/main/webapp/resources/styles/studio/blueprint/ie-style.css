@@ -1,0 +1,54 @@
+@charset "utf-8";
+/* CSS Document */
+
+#vtab > ul > li.selected{
+            border-right: 0px solid #fff !important;
+        }
+        #vtab > ul > li {
+            border-right: 0px solid #ddd !important;
+        }
+        #vtab > div { 
+            /*z-index: -1 !important;*/
+            left:0px;
+        }
+.topmenu{
+	text-align:left;
+}
+.logo{
+	text-align:left;
+}
+.ui-accordion .ui-accordion-header{
+	text-align:left;
+}
+#project_accordion table{
+	width:98%; margin-bottom:1.4em;
+}
+#layer_group_project table{
+	width:92%; 
+}
+#layer_group_project  input[type=checkbox] {top:0.0em; position: static;}
+
+#layer_group_project  input[type=checkbox] {top:0.0em; position: static;}
+#project_pagerDiv   .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#layer_pagerDiv   .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#layergroup_pagerDiv  .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#user_pagerDiv  .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#role_pagerDiv  .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#bookmark_pagerDiv .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#maptip_pagerDiv  .table_adjust{margin-bottom:0.0em; width:30%;margin-left:320px;}
+#project_select_op{ 	margin-right:34px;}
+.accesswidth{
+	width:75% !important;
+}
+
+
+fieldset{
+	border: solid 1px #dddada;
+	width:100%;
+}
+.tablepad{
+	padding-left:8px;
+}
+.checkpad{
+	padding-top:5px;
+}

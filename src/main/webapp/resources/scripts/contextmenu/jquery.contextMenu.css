@@ -1,0 +1,86 @@
+/* Generic context menu styles */
+.contextMenu {
+	position: absolute;
+	width: 170px;
+	z-index: 99999;
+	border: solid 1px #CCC;
+	background: #EEE;
+	padding: 0px;
+	margin: 0px;
+	display: none;
+}
+
+.contextMenu LI {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.contextMenu A {
+	color: #333;
+	text-decoration: none;
+	display: block;
+	line-height: 20px;
+	height: 20px;
+	background-position: 6px center;
+	background-repeat: no-repeat;
+	outline: none;
+	padding: 1px 5px;
+	padding-left: 28px;
+	font-size:12px;
+}
+
+.contextMenu LI.hover A {
+	color: #FFF;
+	background-color: #3399FF;
+	border-radius: 3px 3px 3px 3px;
+}
+
+.contextMenu LI.disabled A {
+	color: #AAA;
+	cursor: default;
+}
+
+.contextMenu LI.hover.disabled A {
+	background-color: transparent;
+}
+
+.contextMenu LI.separator {
+	border-top: solid 1px #CCC;
+}
+
+/*
+	Adding Icons
+	
+	You can add icons to the context menu by adding
+	classes to the respective LI element(s)
+*/
+
+.contextMenu LI.edit A { background-image: url(images/page_white_edit.png); }
+.contextMenu LI.cut A { background-image: url(images/cut.png); }
+.contextMenu LI.copy A { background-image: url(images/page_white_copy.png); }
+.contextMenu LI.paste A { background-image: url(images/page_white_paste.png); }
+.contextMenu LI.delete A { background-image: url(images/page_white_delete.png); }
+.contextMenu LI.quit A { background-image: url(images/door.png); }
+
+
+.contextMenu LI.cm-fullview A { background-image: url(images/zoom_full.png); }
+.contextMenu LI.cm-zoomprevious A { background-image: url(images/previous-zoom.png); }
+.contextMenu LI.cm-zoomnext A { background-image: url(images/previous-next.png); }
+
+.contextMenu LI.cm-fixedzoomin A { background-image: url(images/fixed-zoom-in.png); }
+.contextMenu LI.cm-fixedzoomout A { background-image: url(images/fixed-zoom-out.png); }
+.contextMenu LI.cm-pan A { background-image: url(images/pan.png); }
+
+.contextMenu LI.cm-selectbox A { background-image: url(images/selected.png); }
+.contextMenu LI.cm-info A { background-image: url(images/info.png); }
+.contextMenu LI.cm-zoomtofeature A { background-image: url(images/page_white_edit.png); }
+.contextMenu LI.cm-pantofeature A { background-image: url(images/page_white_edit.png); }
+.contextMenu LI.cm-clearselection A { background-image: url(images/clear.png); }
+
+
+
+
+
+
+

@@ -1,0 +1,63 @@
+<div id="measurediv" class="dialog-v">
+	<div id="measureTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('measurediv');"></div>
+		<div id="measure-help" class="span-h" title="Help for Measurement" onclick="javascript:openHelpWindow('measure_help');"></div>	
+		<div class="lineBreak05p"></div>
+		
+		<div class="styleForm formPattern fg-buttonset fg-buttonset-single">
+			<table width="100%" border="0">
+				<tr>
+					<td align="left" width="5%">
+						<button class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right ui-state-active1" 
+						
+							id="btnLine" title="Length" aria-describedby="ui-tooltip-11">
+							<img src="resources/images/viewer/symbols/markers/mar11.png">
+						</button>
+                      </td>
+                     <td align="left" width="5%">
+						<button class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+							id="btnArea" title="Area" aria-describedby="ui-tooltip-11">
+							<img src="resources/images/viewer/symbols/markers/mar12.png">
+						</button>
+					</td>
+					<td width="90%" align="right">
+						<label for="unit" id="measure_unit">Unit:</label> 
+						<select
+							style="width: 100px;"
+							id="measureUnit">
+							<!--<option value="m">Meter</option>
+							<option value="km">Kilometer</option>
+							<option value="mi">Mile</option>-->
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+					<div class="pad5px"></div>
+						<div class="back-m">
+							<dl>
+
+								<dd>
+									<label id="segLabel"> </label> 
+									<label id="segValue"> </label>
+								</dd>
+
+								<dd>
+									<label id="totLabel"> </label> 
+									<label id="totValue"> </label>
+								</dd>
+							</dl>
+						</div>
+					
+					</td>
+				</tr>
+				</table>
+			</div>
+			
+			<!--<input id="btnLine" class="btn-m" type="submit" value="Line" /> 
+			<input id="btnArea" class="btn-m" type="submit" value="Area" /> -->
+			
+			
+
+		</div>
+</div>

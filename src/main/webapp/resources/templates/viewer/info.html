@@ -1,0 +1,35 @@
+<div id="infoDiv" class="dialog-v">
+
+	<div id="infoDetails">
+		
+		<div id="span-close" title="Close" class="span-c" onclick="javascript:closeDialog('infoDiv');"></div>
+		<div id="info-help" class="span-h" title="" onclick="javascript:openHelpWindow('info_help');"></div>
+		
+		<div class="lineBreak05p"></div>					
+			<div id="info_accordion">
+			<!--table class="one-column-emphasis">
+				<tbody id="infoBody">
+
+				</tbody>
+			</table-->	
+			</div>
+		</div>
+
+
+	<script id="InfoTemplate" type="text/x-jquery-tmpl">
+        {{each(key,val) $item.attrsList}}  
+		
+			<tr>
+			   <th scope="col">
+					${key}
+				</th>
+				<td>
+					${val}    
+
+				</td>  
+			   
+			</tr>
+		{{/each}} 	
+ </script>
+
+</div>

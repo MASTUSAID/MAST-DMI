@@ -1,0 +1,102 @@
+<div id="searchdiv" class="dialog-v">
+	<div id="searchTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close"  onclick="javascript:closeDialog('searchdiv');"></div>
+		<div id="search-help" class="span-h" title="Help for Search" onclick="javascript:openHelpWindow('search_help');"></div>
+		<div class="lineBreak05p"></div>
+		
+		<div class="formPattern">
+		<dl class="styleForm">
+			<dd>
+				<label for="Search" id="search_1">Search</label>
+			</dd>
+			<dd>
+				<input type="text" value="" class="int" id="searchText" />
+			</dd>
+
+			<dd>
+				<label for="Layer" id="search_layer">Layer</label>
+			</dd>
+
+			<dd>
+				<select id="Layers" name="Layers" class="int"
+					onchange="GetFields_Search(this);">
+
+
+				</select>
+
+			</dd>
+
+			<dd>
+				<label for="Fields" id="search_fields">Fields</label>
+			</dd>
+			<dd>
+				<select id="LayersFields" name="LayersFields" class="int">
+					<option value="Please Select">Please Select</option>
+				</select>
+			</dd>
+		</dl>
+
+		<div class="lineBreak05p"></div>
+		
+		<div class="blueSwitch pad05">
+		<div class="search-extent-m">
+				<a id="options-search-extent" href="#">Extent Boundary</a>
+		</div>	
+		<div class="fg-buttonset fg-buttonset-single" id="boundButtons" style="display: block;">
+			<table cellspacing="1" cellpadding="1" align="left" width="60%">
+				<tbody><tr>
+					
+					<td>
+						<button aria-describedby="ui-tooltip-11" oldtitle="Polygon Hole" id="polygon" class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right ui-state-active1">
+							<img src="resources/images/viewer/symbols/markers/mar09.png">
+						</button>
+					</td>
+					
+					<td>
+						<button aria-describedby="ui-tooltip-11" oldtitle="Rectangle" id="rectangle" class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+							<img src="resources/images/viewer/symbols/markers/mar10.png">
+						</button>
+					</td>
+					
+					<!--<td>
+						<button aria-describedby="ui-tooltip-11" oldtitle="Clear" id="clearBounds" class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+							<img src="resources/images/viewer/toolbar/clear_selection.png">
+						</button>
+					</td>-->
+					
+				</tr>
+			</tbody></table>
+		</div>
+		
+		</div>
+
+		<div class="lineBreak05p"></div>
+		
+		<div class="blueSwitch pad05">
+			<div class="search-options-m">
+				<a id="options-s-t" href="#">Type Options</a>
+			</div>	
+				<div id="options-s-d" class="search-options-b">		
+                	<table width="50%" cellpadding="1" cellspacing="1">
+                    	<tr>
+                        	<td width="4%" ><input type="radio" id="exact" name="option" checked="checked"/></td><td width="46%" id="search_exact">Exact	</td>
+                            <td width="4%" ><input type="radio" id="similar" name="option"/></td><td width="46%" id="search_similar">Similar	</td>
+                        </tr>
+                    </table>			
+										
+									
+				</div>
+				
+				</div>
+				
+		</div>
+	</br>
+	
+	
+	<div class="buttons btn-holder-float">
+	<span class="lesserbtn">
+	<input id="btnSearch" type="submit" value="Search" onclick="javascript:SearchIn();" /> </span>
+	</div>
+</div>
+	
+	</div>

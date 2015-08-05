@@ -1,0 +1,785 @@
+<div id="ProjectFormDiv" style="visibility: hidden">
+
+	<form class="cmxform" id="projectForm" action=""
+		onsubmit="return false;">
+
+
+		<div class="topmenu">
+			<a class="btn02" id="project_btnNew"
+				onclick="javascript:createEditProject();"><span class="NewBTN">New</span></a>
+			<a class="btn02" id="project_btnSave"
+				onclick="javascript:saveProject();"><span class="saveBTN">Save</span></a>
+			<a class="btn02" id="project_btnBack"
+				onclick="javascript:displayProjectNew();"><span class="BackBTN">Back</span></a>
+		</div>
+
+
+		<table id="projectTable" class="tablesorter" cellpadding="0"
+			cellspacing="0">
+			<thead>
+
+				<tr class="tbl_Header">
+					<td colspan="8" class="project_cellpadtwo">
+						<table width="100%" cellpadding="0" cellspacing="0"
+							class="project_table_adjust">
+							<tr>
+								<td class="project_cell_adjust styleForm"><label
+									class="searchLbl">Search:</label>&nbsp; <input
+									id="project_txtSearch" value="" maxlength="30" size="30"
+									type="text" />
+									<button value="Submit" onclick="displayRefreshedProject();">Clear</button>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<th class="header1">Name</th>
+					<th>Country</th>
+					<th>Region</th>
+					<th>District</th>
+					<th>Village</th>
+					<!-- <th>Hamlet</th> -->
+
+					<th class="no-sort">&nbsp;</th>
+					<th class="no-sort">&nbsp;</th>
+
+				</tr>
+			</thead>
+			<tbody id="ProjectsRowData">
+
+			</tbody>
+
+			<tfoot>
+
+				<tr class="tblFooter" id="project_pagerDiv">
+					<td colspan="8">
+						<table cellpadding="0" cellspacing="0" class="cell_margin">
+							<tr>
+								<td width="100%" class="cell_color">
+									<table cellpadding="1" cellspacing="1" class="table_adjust">
+										<tr>
+											<td class="cell_adjust"><img
+												src="resources/scripts/tablesorter/addons/pager/icons/first.png"
+												class="first" title="First" /></td>
+											<td class="cell_adjust"><img
+												src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
+												class="prev" title="Previous" /></td>
+											<td class="cell_adjustone"><input type="text"
+												class="pagedisplay" readonly="readonly" /></td>
+											<td class="cell_adjust"><img
+												src="resources/scripts/tablesorter/addons/pager/icons/next.png"
+												class="next" title="Next" /></td>
+											<td class="cell_adjust"><img
+												src="resources/scripts/tablesorter/addons/pager/icons/last.png"
+												class="last" title="Last" /></td>
+											<td class="cell_adjustone"><select class="pagesize">
+													<option selected="selected" value="10">10</option>
+													<option value="20" style="padding-top: 4px;">20</option>
+											</select></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</tfoot>
+
+
+		</table>
+
+		<div id="project_accordion" style="text-align: left;">
+			<h3>
+				<a href="#">General</a>
+			</h3>
+
+			<div style="height: 260px">
+
+				<table id="projectDetails" class="styleForm inputint">
+					<tbody id="projectGeneralBody">
+
+					</tbody>
+				</table>
+
+			</div>
+
+
+
+			<h3>
+				<a href="#">Layer Group</a>
+			</h3>
+			<div style="height: 250px; overflow: hidden;" class="styleForm">
+
+				<div id="project_select_op">
+					<select name="lyr_type" id="lyr_type"
+						onchange="populatebaselayer(this.value);">
+						<option value="">Please Select</option>
+						<option value="Google">Google</option>
+						<option value="Bing">Bing</option>
+						<option value="Open">Open Street Map</option>
+						<option value="MapQuest">Map Quest OSM</option>
+
+					</select>
+				</div>
+
+
+
+				<div id="project_lg">
+
+					<div class="layerg_outer_left">
+
+
+						<fieldset class="fielesetstyle">
+							<legend class="fielesetstyle_legend">Layergroup</legend>
+							<div style="width: 100%">
+								<div class="layerg_inner">
+									<div id="layer_group_project">
+										<!--id added to seprate the css overriding from previous css for ie-->
+										<table id="lyrgrouptbl" class="stripeme">
+											<tbody id="projectLayergroupBody">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+
+					</div>
+
+
+
+
+					<div class="layerg_outer_right">
+
+
+						<fieldset class="fielesetstyle">
+							<legend class="fielesetstyle_legend">Baselayer</legend>
+							<div style="width: 100%">
+								<div class="layerg_inner">
+									<div id="layer_group_project">
+										<!--id added to seprate the css overriding from previous css for ie-->
+										<table id="baselyrtbl" class="stripeme">
+											<tbody id="projectBaselayerBody">
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+
+
+				</div>
+
+
+
+
+
+
+
+			</div>
+
+			<h3>
+				<a href="#">Project Configuration</a>
+			</h3>
+			<div style="height: 150px">
+				<table class="styleForm inputint">
+					<tbody id="projectConfigurationBody">
+
+					</tbody>
+				</table>
+			</div>
+
+			<h3>
+				<a href="#">Hamlet</a>
+			</h3>
+			<div style="height: 150px">
+				<a onclick="javascript:newHamlet();" id="project_saveNew"
+					class="btn02" style="display: block;"><span class="NewBTN">New</span></a>
+
+				<div id=temporaryHamletDiv></div>
+				
+			</div>
+			<h3>
+				<a href="#">Project Adjudicator</a>
+			</h3>
+			<div style="height: 150px">
+				<a onclick="javascript:addTempAdjudicator();" id="project_saveNew"
+					class="btn02" style="display: block;"><span class="NewBTN">New</span></a>
+
+				<div id=temporaryAdjDiv></div>
+				
+			</div>
+
+
+
+			<h3>
+				<a href="#">Disclaimer</a>
+			</h3>
+			<div style="height: 150px">
+				<table>
+					<tbody id="projectDisclaimerBody">
+
+					</tbody>
+				</table>
+			</div>
+
+			<h3>
+				<a href="#">Assign user</a>
+			</h3>
+			<div style="height: 250px">
+				<table>
+
+					<tbody>
+						<tr>
+							<td colspan="4"><a id="all" href="#"
+								style="color: #1491FF; text-decoration: none;"
+								onclick="javascript:toggleUserChecked(true);">Select All</a>
+								&nbsp;&nbsp; <a id="none" href="#"
+								style="color: #1491FF; text-decoration: none;"
+								onclick="javascript:toggleUserChecked(false);">Deselect All</a>
+							</td>
+
+						</tr>
+
+
+					</tbody>
+
+					<tbody id="projectUserList">
+
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+
+
+
+		<script id="ProjectTemplateUser" type="text/x-jquery-tmpl">
+
+
+		<tr>		
+			<td colspan="1">
+				<input type="checkbox" id="${name}" name="project_user" value="${id}" class='userCheckbox' onClick="manageProjLink(this);"/> ${name}
+				
+			</td>
+			<!--<td class="tr-${email}"colspan="2" >
+				
+				 {{if (authkey)}}
+					${$item.projecturl}${authkey}  
+				 {{else}}
+					    
+				 {{/if}}
+				
+				
+			</td>-->
+			<!--<td class="tr-${email}" colspan="1">
+				{{if (authkey)}}
+					<a href="#" onClick="javascript:alert('Not Implemented');" >email</a>
+				 {{else}}
+					    
+				 {{/if}}
+			</td>-->
+		</tr>	
+
+ 
+</script>
+
+
+
+
+
+
+		<script id="ProjectTemplate" type="text/x-jquery-tmpl">
+        <tr>
+              
+			<td>
+                ${name}
+            </td>         
+            <td>
+				{{if (projectAreas.length>0)}}
+                ${projectAreas[0].countryName}
+				{{/if}}
+            </td>
+            <td>
+			{{if (projectAreas.length>0)}}
+                ${projectAreas[0].region}
+				{{/if}}
+            </td>
+            <td>
+			{{if (projectAreas.length>0)}}
+                ${projectAreas[0].districtName}
+				{{/if}}
+            </td>
+			<td>
+			{{if (projectAreas.length>0)}}
+                ${projectAreas[0].village}
+				{{/if}}
+            </td>  
+           <!-- <td>
+			{{if (projectAreas.length>0)}}
+                ${projectAreas[0].hamlet}
+				{{/if}}
+            </td> --> 
+			           
+           <td align="center">
+				<a href="javascript:createEditProject('${name}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteProject('${name}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>
+           <!--td align="center">
+				<a href="javascript:openProjectMapTab('${name}');"><img src="../Content/images/admin/map_preview.png" /></a>
+           </td-->
+        </tr>
+        </script>
+
+		<script id="ProjectTemplateFormNew" type="text/x-jquery-tmpl">        
+ <tr>
+ <td>Name
+<input type="hidden" name="hid_name" id="hid_name" value="${hid_name}" /> 
+</td>
+ <td>
+    <input type="textbox" name="name" id="name" value="${name}"/>    	
+    </td>  
+
+<td>Country Name</td>
+ <td><input type="textbox" name="country"  id="country" value="${projectAreas.countryName}"/></td>
+
+
+
+ </tr>
+ 
+ </script>
+
+		<script id="ProjectTemplateForm" type="text/x-jquery-tmpl">
+    <tr>
+    <td>
+        <label class="lblint">Name</label>
+<input type="hidden" name="hid_idseq" id="hid_idseq" /> 
+<input type="hidden" name="hamlets_length" id="hamlets_length" /> 
+    </td>
+    <td>
+        <input type="textbox" name="name" id="name" value="${name}" />
+			
+    </td>    
+    <td>
+        <label class="lblint">Description</label>
+    </td>
+
+
+
+
+    <td>    
+        <input type="text" name="description" id="description" value="${description}" />          
+    </td>
+    
+    
+   
+</tr>
+
+<tr>    
+    <td>
+        <label class="lblint">Projection</label>
+    </td>
+    <td>    
+        {{if (projection)}}
+         <input type="textbox" name="projection.code" id="projection" value="${projection.code}" />    
+         {{else}}
+            <input type="textbox" name="projection.code" id="project_Projection" value="" />        
+        {{/if}}
+    </td>
+    
+    <td>
+        <label class="lblint">Display Projection</label>
+    </td>
+    <td>
+        {{if (displayProjection)}}  
+		<input type="textbox" name="displayProjection.code" id="displayProjection" value="${displayProjection.code}" /> 
+        {{else}}
+            <input type="textbox" name="displayProjection.code" id="displayProjection" value="" />
+        {{/if}}          
+    </td>
+    
+</tr>
+<input type="hidden" name="maxResolutions" id="maxResolutions" value="0" />
+ <input type="hidden" name="minResolutions" id="minResolutions" value="0" />
+
+
+<tr>
+    <td>
+       <label class="lblint">Max Extent</label>
+    </td>
+    <td>
+        <input type="textbox" name="maxextent" id="maxextent" value="${maxextent}" />
+    </td>
+    <td>
+        <label class="lblint">Min Extent</label>
+    </td>
+    <td>
+        <input type="textbox" name="minextent" id="minextent" value="${minextent}" />
+    </td>
+    
+</tr>
+<tr>
+    <td>
+        <label class="lblint">Zoom Levels</label>
+    </td>
+    <td>
+        <input type="textbox" name="numzoomlevels" id="numzoomlevels" value="${numzoomlevels}" />        
+
+    </td>
+    <td>
+        <label class="lblint">Restricted Extent</label>
+    </td>
+    <td>
+        <input type="textbox" name="restrictedextent" id="restrictedextent" value="${restrictedextent}" />
+    </td>
+    
+</tr>
+<tr>
+    <td>
+        <label class="lblint">Output Format</label>
+    </td>
+    <td>
+        <select name="outputFormat.name" id="project_outputFormat">
+        <option  value="">Please Select</option>         
+        </select>
+    </td>
+    <td>
+        <label class="lblint">Unit</label>
+    </td>
+
+    <td>
+        <select name="unit.name" id="project_unit">
+            <option  value="">Please Select</option>			
+			        
+        </select>
+    </td>    
+</tr>
+<input type="hidden" name="copyright" id="copyright" value="" />
+<input type="hidden" name="watermask" id="watermask" value="" />
+<!--tr>
+    <td>
+        CopyRight
+    </td>
+    <td>
+        <input type="textbox" name="copyright" id="copyright" value="${copyright}" />
+    </td>
+    
+    <td>
+        Water Mask
+    </td>
+    <td>
+        <input type="textbox" name="watermask" id="watermask" value="${watermask}" />
+    </td>
+     
+    
+</tr-->
+
+
+
+<tr>
+     <!--td>&nbsp;</td-->
+
+     <!--td>
+      <input type="hidden" id="active" name="active" value="${active}" />
+       {{if (active)}}       
+       		<input type="checkbox" id="active1" name="active1" value="${active}"  CHECKED onClick="changeActiveValue(this);" />   Active        
+       {{else}}
+       		<input type="checkbox" id="active1" name="active1" value="${active}" onClick="changeActiveValue(this);"/>   Active 
+       {{/if}}
+       
+       
+		
+    </td-->
+	<td>&nbsp;</td>
+    <td>
+      <input type="hidden" id="cosmetic" name="cosmetic" value="${cosmetic}"/>
+      
+	   {{if (cosmetic)}}
+       
+       <input type="checkbox" id="cosmetic1" name="cosmetic1" value="${cosmetic}"  CHECKED onClick="changeCosmeticValue(this);" />   Cosmetic 
+       
+       {{else}}
+
+       <input type="checkbox" id="cosmetic1" name="cosmetic1" value="${cosmetic}" onClick="changeCosmeticValue(this);"/>   Cosmetic 
+       
+       
+						
+                    
+     {{/if}}
+       
+       
+		
+    </td>
+     
+</tr>
+
+<tr>
+     <td>
+        <label class="lblint">Active Layer</label>
+    </td>
+     <td >
+      <select name="activelayer" id = "activelayer">
+       <option SELECTED value="">Please Select</option>
+    </td>
+    
+    <td>
+        <label class="lblint">Overview Layer</label>
+    </td>
+     <td>
+     <select name="overlaymap" id = "overlaymap">
+       <option SELECTED value="">Please Select</option>
+    </td>
+    
+</tr>
+
+</script>
+
+
+
+
+		<script id="ProjectTemplateDisclaimer" type="text/x-jquery-tmpl">
+<tr>
+<td colspan="4">
+<p><input type="checkbox" id="chkDisclaimer" name="chkDisclaimer"  onchange="toggleDisclaimer(this);"  />   Disclaimer </p>
+
+<textarea spellcheck="false" name="disclaimer" id="Disclaimer" value="${disclaimer}" cols=118 rows=2 style="visibility: hidden; height:70px;width:700px;"></textarea>
+</td>
+</tr>
+
+</script>
+
+
+
+		<script id="ProjectTemplateLayergroup" type="text/x-jquery-tmpl">
+
+	<tr>		
+			<td  colspan="2">
+				<input type="checkbox" id="${name}" name="selectedLayergroups" value="${name}" class='layergroupCheckbox' onChange="populateActivelayer(this);"/> ${name}
+				
+			</td>
+
+			<td>
+            <a href="#" class="lgup"><img src="resources/images/studio/move_up.png"></a>
+            <a href="#" class="lgdown"><img src="resources/images/studio/move_down.png"></a>
+			</td>
+			
+	</tr>
+	
+   
+</script>
+
+
+		<script id="ProjectTemplateBaselayer" type="text/x-jquery-tmpl">
+
+	<tr id="tr-${name}">		
+			<td  colspan="2">
+				<input type="checkbox" id="${name}" name="selectedBaselayer" value="${name}" class='baselayerCheckbox' /> ${name}
+				
+			</td>	
+			
+			<td>
+            <a href="#" class="lgup"><img src="resources/images/studio/move_up.png"></a>
+            <a href="#" class="lgdown"><img src="resources/images/studio/move_down.png"></a>
+			</td>
+	</tr>
+	
+   
+</script>
+
+
+		<script id="projectConfigurationTemplate" type="text/x-jquery-tmpl">
+
+	<tr>
+
+    <td>
+        <label class="lblint">Country</label>
+	<input type="hidden" name="hid_id" id="hid_id" /> 
+    </td>
+    <td>
+        <select class="pagesize" id="countryId" name="countryId" onchange="getcountryval(this);">
+			<option selected="selected"  value="">select</option>           
+ 			
+            
+        </select>
+			
+    </td>    
+    <td>
+        <label class="lblint">Region</label>    
+    </td>
+    <td>    
+       <select class="pagesize" id="regionId" name="regionId">
+			<option selected="selected"  value="">select</option>            
+			
+            
+        </select>  
+    </td>
+  
+   
+</tr>
+
+<tr>
+    <td>
+        <label class="lblint">District</label>  
+    </td>
+    <td>
+        <select class="pagesize" id="districtId" name="districtId">
+			<option selected="selected"  value="">select</option>           
+ 			
+            
+        </select>
+			
+    </td>    
+    <td>
+        <label class="lblint">Village</label>
+    </td>
+    <td>    
+       <select class="pagesize" id="villageId" name="villageId">
+            <option selected="selected"  value="">select</option>
+ 			
+            
+        </select>  
+    </td>
+    
+    
+   
+</tr>
+
+<!--  helmat added -->
+<!--
+<tr>
+    <td>
+        <label class="lblint">Hamlet</label>
+    </td>
+    <td>
+        <select class="pagesize" id="hamletId" name="hamletId">
+			<option selected="selected"  value="">select</option>           
+ 			
+            
+        </select>
+			
+    </td> 
+</tr>
+-->
+      <!--  textbox for village_chairman,approving_executive, district_officer added  RMIS NK-->  
+
+      <tr>
+    <td>
+       <label class="lblint">Village Chairman</label> 
+    </td>
+    <td>
+        <input type="textbox" name="villagechairman" id="villagechairmanId" value="" />
+    </td>
+    <td>
+        <label class="lblint">Executive Officer</label>
+    </td>
+    <td>
+        <input type="textbox" name="executiveofficer" id="executiveofficerId" value="" />
+    </td>
+     <td>
+        <label class="lblint">District Officer</label>
+    </td>
+    <td>
+        <input type="textbox" name="districtofficer" id="districtofficerId" value="" />
+    </td>
+
+
+    
+</tr>
+  
+    
+    
+    
+    <!--  textbox for village chairman,executive officer, district officer code end RMIS NK -->  
+
+
+
+   
+</script>
+
+
+
+
+	</form>
+	<script type="text/javascript">
+    function getcountryval(sel) {
+       
+       getRegionOnCountryChange(sel.value);
+       
+       
+       
+    }
+</script>
+
+	<script type="text/javascript">
+    function getregionval(sel) {
+      
+       
+       getDistrictOnRegionChange(sel.value);
+       
+       
+       
+    }
+ </script>
+
+
+	<script type="text/javascript">
+    function getdistrictval(sel) {
+       
+       
+       getVillageOnDistrictChange(sel.value);
+       
+    } 
+   
+</script>
+
+	<script type="text/javascript">
+    function getvillageval(sel) {
+       alert(sel.value);
+       
+       getHamletOnVillageChange(sel.value);
+       
+    }   
+     
+</script>
+
+	
+	<script type="text/javascript">
+    function gethamletval(sel) {
+       alert(sel.value);
+       
+       getHamletOnVillageChange(sel.value);
+       
+    }   
+     
+</script>
+
+</div>
+<div id="adjudicator-dialog-form" title="Project Adjudicator"
+					style="display: none;">
+					<form  id="adjudicatorformID" action="" onsubmit="return false;">
+					<fieldset>
+					
+						<label for="email">Name</label> <input name="adjudicator_name"
+							id="adjudicator_name" value="" /><br>
+							
+					</fieldset>
+					</form>
+				</div>
+<div id="hamlet-dialog-form" title="Hamlet" style="display: none;">
+<form  id="hamletformID" action="" onsubmit="return false;">
+					<fieldset>
+						<label for="email">Name</label> <input name="hamlet_name"
+							id="hamlet_name" value="" class="text ui-widget-content ui-corner-all"/> <br><label for="email">Alias
+							Other Language</label> <input name="hamlet_alias" id="hamlet_alias"
+							value="" class="text ui-widget-content ui-corner-all" /><br> <label for="email">Hamlet Code</label> <input
+							name="hamlet_code" id="hamlet_code" value="" class="text ui-widget-content ui-corner-all"/>
+					</fieldset>
+					</form>
+				</div>

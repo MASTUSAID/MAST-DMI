@@ -1,0 +1,52 @@
+<div id="dynalayerdiv" title="DynaLayer" class="dialog-v">
+    <div id="dynalayerTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('dynalayerdiv');"></div>
+		<div id="dynalayer-help" class="span-h" title="This is Search help for Remotelayer"  ></div>
+		<div class="lineBreak05p"></div>
+	<div>
+	<table width="100%" cellspacin="1" cellpadding="1" class="dynaltable">
+		<tr>
+			<td width="80%">
+				<input type="text" value="http://cp947sw:9999/geoserver/wms" class="value_dyna" id="conn_url" name="conn_url"/>
+		 	</td>
+		 	<td width="20%">
+		 		<input type="button" id="btnConnect" class="btn-dyna"  value="Connect" onclick="javascript:getWmsLayers();"/>
+		 	</td>
+	  </tr>
+
+	</table>
+	</div>
+	
+	<div id="wmslayerBody"></div>
+	
+	
+	<script id="wmslayerTemplate" type="text/x-jquery-tmpl">
+	
+	 {{each(key,wmslayer) $item.capabilityList}}  
+	 
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="cellcolor_dynalayer">
+        	<tr>
+    			<td class="topalign" width="64">
+                	<img id='${(wmslayer.name).replace(':','_')}_img' src="" width="64" height="64" />					
+               </td>
+    			<td class="topalign_dynal">
+                	<div align="left">
+                    	<h3 class="heading_dynalayer">
+                        	${wmslayer.name}  
+							
+                        </h3>
+                    </div>
+                    <div class="content_dynalayer">
+                    		${wmslayer.abstract}  
+                     </div>
+                    <div class="add_dynal"><a href="#" onclick="javascript:addDynalayer('${wmslayer.name}');">Add</a></div>
+                </td>
+  			</tr>
+        </table>
+	
+	{{/each}} 
+	</script>
+	
+
+</div>
+</div>

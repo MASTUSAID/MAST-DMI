@@ -1,0 +1,113 @@
+.header
+{
+	background-image: url(../../images/header_bkg.jpg);
+	background-repeat: no-repeat;
+	margin: 0;
+	min-height: 90px;
+	padding: 0;
+	width: 100%;
+}
+.subHead
+{
+	color: #FFF;
+	float: left;
+	font-size: 24px;
+	margin-left: 20px;
+	padding: 20px 0;
+}
+.loginInfo
+{
+	float: right;
+	margin: 0;
+	position: relative;
+	top: -1px;
+}
+.userText
+{
+	font-size: 90%;
+	margin-left: 38px;
+	position: absolute;
+	top: 1px;
+}
+.logoutApp
+{
+	margin-left: 50px;
+	color:#7eaada;
+	font-size:12px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    display: none;
+    margin: 0;
+	background-image: url(../../images/header_bkg.jpg);
+    /****************
+     ** NEW STYLES **
+     ****************/
+
+    list-style: none; /** Remove list bullets */
+    width: 100%; /** Set the width to 100% of it's parent */
+    padding: 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/** List Item Styles **/
+.dropdown a {
+    display: block;
+    padding: 0.2em 0.8em;
+    text-decoration: none;
+    background: #efefef;
+    color: #333333;
+	text-align:center;
+	min-width: 130px;
+	font-size:12px;
+	border-bottom: 1px solid #ddd;
+}
+
+
+
+.userinfo
+{
+background-image: url(../images/userInfo.png);
+position:absolute;
+right:0px;
+top:0px;
+height:20px;
+background-repeat:no-repeat;
+padding:0.1em 0 0 2.5em;
+color: #fff;
+}
+.userinfo ul {
+list-style:none;
+margin:0;
+padding:0;
+}
+.userinfo ul li{
+  float: left;
+  background: url(../images/separator-cb.png) no-repeat right 3px;
+}
+.userinfo ul li:last-child {
+  background: none;
+}
+.userinfo ul li span{
+  color: #393939;
+  padding: 0 6px;
+}
+.userinfo ul li a{
+  color: #1491FF;
+  padding: 0 6px;
+}
+.userinfo ul li a:hover{
+  color: #393939;
+  
+
+}

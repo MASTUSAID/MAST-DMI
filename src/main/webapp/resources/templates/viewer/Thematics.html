@@ -1,0 +1,365 @@
+<div id="thematicdiv" class="dialog-v">
+	<div id="thematicTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('thematicdiv');"></div>
+		<div id="thematic-help" class="span-h" title=""  onclick="javascript:openHelpWindow('thematic_help');"></div>
+		<div class="lineBreak05p"></div>
+	    <!--old -->
+		<div class="formPattern">
+		  <div class="styleForm">
+            <!--start:classification -->
+				<!--start:heading-->
+                <div class="form_subhead" id="theme_header">
+                    Classification
+                </div>            
+            	<!--end:heading-->
+				<!--start:options-->
+				<div class="blueSwitch">
+					<!--start:suboptions-->
+                    	<div class="celladjust_two">
+                        	<!--start:left-->
+                            	<div class="celladjust_one_left">
+                                	<div id="symbolType">
+                                    	<label>Symbol Type:</label>
+                                	</div>
+                                	<div class="subcelladjust_inner">
+                                        <select name="symbolType" id="symbolType" class="value_thematic">
+											<!--<option value="Single Symbol">Single Symbol</option>-->
+											<option value="Graduated Symbol">Graduated Symbol</option>
+										</select>     
+                                	</div>
+                            	</div>
+                            <!--end:left-->                            
+                            <!--start:right-->
+                             <div class="celladjust_one_right_shift">
+                                <div id="mode1">
+                                        <label>Mode:</label>
+                                </div>
+                                <div class="subcelladjust_inner">
+                                        <select name="mode" id="mode" class="value_thematic">
+											<option value="Mode">Select Mode</option>
+											<option value="Equal Interval">Equal Interval</option>
+											<option value="Quantiles">Quantiles</option>
+										</select>
+                                 </div>                    
+                            </div>
+                            <!--end:right-->
+                            <div class="cellclear"></div>
+                        </div>                
+                    <!--end:suboptions-->
+					<!--start:suboptions-->
+                        <div class="celladjust_two">
+                    		<!--start:left-->
+                            	<div class="celladjust_one_left">
+                                	<div id="classification">
+                                        <label>Classification Field</label>
+                                	</div>
+                                	<div class="subcelladjust_inner">
+                                        <select name="classification_field" id="classification_field" class="value_thematic"></select>
+                                	</div>
+                            	</div>
+                            <!--end:left-->                            
+                            <!--start:right-->
+                             <div class="celladjust_one_right_shift">
+                                <div id="interval_field">
+                                        <label>Interval</label>
+                                </div>
+                                <div class="subcelladjust_inner">
+                                        <input type="text" name="interval" id="interval" value="5" class="value_three"/>
+                                 </div>                    
+                            </div>
+                            <!--end:right-->
+                            <div class="cellclear"></div>
+                        </div>     
+				</div>			
+			<!--end:options-->
+		<!--end:classification -->
+        </div>
+   
+
+        <div class="styleForm">
+        	<div>
+             	<!--start:heading-->
+            		<div class="form_subhead" id="style_header">
+        		 		Style
+        			</div>            
+            	<!--end:heading-->
+                    
+				    <div class="blueSwitch">
+                        <div id="polystylediv" style="display:none;"> 
+                        	
+                            <!--start:Fill Style-->
+                            <div class="thematic_pad">
+                               <table width="100%" cellpadding="1" cellspacing="1">
+                               	<tr>
+                                	 <td  class="text_thematic_one">
+                                    	<label id="theme_fill">Fill:</label>
+                                    </td>
+                                    <td  class="thematic_select">
+                                    	<div id="poly_pattern" class="inputdd">
+                                        	<div id='poly_Patterns' class="dropdown">
+                                            	<div id="ddGrid" class= "ddGrid">
+                                                	<ul> 
+                                                    	<li id="Li26" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                    <a href="#" title="pat00" >
+                                                            	<img height="16px" width="16px" alt="default" />
+                                                            </a>                      
+	                                                	</li>
+                                                    	<li id="pat44" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                    <a href="#" title="pat44" >
+                                                            	<img height="16px" width="16px" id="ttf://SpatialVueFont#0x6E" alt="" 
+                                                                src="resources/images/viewer/symbols/patterns/pat44.png" />
+                                                            </a>                      
+	                                                	</li>
+	                                                	<li id="pat06" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+                                                            <a href="#" title="pat06" >
+                                                                <img height="16px" width="16px" id="ttf://SpatialVueFont#0x6F" alt="" 
+                                                                src="resources/images/viewer/symbols/patterns/pat06.png" />
+                                                             </a>                      
+	                                                	</li>
+	                                                	<li id="pat05" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                	<a href="#" title="pat05" >
+                                                            	<img height="16px" width="16px" id="ttf://SpatialVueFont#0x70" alt="" 
+                                                                src="resources/images/viewer/symbols/patterns/pat05.png" />
+                                                            </a>                      
+                                                    	</li>
+                                                    	<li id="pat04" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                    <a href="#" title="pat04">
+                                                            	<img height="16px" width="16px" id="ttf://SpatialVueFont#0x62" alt="" 
+                                                                src="resources/images/viewer/symbols/patterns/pat04.png" />
+                                                            </a>                      
+                                                    	</li>
+                                                    	<li id="pat03" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+	                                                    	<a href="#" title="pat03">
+                                                            	<img height="16px" width="16px" id="ttf://SpatialVueFont#0x74" alt="" 
+                                                                src="resources/images/viewer/symbols/patterns/pat03.png" />
+                                                            </a>                      
+                                                    	</li>
+                                                    </ul>                                                
+                                                </div>                                            
+                                            </div>                                        
+                                        </div>
+                                    </td>
+                                   <td class="thematic_startc_one"><label id="theme_poly_startcolor">Start:</label></td>
+                                    <td align="left"><input type="text" id="fillColor1"; class="color_input_yellow"/></td>
+                                    <td class="thematic_sfift_color_box_three"><label id="theme_poly_endcolor">End:</label></td>
+                                    <td align="left"><input type="text" id="fillColor2"; class="color_input_blue"/></td>
+                                </tr>
+                             </table>
+                             </div>
+                          <!-- end:fill style-->
+
+                            <div class="pad5px"></div>
+          					<!--start:outine Style-->
+                            <div class="thematic_pad blueSwitch">
+                                <table width="100%" cellpadding="1" cellspacing="1">
+                                	<tr>
+                                        <td  class="text_thematic_one">
+                                           <label id="theme_poly_outline">Outline:</label>
+                                        </td>
+                                        <td class="thematic_select">
+                                            <select id="outlineStyle" style="width:70px;">
+                                                <option value="solid" title="resources/images/viewer/symbols/line/solid.png"></option>
+                                                <option value="10 10" title="resources/images/viewer/symbols/line/dashdash.png"></option>
+                                                <option value="10 10 2.5 10" title="resources/images/viewer/symbols/line/dashdotdash.png"></option>
+                                                <option value="15 10 5 5 5 10" title="resources/images/viewer/symbols/line/dashdotdotdash.png"></option>
+                                                <option value="5 5" title="resources/images/viewer/symbols/line/dotdot.png"></option>
+                                            </select>                                    
+                                        </td>
+                                        <td class="thematic_startc_six"><label id="theme_poly_outcolor">color:</label></td>
+                                    <td align="left"><input type="text" id="outcolor"; class="color_input_black_outline"/></td>
+                                    <td class="thematic_sfift_color_box_three"><label id="theme_poly_outwidth">Width:</label></td>
+                                    <td align="left"><input type="text" id="outWidth" value="1" class="shiftinput_thematic_one" onkeyup='validateNumericInput(this);' /></td>
+                                  	</tr>                                
+                                </table>
+                            </div>
+                            <!--end:ouline Style-->
+                            
+                            <div class="pad5px"></div>
+                            <!--start:opacity Style-->
+                            <div style="padding:5px 0px 5px 0px;">
+                            	<table width="100%" cellpadding="1" cellspacing="1">
+                                	<tr>
+                                        <td  class="text_thematic_one" id='opacity'>
+                                            <label>Opacity</label>
+                                        </td>
+                                        <td colspan="5">
+                                           <div id="slider" style="margin: 10px;"></div>                                 
+                                        </td>
+                                        
+                                  	</tr>                                
+                                </table>
+                            
+                            </div>                            
+                            <!--end:opacity Style-->
+                            </div>
+                        </div>
+                        <!--Fill Style-->
+
+                        <!--Marker Style-->
+                         <div id="markerstylediv" style="display:none;">
+                             
+                               <div class="thematic_pad blueSwitch">
+                               <table width="100%" cellpadding="1" cellspacing="1">
+                               	<tr>
+                                	 <td  class="text_thematic_one">
+                                    	<label id="theme_pointsymbol">Symbol:</label>
+                                    </td>
+                                    <td  class="thematic_select">
+                                    	<div id="point_style" class="inputdd"> 
+                                                <div id='marker_symbols' class="dropdown">
+                                                    <div id="ddGrid" class= "ddGrid">
+                                                        <ul>
+                                                            <li id="Li27" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                            <a href="#" title="mar01" >
+                                                                    <img height="16px" width="16px" alt="default" /></a>                      
+	                                                        </li>
+	                                                        <li id="mar01" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                            <a href="#" title="mar01" >
+                                                                    <img height="16px" width="16px" alt="" id="ttf://SpatialVueFont#0x66" src="resources/images/viewer/symbols/markers/mar01.png" /></a>                      
+	                                                        </li>
+	                                                        <li id="mar02" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                        <a href="#" title="mar02" >
+                                                                <img height="16px" width="16px" alt="" id="ttf://SpatialVueFont#0x65" src="resources/images/viewer/symbols/markers/mar02.png" /></a>                      
+	                                                        </li>
+	                                                        <li id="mar03" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                        <a href="#" title="mar03" >
+                                                                <img height="16px" width="16px" alt="" id="ttf://SpatialVueFont#0x68" src="resources/images/viewer/symbols/markers/mar03.png" /></a>                      
+	                                                        </li>
+                                                        </ul> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                   <td class="thematic_startc_three"><label id="theme_pointstartcolor">Start:</label></td>
+                                    <td align="left"> <input type="text" id="markerColor"; class="color_input_yellow"/></td>
+                                    <td class="thematic_sfift_color_box"><label id="theme_pointsize">Size:</label></td>
+                                    <td align="left"><input type="text" id="szfrom" class="shiftinput_thematic_symbol"; value="4" onkeyup='validateNumericInput(this);'/></td>
+                                </tr>
+                             </table>
+                             </div>
+                      
+                        </div>
+                        <!--Marker Style-->
+
+                        <!--Line Style-->
+                        <div id="linestylediv" style="display:none;">
+                            
+                            <!-- <div id="linediv"  style="width:196px; border:1px solid #cccccc; padding:5px; height:70px;">
+                                <div style="font-family:arial;font-size: 8pt;margin: -12px 0px 5px 10px; width:60px;background-color:#F0F0F0;">Line Style</div>
+                                <select id="linePattern" style="width:120px;">
+                                    <option value="solid" title="resources/images/viewer/symbols/line/solid.png">Solid</option>
+                                    <option value="10 10" title="resources/images/viewer/symbols/line/dashdash.png">dashdash</option>
+                                    <option value="10 10 2.5 10" title="resources/images/viewer/symbols/line/dashdotdash.png">dashdotdash</option>
+                                    <option value="15 10 5 5 5 10" title="resources/images/viewer/symbols/line/dashdotdotdash.png">
+                                                dashdotdotdash</option>
+                                    <option value="5 5" title="resources/images/viewer/symbols/line/dotdot.png">
+                                        dotdot</option>
+                                </select>-->
+                                <div class="thematic_pad blueSwitch">
+                               <table width="100%" cellpadding="1" cellspacing="2">
+                               	<tr>
+                                	 <td  class="text_thematic_one">
+                                    	<label id="theme_line_outline">Outline:</label>
+                                    </td>
+                                    <td  class="thematic_select">
+                                    	<div id="segment_style" class="inputdd"> 
+                                                <div id='line_symbols' class="dropdown">
+                                                    <div id="ddGrid" class= "ddGrid">
+                                                        <ul> 
+                                                             <li id="li28" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                            <a href="#" title="line01" >
+                                                                    <img height="16px" width="16px" alt="default" /></a>                      
+	                                                        </li>      
+	                                                        <li id="li29" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                            <a href="#" title="line02" >
+		                                                            <img height="16px" width="16px" alt="" id="ttf://SpatialVueFont#0x6C" src="resources/images/viewer/symbols/line/line01.png" />
+		                                                            </a>                      
+	                                                        </li>
+                                       
+	                                                        <li id="li30" onMouseOver="this.bgColor='#BFDBFF'" onMouseOut="this.bgColor='#f2f5f7'">
+		                                                            <a href="#" title="line03" >
+		                                                            	<img height="16px" width="16px" alt="" id="ttf://SpatialVueFont#0x6A" src="resources/images/viewer/symbols/line/line02.png" />
+		                                                            </a>                      
+	                                                        </li>
+	                                      
+                                                        </ul> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </td>
+                                   <td class="thematic_startc_four"><label id="theme_line_startcolor">Start:</label></td>
+                                    <td align="left"><input type="text" id="lineColor1"; class="color_input_yellow_outline"/></td>
+                                     <td class="thematic_startc_five"><label id="theme_line_endcolor">End:</label></td>
+                                    <td align="left"><input type="text" id="lineColor2"; class="color_input_blue_outline"/>			</td>
+                                    </tr>
+                                    <tr>
+                                    	<td class="thematic_sfift_color_box"><label id="theme_linesize">Size :</label></td>
+                                    	<td align="left"><input type="text" id="lineWidth" class="shiftinput_thematic_outline" value="1" 
+                                    onkeyup='validateNumericInput(this);'/></td>
+                                </tr>
+                             </table>
+                             </div>
+                      
+                        </div>
+                        <!--Line Style-->
+                        
+                        <!--start:class Interval -->
+                        <div class="pad5px"></div>
+                        <!--start:heading-->
+                        <div class="form_subhead" id="theme_classinterval">
+                            Class Interval
+                        </div>            
+                        <!--end:heading-->
+                        <!--start:suboptions-->
+                            <div class="subcelladjust blueSwitch">
+                                <div id="classificationResults" class="intervalbg" >
+                                    <table id="cbValues">
+                                    <tr /> <!--Empty Row -->
+                                    </table>
+                                </div>
+                            </div>
+                        <!--end:suboptions-->
+                    <!--end:class Intervael -->
+           
+                    
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+			
+			
+			</div>
+			
+			
+			
+			
+			
+                            	<div class="buttons btn-holder-float">
+								
+									<span class="lesserbtn">
+									<input id="classify" name="classify" type="submit" value="Classify" onClick="classify();"/> 
+									</span>
+									<span class="lesserbtn">
+									<input id="removeInterval" name="removeInterval" type="submit" value="Delete Class" onClick="removeRow();"/> 
+									</span>
+									<span class="lesserbtn">
+									<input id="symbolApply" type="submit" value="Apply"/> 
+									</span>
+									
+								</div>    
+
+			
+			
+			
+			
+			
+			
+			
+			
+	</div>
+       
+        
+            
+</div>

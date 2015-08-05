@@ -1,0 +1,55 @@
+<div id="bookmarkdiv" class="dialog-v">
+	<div id="infoDetails">
+		<div id="bookmarkstar" class="bookmark-star" title="New Bookmark"></div>		
+		<div id="span-close" title="Close" class="span-c" onclick="javascript:closeDialog('bookmarkdiv');"></div>
+		<div id="bookmark-help" class="span-h" title="Help for Bookmark" onclick="javascript:openHelpWindow('bookmark_help');"></div>
+		<div class="lineBreak05p"></div>
+		
+		<div class="formPattern">
+		<div id="addbk" class="addbk-c blueSwitch">
+			<form id="BookmarkForm" action="" onsubmit="return false;" >
+				<input class="int" type="text" name="name" id="name" value=""/>
+				<input type="hidden" name="description" id="description" />
+				<input type="hidden" name="minx" id="minx" />
+				<input type="hidden" name="miny" id="miny" />
+				<input type="hidden" name="maxx" id="maxx" />
+				<input type="hidden" name="maxy" id="maxy" />
+				<input type="hidden" name="projectBean.name" id="bkProjectName" />
+			</form>	
+			<a id="bk-save" class="bk-s" href="#">Save</a>
+		</div>
+		<div class="lineBreak05p"></div>
+		<div id="bokkmarkBody"></div>
+		
+		</div>
+	</div>
+
+
+	<script id="bookmarkTemplate" type="text/x-jquery-tmpl">
+    {{if $item.bookmarkList.length>0 }}    
+		{{each(key,bookmark) $item.bookmarkList}}  
+		<div  id="${bookmark.name}"  class="cellcolor">
+        <div>
+        	<p>
+				<img src="resources/images/viewer/bk-01.png"/> 
+			<span class="bookmarks-i">	
+				${bookmark.name}  
+            
+			</span>
+			</p>
+            <div class="widthadjust">
+            	<div class="left">
+                	<div id="zoomBookmark" class="clearmarkers-s"><a href="#" class="zoomlink-s" onclick="javascript:zoomBookmark('${bookmark.name}');">Zoom</a></div>
+                 </div>
+                 <div class="right">
+                 	<div id="removeBookmark" class="clearmarkers-s"><a href="#" class="removebklink-s" onclick="javascript:removeBookmark('${bookmark.name}');">Remove</a></div>
+                  </div>
+            </div>
+       	</div>  
+        <div style="clear:both;"></div>   
+        </div> 
+		{{/each}} 
+	{{/if}}	
+ </script>
+
+</div>

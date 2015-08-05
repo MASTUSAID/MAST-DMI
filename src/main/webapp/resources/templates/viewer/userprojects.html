@@ -1,0 +1,39 @@
+<div id="userprojectsdiv" title="User Projects" class="dialog-v">
+    <div id="userprojectsTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('userprojectsdiv');"></div>
+		<div id="userprojects-help" class="span-h" title="This is Search help for userprojects"  ></div>
+		<div class="lineBreak05p"></div>
+	
+	<div class="formPattern" id="userProjectsBody"></div>
+	
+<script id="userProjectsTemplate" type="text/x-jquery-tmpl">
+	
+	{{each(key,userProject) $item.userProjecList}}  
+	 
+	  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="cellcolor_dynalayer">
+        	<tr>
+    			<td class="topalign" width="64">
+                	<img id='${userProject.name}_img' src="" width="64" height="64" />					
+               </td>
+    			<td class="topalign_dynal">
+                	<div align="left">
+                    	<h3 class="heading_dynalayer">
+                        	${userProject.name}  
+							
+                        </h3>
+                    </div>
+                    <div class="content_dynalayer">
+                    		${userProject.description}  
+                     </div>
+                    <div class="add_dynal"><a href="#" onclick="javascript:openProject('${userProject.name}');">Open</a></div>
+                </td>
+  			</tr>
+        </table>
+	
+	{{/each}} 
+	
+</script>
+
+
+</div>
+</div>

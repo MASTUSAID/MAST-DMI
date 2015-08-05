@@ -1,0 +1,146 @@
+<script type="text/javascript">
+        $(document).ready(function(){		
+			
+	    $("input, textarea, select").addClass("idle");
+            $("input, textarea, select").focus(function(){
+                $(this).addClass("activeField").removeClass("idle");
+	    }).blur(function(){
+                $(this).removeClass("activeField").addClass("idle");
+	    });
+        });
+    </script>
+
+
+<div id="sidebar">
+	<div id="inputArea">
+        <!--start:form-->
+		<form>
+        	<div class="form_div">
+            	<table width="90%" cellpadding="1" cellspacing="1">
+                	
+                    <tr>
+                    	<td >
+                        	<fieldset>
+                            	<legend>Label Feature</legend>
+                                <table width="90%" cellpadding="1" cellspacing="1" class="tablepad" align="center">
+                                	 <tr>
+                    					<td width="30%" >Label Value</td>
+                        				<td align="left">
+                        					<input id="Text16" type="text" />
+                        				</td>  
+                    				</tr> 
+                                    <tr>
+                                    	<td colspan="2">
+                                        	<table width="100%" cellpadding="1" cellspacing="1" align="center">
+                                            	<tr>
+                                                	<td width="30%" align="center">
+                                                    	<select>
+                                            				<option>Serif</option>
+                                            			</select>
+                                                    </td>
+                                                    <td width="10%" align="center">Size</td>
+                                                    <td width="10%" align="center"><input id="Text16" type="text" /></td>
+                                                    <td width="10%" align="center"><strong>B</strong></td>
+                                                    <td width="10%" align="center"><strong><i>I</i></strong></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                    					<td colspan="2">&nbsp;</td>
+                    				</tr> 
+                                    <tr>
+                                    	<td colspan="2">
+                                        	<fieldset>
+                            					<legend>Fill</legend>
+                                                <table width="90%" cellpadding="1" cellspacing="1" class="tablepad">
+                                                    <tr>
+                                                        <td>
+                                                            Color:
+                                                        </td>
+                                                        <td>
+                                                            <input id="Text16" type="text" style="background-color:#808080; background-image:none; " />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Opacity:
+                                                        </td>
+                                                        <td>
+                                                            <input id="Text16" type="text" />
+                                                        </td>
+                                                    </tr>
+                                                </table>                            
+                                            </fieldset>                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                    					<td colspan="2">&nbsp;</td>
+                    				</tr>
+                                    <tr>
+                                    	<td colspan="2">
+                                        	<fieldset>
+                            					<legend><table width="100%" border="0" cellspacing="1" cellpadding="1">
+                                                  <tr>
+                                                    <td class="checkpad"><input type="checkbox" style="background:none; border:none;"/></td>
+                                                    <td>Halo</td>
+                                                  </tr>
+                                                </table>
+                                                </legend>
+                                                <table width="90%" cellpadding="1" cellspacing="1" class="tablepad">
+                                                   <tr>
+                                                        <td width="15%" >Size</td>
+                                                        <td align="left">
+                                                            <input id="Text16" type="text" />
+                                                        </td>  
+                                                    </tr> 
+                                                   <tr>
+                                    	<td colspan="2">
+                                        	<fieldset>
+                            					<legend>Fill</legend>
+                                                <table width="90%" cellpadding="1" cellspacing="1" class="tablepad">
+                                                    <tr>
+                                                        <td>
+                                                            Color:
+                                                        </td>
+                                                        <td>
+                                                            <input id="Text16" type="text" style="background-color:#808080; background-image:none; " />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Opacity:
+                                                        </td>
+                                                        <td>
+                                                            <input id="Text16" type="text" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2" class="gap">&nbsp;</td>
+                                                    </tr>
+                                                </table>                            
+                                            </fieldset>                                        
+                                        </td>
+                                    </tr>
+                                                   <tr>
+                                                        <td colspan="2" class="gap">&nbsp;</td>
+                                                    </tr>
+                                                </table>                            
+                                            </fieldset>                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                                        <td colspan="2" class="gap">&nbsp;</td>
+                                                    </tr>
+                                </table>                            
+                            </fieldset>
+                        
+                        </td>
+                    </tr>                   
+                </table>
+            </div>
+        </form>       
+        <!--end:form-->
+	</div>
+</div>
+

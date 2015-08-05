@@ -1,0 +1,91 @@
+<div id="saveprojectdiv" class="dialog-v">
+	<div id="saveprojectTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" 
+			onclick="javascript:closeDialog('saveprojectdiv');"></div>
+		<div id="saveproject-help" class="span-h" title="This is Search help for Save Project"  ></div>
+		<div class="lineBreak05p"></div>
+		
+		
+		<div class="styleForm formPattern">
+		
+		<dl>
+			<dd>
+				<label for="ProjName">Name</label>
+			</dd>
+			<dd>
+				<input type="text" value="" class="int" id="projectName"
+					name="projectName" />
+			</dd>
+
+
+		</dl>
+		<dl>
+			<dd>
+				<label for="ProjDesc">Description</label>
+			</dd>
+			<dd>
+				<input type="text" value="" class="int" id="projectDescription"
+					name="projectDescription" />
+			</dd>
+
+
+		</dl>
+
+		<dl>
+			<dd>
+				<input type="checkbox" id="defaultProject" name="defaultProject" />
+				Set Default Project
+			</dd>
+
+		</dl>
+
+
+
+		<div class="lineBreak05p"></div>
+		
+		<div class="blueSwitch pad05">
+		<div class="search-options-m">
+			<a id="options-s-t" href="#">Share Project</a>
+		</div>
+		<div id="options-s-d" class="search-options-b"
+			style="height: 250px; overflow: auto;">
+
+			<table>
+
+				<tbody id="userListBody">
+
+				</tbody>
+			</table>
+
+		</div>
+		</div>
+		
+	</div>
+	
+	</div>
+	
+	
+		<div class="btn-holder-w buttons">
+				<span class="lesserbtn">
+				<input id="btnSaveproject" class="btn-w" type="submit" value="Save" />
+				</span>
+	</div>
+
+
+	<script id="userTemplate" type="text/x-jquery-tmpl">
+	       
+			<tr>		
+			<td>
+				{{if (email==$item.useremail)}} 
+				<input type="checkbox" id="${name}" name="users" value="${email}" class='userCheckbox' checked="checked" disabled="disabled"/> ${email}
+				{{else}}
+					<input type="checkbox" id="${name}" name="users" value="${email}" class='userCheckbox' /> ${email}
+				{{/if}} 
+				
+			</td>
+	  <tr>		
+	 
+	
+ 	</script>
+
+</div>
