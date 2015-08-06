@@ -8,7 +8,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="spatialunit_pesonwithinterest")
+@Table(name="spatialunit_personwithinterest")
 public class SpatialunitPersonwithinterest implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
