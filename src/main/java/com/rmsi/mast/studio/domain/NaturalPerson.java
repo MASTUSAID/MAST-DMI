@@ -74,6 +74,23 @@ public class NaturalPerson extends Person implements Serializable {
 	private String citizenship;
 	private Boolean owner;
 	private Boolean resident_of_village;
+	
+	@ManyToOne
+	@JoinColumn(name="personsub_type")
+	private PersonType personSubType;
+	
+
+	@ManyToOne
+	@JoinColumn(name="citizenship_id")
+	private Citizenship citizenship_id;
+
+	public Citizenship getCitizenship_id() {
+		return citizenship_id;
+	}
+
+	public void setCitizenship_id(Citizenship citizenship_id) {
+		this.citizenship_id = citizenship_id;
+	}
 
 	public NaturalPerson() {
 		super();
@@ -251,6 +268,14 @@ public class NaturalPerson extends Person implements Serializable {
 
 	public void setResident_of_village(Boolean resident_of_village) {
 		this.resident_of_village = resident_of_village;
+	}
+
+	public PersonType getPersonSubType() {
+		return personSubType;
+	}
+
+	public void setPersonSubType(PersonType personSubType) {
+		this.personSubType = personSubType;
 	}
 	
 	

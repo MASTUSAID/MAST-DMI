@@ -460,22 +460,22 @@ function sortResultInDesc(filters, result, layerName) {
         version: "1.1.0"
     });
 
-    var dataPostResult=createSortXML();
+    createSortXML();
     var xml = new OpenLayers.Format.XML();
     var xmlFilter = xml.write(filter_1_0.write(filters));
    
     if(selectedLayer == undefined || selectedLayer == null){
-    	dataPostResult = dataPostResult.replace("${layer}", "\"" + layerName + "\"");
+    	dataPost = dataPost.replace("${layer}", "\"" + layerName + "\"");
     }else{
-    	dataPostResult = dataPostResult.replace("${layer}", "\"" + selectedLayer + "\"");
+    	dataPost = dataPost.replace("${layer}", "\"" + selectedLayer + "\"");
     }
 
    
-    dataPostResult = dataPostResult.replace("${featureNS}", "\"" + featureNS + "\"");
-    dataPostResult = dataPostResult.replace("${filter}", xmlFilter);
-    dataPostResult = dataPostResult.replace("${uniqueFld}", uniqueField);
+    dataPost = dataPost.replace("${featureNS}", "\"" + featureNS + "\"");
+    dataPost = dataPost.replace("${filter}", xmlFilter);
+    dataPost = dataPost.replace("${uniqueFld}", uniqueField);
 
-    dataPostResult = dataPostResult.replace("${SortOrder}", "DESC");
+    dataPost = dataPost.replace("${SortOrder}", "DESC");
 
     var mapProj = map.projection;
     var reverseCoords = true;
@@ -489,7 +489,7 @@ function sortResultInDesc(filters, result, layerName) {
         dataType: "xml",
         contentType: "text/xml; subtype=gml/3.1.1; charset=utf-8",
         type: "POST",
-        data: dataPostResult,
+        data: dataPost,
         async:false,
         success: function (data) {
             var gmlFeatures = new OpenLayers.Format.WFST.v1_1_0({

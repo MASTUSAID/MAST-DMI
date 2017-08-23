@@ -31,27 +31,13 @@ public class User implements Serializable {
 	private String password;
 	private Date passwordexpires;
 	private String tenantid;
-	//private Set<UserGroup> userGroups;
 	private Set<Project> projects;
 	private Set<Role> roles;
 	private String authkey;
 	
 	private String manager_name;
-	private String name_user;
+	private String username;
 	
-	//private int functionalRole;
-	//private Set<UserReporting> userReportings2;
-
-	
-	@Column(name="name")
-	public String getName_user() {
-		return name_user;
-	}
-
-	public void setName_user(String name_user) {
-		this.name_user = name_user;
-	}
-
 
 
 	private String reportingTo;
@@ -61,7 +47,6 @@ public class User implements Serializable {
 		return reportingTo;
 	}
 
-	//@Transient
 	public void setReportingTo(String reportingTo) {
 		this.reportingTo = reportingTo;
 	}
@@ -69,27 +54,13 @@ public class User implements Serializable {
 
 	public User() {
     }
-	/*@Column(name="functional_role")
-	public int getFunctionalRole() {
-		return functionalRole;
-	}
 
 
-
-	public void setFunctionalRole(int functionalRole) {
-		this.functionalRole = functionalRole;
-	}*/
-
-
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="username")
 	public String getName() {
 		return this.name;
 	}
 
 	
-
-
 	public String getManager_name() {
 		return manager_name;
 	}
@@ -139,8 +110,7 @@ public class User implements Serializable {
 		this.phone = phone;
 	}
 
-	//@Transient
-	//@Column(name="id")
+
 	@Id	
 	@SequenceGenerator(name="USER_ID_GENERATOR", sequenceName="users_gid_seq")
 	@GeneratedValue(strategy=GenerationType.AUTO, generator="USER_ID_GENERATOR")	
@@ -206,8 +176,7 @@ public class User implements Serializable {
 		this.projects = projects;
 	}
 	
-	//bi-directional many-to-one association to UserRole
-	//@OneToMany(mappedBy="user")
+
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "userid") }, inverseJoinColumns = { @JoinColumn(name = "role") })
@@ -231,15 +200,15 @@ public class User implements Serializable {
 		this.authkey = authkey;
 	}
 
-	/*@Column(name="manager_id")
-	public Integer getManagerid() {
-		return this.managerid;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setManagerid(Integer managerid) {
-		this.managerid = managerid;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	*/
+
+
 	
 	
 	

@@ -342,7 +342,14 @@ h3 {
   overflow: hidden;
 }
 			
-			
+		.vertexAlign{
+	
+	 margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: bold;
+  
+	}		
 @media print {
 	@page {
 		margin: 1cm
@@ -381,6 +388,9 @@ h3 {
 	}
 	.tableHeader{
 	font-weight: bold;
+	}
+	.pageBreak{
+	page-break-before: always;
 	}
 
 }

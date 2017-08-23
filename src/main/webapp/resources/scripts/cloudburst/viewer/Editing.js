@@ -757,7 +757,14 @@ function selectFeature(e){
              var uniqueField = lyrDetails.keyField;
 			 for(var i=0; i<selectedFeatures.length; i++){
 				 delete selectedFeatures[i].attributes[uniqueField];
-				 wfs.addFeatures(selectedFeatures[i]);
+				 if(objLayer.name=='spatial_unit'){
+					 if(selectedFeatures[i].attributes.project_name==activeProject && selectedFeatures[i].attributes.active=='true')
+						 wfs.addFeatures(selectedFeatures[i]);	 
+				 }
+				 else{
+					 wfs.addFeatures(selectedFeatures[i]);
+				 }
+				 
 			 }
 		 }
 	 });
@@ -831,7 +838,7 @@ function onFeatureSelection(feature){
     	}
     	
     	jQuery.ajax({ 
-    		url: "spatialfalse/"+_gid,
+    		url: "landrecords/spatialfalse/"+_gid,
     		async:false,							
     		success: function (data) {	
 
@@ -873,6 +880,7 @@ function saveEdit() {
 }
 
 function onSave(event){
+	jAlert("Data Successfully Saved");
 	objLayer.redraw(true);
 }
 

@@ -55,6 +55,4 @@ public interface SpatialUnitDao extends GenericDAO<SpatialUnit, Long> {
 	 * @return
 	 */
 	List<SpatialUnit> findSpatialUnitByStatusId(String projectId, int statusId);
-
-
 }

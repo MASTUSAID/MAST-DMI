@@ -14,11 +14,35 @@ var bbox = null;
 var map_static;
 var ownershipType="";
 var personInterestList=null;
+var validator="";
+var vertextmp=[];
+var deceasedList=null;
+
 
 
 function get_Adjuticator_detail(id,lang)
 
 {
+	
+	jQuery.ajax({ 
+		url: "landrecords/validator/"+id,
+		async:false,							
+		success: function (data) {	
+
+			validator=data;
+			console.log(validator);
+		}
+
+	});
+	
+	if(validator!='Success')
+		{
+		jAlert(validator,'Validation Error');
+		
+		}
+	
+	else {
+		
 	ID=id;
 
 	if(lang=='En')
@@ -29,9 +53,10 @@ function get_Adjuticator_detail(id,lang)
 	{
 		URL='resources/templates/viewer/land-adjudication-sw.html';
 	}
-
+	
+	
 	jQuery.ajax({ 
-		url: "personbyusin/"+id,
+		url: "landrecords/personbyusin/"+id,
 		async:false,							
 		success: function (data) {	
 
@@ -40,22 +65,34 @@ function get_Adjuticator_detail(id,lang)
 		}
 
 	});
+	
+
+	
 	jQuery.ajax({ 
-		url: "personofinterest/"+id,
+		url: "landrecords/personofinterest/"+id,
 		async:false,							
 		success: function (data) {	
 			
-			personInterestList=data.toString();
-			//console.log(personList);
+			personInterestList=data;
 
+		}
+
+	});
+	
+	jQuery.ajax({ 
+		url: "landrecords/deceasedpersonbyid/"+id,
+		async:false,							
+		success: function (data) {	
 			
+			deceasedList=data;
+			console.log(deceasedList);
 
 		}
 
 	});
 
 	jQuery.ajax({ 
-		url: "Adjuticator/"+id,
+		url: "landrecords/Adjuticator/"+id,
 		async:false,							
 		success: function (data) {	
 
@@ -74,43 +111,61 @@ function get_Adjuticator_detail(id,lang)
 							getonmap(ID);
 
 							var admin_array=[];
-
+							
+							
+							//document.getElementById("vertexList").style.pageBreakAfter = "always";
+							
+							var personarr=[];
 							for (i=0;i<personList.length;i++)
 							{
-								//Added by Prashant
-								var json_obj={};
-								if(personList[i].person_gid.administator!=null && personList[i].person_gid.administator!='' && personList[i].person_gid.administator!='null')
-								{
-									json_obj['firstName'] = personList[i].person_gid.administator;
-									admin_array.push(json_obj);
-								}
-								//$("#_ownershipDuration").text(personList[i].tenure_duration);
+						
 								if(personList[i].person_gid.person_type_gid.person_type_gid==1)
 								{
 
 
 									jQuery("#_non_natural").hide();
 									jQuery("#_adjudicator").show();
-
+									if(lang=='Sw'){
+									var name=personList[i].person_gid.firstName+" "+personList[i].person_gid.lastName+"("+personList[i].person_gid.personSubType.personType_sw+")";
+									if(personList[i].person_gid.middleName!=null && personList[i].person_gid.middleName!="")
+									name=personList[i].person_gid.firstName+" "+personList[i].person_gid.middleName+" "+personList[i].person_gid.lastName+"("+personList[i].person_gid.personSubType.personType_sw+")";
+									personarr.push(name);
+									}
+									else if(lang=="En"){
+									var name=personList[i].person_gid.firstName+" "+personList[i].person_gid.lastName+"("+personList[i].person_gid.personSubType.personType+")";
+									if(personList[i].person_gid.middleName!=null && personList[i].person_gid.middleName!="")
+									name=personList[i].person_gid.firstName+" "+personList[i].person_gid.middleName+" "+personList[i].person_gid.lastName+"("+personList[i].person_gid.personSubType.personType+")";
+									personarr.push(name);
+									}
+									
 
 									if(lang=='En'){
-										ownershipType="Single";
-										if(i>=1)
-										{
-											ownershipType="Multiple";
+									
+										if(personList[i].person_gid.personSubType!=null){
+											jQuery("#_naturalpersonTemplateEn").tmpl(personList[i].person_gid).appendTo("#_naturalperson");
+											var cells = Array.prototype.slice.call(document.getElementById("_naturalperson").getElementsByTagName("td"));
+											var j=i*13+11;
+											if(personList[i].resident)
+											cells[j].innerHTML="Yes";
+											else
+												cells[j].innerHTML="No";
 
+											
 										}
-										jQuery("#_naturalpersonTemplateEn").tmpl(personList[i].person_gid).appendTo("#_naturalperson");
-
+								
 									}
 									else if(lang=='Sw') {
-										ownershipType="Binafsi";
-										if(i>=1)
-										{
-											ownershipType="Pamoja";
-
+										if(personList[i].person_gid.personSubType!=null){
+											jQuery("#_naturalpersonTemplateSw").tmpl(personList[i].person_gid).appendTo("#_naturalperson");
+											var cells = Array.prototype.slice.call(document.getElementById("_naturalperson").getElementsByTagName("td"));
+											var j=i*13+11;
+											if(personList[i].resident)
+											cells[j].innerHTML="Ndiyo";
+											else
+											cells[j].innerHTML="Hapana";
+											
 										}
-										jQuery("#_naturalpersonTemplateSw").tmpl(personList[i].person_gid).appendTo("#_naturalperson");
+								
 									}
 
 									$("._age").text(year);
@@ -119,13 +174,7 @@ function get_Adjuticator_detail(id,lang)
 
 								if(personList[i].person_gid.person_type_gid.person_type_gid==2)
 								{
-									if(lang=='Sw')
-										ownershipType="Taasisi";
-
-
-									if(lang=='En')
-										ownershipType="Institution";
-
+									
 									jQuery("#_adjudicator").hide();
 									jQuery("#_non_natural").show();
 
@@ -133,37 +182,30 @@ function get_Adjuticator_detail(id,lang)
 								}
 
 							}
-
-							//Added by Prashant
-							if(admin_array.toString()!="" && admin_array.length>0 )
-								jQuery("#_naturalpersonTemplateSw_admin").tmpl(admin_array).appendTo("#_naturalperson");
-
-							//Commented by Prashant
-							/*if(admin_array.toString()!="" && admin_array.length>0 ){
-							for (var int = 0; int <admin_array.length; int++) {
-							if(lang=="En"){
-							$('#admin_details').append('<td><div class="rTableRow"><div class="rTableCell"><span id="admin_natrual'+""+int+""+'"></span></div><div class="rTableCell-1"></div><div class="rTableCell-2"></div><div class="rTableCell-3"></div><div class="rTableCell-4"></div><div class="rTableCell-5"></div><div class="rTableCell-6"></div><div class="rTableCell-7"></div><div class="rTableCell-8"></div><div class="rTableCell-9"></div></div></td>');
-							jQuery('#admin_natrual'+""+int+""+'').text(admin_array[int]);
-							}
-							else if(lang=="Sw"){
-							if(personList[i].person_gid.mobile=="null")
-							{
-							$('#admin_details').append('<td><div class="rTableRow"><div class="rTableCell_sw"><span id="admin_natrual'+""+int+""+'"></span></div><div class="rTableCell-1_sw"></div><div class="rTableCell-2_sw"></div><div class="rTableCell-3_sw"></div><div class="rTableCell-4_sw"></div><div class="rTableCell-5_sw"></div><div class="rTableCell-6_sw"></div><div class="rTableCell-7_sw"></div><div class="rTableCell-8_sw"></div><div class="rTableCell-9_sw"></div></div></td>');
-							jQuery('#admin_natrual'+""+int+""+'').text(admin_array[int]);
-							}
-							else{
-							$('#admin_details').append('<td><div class="rTableRow"><div class="rTableCell_sw"><span id="admin_natrual'+""+int+""+'"></span></div><div class="rTableCell-1_sw"></div><div class="rTableCell-2_sw"></div><div class="rTableCell-3_sw"></div><div class="rTableCell-4_sw"></div><div class="rTableCell-5_sw"></div><div class="rTableCell-6_sw"></div><div class="rTableCell-7_sw"></div><div class="rTableCell-8_sw"></div><div class="rTableCell-9_sw"></div></div></td>');
-							jQuery('#admin_natrual'+""+int+""+'').text(admin_array[int]);
-
-							}
-
-							}
-
-							}
-							}*/
-
+							
+							
+							// insert name in adjudication_personnameCustomDiv div
+							jQuery("#adjudication_personnameCustomDiv").empty();
+							
+							for (var int = 0; int < personarr.length; int++) {
+								if(lang=='En'){
+								jQuery("#adjudication_personnameCustomDiv").append('<div class="row-fluid"><div class="span6">Msimamizi/Mmiliki wa Ardhi Jina :<strong>'+personarr[int]+'</strong> </div><div class="span3">Signature _ _ _ _ _ _ _ _ _ _ _ _ </div><div class="span2">Date_ _ _ _ _ _ _ </div></div>');
+								}
+								else if(lang=='Sw'){
+									jQuery("#adjudication_personnameCustomDiv").append('<div class="row-fluid"><div class="span6">Msimamizi/Mmiliki wa Ardhi Jina :<strong>'+personarr[int]+'</strong> </div><div class="span3">Saini _ _ _ _ _ _ _ _ _ _ _ _ </div><div class="span2">Tarehe_ _ _ _ _ _ _ </div></div>');
+									
+								}
+								
+								
+								}
+							
+							
+							
 							if(lang=='En'){
-
+								
+								if(data[0].hamlet_Id!="" && data[0].hamlet_Id!=null)
+								$("#_hamletName").text(data[0].hamlet_Id.hamletName);
+								
 								if(data[0].landType!="" && data[0].landType!=null)
 									$("#_landType").text(data[0].landType.landTypeValue);
 
@@ -177,7 +219,8 @@ function get_Adjuticator_detail(id,lang)
 							else if(lang=='Sw')
 
 							{
-
+								if(data[0].hamlet_Id!="" && data[0].hamlet_Id!=null)
+									$("#_hamletName").text(data[0].hamlet_Id.hamletNameSecondLanguage);
 
 								if(data[0].landType!="" && data[0].landType!=null)
 									$("#_landType").text(data[0].landType.landTypeValue_sw);
@@ -189,7 +232,20 @@ function get_Adjuticator_detail(id,lang)
 									$("#_proposedUse").text(data[0].proposedUse.landUseType_sw);
 
 							}
-
+							
+							// for vertex table
+							
+							vertextmp=[];
+							for (var int = 1; int <= vertexlist.length; int++) {
+								var tmp=[];
+								tmp["index"]=int;
+								tmp["x"]=vertexlist[int-1].x;
+								tmp["y"]=vertexlist[int-1].y;
+								vertextmp.push(tmp);
+							}
+							
+							jQuery("#vertexTemp").tmpl(vertextmp).appendTo("#vertexBody");
+							
 							$("#_plotID").text(data[0].propertyno);
 							$("#_northName").text(data[0].neighbor_north);
 							$("#_southName").text(data[0].neighbor_south);
@@ -199,26 +255,23 @@ function get_Adjuticator_detail(id,lang)
 							$("#witness1_id").text(data[0].witness_1);
 							$("#witness2_id").text(data[0].witness_2);
 							$("#_ownership").text(data[0].landOwner);
-							$("#_applicationDate").text(data[0].surveyDate);
+							//$("#_applicationDate").text(data[0].surveyDate);
+							$("#_applicationDate").text("_____________");
 							//$("#area_id").text(data[0].area);
-							$("#_ownershipType").text(ownershipType);
+							if(lang=='Sw')
+							$("#_ownershipType").text(personList[0].share_type.shareType_sw);
+						if(lang=='En')
+							$("#_ownershipType").text(personList[0].share_type.shareType);
+
 							
 							$("#trustedInter").text(data[0].user.name);
-							
-							/*year = (new Date(data[0].surveyDate)).getFullYear();*/
 							if(data[0].propertyno!="" && data[0].propertyno!=null){
 							var Uka_no=data[0].propertyno;
 							var hamlet_array=Uka_no.split("/");
-							var arr = {"SGL":"Songambele","IPG":"Ipangani","ILL":"Ilalasimba","KLG":"Kalangali","IGG":"Igungandembwe"};
-
-							var hamlet_name=arr[hamlet_array[1]];
-
 							var project = data[0].user.defaultproject;
-
-							$("#_hamletName").text(hamlet_name);
 							}
 							jQuery.ajax({
-								url: "projectarea/",
+								url: "landrecords/projectarea/",
 								async:false,
 								success: function (result) {
 									ProjectAreaList = result;    
@@ -231,10 +284,64 @@ function get_Adjuticator_detail(id,lang)
 							$("#secretary").text(ProjectAreaList[0].approvingExecutive);
 							$(".vill_address").text(ProjectAreaList[0].address);
 							$("#personwithint").empty();
-							if(personInterestList!="")
+							if(personInterestList.length!=0)
 								{
-							$("#personwithint").text(personInterestList);
+								var pwitmp1=[];
+								for (var int = 1; int <= personInterestList.length; int++) {
+										if(lang=='Sw'){
+									var pwitmp=[]
+
+									pwitmp["number"]="Mtu mwenye Maslahi"+int;
+									pwitmp["name"]=personInterestList[int-1];
+									pwitmp1.push(pwitmp);
 								}
+								else if(lang=='En'){
+									var pwitmp=[]
+
+									pwitmp["number"]="Person of interest"+int;
+									pwitmp["name"]=personInterestList[int-1];
+									pwitmp1.push(pwitmp);
+
+								}
+								}
+							//$("#personwithint").text(personInterestList);
+								jQuery("#_personwithInterestTemp").tmpl(pwitmp1).appendTo("#_personwithInterset");
+								}
+							else{
+								var pwitmp2={number:"&nbsp;",name:"&nbsp;"};
+								jQuery("#_personwithInterestTemp").tmpl(pwitmp2).appendTo("#_personwithInterset");
+								
+							}
+							
+							$("#_deceasedPerson").empty();
+							if(deceasedList.length!=0)
+								{
+								var deceasedtmp1=[];
+								for (var int = 1; int <= deceasedList.length; int++) {
+									if(lang=='Sw'){
+									var deceasedtmp=[]
+
+									deceasedtmp["number"]="Marehemu"+int;
+									deceasedtmp["name"]=deceasedList[int-1];
+									deceasedtmp1.push(deceasedtmp);
+								}
+								else if(lang=='En'){
+									var deceasedtmp=[]
+
+									deceasedtmp["number"]="Deceased Person"+int;
+									deceasedtmp["name"]=deceasedList[int-1];
+									deceasedtmp1.push(deceasedtmp);
+
+								}
+								}
+							//$("#personwithint").text(personInterestList);
+								jQuery("#_deceasedPersonTemp").tmpl(deceasedtmp1).appendTo("#_deceasedPerson");
+								}
+							else{
+								var deceasedtmp2={number:"&nbsp;",name:"&nbsp;"};
+								jQuery("#_deceasedPersonTemp").tmpl(deceasedtmp2).appendTo("#_deceasedPerson");
+								
+							}
 							var popUpwindow=id;
 
 							var printWindow=window.open('',popUpwindow,'height=900,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no,location=no');
@@ -243,15 +350,10 @@ function get_Adjuticator_detail(id,lang)
 
 							printWindow.document.write ('<html><head><title>MAST</title>'
 									+' <link rel="stylesheet" href="../resources/styles/viewer/adjudication.css" type="text/css" />'
-
-									/*+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'*/
-									/*+'<script src="../resources/scripts/openlayers/OpenLayers.js"></script>'*/
-									/*+'<script src="../resources/scripts/cloudburst/viewer/mapLoader.js"></script>'*/
 									+'<script src="../resources/scripts/cloudburst/viewer/land-adjudication.js"></script>'
 									+'</head><body> '+html+' </body></html>');
 
 							printWindow.focus();
-							//printWindow.location.reload();
 
 						}
 					});
@@ -261,31 +363,16 @@ function get_Adjuticator_detail(id,lang)
 
 	});
 
-
+}
 }
 
 function print_templ()
 
 {
-
-
-
-	/*var divToPrint = document.getElementById('adjudicationdiv');
-	document.getElementById("print-btn").style.visibility = "hidden";
-	var popupWin = window.open('', '_blank', 'width=600,height=600');
-	//  popupWin.document.open();
-	popupWin.document.write('<html><head><title>MAST</title>'	
-			+' <link rel="stylesheet" href="../resources/styles/viewer/CCRO.css" type="text/css" />'
-			+' <link rel="stylesheet" href="../resources/styles/viewer/style-new.css" type="text/css" />'
-
-			+'</head><body> '+divToPrint.innerHTML+' </body></html>');
-
-	popupWin.document.close(); 
-	location.reload(true);
-	popupWin.print();
-	 */
-	document.getElementById("print-btn").style.visibility = "hidden";
 	location.reload();
+	
+	document.getElementById("print-btn").style.visibility = "hidden";
+	
 	window.print();
 }
 
@@ -294,7 +381,7 @@ function getonmap(usin)
 
 {
 	var map = new mapImage(usin);
-//	map.printDrawing(ID);
+
 
 
 } 

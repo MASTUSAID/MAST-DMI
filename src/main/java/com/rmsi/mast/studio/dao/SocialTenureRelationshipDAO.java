@@ -21,4 +21,6 @@ public interface SocialTenureRelationshipDAO extends GenericDAO<SocialTenureRela
 	List<SocialTenureRelationship> findDeletedPerson(Long id);
 
 	boolean addDeletedPerson(Long gid);
+
+	boolean updateSharePercentage(String alias, long personGid);
 }

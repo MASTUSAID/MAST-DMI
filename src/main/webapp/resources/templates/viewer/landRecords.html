@@ -11,11 +11,10 @@
 		$("#tab-nonnatural").tabs();
 	});
 
-
-/* 	$(function() {
-		$("#tab-admin").tabs();
+	$(function() {
+		$("#tab-nxtTokin").tabs();
 	});
- */
+
 	$(function() {
 		$("#tab-tenure").tabs();
 	});
@@ -23,15 +22,24 @@
 	$(function() {
 		$("#tab-multimedia").tabs();
 	});
+	$(function() {
+		$("#tab-deceased").tabs();
+	});
 
 	$(function() {
-		$(".datepicker").datepicker();
-		$(".datepicker").live('click', function() {
-			$(this).datepicker('destroy').datepicker({
-				dateFormat : 'yy-mm-dd'
-			}).focus();
+		$(".datepicker").datepicker({
+			
+			dateFormat: "yy-mm-dd"
 		});
+	/* 	 $(".datepicker").live('click', function() {
+			$(this).datepicker({
+				 dateFormat : 'MM/dd/yyyy'
+			}).focus();
+		});  */
+		
+		
 	});
+
 </script>
 <div class="container-fluid">
 
@@ -66,10 +74,10 @@
 								<span class="deatails-label">Village</span> <span
 									class="deatails-label-value" id="village"></span>
 							</div>
-							<div id="hamlet_sel" class="span2">
+							<!-- <div id="hamlet_sel" class="span2">
 								<span class="deatails-label">Hamlet</span> <span
 									class="deatails-label-value" id="hamlet"></span>
-							</div>
+							</div> -->
 
 						</div>
 					</div>
@@ -93,8 +101,7 @@
 
 								<div class="span2">
 									<label>Status</label> <select name="status_id" id="status_id"
-										value="" class="input-medium">
-
+										class="input-medium">
 									</select>
 								</div>
 								<div class="span2">
@@ -112,7 +119,7 @@
 									<button class="btn1 v-top-18" onclick="javascript:search();">Search</button>
 									<button class="btn v-top-24"
 										onclick="LandRecords('landRecords');">Clear</button>
-										<!-- <button class="btn1 v-top-18" onclick="javascript:autogenerateUKA();">Generate UKA</button> -->
+
 								</div>
 							</div>
 						</div>
@@ -123,6 +130,8 @@
 				</div>
 
 				<div class="scrollbarxy">
+
+
 					<table class="tablesorter" id="landRecordsTable" cellpadding="0"
 						cellspacing="0">
 
@@ -131,10 +140,14 @@
 							<tr>
 								<th>USIN</th>
 								<th>UKA</th>
+								<th>Hamlet Name</th>
 								<th>Status</th>
 								<th>Collector</th>
 								<th>Date</th>
-								<th class="no-sort">Actions</th>
+								<th class="no-sort" style="position: relative;"><a
+									class="generate" onclick="javascript:autogenerateUKA();">Generate
+										UKA </a>Actions</th>
+
 
 							</tr>
 						</thead>
@@ -146,114 +159,29 @@
 						<tfoot>
 
 							<tr class="tblFooter" id="landrecords_pagerDiv">
-								<td colspan="6">
+								<td colspan="7">
 									<div id="spatialunitDiv">
 										<a href="javascript:previousRecords();"><img
 											class="img-prev" src="resources/images/studio/previous.png"
-											title="Previous" /></a>
-										<!-- <button  onclick="javascript:previousRecords();">Previous</button> -->
-										<input type="text" readonly="readonly" name="records_from"
-											id="records_from" value="" class="input-medium"> To <input
-											type="text" name="records_to" id="records_to" value=""
+											title="Previous" /></a> <input type="text" readonly="readonly"
+											name="records_from" id="records_from" value=""
+											class="input-medium"> To <input type="text"
+											name="records_to" id="records_to" value=""
 											class="input-medium" readonly="readonly"> Of <input
 											type="text" name="records_all" id="records_all" value=""
 											class="input-medium" readonly="readonly"><a
 											href="javascript:nextRecords();"><img class="img-next"
 											src="resources/images/studio/next.png" title="Next" /></a>
-										<!-- <button class="btn" onclick="javascript:nextRecords();">Next</button> -->
 									</div>
 								</td>
 							</tr>
 						</tfoot>
 
-
-						<!-- 				<tfoot>
-
-							<tr class="tblFooter" id="landrecords_pagerDiv">
-								<td colspan="6">
-									<table cellpadding="0" cellspacing="0" class="cell_margin">
-										<tbody>
-											<tr>
-												<td width="100%" class="cell_color">
-													<table cellpadding="1" cellspacing="1" class="table_adjust"
-														style="display: block; padding-left: 450px;">
-														<tbody>
-															<tr>
-																<td class="cell_adjust"><img
-																	src="resources/scripts/tablesorter/addons/pager/icons/first.png"
-																	class="first" title="First"></td>
-																<td class="cell_adjust"><img
-																	src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
-																	class="prev" title="Previous"></td>
-																<td class="cell_adjustone"><input type="text"
-																	class="pagedisplay" readonly="readonly"></td>
-																<td class="cell_adjust"><img
-																	src="resources/scripts/tablesorter/addons/pager/icons/next.png"
-																	class="next" title="Next"></td>
-																<td class="cell_adjust"><img
-																	src="resources/scripts/tablesorter/addons/pager/icons/last.png"
-																	class="last" title="Last"></td>
-																<td class="cell_adjustone"><select class="pagesize">
-																		<option selected="selected" value="10">10</option>
-																		<option value="20" style="padding-top: 4px;">20</option>
-																</select></td>
-															</tr>
-														</tbody>
-													</table>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-						</tfoot> -->
-
-
 					</table>
+
 				</div>
 
 			</div>
-
-			<script id="landRecordsAttrTemplate" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${usinStr}
-            </td> 
-	
-		<td>
-                ${propertyno}
-            </td>                      
-			<td>
-                ${status.workflowStatus}
-            </td>           
-            <td>
-                ${user.name}
-            </td>
-			<td>
-                ${surveyDate}
-            </td>    
-			   
-									<td><div class="actions-btn">
-									<a href="#" title="Update UKA Number" class="id-checked" onclick="updateUKA(${usin},'${status.workflowStatusId}');" ></a>  
-                                    <a href="#" title="Edit Attributes" class="ea" onclick="editAttributeNew('${usin}','${status.workflowStatusId}');" ></a> 		
-                    				<a href="#" class="correct" title="Approve Status" onclick="updateStatus('${usin}','${status.workflowStatusId}');"></a>
-									<a href="#" title="Reject Status" class="cross" onclick="rejectStatus('${usin}','${status.workflowStatusId}');"></a> 
-									<a href="#" title="Adjudicate Spatial Unit" class="adj" onclick="adjudicateStatus('${usin}','${status.workflowStatusId}');"></a> 
-									<a href="#" title="Show on Map" class="map-viewer" onclick="showOnMap('${usin}','${status.workflowStatusId}');"></a> 
-									<a href="#" title="Finalize Data" class="reviewed" onclick="updatefinal('${usin}','${status.workflowStatusId}');" ></a>
-									<a href="#" title="Upload Document" onclick="javascript:uploadDocuments(${usin})" class="upload"></a>
-									<a href="#" title="Generate Adjudication Form" onclick="javascript:adjudicationFormDialog('${usin}','${status.workflowStatusId}');" class="ga"></a>
-									<a href="#" title="Generate CCRO Certification" onclick="javascript:get_Usin_detail('${usin}','${status.workflowStatusId}');" class="ccro"></a>
-								
-				
-										</div></td>
-     </tr>
-              
-        
-</script>
 
 			<div id="upload-dialog-form" title="Web Upload"
 				style="display: none;">
@@ -286,7 +214,7 @@
 				</form>
 			</div>
 
-			<div id="attribute-dialog-form" title="Update UKA Number"
+			<div id="attribute-dialog-form" title="Update Hamlet Name"
 				style="display: none;">
 
 
@@ -297,15 +225,18 @@
 					<fieldset>
 
 						<input type="hidden" name="primeryky" id="primeryky" value="">
-						<label for="email">UKA Number </label> <input type="text"
+						<!-- <label for="email">UKA Number </label> <input type="text"
 							name="uka_no" id="uka_no" value=""
-							class="text ui-widget-content ui-corner-all">
+							class="text ui-widget-content ui-corner-all"> -->
+
+						<label style="display: block" for="email" style="font-weight:bold">Hamlet
+							Name</label> <select name="hamlet_id" id="hamlet_id"></select>
 
 					</fieldset>
 				</form>
 			</div>
 
-			<div id="adjudication-dialog-form" title="Language Prefrence"
+			<div id="adjudication-dialog-form" title="Language Preference"
 				style="display: none;">
 
 
@@ -359,8 +290,10 @@
 						<ul>
 							<li><a href="#tabs-1">General Info</a></li>
 							<li><a href="#tabs-2a"> Natural Person</a></li>
-							<li><a href="#tabs-2b"> Non Natural Person</a></li>
-							<!-- <li><a href="#tabs-2c"> Administrator</a></li> -->
+							<li class="hidenonTable"><a href="#tabs-2b"> Non Natural
+									Person</a></li>
+							<li><a href="#tabs-2c"> Person of Interest</a></li>
+							<li><a href="#tabs-2d"> Deceased Person</a></li>
 							<li><a href="#tabs-3">Tenure Info</a></li>
 							<li><a href="#tabs-4">Multimedia</a></li>
 							<!-- <li><a href="#tabs-5">Custom</a></li> -->
@@ -392,24 +325,7 @@
 									</div>
 
 									<table style="width: 100%" class="landrecords22 ">
-										<!--<tr>
-														<div class="project-details" style=" overflow: hidden;">
-														
-															<td><div style="margin: 10px 0; overflow: hidden;">
-																	<span class="deatails-label" style="color: #0088cc">Spatial
-																		Unit Id</span> <span class="deatails-label-value"
-																		id="spatialid"></span> <input type="hidden"
-																		name="primary" id="primary" value="">
-																</div></td>
-															<td><div style="margin: 10px 0; overflow: hidden;">
-																	<span class="deatails-label" style="color: #0088cc">Project
-																		Name</span> <span class="deatails-label-value" id="projname"></span>
 
-																</div></td>
-
-                                                            </div>
-														</tr>
-														-->
 
 										<tr>
 
@@ -495,13 +411,11 @@
 
 
 										<tr>
-											<td><label for="email">Witness 1</label> <input
-												type="text" name="witness_1" id="witness_1" value=""
-												class="text ui-widget-content ui-corner-all justread"></td>
+											<td><label for="email">Adjudicator 1</label> <select
+												name="witness_1" id="witness_1" class="gendisable"></select></td>
 
-											<td><label for="email">Witness 2 </label> <input
-												type="text" name="witness_2" id="witness_2" value=""
-												class="text ui-widget-content ui-corner-all justread"></td>
+											<td><label for="email">Adjudicator 2 </label><select
+												name="witness_2" id="witness_2" class="gendisable"></select></td>
 
 										</tr>
 
@@ -532,14 +446,17 @@
 										<thead>
 											<tr>
 												<th>ID</th>
-												<th>Name</th>
+												<th>First Name</th>
+												<th>Last name</th>
 												<th>Gender</th>
-												<th>Education</th>
-												<th>Tenure</th>
+												<th>Person Type</th>
+												<th>Owner</th>
+												<th>Age</th>
 												<th class="showNatural">Edit</th>
 												<th class="showNatural delHide">Delete</th>
 												<th class="hideNatural">View</th>
 												<th class="showNatural">Upload Image</th>
+												<th class="showNatural">Delete Image</th>
 											</tr>
 										</thead>
 										<tbody id="naturalpersonRowData">
@@ -551,25 +468,22 @@
 									<thead>
 										<tr>
 											<th>ID</th>
-											<th>Name</th>
+											<th>First Name</th>
+											<th>Last name</th>
 											<th>Gender</th>
-											<th>Education</th>
-											<th>Tenure</th>
+											<th>Person Type</th>
+											<th>Age</th>
 											<th class="showAssociate">Edit</th>
-
 											<th class="hideAssociate">View</th>
+											<th class="showAssociate">Upload Image</th>
+											<th class="showAssociate">Delete Image</th>
+
 										</tr>
 									</thead>
 									<tbody id="associatedNaturalRowData">
 
 									</tbody>
 								</table>
-								<!-- <div>
-									<a href="#" class="showNonAddPerson personadd"
-										onclick="javascript:addNaturalPerson();"><img
-										src="resources/images/studio/addPerson.png"
-										style="padding: right" title="Add Person" /></a>
-								</div> -->
 								<div
 									style="margin-bottom: 10px; float: right; margin-top: -10px;">
 									<!-- <button onclick="javascript:addPerson();">Add Person</button> -->
@@ -591,25 +505,25 @@
 
 						<div id="tabs-2b">
 							<div class="row-fluid">
-								<div class="hidenonTable">
-									<table id="non_naturalTable" class="table table-bordered">
-										<thead>
-											<tr>
-												<th>ID</th>
-												<th>Institution Name</th>
-												<th>Address</th>
-												<th>Phone Number</th>
-												<th class="showNon">Edit</th>
-												<th class="showNon">Delete</th>
-												<th class="hideNon">View</th>
 
-											</tr>
-										</thead>
-										<tbody id="non_naturalpersonRowData">
+								<table id="non_naturalTable" class="table table-bordered">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Institution Name</th>
+											<th>Address</th>
+											<th>Phone Number</th>
+											<th class="showNon">Edit</th>
+											<th class="showNon">Delete</th>
+											<th class="hideNon">View</th>
 
-										</tbody>
-									</table>
-								</div>
+										</tr>
+									</thead>
+									<tbody id="non_naturalpersonRowData">
+
+									</tbody>
+								</table>
+
 								<div
 									style="margin-bottom: 10px; float: right; margin-top: -10px;">
 
@@ -623,25 +537,20 @@
 						</div>
 
 
-					<!-- 	<div id="tabs-2c">
+						<div id="tabs-2c">
 							<div class="row-fluid ">
-								<div id="hideTable">
-									<table id="adminTable" class="table table-bordered">
+								<div id="hideTable1">
+									<table id="nxtTokinTable" class="table table-bordered">
 										<thead>
 											<tr>
 												<th>ID</th>
-												<th>First Name</th>
-												<th>Last Name</th>
-												<th>Citizenship</th>
-												<th>Gender</th>
-												<th>Phone Number</th>
-												<th class="showadmin">Edit</th>
-												<th class="showadmin">Delete</th>
-												<th class="hideadmin">View</th>
-												<th class="showadmin">Upload Image</th>
+												<th>Name</th>
+												<th class="showkin">Edit</th>
+												<th class="showkin">Delete</th>
+												<th class="hidekin">View</th>
 											</tr>
 										</thead>
-										<tbody id="adminRowData">
+										<tbody id="nxtTokinRowData">
 
 										</tbody>
 									</table>
@@ -651,18 +560,45 @@
 
 									<span>
 										<button class="btn1 padding0 hideNew"
-											onclick="javascript:editAdminData(0);">
-											<i class="fa fa-plus"></i>New Admin
+											onclick="javascript:editnxtTokin(0);">
+											<i class="fa fa-plus"></i>Add
 										</button>
-										<button class="btn padding1 hideNew"
-											onclick="javascript:addExistingAdmin();">
-											<i class="fa fa-user"></i>Existing Admin
-										</button>
+
 									</span>
 								</div>
 
 							</div>
-						</div> -->
+						</div>
+
+						<div id="tabs-2d">
+							<div class="row-fluid ">
+								<div id="hideTable">
+									<table id="deceasedTable" class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>First Name</th>
+												<th>Middle Name</th>
+												<th>Last Name</th>
+												<th class="showdeceased">Edit</th>
+												<th class="showdeceased">Delete</th>
+												<th class="hidedeceased">View</th>
+											</tr>
+										</thead>
+										<tbody id="deceasedRowData">
+
+										</tbody>
+									</table>
+
+								</div>
+								<div>
+									<button onclick="javascript:editDeceasedPerson(0);"
+										class="btn1 padding0 hideNew" style="display: inline-block;">
+										<i class="fa fa-plus"></i>Add
+									</button>
+								</div>
+							</div>
+						</div>
 						<div id="tabs-3">
 							<div class="row-fluid">
 								<div class="hidetenureTable">
@@ -670,10 +606,11 @@
 										<thead>
 											<tr>
 												<th>ID</th>
-												<th>Share</th>
-												<th>Tenure Class</th>
-												<th>Occupancy Type</th>
-												<th>Duration</th>
+												<th>Tenure Type</th>
+												<th>Type of Right of Occupancy</th>
+												<th>Resident</th>
+												<!-- <th>Occupancy Type</th> -->
+												<!-- <th>Duration</th> -->
 												<th class="showTenure">Edit</th>
 												<th class="showTenure">Delete</th>
 												<th class="hideTenure">View</th>
@@ -716,210 +653,6 @@
 				</form>
 			</div>
 
-			<script id="naturalpersonTemplate" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${person_gid.person_gid}
-            </td> 
-	         
-			<td>
-                ${person_gid.alias}
-            </td>           
-            <td>
-               {{if person_gid.gender}} ${person_gid.gender.gender}{{/if}}
-            </td>
-
-			<td>
- 			{{if person_gid.education}} ${person_gid.education.educationLevel}{{/if}}
-			</td>
-			<td>
-                ${person_gid.tenure_Relation}
-            </td>    
-			  
-			<td align="center">
-				<a href="javascript:editNaturalData('${person_gid.person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-            </td>
-           <td align="center">
-				<a href="javascript:deleteNatural('${person_gid.person_gid}','${person_gid.alias}' );"><img src="resources/images/studio/delete.png"
- 					title="Delete" /></a>
-           </td>
-		<td align="center">
-				<a href="javascript:editNaturalData('${person_gid.person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-            </td>	
-
-	    </td>
-		<td align="center">
-				<a href="javascript:naturalPersonImage('${person_gid.person_gid}',0);"><img src="resources/images/studio/uploadImage.png" title="View" /></a>
-            </td>	  
-								
-     </tr>
-              
-        
-
-
-</script>
-
-			<script id="naturalpersonTemplate_2" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${person_gid}
-            </td> 
-	         
-			<td>
-                ${alias}
-            </td>           
-            <td>
-			{{if gender}}  ${gender.gender}{{/if}}
-            
-            </td>
-
-			<td>
-			{{if education}}  ${education.educationLevel}{{/if}}
- 			
-			</td>
-			<td>
-                ${tenure_Relation}
-            </td>    
-			  
-			<td align="center" >
-				<a href="javascript:editNaturalData('${person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-            </td>
-           
-				<td align="center" >
-				<a href="javascript:editNaturalData('${person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-            </td>
-		
-     </tr>
-              
-        
-</script>
-
-
-			<script id="non_naturalpersonTemplate" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${person_gid.person_gid}
-            </td> 
-	         
-			<td>
-                ${person_gid.institutionName}
-            </td>           
-            <td>
-                ${person_gid.address}
-            </td>
-			<td>
-                ${person_gid.phoneNumber}
-            </td>  
-  
-			  
-			<td align="center">
-				<a href="javascript:editNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-            </td>
-           <td align="center">
-				<a href="javascript:deleteNonNatural('${person_gid.person_gid}','${person_gid.institutionName}' );"><img src=
-				"resources/images/studio/delete.png" title="Delete" /></a>
-           </td>
-			<td align="center">
-				<a href="javascript:editNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-            </td>
-			 
-								
-     </tr>
-              
-        
-</script>
-
-			<script id="tenureinfoTemplate" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${gid}
-            </td>     
- 
-          <td>{{if share_type}}${share_type.shareType}{{/if}}</td> 
-
-          <td>
-
- 			{{if tenureclass_id}}${tenureclass_id.tenureClass}{{/if}}
-			</td>
-
-			<td>
-           {{if occupancy_type_id}} ${occupancy_type_id.description}{{/if}}
-             </td>
-			   
-			<td>
-                ${tenure_duration}
-            </td>   
-
-			<td align="center">
-				<a href="javascript:editTenure('${gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-            </td>
-           <td align="center">
-				<a href="javascript:deleteTenure('${gid}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
-           </td>	
-
-			<td align="center">
-				<a href="javascript:editTenure('${gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-            </td> 
-								
-     </tr>
-              
-        
-</script>
-
-
-			<script id="multimediaTemplate" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${gid}
-            </td> 
-	         
-			<td>
-                ${scanedSourceDoc}
-            </td>
-			<td>
-                ${recordation}
-            </td>    
-			  
-<td>
-                ${socialTenureInvantoryType}
-            </td>   
-<td>
-                ${comments}
-            </td>   
-
-			<td align="center">
-				<a href="javascript:editMultimedia('${gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-            </td>
-           <td align="center">
-				<a href="javascript:deleteMultimedia('${gid}','${scanedSourceDoc}' );"><img src="resources/images/studio/delete.png" title="Delete"/></a>
-           </td>	 
-				<td align="center">
-				<a href="javascript:viewMultimedia('${gid}');"><img src="resources/images/studio/document-image-view.png" title="View Document" /></a>
-            </td>	
-		<td align="center">
-				<a href="javascript:editMultimedia('${gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-            </td>			
-     </tr>
-              
-        
-</script>
-
-
 			<div id="naturalperson-dialog-form" title="Natural Person"
 				style="display: none;">
 
@@ -935,20 +668,14 @@
 							onsubmit="return false;">
 							<div id="tabs-1" style="margin: 10px;">
 								<div class="tab-pane landrecords22" id="land-record">
-								<input type="hidden" name="natural_usin" id="natural_usin"
-										value="">
-									<input type="hidden" name="natual_length" id="natual_length"
-										value=""><input type="hidden" name="projectname_key"
-										id="projectname_key" value=""> <input type="hidden"
-										name="natural_key" id="natural_key" value=""> <input
-										type="hidden" name="occ_age" id="occ_age" value="">
-									<div class="hidden_alias">
-										<label for="email">Alias </label> <input type="text"
-											name="name" id="name" value=""
-											class="text ui-widget-content ui-corner-all justread">
-									</div>
-									<label for="email">First Name </label> <input type="text"
-										name="fname" id="fname" value=""
+									<input type="hidden" name="natural_usin" id="natural_usin"
+										value=""> <input type="hidden" name="natual_length"
+										id="natual_length" value=""><input type="hidden"
+										name="projectname_key" id="projectname_key" value="">
+									<input type="hidden" name="natural_key" id="natural_key"
+										value=""> <input type="hidden" name="occ_age"
+										id="occ_age" value=""> <label for="email">First
+										Name </label> <input type="text" name="fname" id="fname" value=""
 										class="text ui-widget-content ui-corner-all justread">
 									<label for="email">Middle Name </label> <input type="text"
 										name="mname" id="mname" value=""
@@ -964,30 +691,13 @@
 										class="text ui-widget-content ui-corner-all justread">
 									<label for="email">Gender</label> <select name="gender"
 										class="justdisable" id="gender">
-									</select>
-
-									<!-- <option value="" class="text ui-widget-content ui-corner-all">Please Select</option> -->
-
-									<label for="email">Occupation </label> <input type="text"
-										name="occ" id="occ" value=""
-										class="text ui-widget-content ui-corner-all justread">
-									<label for="email">Education</label> <select name="edu"
-										id="edu" class="justdisable">
+									</select> <label id="subtypehide" for="email">Person_subType</label> <select
+										name="person_subType" class="justdisable" id="person_subType">
 									</select> <label for="email">Marital Status</label> <select
 										name="marital_status" id="marital_status" class="justdisable"></select>
-									<label for="email">Tenure </label> <input type="text"
-										name="tenure" id="tenure" value=""
-										class="text ui-widget-content ui-corner-all justread">
-									<label for="email">Owner</label> <select name="owner_nat"
-										id="owner_nat" class="justdisable"></select> <label
-										for="email">Resident Of Village</label> <select
-										name="resident" id="resident" class="justdisable"></select> <label
-										for="email">Administator </label> <input type="text"
-										name="administrator" id="administrator" value=""
-										class="text ui-widget-content ui-corner-all justread">
-									<label for="email">Citizenship </label> <input type="text"
-										name="citizenship" id="citizenship" value=""
-										class="text ui-widget-content ui-corner-all justread">
+									<label for="email">Citizenship </label> <select
+										name="citizenship" id="citizenship" class="justdisable"></select>
+
 								</div>
 							</div>
 							<div id="tabs-2" style="margin: 10px;">
@@ -1007,51 +717,29 @@
 
 			</div>
 
-			<!-- <div id="admin-dialog-form" title="Administrator"
+			<div id="nxtTokin-dialog-form" title="Person of Interest"
 				style="display: none;">
 
 				<fieldset>
 
-					<div id="tab-admin">
+					<div id="tab-nxtTokin">
 
-						<form class="cmxform" id="editadminformID" action=""
+						<form class="cmxform" id="editnxtTokinformID" action=""
 							onsubmit="return false;">
 							<div class="tab-pane landrecords22" id="land-record">
-								<input type="hidden" name="admin_usin" id="admin_usin">
-								<input type="hidden" name="admin_length" id="admin_length"
-									value=""> <input type="hidden" name="projectname_key"
-									id="projectname_key" value=""> <input type="hidden"
-									name="adminId" id="adminId" value=""> <label
-									for="email">First Name </label> <input type="text"
-									name="admin_fname" id="admin_fname" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
-
-								<label for="email">Middle Name </label> <input type="text"
-									name="admin_mname" id="admin_mname" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
-								<label for="email">Last Name </label> <input type="text"
-									name="admin_lname" id="admin_lname" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
-								<label for="email">Gender</label> <select name="admin_gender"
-									class="disableAdmin" id="admin_gender">
-								</select> <label for="email">Age </label> <input type="text"
-									name="admin_age" id="admin_age" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
-
-								<label for="email">Marital Status</label> <select
-									name="admin_marital_status" id="admin_marital_status"
-									class="disableAdmin"></select> <label for="email">Citizenship
-								</label> <input type="text" name="admin_citizenship"
-									id="admin_citizenship" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
-								<label for="email">Address</label> <input type="text"
-									name="admin_address" id="admin_address" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
-								<label for="email">Resident Of Village</label> <select
-									name="admin_resident" id="admin_resident" class="disableAdmin"></select>
-								<label for="email">Mobile Number </label> <input type="text"
-									name="admin_mobile" id="admin_mobile" value=""
-									class="text ui-widget-content ui-corner-all readAdmin">
+								<input type="hidden" name="usin_kin" id="usin_kin" value="">
+								<input type="hidden" name="id_kin" id="id_kin" value="">
+								<input type="hidden" name="name_kin" id="name_kin" value=""
+									class="text ui-widget-content ui-corner-all justread">
+								<label for="email">First Name</label> <input type="text"
+									name="fname_kin" id="fname_kin" value=""
+									class="text ui-widget-content ui-corner-all"> <label
+									for="email">Middle Name</label> <input type="text"
+									name="mname_kin" id="mname_kin" value=""
+									class="text ui-widget-content ui-corner-all"> <label
+									for="email">Last Name</label> <input type="text"
+									name="lname_kin" id="lname_kin" value=""
+									class="text ui-widget-content ui-corner-all">
 
 							</div>
 						</form>
@@ -1060,7 +748,7 @@
 
 				</fieldset>
 
-			</div> -->
+			</div>
 
 			<div id="non_naturalperson-dialog-form" title="Non Natural Person"
 				style="display: none;">
@@ -1131,7 +819,7 @@
 									<input type="hidden" name="projectname_key3"
 										id="projectname_key3" value=""> <input type="hidden"
 										name="tenure_key" id="tenure_key" value=""> <label
-										for="email">Type</label> <select name="tenure_type"
+										for="email">Tenure Type</label> <select name="tenure_type"
 										id="tenure_type" class="read-tenure"></select> <input
 										type="hidden" class="datepicker" name="start_date"
 										id="start_date" value=""
@@ -1142,9 +830,11 @@
 									<input type="hidden" name="usin" id="usin" value=""> <input
 										type="hidden" name="person_gid" id="person_gid" value="">
 									<input type="hidden" name="tenure_length" id="tenure_length"
-										value=""> <label for="email">Occupancy Type</label> <select
-										name="occtype_id" id="occtype_id" class="read-tenure"></select>
-									<label for="email">Tenure Class</label> <select
+										value=""> <label for="email">Resident</label> <select
+										name="tenure_resident" id="tenure_resident"
+										class="read-tenure"
+										onchange="javascript:changeResident(this);"></select> <label
+										for="email">Type of Right of Occupancy</label> <select
 										name="tenureclass_id" id="tenureclass_id" class="read-tenure"></select>
 									<div class="hide_duration">
 										<label for="email">Tenure Duration</label> <input type="text"
@@ -1223,6 +913,36 @@
 				</form>
 			</div>
 
+			<div id="deceased-dialog-form" title="Deceased Person"
+				style="display: none;">
+
+				<form class="cmxform landrecords22" id="editdeceasedformID"
+					action="" onsubmit="return false;">
+
+					<fieldset>
+
+						<div id="tab-deceased">
+
+							<input type="hidden" name="deceased_key" id="deceased_key"
+								value=""> <input type="hidden" name="usin_deceased"
+								id="usin_deceased" value=""> <input type="hidden"
+								name="deceased_length" id="deceased_length" value=""> <label
+								for="email">First Name </label><input type="text"
+								name="d_firstname" id="d_firstname" value=""
+								class="text ui-widget-content ui-corner-all justread"> <label
+								for="email">Middle Name </label> <input type="text"
+								name="d_middlename" id="d_middlename" value=""
+								class="text ui-widget-content ui-corner-all justread"><label
+								for="email">Last Name </label> <input type="text"
+								name="d_lastname" id="d_lastname" value=""
+								class="text ui-widget-content ui-corner-all justread">
+
+
+						</div>
+					</fieldset>
+
+				</form>
+			</div>
 
 			<div id="deletednat-dialog-form" title="Add Natural Person"
 				style="display: none;">
@@ -1233,10 +953,12 @@
 						<thead>
 							<tr>
 								<th>ID</th>
-								<th>Name</th>
+								<th>First Name</th>
+								<th>Last name</th>
 								<th>Gender</th>
-								<th>Education</th>
-								<th>Tenure</th>
+								<th>Person Type</th>
+								<th>Owner</th>
+								<th>Age</th>
 								<th>Add</th>
 							</tr>
 						</thead>
@@ -1275,41 +997,41 @@
 
 			</div>
 
-			<script id="naturalpersonTemplate_add" type="text/x-jquery-tmpl">
-       
-	   
-	   <tr>
-	   
-            <td>
-                ${person_gid.person_gid}
-            </td> 
-	         
-			<td>
-                ${person_gid.alias}
-            </td>           
-            <td>
-			{{if person_gid.gender}}  ${person_gid.gender.gender}{{/if}}
-            
-            </td>
+			<div id="share-dialog-form" title="Share" style="display: none;">
+				<form class="cmxform landrecords22" id="shareformID" action=""
+					onsubmit="return false;">
 
-			<td>
-			{{if person_gid.education}}  ${person_gid.education.educationLevel}{{/if}}
- 			
-			</td>
-			<td>
-                ${person_gid.tenure_Relation}
-            </td>    
-			  
-			
-           </td>	 
-				<td align="center" >
-				<a href="javascript:addDeletedNatural('${person_gid.person_gid}');"><img src="resources/images/studio/add.png" title="Add Person" /></a>
-            </td>
-		
-     </tr>
-              
-        
-</script>
+
+					<fieldset>
+						<div id="customShareDiv"></div>
+					</fieldset>
+				</form>
+
+			</div>
+
+			<div id="upload-natural-Image" title="Web Upload"
+				style="display: none;">
+				<!--p class="validateTips">All form fields are required.</p-->
+
+				<form class="cmxform landrecords22" id="uploadNaturalImage"
+					action="" onsubmit="return false;">
+
+
+					<fieldset>
+
+						<div id="naturalImage-div"></div>
+						<br> <strong><span id="check_img"></span></strong> <br>
+						<label for="email">Document Name </label> <input type="text"
+							name="document_natural" id="document_natural" value=""
+							class="text ui-widget-content ui-corner-all" />
+						<!-- <form id="form2" method="post" onSubmit="return false;"> -->
+						<label class="searchLbl"
+							style="margin-top: -3px; margin-right: 5px;">Select File:</label>
+						<input name="natural_image" id="natural_image" type="file" /> <label
+							style="color: #0088cc">Eg:-.jpeg ,.png</label> <br>
+					</fieldset>
+				</form>
+			</div>
 
 			<div id="deletednon-dialog-form" title="Add Non Natural Person"
 				style="display: none;">
@@ -1334,6 +1056,351 @@
 				</fieldset>
 
 			</div>
+
+
+			<div id="add_admin-dialog-form" title="Add Admin"
+				style="display: none;">
+
+
+
+				<form class="cmxform" action="" onsubmit="return false;">
+
+					<fieldset>
+						<span>
+							<button class="btn" onclick="javascript:editAdminData(0);">
+								New Person</button>
+							<button class="btn" onclick="javascript:addExistingAdmin();">
+								Existing Person</button>
+						</span>
+					</fieldset>
+				</form>
+			</div>
+
+			<script id="landRecordsAttrTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${usinStr}
+            </td> 
+	
+		<td>
+                ${propertyno}
+            </td> 
+		<td>
+	{{if hamlet_Id}}
+				${hamlet_Id.hamletName}
+	{{/if}}
+		</td>                     
+			<td>
+                ${status.workflowStatus}
+            </td>           
+            <td>
+                ${user.name}
+            </td>
+			<td>
+                ${surveyDate}
+            </td>    
+			   
+									<td><div class="actions-btn">
+									<a href="#" title="Update Hamlet" class="id-checked" onclick="editHamlet('${usin}','${status.workflowStatusId}');" ></a>  
+                                    <a href="#" title="Edit Attributes" class="ea" onclick="editAttributeNew('${usin}','${status.workflowStatusId}');" ></a> 		
+                    				<a href="#" class="correct" title="Approve Status" onclick="updateStatus('${usin}','${status.workflowStatusId}');"></a>
+									<a href="#" title="Reject Status" class="cross" onclick="rejectStatus('${usin}','${status.workflowStatusId}');"></a> 
+									<a href="#" title="Adjudicate Spatial Unit" class="adj" onclick="adjudicateStatus('${usin}','${status.workflowStatusId}');"></a> 
+									<a href="#" title="Show on Map" class="map-viewer" onclick="showOnMap('${usin}','${status.workflowStatusId}');"></a> 
+									<a href="#" title="Finalize Data" class="reviewed" onclick="updatefinal('${usin}','${status.workflowStatusId}');" ></a>
+									<a href="#" title="Upload Document" onclick="javascript:uploadDocuments(${usin})" class="upload"></a>
+									<a href="#" title="Generate Adjudication Form" onclick="javascript:adjudicationFormDialog('${usin}','${status.workflowStatusId}');" class="ga"></a>
+									<a href="#" title="Generate CCRO Certification" onclick="javascript:get_Usin_detail('${usin}','${status.workflowStatusId}');" class="ccro"></a>
+								
+				
+										</div></td>
+     </tr>
+              
+        
+</script>
+
+			<script id="naturalpersonTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+  <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.firstName}
+            </td>   
+<td>
+                ${person_gid.lastName}
+            </td>        
+
+            <td>
+			{{if person_gid.gender}}  ${person_gid.gender.gender}{{/if}}
+            
+            </td>
+
+			<td>
+{{if (person_gid.personSubType)}}  ${person_gid.personSubType.personType} {{/if}}
+               
+            </td>    
+<td>
+{{if (person_gid.personSubType)}} 
+ {{if (person_gid.personSubType.person_type_gid==3)}} Yes {{/if}}
+
+{{if (person_gid.personSubType.person_type_gid!=3)}} No {{/if}}
+{{/if}}
+</td>
+<td>
+${person_gid.age}
+</td> 
+			  
+			<td align="center">
+				<a href="javascript:editNaturalData('${person_gid.person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteNatural('${person_gid.person_gid}','${person_gid.firstName}' );"><img src="resources/images/studio/delete.png"
+ 					title="Delete" /></a>
+           </td>
+		<td align="center">
+				<a href="javascript:editNaturalData('${person_gid.person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>	
+
+	    </td>
+		<td align="center">
+				<a href="javascript:naturalPersonImage('${person_gid.person_gid}',0);"><img src="resources/images/studio/uploadImage.png" title="Upload Image" /></a>
+            </td>	  
+		<td align="center">
+				<a href="javascript:naturalPersonDeleteImage('${person_gid.person_gid}','${person_gid.firstName}');"><img src="resources/images/studio/deleteImage.png" title="Delete Image" /></a>
+            </td>							
+     </tr>
+              
+        
+
+
+</script>
+
+			<script id="naturalpersonTemplate_2" type="text/x-jquery-tmpl">
+       
+	   
+		   <tr>
+	   
+  <td>
+                ${person_gid}
+            </td> 
+	         
+			<td>
+                ${firstName}
+            </td>   
+			<td>
+                ${lastName}
+            </td>        
+
+            <td>
+			{{if gender}}  ${gender.gender}{{/if}}
+            
+            </td>
+
+			<td>
+		{{if (personSubType)}}  ${personSubType.personType} {{/if}}
+               
+            </td>    
+	
+			<td>
+			${age}
+			</td> 
+			  
+			<td align="center">
+				<a href="javascript:editNaturalData('${person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+        
+		<td align="center">
+				<a href="javascript:editNaturalData('${person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>	
+
+	    </td>
+		<td align="center">
+				<a href="javascript:naturalPersonImage('${person_gid}',0);"><img src="resources/images/studio/uploadImage.png" title="Upload Image" /></a>
+            </td>	  
+		<td align="center">
+				<a href="javascript:naturalPersonDeleteImage('${person_gid}','${firstName}');"><img src="resources/images/studio/deleteImage.png" title="Delete Image" /></a>
+            </td>							
+     </tr>
+              
+        
+</script>
+
+
+			<script id="non_naturalpersonTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.institutionName}
+            </td>           
+            <td>
+                ${person_gid.address}
+            </td>
+			<td>
+                ${person_gid.phoneNumber}
+            </td>  
+  
+			  
+			<td align="center">
+				<a href="javascript:editNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteNonNatural('${person_gid.person_gid}','${person_gid.institutionName}' );"><img src=
+				"resources/images/studio/delete.png" title="Delete" /></a>
+           </td>
+			<td align="center">
+				<a href="javascript:editNonNatural('${person_gid.person_gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>
+			 
+								
+     </tr>
+              
+        
+</script>
+
+			<script id="tenureinfoTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${gid}
+            </td>     
+ 
+          <td>{{if share_type}}${share_type.shareType}{{/if}}</td> 
+
+          <td>
+
+ 			{{if tenureclass_id}}${tenureclass_id.tenureClass}{{/if}}
+			</td>
+
+			<!--<td>
+           {{if occupancy_type_id}} ${occupancy_type_id.description}{{/if}}
+             </td>
+			   
+			<td>
+                ${tenure_duration}
+            </td>   
+-->
+			<td>
+			{{if resident}} Yes{{/if}}
+			{{if !resident}} No{{/if}}
+				
+			</td>
+			<td align="center">
+				<a href="javascript:editTenure('${gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteTenure('${gid}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>	
+
+			<td align="center">
+				<a href="javascript:editTenure('${gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td> 
+								
+     </tr>
+              
+        
+</script>
+
+
+			<script id="multimediaTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${gid}
+            </td> 
+	         
+			<td>
+                ${scanedSourceDoc}
+            </td>
+			<td>
+                ${recordation}
+            </td>    
+			  
+<td>
+                ${socialTenureInvantoryType}
+            </td>   
+<td>
+                ${comments}
+            </td>   
+
+			<td align="center">
+				<a href="javascript:editMultimedia('${gid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deleteMultimedia('${gid}','${scanedSourceDoc}' );"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+           </td>	 
+				<td align="center">
+				<a href="javascript:viewMultimedia('${gid}');"><img src="resources/images/studio/document-image-view.png" title="View Document" /></a>
+            </td>	
+		<td align="center">
+				<a href="javascript:editMultimedia('${gid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>			
+     </tr>
+              
+        
+</script>
+
+
+			<script id="naturalpersonTemplate_add" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${person_gid.person_gid}
+            </td> 
+	         
+			<td>
+                ${person_gid.firstName}
+            </td>   
+<td>
+                ${person_gid.lastName}
+            </td>        
+
+            <td>
+			{{if person_gid.gender}}  ${person_gid.gender.gender}{{/if}}
+            
+            </td>
+
+			<td>
+           {{if (person_gid.personSubType)}}  ${person_gid.personSubType.personType} {{/if}}
+            </td>    
+			<td>
+ {{if (person_gid.owner==true)}} Yes {{/if}}
+
+{{if (person_gid.owner==false)}} No {{/if}}
+</td>
+<td>
+${person_gid.age}
+</td> 
+			 
+				<td align="center" >
+				<a href="javascript:addDeletedNatural('${person_gid.person_gid}');"><img src="resources/images/studio/add.png" title="Add Person" /></a>
+            </td>
+		
+     </tr>
+              
+        
+</script>
+
+
 
 
 			<script id="nonnaturalpersonTemplate_add" type="text/x-jquery-tmpl">
@@ -1364,77 +1431,63 @@
 </script>
 
 
-			<div id="upload-natural-Image" title="Web Upload"
-				style="display: none;">
-				<!--p class="validateTips">All form fields are required.</p-->
-
-				<form class="cmxform landrecords22" id="uploadNaturalImage"
-					action="" onsubmit="return false;">
-
-
-					<fieldset>
-
-						<div id="naturalImage-div"></div>
-						<br> <strong><span id="check_img"></span></strong> <br>
-						<label for="email">Document Name </label> <input type="text"
-							name="document_natural" id="document_natural" value=""
-							class="text ui-widget-content ui-corner-all" />
-						<!-- <form id="form2" method="post" onSubmit="return false;"> -->
-						<label class="searchLbl"
-							style="margin-top: -3px; margin-right: 5px;">Select File:</label>
-						<input name="natural_image" id="natural_image" type="file" /> <label
-							style="color: #0088cc">Eg:-.jpeg ,.png</label> <br>
-					</fieldset>
-				</form>
-			</div>
-
-
-
-
-			<script id="adminTemplate" type="text/x-jquery-tmpl">
+			<script id="nxtTokinTemplate" type="text/x-jquery-tmpl">
        
 	   
 	   <tr>
 	   
             <td>
-                ${adminid}
+                ${id}
+            </td> 
+	         
+			<td>
+                ${personName}
+            </td>           
+           
+				<td align="center">
+				<a href="javascript:editnxtTokin('${id}','${personName}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            </td>
+           <td align="center">
+				<a href="javascript:deletenxtTokin('${id}','${personName}');"><img src="resources/images/studio/delete.png"
+ 					title="Delete" /></a>
+           </td>
+		<td align="center">
+				<a href="javascript:editnxtTokin('${id}','${personName}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+            </td>	
+     </tr>
+              
+        
+</script>
+
+
+			<script id="deceasedTemplate" type="text/x-jquery-tmpl">
+       
+	   
+	   <tr>
+	   
+            <td>
+                ${id}
             </td> 
 	         
 			<td>
                 ${firstname}
-            </td>           
-            <td>
-			${lastname}
-            
-            </td>
-				
-		
-			<td>
-                ${citizenship}
             </td>    
-			  	<td>
-				{{if gender}}  ${gender.gender}{{/if}}
- 			
-			</td>
 	<td>
-			${phonenumber}
- 			
-			</td>
-			
-           </td>	 
+                ${middlename}
+            </td> 
+	<td>
+                ${lastname}
+            </td>        
+           
 				<td align="center">
-				<a href="javascript:editAdminData('${adminid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+				<a href="javascript:editDeceasedPerson('${id}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
             </td>
            <td align="center">
-				<a href="javascript:deleteAdmin('${adminid}','${firstname}' );"><img src="resources/images/studio/delete.png"
+				<a href="javascript:deleteDeceased('${id}','${firstname}');"><img src="resources/images/studio/delete.png"
  					title="Delete" /></a>
            </td>
 		<td align="center">
-				<a href="javascript:editAdminData('${adminid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-            </td>	
-		
-<td align="center">
-				<a href="javascript:naturalPersonImage(0,'${adminid}');"><img src="resources/images/studio/uploadImage.png" title="View" /></a>
+				<a href="javascript:editDeceasedPerson('${id}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
             </td>	
      </tr>
               
@@ -1480,6 +1533,16 @@
               
         
 </script>
+ <script type="text/javascript">
+        var specialKeys = new Array();
+        specialKeys.push(8); //Backspace
+        function IsNumeric(e) {
+            var keyCode = e.which ? e.which : e.keyCode
+            var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+            document.getElementById("error").style.display = ret ? "none" : "inline";
+            return ret;
+        }
+    </script>
 
 
 			<!-- <div id="add_person-dialog-form" title="Add Person"
@@ -1495,29 +1558,19 @@
 				</form>
 			</div> -->
 
-			<div id="add_admin-dialog-form" title="Add Admin"
-				style="display: none;">
-
-
-
-				<form class="cmxform" action="" onsubmit="return false;">
-
-					<fieldset>
-						<span>
-							<button class="btn" onclick="javascript:editAdminData(0);">
-								New Person</button>
-							<button class="btn" onclick="javascript:addExistingAdmin();">
-								Existing Person</button>
-						</span>
-					</fieldset>
-				</form>
-			</div>
 
 			<!-- 	<div id="newnaturalperson-dialog-form" title="Natural Person"
 				style="display: none;">
  -->
 
 		</div>
+	</div>
+	<div id="dialog-confirm" title="Validate and Update Attributes">
+		<p id="validationCheck" style="display: none">
+			<span class="ui-icon ui-icon-alert"
+				style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you
+			want to update the attributes?
+		</p>
 	</div>
 </div>
 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+	updateCheck="false">
+	<!-- | Please see http://ehcache.sourceforge.net/documentation/configuration.html 
+		for | detailed information on how to configurigure caches in this file + -->
+	<!-- Location of persistent caches on disk -->
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache eternal="false" maxElementsInMemory="1000"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="projectFBNCache" eternal="false"
+		maxElementsInMemory="100" overflowToDisk="true" diskPersistent="true"
+		timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="layerFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="layerGroupFBNCache" eternal="false"
+		maxElementsInMemory="100" overflowToDisk="true" diskPersistent="true"
+		timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="roleFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="maptipFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="layertypeFBNCache" eternal="false"
+		maxElementsInMemory="100" overflowToDisk="true" diskPersistent="true"
+		timeToIdleSeconds="0" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+
+	<cache name="userFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="bookmarkFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+
+	<cache name="dbconnFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+		
+		<cache name="baseLayerFBNCache" eternal="false" maxElementsInMemory="100"
+		overflowToDisk="true" diskPersistent="true" timeToIdleSeconds="0"
+		timeToLiveSeconds="0" memoryStoreEvictionPolicy="LRU" />
+		
+	
+
+</ehcache>

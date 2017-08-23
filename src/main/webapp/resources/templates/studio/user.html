@@ -137,7 +137,7 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 			<script id="UserTemplate" type="text/x-jquery-tmpl">
         <tr>
             <td>
-                ${name}
+                ${username}
             </td>                       
 			<td>
                 ${defaultproject}
@@ -169,10 +169,10 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
  <tr>
  <td class="labelHeader">Username</td>
 <input type="hidden" name="hid_userid" id="hid_userid" value="${id}" /> 
-<td><input type="textbox" name="name" id="name" value="${name}" /></td>
+<td><input type="textbox" name="name" id="name" value="${username}" /></td>
 
  <td class="labelHeader">Name</td>
- <td><input type="text" name="name_user" id="name_user" value="${name_user}"/></td>
+ <td><input type="text" name="name_user" id="name_user" value="${name}"/></td>
   </tr>
 
  <tr>
@@ -255,3 +255,4 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
  
  </script>
 	</form>
+	</div>

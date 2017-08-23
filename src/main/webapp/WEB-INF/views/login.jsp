@@ -139,7 +139,7 @@ importantly, to make the process more transparent and accessible to local people
 <div class="header_bluebar_bottom"></div>
 <div id="copyright">&copy; 2015. All Rights Reserved.</div>
 <div id="ccg_logo" onClick="window.location = 'http://cloudburstgroup.com';"></div>
-<div id="rmsi_logo" onClick="window.location = 'http://www.rmsi.com';"></div>
+<!-- <div id="rmsi_logo" onClick="window.location = 'http://www.rmsi.com';"></div> -->
 <script language="javascript">			
 		var auth_status = "<%=auth_fail_status%>";
 		var language = "<%=lang%>";
@@ -152,13 +152,13 @@ importantly, to make the process more transparent and accessible to local people
 			var login = document.getElementById("login");
 			var password = document.getElementById("pwd");
 			var btn = document.getElementById("btnLogin");
-			var register = document.getElementById("register");
+		//	var register = document.getElementById("register");
 			var helptxt = document.getElementById("helptxt");
 			// if(lang.indexOf("en") > -1){
 				login.appendChild(document.createTextNode("Username:"));
 				password.appendChild(document.createTextNode("Password:"));
 				btn.value = "Login";
-				register.appendChild(document.createTextNode("Register"));
+			//	register.appendChild(document.createTextNode("Register"));
 				
 			//}
 		}

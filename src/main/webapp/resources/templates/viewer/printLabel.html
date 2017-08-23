@@ -1,0 +1,79 @@
+<div class="PrintWrapperLandScape">
+	<div class="personalDetails-wrap">
+		<p style="text-align:center;font-size: 18px;"><U><strong><span id="title1"></span></strong></U></p>
+		<div class="container-fluid">
+			<div class="row-fluid">
+
+				
+					<div class="personalDetails alt">
+						<div id=print_map class="personalDetails-inner" >
+						</div>
+					</div>
+
+			
+			
+		</div>
+		
+		<p style="text-align:center;"><U><strong>Parcel Details</strong></U></p>
+		
+			<div class="personalDetails alt">
+
+			<div class="personalDetails-inner">
+			<table class="tablesorter" id="printDetailsTable" cellpadding="0" cellspacing="0">
+			<thead>
+			<th>Usin</th>
+			<th>Uka No.</th>
+			<th>Hamlet Name</th>
+			<th>Person Type</th>
+			<th>Person Name</th>
+			<th>Person With Interest</th>
+			
+			
+			</thead>
+			<tbody id="printDetailsBodyData">
+			</tbody>
+			
+			</table>
+				
+
+			</div>
+
+
+		</div>
+	</div>
+
+<!-- 
+	<div class="personalDetails-wrap">
+		<div class="personalDetails no-border">
+		div
+
+		</div>
+	</div> -->
+</div>
+</div>
+
+<script id="printDetailsTemplate" type="text/x-jquery-tmpl">
+	<tr>                                                                        
+		<td>
+			${usin}
+		</td>
+		<td>
+			${uka}
+		</td>
+		<td>
+		   ${hamletName}
+		</td>
+		<td>
+		   ${personSubType}
+		</td>
+	<td>
+		   ${name}
+		</td>
+	<td>
+		   ${pwi}
+		</td>
+	
+		
+
+	</tr>
+</script>

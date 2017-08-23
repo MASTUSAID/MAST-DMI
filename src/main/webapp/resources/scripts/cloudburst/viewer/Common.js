@@ -189,6 +189,7 @@ function createThematicXML() {
             "<ogc:SortBy><ogc:SortProperty><ogc:PropertyName>${uniqueFld}</ogc:PropertyName><ogc:SortOrder>${SortOrder}</ogc:SortOrder></ogc:SortProperty></ogc:SortBy>" +
      "</wfs:Query>" +
 "</wfs:GetFeature>";
+    return dataPost;
 
 }
 

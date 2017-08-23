@@ -603,7 +603,7 @@ var CreateFilter = function (selectedSearchType1, searchText1) {
             version: "1.1.0"
         });
 
-        var dataPost=createXML();
+        var dataPost=createThematicXML();
         var xml = new OpenLayers.Format.XML();
         var xmlFilter = xml.write(filter_1_0.write(filters));
 

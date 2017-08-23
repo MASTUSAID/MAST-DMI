@@ -41,8 +41,11 @@ import com.rmsi.mast.studio.domain.ProjectSpatialData;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SourceDocument;
 import com.rmsi.mast.studio.domain.SpatialUnit;
+import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.domain.User;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.mobile.service.PersonService;
+import com.rmsi.mast.studio.mobile.service.ProjectService;
 import com.rmsi.mast.studio.mobile.service.SpatialDataService;
 import com.rmsi.mast.studio.mobile.service.SpatialUnitService;
 import com.rmsi.mast.studio.mobile.service.SurveyProjectAttributeService;
@@ -73,6 +76,9 @@ public class MobileDataController {
 
 	@Autowired
 	PersonService personService;
+
+	@Autowired
+	ProjectService projectService;
 
 	private SpatialUnit spatialUnit;
 
@@ -114,6 +120,9 @@ public class MobileDataController {
 	 */
 	private static final int BUFFER_SIZE = 26214400;
 
+	
+	
+	
 	@RequestMapping(value = "/studio/mobile/user/{id}", method = RequestMethod.GET)
 	public User getUserById(@PathVariable String id) {
 		User usr = userService.findUserByName(id);
@@ -128,9 +137,10 @@ public class MobileDataController {
 	 * @return: Returns user object of the user after successful authentication
 	 * @author shruti.thakur
 	 */
-	@RequestMapping(value = "/studio/mobile/user/auth", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/user/auth", method = RequestMethod.POST)
 	public User authenticateUser(HttpServletRequest request,
 			HttpServletResponse response) {
+		System.out.println("AA");
 		return mobileUserService
 				.authenticateByEmail(request.getParameter("email"),
 						request.getParameter("password"));
@@ -143,7 +153,7 @@ public class MobileDataController {
 	 * @param redsponse
 	 * @author shruti.thakur
 	 */
-	@RequestMapping(value = "studio/mobile/user/download/mbTiles/{mbTilesId}", method = RequestMethod.GET)
+	@RequestMapping(value = "sync/mobile/user/download/mbTiles/{mbTilesId}", method = RequestMethod.GET)
 	public String downloadMbTilesByProjectId(@PathVariable int mbTilesId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -169,7 +179,7 @@ public class MobileDataController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "studio/mobile/user/download/configuration/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "sync/mobile/user/download/configuration/{userId}", method = RequestMethod.POST)
 	public Map<String, Object> downloadConfigurationByProjectId(
 			@PathVariable int userId, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -180,6 +190,11 @@ public class MobileDataController {
 			Map<String, Object> configurationData = new ConcurrentHashMap<String, Object>();
 
 			try {
+
+				// Add Village Name to Map
+				configurationData.put("Village",
+						projectService.getProjectArea(projectId).getVillage());
+
 				// Add Attributes to the map
 				configurationData.put("Attributes", surveyProjectAttribute
 						.getSurveyAttributesByProjectId(projectId));
@@ -187,6 +202,14 @@ public class MobileDataController {
 				// Add Project Spatial Data
 				configurationData.put("SpatialData", spatialDataService
 						.getProjectSpatialDataByProjectId(projectId));
+
+				// Add List of Adjudicator
+				configurationData.put("Adjudicator", surveyProjectAttribute
+						.getProjectAdjudicatorByProjectId(projectId));
+
+				// Add List of Hamlet
+				configurationData.put("Hamlet", surveyProjectAttribute
+						.getProjectHamletsByProjectId(projectId));
 
 				// Return map containing Attributes and SpatialUnit for Download
 				// Configuration
@@ -229,7 +252,7 @@ public class MobileDataController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/studio/mobile/project/attributeValues/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/project/attributeValues/{userId}", method = RequestMethod.POST)
 	public Map<Long, List<List<Object>>> getProjectAttributeValues(
 			@PathVariable int userId, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -270,7 +293,7 @@ public class MobileDataController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/studio/mobile/document/upload/", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/document/upload/", method = RequestMethod.POST)
 	@ResponseBody
 	synchronized public String upload(MultipartHttpServletRequest request,
 			HttpServletResponse response) {
@@ -303,17 +326,17 @@ public class MobileDataController {
 
 					/** Setting File Name */
 					sourceDocument.setLocScannedSourceDoc("resources"
-							+ File.separator
+							+ "/"
 							+ "documents"
-							+ File.separator
+							+ "/"
 							+ spatialUnitService.getSpatialUnitByUsin(
 									sourceDocument.getUsin()).getProject()
-							+ File.separator + "multimedia");
+							+ "/" + "multimedia");
 
 					/** Creating documents directory to store file */
 					File documentsDir = new File(request.getServletContext()
 							.getRealPath(
-									sourceDocument.getLocScannedSourceDoc()));
+									sourceDocument.getLocScannedSourceDoc()).replace("mast", ""));
 
 					if (!documentsDir.exists()) {
 						documentsDir.mkdirs();
@@ -345,20 +368,26 @@ public class MobileDataController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "/studio/mobile/attributes/sync", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/attributes/sync", method = RequestMethod.POST)
 	synchronized public Map<String, String> syncAttributes(
 			HttpServletRequest request, HttpServletResponse response) {
 
 		List<NaturalPerson> naturalPersonList = new ArrayList<NaturalPerson>();
 		List<NonNaturalPerson> nonNaturalPersonList = new ArrayList<NonNaturalPerson>();
 		List<SocialTenureRelationship> socialTenureList = new ArrayList<SocialTenureRelationship>();
+		List<SpatialUnitPersonWithInterest> nextOfKinList = new ArrayList<SpatialUnitPersonWithInterest>();
+		List<SpatialunitDeceasedPerson> deceasedPersonList= new ArrayList<SpatialunitDeceasedPerson>();
+
+		SpatialUnitPersonWithInterest nextOfKin;
+		SpatialunitDeceasedPerson deceasePerson;
 
 		Map<String, String> result = new IdentityHashMap<String, String>();
 
 		try {
 
 			// Main Array
-			JSONArray attributesArray = new JSONArray(request.getParameter("syncData"));
+			JSONArray attributesArray = new JSONArray(
+					request.getParameter("syncData"));
 
 			for (int i = 0; i < attributesArray.length(); i++) {
 
@@ -369,7 +398,7 @@ public class MobileDataController {
 				naturalPerson = new NaturalPerson();
 				nonNaturalPerson = new NonNaturalPerson();
 				socialTenure = new SocialTenureRelationship();
-
+		
 				if (surveyProject.has("SpatialFeatures")) {
 					// SpatialFeature Array
 					JSONArray spatialFeature = surveyProject
@@ -405,9 +434,9 @@ public class MobileDataController {
 							spatialUnit.setPolygon(geometryConversion
 									.convertWktToPolygon(spatialFeature.get(2)
 											.toString()));
-							spatialUnit.setArea(spatialUnit
-									.getPolygon().getArea());
-//							spatialUnit.setArea(geometryConversion.getArea(spatialUnit.getPolygon()));
+							spatialUnit.setArea(spatialUnit.getPolygon()
+									.getArea());
+							// spatialUnit.setArea(geometryConversion.getArea(spatialUnit.getPolygon()));
 							spatialUnit.getPolygon().setSRID(4326);
 							spatialUnit.setPerimeter((float) spatialUnit
 									.getPolygon().getLength());
@@ -415,7 +444,7 @@ public class MobileDataController {
 						}
 
 						spatialUnit.getTheGeom().setSRID(4326);
-						
+
 						// Setting "Survey Date"
 						spatialUnit.setSurveyDate(new SimpleDateFormat(
 								"dd-MM-yyyy HH:mm:ss a").parse(spatialFeature
@@ -428,9 +457,6 @@ public class MobileDataController {
 
 						// Setting IMEI
 						spatialUnit.setImeiNumber(spatialFeature.getString(5));
-						
-						//setting active true
-						spatialUnit.setActive(true);
 
 						// Setting PersonType
 						if (spatialFeature.getString(6).equalsIgnoreCase(
@@ -453,8 +479,57 @@ public class MobileDataController {
 						spatialUnit.setUserid(Integer.parseInt(spatialFeature
 								.getString(8)));
 
+						// Setting Hamlet Id
+						spatialUnit.setHamletId(Integer.parseInt(spatialFeature
+								.getString(9)));
+
+						// Setting Witness1
+						spatialUnit.setWitness1(spatialFeature.getString(10));
+
+						// Setting Witness2
+						spatialUnit.setWitness2(spatialFeature.getString(11));
+						
+						// Setting active=true
+						spatialUnit.setActive(true);
 					}
 				}
+
+				if (surveyProject.has("NextOfKin")) {
+
+					// NextOfKin Array
+					JSONArray nextOfKinArr = surveyProject
+							.getJSONArray("NextOfKin");
+
+					if (nextOfKinArr.length() > 0) {
+
+						for (int k = 0; k < nextOfKinArr.length(); k++) {
+							nextOfKin = new SpatialUnitPersonWithInterest();
+							nextOfKin.setPerson_name(nextOfKinArr.getJSONArray(k).getString(0));
+							nextOfKinList.add(nextOfKin);
+						}
+					}
+				}
+				
+				if (surveyProject.has("DeceasedPerson")) {
+
+					// NextOfKin Array
+					JSONArray deceasedPersonArr = surveyProject
+							.getJSONArray("DeceasedPerson");
+
+					if (deceasedPersonArr.length() > 0) {
+
+						for (int k = 0; k < deceasedPersonArr.length(); k++) {
+							JSONArray deceasedArr = deceasedPersonArr.getJSONArray(k);
+							deceasePerson=new SpatialunitDeceasedPerson();
+							deceasePerson.setFirstname(deceasedArr.getString(0));
+							deceasePerson.setMiddlename(deceasedArr.getString(1));
+							deceasePerson.setLastname(deceasedArr.getString(2));
+							
+							deceasedPersonList.add(deceasePerson);
+						}
+					}
+				}
+				
 				if (surveyProject.has("AttributeValue")) {
 
 					// AttributeValue Array
@@ -538,7 +613,7 @@ public class MobileDataController {
 									nonNaturalArray.getString(3));
 
 						}
-
+						
 						nonNaturalPersonList.add(nonNaturalPerson);
 						System.out.println("Non Natural List: "
 								+ nonNaturalPersonList);
@@ -624,9 +699,10 @@ public class MobileDataController {
 				result.put(
 						featureId,
 						mobileUserService.syncSurveyProjectData(spatialUnit,
-								naturalPersonList, nonNaturalPersonList,
-								socialTenureList, attributeValuesList,
-								attributeValuesMap).toString());
+								deceasedPersonList,nextOfKinList, naturalPersonList,
+								nonNaturalPersonList, socialTenureList,
+								attributeValuesList, attributeValuesMap)
+								.toString());
 				System.out.println("Data Persisted Successfully");
 
 				/** Clearing all lists and map **/
@@ -635,6 +711,8 @@ public class MobileDataController {
 				naturalPersonList.clear();
 				nonNaturalPersonList.clear();
 				socialTenureList.clear();
+				nextOfKinList.clear();
+				deceasedPersonList.clear();
 
 				// Clear all static lists and map
 				clearAll();
@@ -658,14 +736,14 @@ public class MobileDataController {
 			nonNaturalPersonList.removeAll(Collections
 					.singleton(nonNaturalPerson));
 			socialTenureList.removeAll(Collections.singleton(socialTenure));
-		
+
 			// Clear all static lists and map
 			clearAll();
 		}
 		return result;
 	}
 
-	@RequestMapping(value = "/studio/mobile/sync/RejectedSpatialUnit/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/sync/RejectedSpatialUnit/{userId}", method = RequestMethod.POST)
 	public List<Long> syncRejectedSpatialUnit(@PathVariable int userId,
 			HttpServletRequest request, HttpServletResponse response) {
 
@@ -680,7 +758,7 @@ public class MobileDataController {
 
 	}
 
-	@RequestMapping(value = "/studio/mobile/sync/adjudicatedData", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/sync/adjudicatedData", method = RequestMethod.POST)
 	public synchronized List<Long> updateAdjudicatedData(
 			HttpServletRequest request, HttpServletResponse response) {
 
@@ -713,7 +791,7 @@ public class MobileDataController {
 		}
 	}
 
-	@RequestMapping(value = "/studio/mobile/download/FinalDataSet/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/sync/mobile/download/FinalDataSet/{userId}", method = RequestMethod.POST)
 	public Map<Long, List<List<Object>>> downloadFinalDataset(
 			@PathVariable int userId, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -833,20 +911,14 @@ public class MobileDataController {
 					if (attributeId == 9) {
 						spatialUnit.setProposedUse(spatialUnitService
 								.getLandUseTypeById(Integer.parseInt(value)));
-					}/* else if (attributeId == 14) {
-						spatialUnit.setTypeName(value);
-
-					}*/ else if (attributeId == 15) {
+					} else if (attributeId == 15) {
 						spatialUnit.setHousehidno(Integer.parseInt(value));
 					} else if (attributeId == 16) {
 						spatialUnit.setExistingUse(spatialUnitService
 								.getLandUseTypeById(Integer.parseInt(value)));
 					} else if (attributeId == 17) {
 						spatialUnit.setComments(value);
-					}
-					// else if(attributeId == 18){
-					// spatialUnit.setmeasurementUnit(value); }
-					else if (attributeId == 28) {
+					} else if (attributeId == 28) {
 						spatialUnit.setLandOwner(value);
 					} else if (attributeId == 34) {
 						spatialUnit.setAddress1(value);
@@ -872,14 +944,6 @@ public class MobileDataController {
 						spatialUnit.setNeighborEast(value);
 					} else if (attributeId == 47) {
 						spatialUnit.setNeighborWest(value);
-					} else if (attributeId == 48) {
-						spatialUnit.setWitness1(value);
-					} else if (attributeId == 49) {
-						spatialUnit.setWitness2(value);
-					} else if (attributeId == 50) {
-						spatialUnit.setWitness3(value);
-					} else if (attributeId == 51) {
-						spatialUnit.setWitness4(value);
 					} else if (attributeId == 53) {
 						spatialUnit.setOtherUseType(value);
 					}
@@ -892,7 +956,7 @@ public class MobileDataController {
 							prevGroupId = currentGroupId;
 							naturalPerson.setMobileGroupId(currentGroupId);
 						}
-
+						naturalPerson.setAlias("");
 						if (attributeId == 1) {
 							naturalPerson.setFirstName(value);
 						} else if (attributeId == 2) {
@@ -937,7 +1001,10 @@ public class MobileDataController {
 						} else if (attributeId == 41) {
 							naturalPerson.setAdministator(value);
 						} else if (attributeId == 42) {
-							naturalPerson.setCitizenship(value);
+							/*naturalPerson.setCitizenship(value);*/
+							naturalPerson
+							.setCitizenship_id(spatialUnitService
+									.getCitizenship(Integer.parseInt(value)));
 						} else if (attributeId == 43) {
 							if (value.equalsIgnoreCase("yes")) {
 								value = "true";
@@ -946,6 +1013,45 @@ public class MobileDataController {
 							}
 							naturalPerson.setResident_of_village(Boolean
 									.valueOf(value));
+						} 
+						
+						// parse in long instead of Int 25-Sep
+						else if (attributeId == 54) {
+							
+							try {
+								if(value.equals("10"))
+									naturalPerson
+									.setPersonSubType(personService
+											.getPersonTypeById(3l));
+								
+								else if(value.equals("11"))
+									naturalPerson
+									.setPersonSubType(personService
+											.getPersonTypeById(4l));
+								
+								else if(value.equals("12"))
+									naturalPerson
+									.setPersonSubType(personService
+											.getPersonTypeById(5l));
+								
+								else
+								naturalPerson
+										.setPersonSubType(personService
+												.getPersonTypeById(Long.parseLong(value)));
+							} catch (Exception e) {
+								logger.error(e);
+							}
+							
+						/*	else if(value.equals("11"))
+								naturalPerson
+										.setPersonSubType(personService
+												.getPersonTypeById(4l));
+								
+							else if(value.equals("12"))
+								naturalPerson
+										.setPersonSubType(personService
+												.getPersonTypeById(5l));
+								*/
 						}
 					}
 				} else if (attributeCategoryType.equalsIgnoreCase("nonnatural")
@@ -996,7 +1102,25 @@ public class MobileDataController {
 									.setTenureclass_id(spatialUnitService
 											.getTenureClassById(Integer
 													.parseInt(value)));
-						} else if (attributeId == 32) {
+							
+							// updated on 20-Oct as resident introduced for tenure class
+							if(value.equals("30"))
+							socialTenure.setResident(false);
+							else if(value.equals("29"))
+								socialTenure.setResident(true);
+						} 
+						
+						else if (attributeId == 55) {
+							if (value.equalsIgnoreCase("Yes")) {
+								value = "true";
+								socialTenure.setResident(true);
+							} else {
+								value = "false";
+								socialTenure.setResident(false);
+							}
+							
+						}
+						else if (attributeId == 32) {
 							try {
 								socialTenure
 										.setSocial_tenure_startdate(new SimpleDateFormat(
@@ -1023,6 +1147,7 @@ public class MobileDataController {
 
 				// Persisting data in AttributesValue
 				if (!value.equals("null")) {
+					if(attributeId!=54)
 					addAllAttributeValues(value, attributeId);
 				}
 			}
@@ -1117,13 +1242,13 @@ public class MobileDataController {
 
 		// Clears natural list by gid
 		naturalListByGId.clear();
-		
+
 		// Clears non natural list by gid
 		nonNaturalListByGId.clear();
-		
+
 		// Clears tenure List by GId
 		tenureListByGId.clear();
-		
+
 		// Clears attribute values Hash Map
 		attributeValuesMap.clear();
 	}

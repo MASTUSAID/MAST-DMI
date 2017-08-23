@@ -173,7 +173,7 @@ Selection.prototype.displaySelection = function(filter, style, activeLayer){
             var layer = activeLayer; //OpenLayers.Map.activelayer;
             var clonedLayer = layer.clone();
             clonedLayer.setName("clone");
-            map.addLayers([clonedLayer]);
+            map.addLayer(clonedLayer);
             clonedLayer.mergeNewParams({
                 SLD: sld_result
             });

@@ -10,9 +10,10 @@ var idorder=[];
 
 function ProjectAttribute(_selectedItem)
 {
+	
 	proj_name = null;
 	selectedItem=_selectedItem;
-
+	
 
 	jQuery.ajax({
 		url: "projecttype/",
@@ -30,6 +31,7 @@ function ProjectAttribute(_selectedItem)
 
 function displayRefreshedProjectAttr()
 {
+	
 	jQuery("#projectattribute-div").empty();
 	jQuery.get("resources/templates/mobile/" + selectedItem + ".html", function (template) 
 			{
@@ -55,15 +57,19 @@ function displayRefreshedProjectAttr()
 
 			});	
 
+
 }
 
 function fillAccordians(_proj_name)
 {
 	proj_name = _proj_name;
+	
 
 	projname=$('#projectAttr_project').val();
 	if(projname==0)
 	{
+		
+		jQuery(".btnprojectattr").hide();
 		jQuery("#generaltbl").empty();
 		jQuery("#general_property_tbl").empty();
 		jQuery("#natural_persontbl").empty();
@@ -74,7 +80,8 @@ function fillAccordians(_proj_name)
 	}
 
 	else{
-
+		jQuery(".btnprojectattr").show();
+		
 		jQuery.ajax({          
 			type: 'GET',
 			url: "projectattrib/display/1/"+proj_name+"/",

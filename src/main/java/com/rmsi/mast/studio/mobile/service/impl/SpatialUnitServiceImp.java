@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.Gender;
 import com.rmsi.mast.studio.domain.GroupType;
 import com.rmsi.mast.studio.domain.LandType;
@@ -21,6 +22,7 @@ import com.rmsi.mast.studio.domain.SlopeValues;
 import com.rmsi.mast.studio.domain.SoilQualityValues;
 import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.TenureClass;
+import com.rmsi.mast.studio.mobile.dao.CitizenshipDao;
 import com.rmsi.mast.studio.mobile.dao.GenderDao;
 import com.rmsi.mast.studio.mobile.dao.GroupTypeDao;
 import com.rmsi.mast.studio.mobile.dao.LandTypeDao;
@@ -74,6 +76,9 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
 
 	@Autowired
 	LandTypeDao landTypeDao;
+	
+	@Autowired
+	CitizenshipDao citizenshipDao;
 
 	@Override
 	public List<SpatialUnit> getSpatialUnitDataByProjectId(String projectId) {
@@ -181,6 +186,11 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
 
 		return landTypeDao.getLandTypeById(landTypeId);
 
+	}
+
+	@Override
+	public Citizenship getCitizenship(int val) {
+		return citizenshipDao.getCitizensbyId(val);
 	}
 
 }

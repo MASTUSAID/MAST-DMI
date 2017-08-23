@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 /*var width = $(window).width(); 
 var height = $(window).height(); 
 
@@ -12,10 +12,13 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 
 </script>
 </head>
-<body>
-	<div id="adjudicationdiv" class="PrintWrapperLandScape"
+<body> -->
+	<!-- <div id="adjudicationdiv" class="PrintWrapperLandScape"
 		style="overflow-y: auto; height: 100%;">
+		<div class="PrintWrapperLandScape"> -->
 
+ 
+ 	<div class="PrintWrapperLandScape" >
 		<div class="personalDetails no-border">
 			
 			<span style="position:absolute; right: 0px;">Fomu na 18 & 49</span>
@@ -155,6 +158,7 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 						<th>Jina La Ukoo</th>
 						<th>Mmiliki</th>
 						<th>Msimamizi</th>
+						<th>Mlezi</th>
 						<th>Jinsia</th>
 						<th>Umri</th>
 						<th>Ndoa</th>
@@ -174,7 +178,7 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 					<tr>
 						<th>Jina la Taasisi</th>
 						<th>Anwani</th>
-						<th>Kuwasiliana Idadi</th>
+						<th>Nambari ya simu</th>
 					</tr>
 
 					<tbody id="_nonnaturalperson">
@@ -192,6 +196,8 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 					<th style="width: 140px;">Saini</th>
 					<th style="width: 248px;">Mchoro:</th>
 				</tr>
+				
+			
 				<tr>
 					<td>Kaskazini</td>
 					<td><span id="_northName"></span></td>
@@ -200,10 +206,27 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 						class="attribute-position"></span></td>
 				
 					<td></td>
-					<td rowspan="6" style="position:relative;">
-						<div id="map1"  >
-						<img src="resources/images/compass.png" class="map-compass"/>
+					<td rowspan="7" style="position:relative;">
+					<div> <img src="resources/images/compass.png" class="map-compass"/></div>
+					
+						<div id="map1" style="position: relative; top:-32px; " >
 						</div>
+								
+					<div style="position:absolute; bottom:-10px; width:98%;">
+					<p class="bottom-separator">
+						<strong>Jira: </strong>
+					</p>
+					<p class="bottom-separator">
+						<strong>Mashariki: </strong>&nbsp; <span id="east_coord"></span>
+					</p>
+
+					<p>
+						<strong>Kaskazini: </strong><span id="noth_coord"></span>
+					</p>
+					<p class="bottom-separator"></p>
+					  
+					</div>
+							
 					</td>
 				</tr>
 				<tr>
@@ -233,41 +256,52 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 
 				</tr>
 				<tr>
-					<td colspan="5
-					">Haki ya njia na matumizi mengine :</td>
+					<td colspan="5">Haki ya njia na matumizi mengine :</td>
 
 
 				</tr>
 
 				<tr>
 					<td colspan="5">
-						<div class="container-fluid">
-							<div class="row-fluid">
-								<div class="span6">Watu wenye Maslahi:<span id="personwithint"></span>
-								</div>
-							</div>
-						<div class="row-fluid">
-								<div class="span6">Msimamizi/Mmiliki wa Ardhi Jina _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </div>
-								<div class="span3">Saini _ _ _ _ _ _ _ _ _ _ _ _ </div>
-								<div class="span2">Tarehe_ _ _ _ _ _ _ </div>
+				<div id="personwithInterset">
+			<table class="amendbeforeAfterTable">
+				<tr>
+					<th>Mtu/Watu wenye maslahi</th>
+					<th>Jina</th>
+				</tr>
 
+				<tbody id="_personwithInterset">
 
-							</div>
-							<div class="row-fluid">
-								<div class="span6">Msimamizi/Mmiliki wa Ardhi Jina _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div>
-								<div class="span3">Saini _ _ _ _ _ _ _ _ _ _ _ _ </div>
-								<div class="span2">Tarehe _ _ _ _ _ _ _  </div>
+				</tbody>
+			</table>
+		</div>
+					<div id="deceasedPerson">
+			<table class="amendbeforeAfterTable">
+				<tr>
+					<th>Marehemu</th>
+					<th>Jina</th>
+				</tr>
 
+				<tbody id="_deceasedPerson">
 
-							</div>
+				</tbody>
+			</table>
+		</div>
+						
 
-						</div>
-
+						
 					</td>
 
 				</tr>
 				<tr>
-					<td colspan="5">
+				<td colspan="5">
+				<div class="container-fluid">
+			  <div id ="adjudication_personnameCustomDiv"></div>
+			  </div>
+			  </td>
+			  </tr>
+				<tr class="pageBreak">
+					<td colspan="6">
 						<p><strong>Kwa Matumizi ya Ofisi:</strong></p>
 						<div class="row-fluid">
 							<div class="span12">Maoni ya Halmashauri ya Kijiji
@@ -282,28 +316,27 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 
 						</div>
 						<div class="row-fluid">
-							<div class="span4">Jina la Mwenyekiti __<strong><span id="chairperson"></span></strong>
+							<div class="span4">Jina la Mwenyekiti: <strong><span id="chairperson"></span></strong>
 								</div>
 							<div class="span4">Saini _ _ _ _ _ _ _ _ _ _ _ _  </div>
-							<div class="span4">Tarehe _ _ _ _ _ _ _</div>
+							<div class="span4">Tarehe _ _ _ _ _ _ _ _ _ _ _ _</div>
 
 
 						</div>
 						<div class="row-fluid">
-							<div class="span4">Jina la Katibu 
-								 __ <strong><span id="secretary"></span></strong></div></div>
+							<div class="span4">Jina la Katibu :<strong><span id="secretary"></span></strong></div>
 							<div class="span4">Saini _ _ _ _ _ _ _ _ _ _ _ _  </div>
-							<div class="span4">Tarehe _ _ _ _ _ _ _</div>
+							<div class="span4">Tarehe _ _ _ _ _ _ _ _ _ _ _ </div>
+						</div>
 
-
-						
 						<div class="row-fluid">
-							<div class="span4">Jina la Mhakiki__<strong><span id="trustedInter"></span></strong></div>
+							<div class="span4">Jina la Mhakiki: <strong><span id="trustedInter"></span></strong></div>
+							
 							<div class="span4">Saini _ _ _ _ _ _ _ _ _ _ _ _  </div>
-							<div class="span4">Tarehe _ _ _ _ _ _ _</div>
+							<div class="span4">Tarehe _ _ _ _ _ _ _ _ _ _ _ _</div>
 						</div>
 					</td>
-					<td valign="top">
+				<!-- 	<td valign="top">
 						<p class="bottom-separator" style="font-weight:bold;">Jira:</p>
 						<p class="bottom-separator">
 							Mashariki: <span id="east_coord"></span>
@@ -315,10 +348,25 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 						</p>
 						<p class="bottom-separator">
 
-					</td>
+					</td> -->
 				</tr>
 
 			</table>
+					<div id="vertexList">
+			<div class="vertexAlign">Majira X na Y</div>
+			<table class="amendbeforeAfterTable">
+			
+				<tr>
+					<th>S.No.</th>
+					<th>Majira X</th>
+					<th>Majira Y</th>
+				</tr>
+
+				<tbody id="vertexBody">
+
+				</tbody>
+			</table>
+		</div>
 			<div>
 				<button id="print-btn" class="btn v-top-20" style="float: right"
 					onclick="print_templ();">Print</button>
@@ -356,10 +404,22 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 		   ${lastName}
 		</td>
 		<td>
- 	&nbsp;
+ {{if (personSubType.person_type_gid!=3)}} &nbsp; {{/if}}
+
+{{if (personSubType.person_type_gid==3)}} Ndiyo {{/if}}
 		</td>
 		<td>
-		     &nbsp;
+{{if (personSubType.person_type_gid!=4)}} &nbsp; {{/if}}
+
+{{if (personSubType.person_type_gid==4)}} Ndiyo {{/if}}
+
+	
+</td>
+<td>
+{{if (personSubType.person_type_gid!=5)}} &nbsp; {{/if}}
+
+{{if (personSubType.person_type_gid==5)}} Ndiyo {{/if}}
+
 		</td>
 		<td>
 		   {{if gender}}${gender.gender_sw}{{/if}}
@@ -371,15 +431,18 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
 		  {{if marital_status}}${marital_status.maritalStatus_sw}{{/if}} 
 		</td>
 		<td>
-		   ${citizenship}
+		   {{if citizenship_id}}${citizenship_id.citizenname_sw}{{/if}} 
 		</td>
-		<td>
-		      &nbsp;
-		</td>
+		<!--<td class="vill_address">
+		      
+		</td>-->
+<td>
+&nbsp;
+</td>
 		<td>
 {{if (!resident_of_village)}} Hapana {{/if}}
 
-{{if (resident_of_village)}} Ndiyo {{/if}}
+{{if (resident_of_village)}} Ndio {{/if}}
 		</td>
 		<td>
 		   {{if mobile && mobile!=0 }} ${mobile}  {{/if}}
@@ -424,6 +487,43 @@ $(".amendbeforeAfterTable-overlap").css('width','346px');
   </td>
   
 
+ </tr>
+</script>
+<script id="_personwithInterestTemp" type="text/x-jquery-tmpl">
+ <tr>                                                                        
+  <td>
+	${number}
+  </td>
+  
+  <td>
+  ${name}
+  </td>
+ </tr>
+</script>
+<script id="_deceasedPersonTemp" type="text/x-jquery-tmpl">
+ <tr>                                                                        
+  <td>
+	${number}
+  </td>
+  
+  <td>
+  ${name}
+  </td>
+ </tr>
+</script>
+<script id="vertexTemp" type="text/x-jquery-tmpl">
+ <tr>  
+ <td>
+	${index}
+  </td>
+                                                                        
+  <td>
+	${x}
+  </td>
+  
+  <td>
+  ${y}
+  </td>
  </tr>
 </script>
 

@@ -1,5 +1,6 @@
 package com.rmsi.mast.viewer.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -23,7 +24,8 @@ implements SpatialUnitPersonWithInterestDao {
 	public List<SpatialunitPersonwithinterest> findByUsin(Long usin) {
 
 		try {
-			Query query = getEntityManager().createQuery("Select sp from SpatialunitPersonwithinterest sp where sp.usin = :usin");
+			
+			Query query = getEntityManager().createQuery("Select sp from SpatialunitPersonwithinterest sp where sp.usin = :usin order by sp.id asc ");
 			List<SpatialunitPersonwithinterest> personinterest = query.setParameter("usin", usin).getResultList();
 			
 
@@ -32,12 +34,12 @@ implements SpatialUnitPersonWithInterestDao {
 			}		
 			else
 			{
-				return null;
+				return new ArrayList<SpatialunitPersonwithinterest>();
 			}
 		} catch (Exception e) {
 
 			logger.error(e);
-			return null;
+			return new ArrayList<SpatialunitPersonwithinterest>();
 		}
 
 	}

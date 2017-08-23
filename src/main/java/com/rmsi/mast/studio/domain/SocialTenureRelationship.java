@@ -60,6 +60,10 @@ public class SocialTenureRelationship implements Serializable {
 	private float tenure_duration;
 	private boolean isActive;
 
+	private String sharePercentage;
+	private boolean resident;
+
+
 	public SocialTenureRelationship() {
 		super();
 	}
@@ -145,5 +149,24 @@ public class SocialTenureRelationship implements Serializable {
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+
+
+	public String getSharePercentage() {
+		return sharePercentage;
+	}
+
+	public void setSharePercentage(String sharePercentage) {
+		this.sharePercentage = sharePercentage;
+	}
+
+
+	public boolean isResident() {
+		return resident;
+	}
+
+	public void setResident(boolean resident) {
+		this.resident = resident;
+	}
+
 
 }

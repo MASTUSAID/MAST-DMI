@@ -1,5 +1,6 @@
 package com.rmsi.mast.studio.domain.fetch;
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -14,6 +15,8 @@ public class SpatialunitPersonwithinterest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@SequenceGenerator(name="PERSON_WITH_INTEREST_ID_GENERATOR", sequenceName="spatial_unit_person_with_interest_seq")
+	@GeneratedValue(strategy=GenerationType.AUTO , generator="PERSON_WITH_INTEREST_ID_GENERATOR")
 	private Long id;
 
 	@Column(name="person_name")

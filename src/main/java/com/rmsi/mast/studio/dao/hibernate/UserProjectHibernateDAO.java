@@ -55,7 +55,7 @@ public class UserProjectHibernateDAO extends GenericHibernateDAO<UserProject, Lo
 public List<String> getUsersByProject(String name){
 		
 		TypedQuery<String> query = 
-			getEntityManager().createQuery("Select up.user.name from UserProject up where up.projectBean.name = :name", String.class).setParameter("name", name);
+			getEntityManager().createQuery("Select up.user.username from UserProject up where up.projectBean.name = :name", String.class).setParameter("name", name);
 		
 		return query.getResultList();
 	}
@@ -64,7 +64,7 @@ public List<String> getUsersByProject(String name){
 public List<String> getUserNameByProject(String id){
 	
 	TypedQuery<String> query = 
-			getEntityManager().createQuery("Select up.user.name from UserProject up where up.projectBean.name = :name", String.class).setParameter("name", id);
+			getEntityManager().createQuery("Select up.user.username from UserProject up where up.projectBean.name = :name", String.class).setParameter("name", id);
 	return query.getResultList();
 }
 

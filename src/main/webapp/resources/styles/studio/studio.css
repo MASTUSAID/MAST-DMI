@@ -878,6 +878,10 @@ a.btn02 {
 	cursor:pointer;
 }
 
+a.btnprojectattr {
+      display: none;
+
+}
 a.btn02 span {
     background: transparent url('../../images/viewer/bg_button_span.png') no-repeat;
     display: block;

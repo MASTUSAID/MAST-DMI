@@ -18,7 +18,9 @@ import com.rmsi.mast.studio.dao.MaritalStatusDAO;
 import com.rmsi.mast.studio.dao.OccupancyDAO;
 import com.rmsi.mast.studio.dao.PersonDAO;
 import com.rmsi.mast.studio.dao.PersonTypeDAO;
+import com.rmsi.mast.studio.dao.ProjectAdjudicatorDAO;
 import com.rmsi.mast.studio.dao.ProjectAreaDAO;
+import com.rmsi.mast.studio.dao.ProjectHamletDAO;
 import com.rmsi.mast.studio.dao.SUnitHistoryDAO;
 import com.rmsi.mast.studio.dao.ShareTypeDAO;
 import com.rmsi.mast.studio.dao.SlopeValuesDAO;
@@ -30,6 +32,7 @@ import com.rmsi.mast.studio.dao.UnitDAO;
 import com.rmsi.mast.studio.dao.UsertableDAO;
 import com.rmsi.mast.studio.domain.AttributeCategory;
 import com.rmsi.mast.studio.domain.AttributeValues;
+import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.EducationLevel;
 import com.rmsi.mast.studio.domain.Gender;
 import com.rmsi.mast.studio.domain.GroupType;
@@ -41,7 +44,9 @@ import com.rmsi.mast.studio.domain.NonNaturalPerson;
 import com.rmsi.mast.studio.domain.OccupancyType;
 import com.rmsi.mast.studio.domain.Person;
 import com.rmsi.mast.studio.domain.PersonType;
+import com.rmsi.mast.studio.domain.ProjectAdjudicator;
 import com.rmsi.mast.studio.domain.ProjectArea;
+import com.rmsi.mast.studio.domain.ProjectHamlet;
 import com.rmsi.mast.studio.domain.ShareType;
 import com.rmsi.mast.studio.domain.SlopeValues;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
@@ -55,10 +60,12 @@ import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitStatusHistory;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTemp;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonadministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
 import com.rmsi.mast.studio.domain.fetch.Usertable;
 import com.rmsi.mast.studio.mobile.dao.AttributeValuesDao;
+import com.rmsi.mast.studio.mobile.dao.CitizenshipDao;
 import com.rmsi.mast.studio.mobile.dao.EducationLevelDao;
 import com.rmsi.mast.studio.mobile.dao.LandUseTypeDao;
 import com.rmsi.mast.studio.mobile.dao.NaturalPersonDao;
@@ -69,6 +76,7 @@ import com.rmsi.mast.studio.mobile.dao.SurveyProjectAttributeDao;
 import com.rmsi.mast.viewer.dao.LandRecordsDao;
 import com.rmsi.mast.viewer.dao.PersonAdministratorDao;
 import com.rmsi.mast.viewer.dao.SpatialStatusDao;
+import com.rmsi.mast.viewer.dao.SpatialUnitDeceasedPersonDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitPersonAdministratorDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitPersonWithInterestDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitTempDao;
@@ -189,6 +197,18 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 	
 	@Autowired
 	private SpatialUnitPersonWithInterestDao spatialUnitPersonWithInterestDao;
+	
+	@Autowired
+	private ProjectHamletDAO projectHamletDAO;
+	
+	@Autowired
+	private SpatialUnitDeceasedPersonDao spatialUnitDeceasedPersonDao;
+	
+	@Autowired
+	private ProjectAdjudicatorDAO projectAdjudicatorDAO;
+	
+	@Autowired
+	private CitizenshipDao citizenshipDao;
 
 	@Override
 	public List<SpatialUnitTable> findAllSpatialUnit(String defaultProject) {
@@ -264,7 +284,12 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 	@Override
 	public List<NaturalPerson> naturalPersonById(Long id) {
 		
-		return naturalPersonDao.findById(id);
+		try {
+			return naturalPersonDao.findById(id);
+		} catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 		
 	}
 
@@ -418,6 +443,9 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 
 	@Override
 	public boolean deleteNatural(Long id) {
+		//check if source document is not present against person_gid
+		if(getdocumentByPerson(id)!=null)
+		deleteMultimedia(Long.valueOf(getdocumentByPerson(id).getGid()));
 		
 		return socialTenureRelationshipDAO.deleteNatural(id);
 	}
@@ -526,8 +554,7 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 		try {
 			return attributeMasterDAO.fetchCustomAttribs(parentid,id.intValue());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
 			return null;
 		}
 		
@@ -565,8 +592,7 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 		try {
 			return sourceDocumentDAO.makePersistent(sourceDocument);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e);
 			return null;
 		}
 	}
@@ -747,8 +773,7 @@ try {
 			try {
 				return socialTenureRelationshipDAO.findDeletedPerson(id);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e);
 				return null;
 			}
 		}
@@ -869,6 +894,176 @@ try {
 			return spatialUnitTempDao.updateUKAnumber(long1,uka);
 		}
 
-	
-	
+
+
+		@Override
+		public boolean addnxtTokin(SpatialunitPersonwithinterest spi) {
+			 try {
+				spatialUnitPersonWithInterestDao.makePersistent(spi);
+				return true;
+			} catch (Exception e) {
+				logger.error(e);
+				return false;
+			}
+		}
+
+
+
+		@Override
+		public boolean deletePersonWithInterest(Long id) {
+			 try {
+				spatialUnitPersonWithInterestDao.makeTransientByID(id);
+				return true;
+			} catch (Exception e) {
+				logger.error(e);
+				return false;
+			}		
+		}
+
+
+
+		@Override
+		public List<PersonType> AllPersonType() {
+			return personTypeDAO.findAll();
+		}
+
+
+
+		@Override
+		public List<SpatialUnitTable> getSpatialUnitByBbox(String bbox , String project_name) {
+			
+			return landRecordsDao.getSpatialUnitByBbox(bbox,project_name);
+		}
+
+
+
+		@Override
+		public AttributeValues getAttributeValue(Long value_key) {
+			try {
+				return attributeValuesDao.findById(value_key, false);
+			} catch (Exception e) {
+				logger.error(e);
+				return null;
+			}
+		}
+
+
+
+		@Override
+		public Long getAttributeKey(long person_gid, long uid) {
+			return attributeValuesDao.getAttributeKeyById(person_gid,uid);
+		}
+
+
+
+		@Override
+		public boolean findExistingHamlet(long hamlet_id) {
+			return landRecordsDao.findExistingHamlet(hamlet_id);
+		}
+
+
+
+		@Override
+		public List<SpatialunitDeceasedPerson> findDeceasedPersonByUsin(
+				Long usin) {
+		
+			return spatialUnitDeceasedPersonDao.findPersonByUsin(usin);
+		}
+
+
+
+		@Override
+		public boolean saveDeceasedPerson(SpatialunitDeceasedPerson spdeceased) {
+			try {
+				spatialUnitDeceasedPersonDao.makePersistent(spdeceased);
+				return true;
+			} catch (Exception e) {
+				
+				logger.error(e);
+				return false;
+			}
+		}
+
+
+
+		@Override
+		public boolean deleteDeceasedPerson(Long id) {
+		
+			try {
+				spatialUnitDeceasedPersonDao.makeTransientByID(id);
+				return true;
+			} catch (Exception e) {
+			
+				logger.error(e);
+				return false;
+			}
+		}
+
+
+
+		@Override
+		public boolean deleteAllVertexLabel() {
+			return landRecordsDao.deleteAllVertexLabel();
+		}
+
+
+
+		@Override
+		public boolean addAllVertexLabel(int k, String lat, String lon) {
+		return landRecordsDao.addAllVertexLabel(k,lat,lon);
+		}
+
+
+
+		@Override
+		public ProjectAdjudicator findAdjudicatorByID(int witness1) {
+			return projectAdjudicatorDAO.findById(witness1, false);
+		}
+
+
+
+		@Override
+		public boolean updateSharePercentage(String alias, long personGid) {
+		return socialTenureRelationshipDAO.updateSharePercentage(alias,personGid);
+		}
+
+
+
+
+		@Override
+		public Citizenship findcitizenship(long citizenship) {
+			return citizenshipDao.findBycitizenId(citizenship);
+		}
+
+
+
+		@Override
+		public List<Citizenship> findAllCitizenShip() {
+			try {
+				return citizenshipDao.findAll();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+
+
+		@Override
+		public boolean deleteNaturalImage(Long id) {
+			return sourceDocumentDAO.deleteNaturalPersonImage(id);
+		}
+
+
+
+		@Override
+		public boolean checkActivePerson(Long id) {
+		return sourceDocumentDAO.checkPersonImage(id);
+		}
+
+
+
+
+
 }

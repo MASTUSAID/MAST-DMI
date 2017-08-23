@@ -56,7 +56,7 @@ GenericHibernateDAO<NaturalPerson, Integer> implements NaturalPersonDao {
 			if (naturalperson.size() > 0) {
 				return naturalperson;
 			} else {
-				return null;
+				return new ArrayList<NaturalPerson>();
 			}
 		} catch (Exception e) {
 			logger.error(e);

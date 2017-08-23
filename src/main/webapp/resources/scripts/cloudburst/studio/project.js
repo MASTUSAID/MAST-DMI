@@ -14,6 +14,8 @@ var checkHamletEdit=false;
 var HamletName=null;
 var HamletAlias=null;
 var HamletCode=null;
+var checkeditHam=false;
+
 
 function Project(_selectedItem)
 {	
@@ -50,6 +52,10 @@ function Project(_selectedItem)
 
 
 function displayRefreshedProject(){
+	$('body').find("#hamlet-dialog-form").remove();
+	$('body').find("#adjudicator-dialog-form").remove();
+
+	$("#hamlet-dialog-form").remove();
 	jQuery.ajax({
 		url: "project/" ,
 		success: function (data) {
@@ -121,10 +127,13 @@ var sortedLyrGroup = null;
 var proj_users = null;
 var proj_baselayer=null;
 var proj_country=null;
+var editableProject;
 //var proj_region=null;
 
 var createEditProject = function (_name) 
 {	
+	checkeditHam=false;
+	editableProject=_name;
 	var projurl=window.location.protocol+'//'+window.location.host+'/'+'spatialvue-viewer/?project='+_name+'&_token=';
 
 	optVals = [];
@@ -220,147 +229,153 @@ var createEditProject = function (_name)
 
 	if (_name) 
 	{
+
+
 		jQuery.ajax({
-		url: "adjudicators/"+_name,
-		success: function (adjudicatorList) {
-			adjList=adjudicatorList;
+			url: "adjudicators/"+_name,
+			success: function (adjudicatorList) {
+				adjList=adjudicatorList;
 
 
-		},
-		async: false
-	});	
+			},
+			async: false
+		});	
 
-	jQuery.ajax({
-		url: "hamlet/"+_name,
-		success: function (lsthamlet) {
+		jQuery.ajax({
+			url: "hamlet/"+_name,
+			success: function (lsthamlet) {
 
-			hamletList=lsthamlet;
-		},
-		async: false
-	});	
+				hamletList=lsthamlet;
+			},
+			async: false
+		});	
 
-	jQuery('#name').attr('readonly', true);
-	jQuery.ajax({
-		url: selectedItem+"/" + _name + "?" + token,
-		async:false,
-		success: function (data) {
+		jQuery('#name').attr('readonly', true);
+		jQuery.ajax({
+			url: selectedItem+"/" + _name + "?" + token,
+			async:false,
+			success: function (data) {
 
-			sortedLyrGroup = new Array(proj_layerGroup.length);
-			selectedLyrGroups = data.projectLayergroups;
-			var _i;
-			for(_i=0; _i<selectedLyrGroups.length; _i++){
-				for(_j=0; _j<proj_layerGroup.length; _j++){
-					if(selectedLyrGroups[_i].layergroups.name == proj_layerGroup[_j].name){
-						sortedLyrGroup[_i] = proj_layerGroup[_j];
-						proj_layerGroup.splice(_j, 1);
-						break;
+				sortedLyrGroup = new Array(proj_layerGroup.length);
+				selectedLyrGroups = data.projectLayergroups;
+				var _i;
+				for(_i=0; _i<selectedLyrGroups.length; _i++){
+					for(_j=0; _j<proj_layerGroup.length; _j++){
+						if(selectedLyrGroups[_i].layergroups.name == proj_layerGroup[_j].name){
+							sortedLyrGroup[_i] = proj_layerGroup[_j];
+							proj_layerGroup.splice(_j, 1);
+							break;
+						}
 					}
 				}
-			}
 
 
-			for(_k=0; _k<proj_layerGroup.length; _k++, _i++){
-				sortedLyrGroup[_i] = proj_layerGroup[_k];
-			}
+				for(_k=0; _k<proj_layerGroup.length; _k++, _i++){
+					sortedLyrGroup[_i] = proj_layerGroup[_k];
+				}
 
-			jQuery("#ProjectTemplateForm").tmpl(data,
+				jQuery("#ProjectTemplateForm").tmpl(data,
 
-					{
+						{
 
-					}
+						}
 
-			).appendTo("#projectGeneralBody");
+				).appendTo("#projectGeneralBody");
 
-			jQuery("#ProjectTemplateLayergroup").tmpl(data,
+				jQuery("#ProjectTemplateLayergroup").tmpl(data,
 
-					{
+						{
 
-					}
+						}
 
-			).appendTo("#projectLayergroupBody");
-
-
-			jQuery("#projectConfigurationTemplate").tmpl(data,
+				).appendTo("#projectLayergroupBody");
 
 
-					{
-
-					}
-
-			).appendTo("#projectConfigurationBody");
+				jQuery("#projectConfigurationTemplate").tmpl(data,
 
 
-			// add value for project configuration start by RMSI NK (also villagechairmanId for save text three field value)
+						{
 
-			jQuery.each(proj_country, function (i, value) {    	
-				jQuery("#countryId").append(jQuery("<option></option>").attr("value", value).text(value)); 
+						}
 
-			});
-
-			jQuery("#hid_idseq").val(data.id);
+				).appendTo("#projectConfigurationBody");
 
 
+				// add value for project configuration start by RMSI NK (also villagechairmanId for save text three field value)
 
-			if(data.projectAreas.length>0)
-			{
+				jQuery.each(proj_country, function (i, value) {    	
+					jQuery("#countryId").append(jQuery("<option></option>").attr("value", value).text(value)); 
 
-				jQuery("#countryId").val(data.projectAreas[0].countryName);
-				jQuery("#hid_id").val(data.projectAreas[0].areaId);
-				getRegionOnCountryChange(data.projectAreas[0].countryName);					
-				jQuery("#regionId").val(data.projectAreas[0].region);
-				jQuery("#districtId").val(data.projectAreas[0].districtName);
-				jQuery("#hamletId").val(data.projectAreas[0].hamlet);
-				jQuery("#villageId").val(data.projectAreas[0].village);	
+				});
 
-				jQuery("#villagechairmanId").val(data.projectAreas[0].villageChairman);	
-				jQuery("#executiveofficerId").val(data.projectAreas[0].approvingExecutive);	
-				jQuery("#districtofficerId").val(data.projectAreas[0].districtOfficer);	
-			}
-
-
-			// add value for project configuration end by RMSI NK 
-
-
-			jQuery("#ProjectTemplateDisclaimer").tmpl(data,
-
-					{
-
-					}
-
-			).appendTo("#projectDisclaimerBody");
-
-			jQuery("#projectLayergroupBody").empty();
-
-
-			jQuery("#ProjectTemplateLayergroup").tmpl(sortedLyrGroup,
-
-					{
-
-					}
-
-			).appendTo("#projectLayergroupBody");	 
-
-			jQuery("#projectBaselayerBody").empty();
-			jQuery("#ProjectTemplateBaselayer").tmpl(proj_baselayer,
-
-					{
-
-					}
-
-			).appendTo("#projectBaselayerBody");
+				jQuery("#hid_idseq").val(data.id);
 
 
 
+				if(data.projectAreas.length>0)
+				{
+
+					jQuery("#countryId").val(data.projectAreas[0].countryName);
+					jQuery("#hid_id").val(data.projectAreas[0].areaId);
+					getRegionOnCountryChange(data.projectAreas[0].countryName);					
+					jQuery("#regionId").val(data.projectAreas[0].region);
+					jQuery("#districtId").val(data.projectAreas[0].districtName);
+					jQuery("#hamletId").val(data.projectAreas[0].hamlet);
+					jQuery("#villageId").val(data.projectAreas[0].village);	
+
+					jQuery("#villagechairmanId").val(data.projectAreas[0].villageChairman);	
+					jQuery("#executiveofficerId").val(data.projectAreas[0].approvingExecutive);	
+					jQuery("#districtofficerId").val(data.projectAreas[0].districtOfficer);
+
+					//Added Village Code and Village Postal Code
+					jQuery("#villagecode").val(data.projectAreas[0].village_code);
+					jQuery("#villagepostalcode").val(data.projectAreas[0].address);
+				}
 
 
-			jQuery("#projectUserList").empty();
+				// add value for project configuration end by RMSI NK 
 
-			jQuery("#ProjectTemplateUser").tmpl(userroledata).appendTo("#projectUserList");
 
-			if (adjList.length>0)
-			{
-				checkAdjEdit=true;
-				/*jQuery("#temporaryAdjDiv").empty();
+				jQuery("#ProjectTemplateDisclaimer").tmpl(data,
+
+						{
+
+						}
+
+				).appendTo("#projectDisclaimerBody");
+
+				jQuery("#projectLayergroupBody").empty();
+
+
+				jQuery("#ProjectTemplateLayergroup").tmpl(sortedLyrGroup,
+
+						{
+
+						}
+
+				).appendTo("#projectLayergroupBody");	 
+
+				jQuery("#projectBaselayerBody").empty();
+				jQuery("#ProjectTemplateBaselayer").tmpl(proj_baselayer,
+
+						{
+
+						}
+
+				).appendTo("#projectBaselayerBody");
+
+
+
+
+
+				jQuery("#projectUserList").empty();
+
+				jQuery("#ProjectTemplateUser").tmpl(userroledata).appendTo("#projectUserList");
+
+				if (adjList.length>0)
+				{
+					checkAdjEdit=true;
+					/*jQuery("#temporaryAdjDiv").empty();
 
 		        	for (var i = 0; i < adjList.length; i++) {
 		        		 selectedText=adjList[i].adjudicatorName;
@@ -373,138 +388,138 @@ var createEditProject = function (_name)
 		        				jQuery("#temporaryAdjDiv").append(content);	
 		        			jQuery('#adjudicator_name'+""+i+""+'').val(selectedText);
 		        	}
-				 */
-				array=[];
-				for (var i = 0; i < adjList.length; i++) {
-					selectedText=adjList[i].adjudicatorName;
-					array.push(selectedText);
+					 */
+					array=[];
+					for (var i = 0; i < adjList.length; i++) {
+						selectedText=adjList[i].adjudicatorName;
+						array.push(selectedText);
+					}
+					addPersonAdjudicator('new'); 
 				}
-				addPersonAdjudicator(); 
-			}
-			if (hamletList.length>0)
-			{
-				checkHamletEdit=true;
-				hamletDetails=[];
-				for (var i = 0; i < hamletList.length; i++) {
-					HamletName=hamletList[i].hamletName;
-					HamletAlias=hamletList[i].hamletNameSecondLanguage;
-					HamletCode=hamletList[i].hamletCode;
-					hamletDetails.push(HamletName);
-					hamletDetails.push(HamletAlias);
-					hamletDetails.push(HamletCode);
+				if (hamletList.length>0)
+				{
+					checkHamletEdit=true;
+					hamletDetails=[];
+					for (var i = 0; i < hamletList.length; i++) {
+						HamletName=hamletList[i].hamletName;
+						HamletAlias=hamletList[i].hamletNameSecondLanguage;
+						HamletCode=hamletList[i].hamletCode;
+						hamletDetails.push(HamletName);
+						hamletDetails.push(HamletAlias);
+						hamletDetails.push(HamletCode);
+					}
+					addHamlet('new'); 
 				}
-				addHamlet(); 
-			}
 
-			jQuery('#name').attr('readonly', true);
+				jQuery('#name').attr('readonly', true);
 
-			jQuery.each(proj_units, function (i, value) {    	
-				jQuery("#project_unit").append(jQuery("<option></option>").attr("value", value.name).text(value.description));        
-			});
+				jQuery.each(proj_units, function (i, value) {    	
+					jQuery("#project_unit").append(jQuery("<option></option>").attr("value", value.name).text(value.description));        
+				});
 
-			jQuery.each(proj_formats, function (i, value) {    	
-				jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.name).text(value.name));        
-			});
+				jQuery.each(proj_formats, function (i, value) {    	
+					jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.name).text(value.name));        
+				});
 
 
-			$('[class^="tr-"]').hide();
+				$('[class^="tr-"]').hide();
 
-			/*APARESH 
+				/*APARESH 
                 jQuery.each(proj_layerGroup, function (i, value) {    	
                 	jQuery("#layerGroupList").append(jQuery("<option></option>").attr("value", value.name).text(value.name));        
                 });
-			 */
-			//set DD value
-			jQuery("#project_unit").val(data.unit.name);
-			jQuery("#project_outputFormat").val(data.outputformat.name);
+				 */
+				//set DD value
+				jQuery("#project_unit").val(data.unit.name);
+				jQuery("#project_outputFormat").val(data.outputformat.name);
 
-			if (data.disclaimer != null  &&  data.disclaimer != "") {
-				jQuery("#chkDisclaimer").attr('checked', true);
-				jQuery('#Disclaimer').css("visibility", "visible");
-				jQuery('#Disclaimer').val(data.disclaimer);
-			}
-			else {
-				jQuery("#chkDisclaimer").attr('checked', false);
-				jQuery('#Disclaimer').val("");
-				jQuery('#Disclaimer').css("visibility", "hidden");
-			}
+				if (data.disclaimer != null  &&  data.disclaimer != "") {
+					jQuery("#chkDisclaimer").attr('checked', true);
+					jQuery('#Disclaimer').css("visibility", "visible");
+					jQuery('#Disclaimer').val(data.disclaimer);
+				}
+				else {
+					jQuery("#chkDisclaimer").attr('checked', false);
+					jQuery('#Disclaimer').val("");
+					jQuery('#Disclaimer').css("visibility", "hidden");
+				}
 
-			//set layergroup list value  APARESH
-			var layergrouporder={};
+				//set layergroup list value  APARESH
+				var layergrouporder={};
 
-			jQuery.each(data.projectLayergroups, function (i, layergroupList) {      
-				layergrouporder[layergroupList.grouporder]=layergroupList.layergroups.name;                	                	
-			});
+				jQuery.each(data.projectLayergroups, function (i, layergroupList) {      
+					layergrouporder[layergroupList.grouporder]=layergroupList.layergroups.name;                	                	
+				});
 
-			for(var i=1; i<=data.projectLayergroups.length;i++){
+				for(var i=1; i<=data.projectLayergroups.length;i++){
 
-				jQuery("#addedLayerGroupList").append(jQuery("<option></option>").attr("value", layergrouporder[i]).text(layergrouporder[i]));                        
-				jQuery("#layerGroupList option[value=" + layergrouporder[i] + "]").remove();
-
-			}
-
-			jQuery.each(data.projectLayergroups, function (i, layergroupList) {                                            
-
-				jQuery("#"+layergroupList.layergroups.name).attr('checked', true);
-
-			});
-
-			jQuery.each(data.projectBaselayers, function (i, baselayersList) {                                            
-
-				//jQuery("#"+baselayersList.baselayers.name).attr('checked', true);
-				$("input[id='"+baselayersList.baselayers.name+"']").attr('checked', true);  
-
-			});
-
-			if(data.projectBaselayers.length>0){
-				if(data.projectBaselayers[0].baselayers.name.indexOf("Google_") > -1){
-					populatebaselayer('Google',data);
+					jQuery("#addedLayerGroupList").append(jQuery("<option></option>").attr("value", layergrouporder[i]).text(layergrouporder[i]));                        
+					jQuery("#layerGroupList option[value=" + layergrouporder[i] + "]").remove();
 
 				}
-				else if(data.projectBaselayers[0].baselayers.name.indexOf("Bing") > -1){
-					populatebaselayer('Bing',data);
-				}		
-				else if(data.projectBaselayers[0].baselayers.name.indexOf("Open_") > -1){
-					populatebaselayer('Open',data);
-				}
-				else if(data.projectBaselayers[0].baselayers.name.indexOf("MapQuest") > -1){
-					populatebaselayer('MapQuest',data);
-				}
-			}
-			else{
 
-				populatebaselayer('Google','');
+				jQuery.each(data.projectLayergroups, function (i, layergroupList) {                                            
 
-			}
-			/*jQuery.each(data.projectLayergroups, function (i, layergroupList) {                    
+					jQuery("#"+layergroupList.layergroups.name).attr('checked', true);
+
+				});
+
+				jQuery.each(data.projectBaselayers, function (i, baselayersList) {                                            
+
+					//jQuery("#"+baselayersList.baselayers.name).attr('checked', true);
+					$("input[id='"+baselayersList.baselayers.name+"']").attr('checked', true);  
+
+				});
+
+				if(data.projectBaselayers.length>0){
+					if(data.projectBaselayers[0].baselayers.name.indexOf("Google_") > -1){
+						populatebaselayer('Google',data);
+
+					}
+					else if(data.projectBaselayers[0].baselayers.name.indexOf("Bing") > -1){
+						populatebaselayer('Bing',data);
+					}		
+					else if(data.projectBaselayers[0].baselayers.name.indexOf("Open_") > -1){
+						populatebaselayer('Open',data);
+					}
+					else if(data.projectBaselayers[0].baselayers.name.indexOf("MapQuest") > -1){
+						populatebaselayer('MapQuest',data);
+					}
+				}
+				else{
+
+					populatebaselayer('Google','');
+
+				}
+				/*jQuery.each(data.projectLayergroups, function (i, layergroupList) {                    
                         jQuery('#addedLayerGroupList').append(jQuery("<option></option>").attr("value", layergroupList.layergroups.name).text(layergroupList.layergroups.name));
                         jQuery("#layerGroupList option[value=" + layergroupList.layergroups.name + "]").remove();
                 });*/
 
-			GetActiveLayer('default','');
+				GetActiveLayer('default','');
 
-			//Setting activelayer and Overview layer
-			$('#activelayer').val(data.activelayer);
-			$('#overlaymap').val(data.overlaymap);
+				//Setting activelayer and Overview layer
+				$('#activelayer').val(data.activelayer);
+				$('#overlaymap').val(data.overlaymap);
 
-			jQuery.ajax({
-				url: selectedItem+"/" + _name+"/user" + "?" + token,
-				async:false,
-				success: function (users) {
-					jQuery.each(users, function (i, value) {    	
-						//jQuery('#'+value).attr('checked', true);
-						$("input[id='"+value+"']").attr('checked', true);
-						jQuery(".tr-"+value).show();
-					});
+				jQuery.ajax({
+					url: selectedItem+"/" + _name+"/user" + "?" + token,
+					async:false,
+					success: function (users) {
+						jQuery.each(users, function (i, value) {    	
+							//jQuery('#'+value).attr('checked', true);
+							$("input[id='"+value+"']").attr('checked', true);
+							jQuery(".tr-"+value).show();
+						});
 
-				}
-			}); 
+					}
+				}); 
 
-			//$("#lyrgrouptbl tr:odd").addClass('alt-tr'); 
-			//$("#baselyrtbl tr:odd").addClass('alt-tr');
-		},
-		cache: false
-	});
+				//$("#lyrgrouptbl tr:odd").addClass('alt-tr'); 
+				//$("#baselyrtbl tr:odd").addClass('alt-tr');
+			},
+			cache: false
+		});
 	} else {
 
 		jQuery("#ProjectTemplateForm").tmpl(null,
@@ -591,7 +606,7 @@ var createEditProject = function (_name)
 		});
 		jQuery("#temporaryAdjDiv").empty();
 		jQuery("#temporaryHamletDiv").empty();
-		
+
 		/*APARESH
         jQuery.each(proj_layerGroup, function (i, value) {    	
         	jQuery("#layerGroupList").append(jQuery("<option></option>").attr("value", value.name).text(value.name));        
@@ -663,10 +678,13 @@ function GetActiveLayer(type,selectedGroup) {
 			async: false,
 			success: function (data) 
 			{ 
+				
 				for (var j = 0; j < data[0].layers.length; j++) 
 				{	
 					if (type == 'add') 
 					{
+						jQuery('#activelayer').empty();
+						jQuery('#overlaymap').empty();
 						if(!isTilecache(data[0].layers[j].layer))
 						{								
 							jQuery('#activelayer').append(jQuery("<option></option>").attr("value", data[0].layers[j].layer).text(data[0].layers[j].layer));									
@@ -856,7 +874,7 @@ var saveProject= function () {
 
 	if ($("#projectForm").valid()) {
 
-		if (!$('#temporaryAdjDiv').is(':empty')){
+		if (array.length>=2){
 
 
 			if (!$('#temporaryHamletDiv').is(':empty')){
@@ -911,7 +929,8 @@ var saveProject= function () {
 			}
 		}
 		else{
-			jAlert("Add atleast one adjudicator");
+			jAlert("Add atleast two adjudicator");
+			checkAdjEdit=true;
 		}
 	}
 	if (!$("#projectForm").valid()==true)
@@ -1181,7 +1200,7 @@ function getRegionOnCountryChange(countryname)
 	});  
 
 }
-function addTempAdjudicator()
+function addTempAdjudicator(title)
 {
 
 	adjudicatorDialog = $( "#adjudicator-dialog-form" ).dialog({
@@ -1194,7 +1213,7 @@ function addTempAdjudicator()
 		buttons: {
 			"Save": function() 
 			{
-				validateAdjudicator();
+				validateAdjudicator(title);
 
 				//adjudicatorDialog.dialog( "destroy" );
 
@@ -1212,9 +1231,11 @@ function addTempAdjudicator()
 
 		}
 	});
+	if(title!='new')
+		$('#adjudicator_name').val(title.name);
 	adjudicatorDialog.dialog( "open" );
 }
-function addPersonAdjudicator()
+function addPersonAdjudicator(title)
 {
 
 	if(!checkAdjEdit)
@@ -1222,9 +1243,18 @@ function addPersonAdjudicator()
 		checkAdjEdit=true;
 		array=[];	
 	}
+
+
 	adjName=document.getElementById("adjudicator_name").value;
 	jQuery("#adjudicator_name").val("");
-	if(adjName!="" && array.indexOf(adjName)== -1)
+
+	if(title!='new')
+
+	{
+		array[title.id]=adjName;
+
+	}
+	else if(adjName!="" && array.indexOf(adjName)== -1)
 	{
 		array.push(adjName);
 	}
@@ -1238,20 +1268,25 @@ function addPersonAdjudicator()
 		selectedText=array[i];
 
 
-		content = '<tr><td>' + '<label id="adjudicator_name'+""+i+""+'">'+""+selectedText+""+'</label><input type="hidden" name="project_adjudicatorhid" value='+""+selectedText+""+'> '+'</td>';
+		content = '<tr><td>' + '<label id="adjudicator_name'+""+i+""+'">'+""+selectedText+""+'</label><input type="hidden" name="project_adjudicatorhid" id= "project_adjudicatorhid" value="'+selectedText+'"> '+'</td>';
+		content += '<td align="center">' + '<div><a href ="#" title=Edit name= '+selectedText+' id= '+i+' onclick="javascript:addTempAdjudicator(this);"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
 		content += '<td align="center">' + '<div><a href="javascript:deleteAdjudicator('+i+');"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+		
 
 		content1=content1+content;
 
 	}
 	if(array.length>0)
-	jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Delete</th>"+content1+"</table>");	
-
+		jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>"+content1+"</table>");	
+	if(title!='new')	
+	jAlert("Data successfully saved","Adjudicator Info");
 }
 
 function deleteAdjudicator(name)
 {
+	jConfirm('Are You Sure You Want To Delete : <strong>' + "adjudicator" + '</strong>', 'Delete Confirmation', function (response) {
 
+		if (response) {
 	array = jQuery.grep(array, function(value) {
 		return value != array[name];
 	});
@@ -1261,17 +1296,22 @@ function deleteAdjudicator(name)
 		selectedText=array[i];
 
 
-		content = '<tr><td>' + '<label id="adjudicator_name'+""+i+""+'">'+""+selectedText+""+'</label><input type="hidden" name="project_adjudicatorhid" value='+""+selectedText+""+'> '+'</td>';
+		content = '<tr><td>' + '<label id="adjudicator_name'+""+i+""+'">'+""+selectedText+""+'</label><input type="hidden" name="project_adjudicatorhid" value="'+selectedText+'"> '+'</td>';
+		content += '<td align="center">' + '<div><a href ="#" title=Edit name= '+selectedText+' id= '+i+' onclick="javascript:addTempAdjudicator(this);"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
 		content += '<td align="center">' + '<div><a href="javascript:deleteAdjudicator('+i+');"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+		
 
 		content1=content1+content;
 
 	}
 	if(array.length>0)
-	jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Delete</th>"+content1+"</table>");	
+		jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>"+content1+"</table>");	
+		jAlert("Data deleted successfully","Delete");
+		}
+	});
 }
 
-function validateAdjudicator()
+function validateAdjudicator(title)
 
 {
 	$("#adjudicatorformID").validate({
@@ -1287,14 +1327,15 @@ function validateAdjudicator()
 
 	if ($("#adjudicatorformID").valid())
 	{
-		addPersonAdjudicator();
+		addPersonAdjudicator(title);
 		adjudicatorDialog.dialog( "destroy" );
 	}
 }
 
-function newHamlet()
+function newHamlet(title)
 {
-
+	if(title=='new')
+		checkeditHam=false;
 	hamletDialog = $( "#hamlet-dialog-form" ).dialog({
 		autoOpen: false,
 		height: 350,
@@ -1305,26 +1346,36 @@ function newHamlet()
 		buttons: {
 			"Save": function() 
 			{
-				validateHamlet();
+				validateHamlet(title);
+
+
 
 			},
 			"Cancel": function() 
 			{
-
-				hamletDialog.dialog( "destroy" );
+				hamletDialog.dialog("destroy");
+				hamletDialog.dialog("close");
 
 			}
 		},
 		close: function() {
 
-			hamletDialog.dialog( "destroy" );
+			hamletDialog.dialog("destroy");
+			hamletDialog.dialog("close");
 
 		}
 	});
+	if(title!='new'){
+
+		$('#hamlet_name').val(title.name);
+		$('#hamlet_alias').val(title.type);
+		$('#hamlet_code').val(title.title);	
+	}
+
 	hamletDialog.dialog( "open" );
 }
 
-function addHamlet()
+function addHamlet(title)
 {
 	if(!checkHamletEdit)
 	{
@@ -1339,7 +1390,17 @@ function addHamlet()
 	jQuery("#hamlet_name").val("");
 	jQuery("#hamlet_alias").val("");
 	jQuery("#hamlet_code").val("");
-	if(hamlet_name!="" && hamletDetails.indexOf(hamlet_name)== -1)
+
+	if(checkeditHam)
+	{
+		var k=parseInt(title.id);
+		hamletDetails[k]=hamlet_name;
+		hamletDetails[k+1]=hamlet_alias;
+		hamletDetails[k+2]=hamlet_code;
+
+	}
+
+	else if(hamlet_name!="" && hamletDetails.indexOf(hamlet_name)== -1)
 	{
 		hamletDetails.push(hamlet_name);
 		hamletDetails.push(hamlet_alias);
@@ -1350,6 +1411,7 @@ function addHamlet()
 	{
 		jAlert("Name already exists");
 	}
+
 	jQuery("#temporaryHamletDiv").empty();
 	var content1="";
 	var flag=0;
@@ -1363,65 +1425,131 @@ function addHamlet()
 		content = '<tr><td>' + '<label id="hamlet_name'+""+i+""+'">'+""+HamletName+""+'</label><input type="hidden" name="hamletName" value='+""+HamletName+""+'> '+'</td>';
 		content += '<td>' + '<label id="hamlet_alias'+""+i+""+'">'+""+HamletAlias+""+'</label><input type="hidden" name="hamletAlias" value='+""+HamletAlias+""+'> '+'</td>';
 		content += '<td>' + '<label id="hamlet_code'+""+i+""+'">'+""+HamletCode+""+'</label><input type="hidden" name="hamletCode" value='+""+HamletCode+""+'> '+'</td>';
-		content += '<td align="center">' + '<div><a href="javascript:deleteHamet('+i+');"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
-
+		content += '<td align="center">' + '<div><a href ="#" title= '+HamletCode+' name= '+HamletName+' type= '+HamletAlias+'  id= '+i+' onclick="javascript:editHamlet(this);"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
+		content += '<td align="center">' + '<div><a href ="#" title= '+HamletCode+' id= '+i+' onclick="javascript:deleteHamet(this);"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+		
 		content1=content1+content;
 		i=i+2;
 		flag++;
 	}
-	jQuery("#hamlets_length").val(flag);
+	//jQuery("#hamlets_length").val(flag);
 
 	if(hamletDetails.length>0)
-	jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Delete</th>"+content1+"</table>");	
-
+		jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>"+content1+"</table>");	
+	if(title!='new')	
+	jAlert("Data successfully saved","Hamlet Info");
 }
 
-function deleteHamet(index)
+function deleteHamet(dH)
 {
-	hamletDetails.splice(index,3);
-	jQuery("#temporaryHamletDiv").empty();
-	var content1="";
-	for (var i = 0; i < (hamletDetails.length); i++) {
+	var checkdelete=true;
 
-		HamletName=hamletDetails[i];
-		HamletAlias=hamletDetails[i+1];
-		HamletCode=hamletDetails[i+2];
+	jConfirm('Are You Sure You Want To Delete : <strong>' + dH.title + '</strong>', 'Delete Confirmation', function (response) {
+
+		if (response) {
+
+			if(editableProject!=undefined)
+			{
+				jQuery.ajax({          
+					type: 'GET',
+					async:false,
+					url: "project/delethamlet/"+dH.title+"/"+editableProject,
+					success: function (result) 
+					{
+						checkdelete=result;
+					}         
+				});
+
+			}
+			if(checkdelete){
+				hamletDetails.splice(dH.id,3);
+				jQuery("#temporaryHamletDiv").empty();
+				var content1="";
+				for (var i = 0; i < (hamletDetails.length); i++) {
+
+					HamletName=hamletDetails[i];
+					HamletAlias=hamletDetails[i+1];
+					HamletCode=hamletDetails[i+2];
 
 
-		content = '<tr><td>' + '<label id="hamlet_name'+""+i+""+'">'+""+HamletName+""+'</label><input type="hidden" name="hamletName" value='+""+HamletName+""+'> '+'</td>';
-		content += '<td>' + '<label id="hamlet_alias'+""+i+""+'">'+""+HamletAlias+""+'</label><input type="hidden" name="hamletAlias" value='+""+HamletAlias+""+'> '+'</td>';
-		content += '<td>' + '<label id="hamlet_code'+""+i+""+'">'+""+HamletCode+""+'</label><input type="hidden" name="hamletCode" value='+""+HamletCode+""+'> '+'</td>';
-		content += '<td align="center">' + '<div><a href="javascript:deleteHamet('+i+');"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+					content = '<tr><td>' + '<label id="hamlet_name'+""+i+""+'">'+""+HamletName+""+'</label><input type="hidden" name="hamletName" value='+""+HamletName+""+'> '+'</td>';
+					content += '<td>' + '<label id="hamlet_alias'+""+i+""+'">'+""+HamletAlias+""+'</label><input type="hidden" name="hamletAlias" value='+""+HamletAlias+""+'> '+'</td>';
+					content += '<td>' + '<label id="hamlet_code'+""+i+""+'">'+""+HamletCode+""+'</label><input type="hidden" name="hamletCode" value='+""+HamletCode+""+'> '+'</td>';
+					content += '<td align="center">' + '<div><a href ="#" title= '+HamletCode+' name= '+HamletName+' type= '+HamletAlias+'  id= '+i+' onclick="javascript:editHamlet(this);"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
+					content += '<td align="center">' +'<div><a href ="#" title= '+HamletCode+' id= '+i+' onclick="javascript:deleteHamet(this);"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+					
+					content1=content1+content;
+					i=i+2;	
+				}
+				if(hamletDetails.length>0)
+					jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Delete</th><th class='tableHeader'>Edit</th>"+content1+"</table>");	
+				jAlert("Data deleted successfully","Delete");
 
-		content1=content1+content;
-		i=i+2;	
-	}
-	if(hamletDetails.length>0)
-	jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Delete</th>"+content1+"</table>");
+			}
+
+			else{
+
+				jAlert("Hamlet is mapped with spatial unit","Delete Hamlet");
+			}
+		}
+
+	});
 
 }
- function validateHamlet()
- {
-		$("#hamletformID").validate({
 
-			rules: {
-				hamlet_name: "required",
-				hamlet_alias: "required",
-				hamlet_code: "required",
-			},
-			messages: {
-				hamlet_name: "Enter Hamlet Name",
-				hamlet_alias: "Enter Hamlet Alias",
-				hamlet_code: "Enter Hamlet Code",
+function validateHamlet(title)
+{
+	$("#hamletformID").validate({
 
-			},
+		rules: {
+			hamlet_name: "required",
+			hamlet_alias: "required",
+			hamlet_code: "required",
+		},
+		messages: {
+			hamlet_name: "Enter Hamlet Name",
+			hamlet_alias: "Enter Hamlet Alias",
+			hamlet_code: "Enter Hamlet Code",
+
+		},
+	});
+
+	if ($("#hamletformID").valid())
+	{
+		addHamlet(title);
+		hamletDialog.dialog("destroy");
+		hamletDialog.dialog("close");
+	}
+}
+
+function editHamlet(dH)
+{
+	checkeditHam=true;
+	
+	if(editableProject!=undefined)
+	{
+		jQuery.ajax({          
+			type: 'GET',
+			async:false,
+			url: "project/delethamlet/"+dH.title+"/"+editableProject,
+			success: function (result) 
+			{
+				checkeditHam=result;
+			}         
 		});
 
-		if ($("#hamletformID").valid())
-		{
-			addHamlet();
-			hamletDialog.dialog( "destroy" );
-		}
 	}
 
-	
+	if(checkeditHam){
+
+		newHamlet(dH);
+
+	}
+	else{
+
+		jAlert("Hamlet is mapped with spatial unit","Edit Hamlet");
+	}
+}
+
+
+

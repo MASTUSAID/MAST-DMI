@@ -21,6 +21,8 @@ public class TenureClass implements Serializable {
 
 	@Column(name = "tenure_class", nullable = false)
 	private String tenureClass;
+	
+	private boolean active;
 
 	public TenureClass() {
 		super();
@@ -40,6 +42,14 @@ public class TenureClass implements Serializable {
 
 	public void setTenureClass(String tenureClass) {
 		this.tenureClass = tenureClass;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

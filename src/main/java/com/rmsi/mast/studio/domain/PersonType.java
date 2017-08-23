@@ -23,6 +23,9 @@ public class PersonType implements Serializable {
 
 	@Column(name="person_type")
 	private String PersonType;
+	
+	@Column(name="person_type_sw")
+	private String PersonType_sw;
 
 	public PersonType() {
 		super();
@@ -42,6 +45,14 @@ public class PersonType implements Serializable {
 
 	public void setPersonType(String PersonType) {
 		this.PersonType = PersonType;
+	}
+
+	public String getPersonType_sw() {
+		return PersonType_sw;
+	}
+
+	public void setPersonType_sw(String personType_sw) {
+		PersonType_sw = personType_sw;
 	}
 
 }

@@ -131,6 +131,11 @@
 
 			</div>
 		</div>
+		<form id="vertexform" action="" onsubmit="return false;">
+		<input type="hidden" id="lon" name="lon">
+		<input type="hidden" id="lat" name="lat">
+		</form>
+		
 		<p class="space-top-10">ADJUDICATION</p>
 		<div id="_adjudicator">
 			<table class="amendbeforeAfterTable">
@@ -140,6 +145,7 @@
 					<th>Surname</th>
 					<th>Owner</th>
 					<th>Administrator</th>
+					<th>Guardian</th>
 					<th>Gender</th>
 					<th>Age</th>
 					<th>Marital Status</th>
@@ -184,9 +190,24 @@
 				<td>1.<span id="witness1_id" class="attribute-position"></span></td>
 				<td></td>
 
-				<td rowspan="6" style="position: relative;">
-					<div id="map1">
-						<img src="resources/images/compass.png" class="map-compass" />
+				<td rowspan="6"  style="position: relative; ">
+				
+				<div> <img src="resources/images/compass.png" class="map-compass"/></div>
+					<div id="map1" style="position: relative; top:-32px;">
+					</div>
+					<div style="position:absolute; bottom:-10px; width:98%;">
+					<p class="bottom-separator">
+						<strong>Coordinates: </strong>
+					</p>
+					<p class="bottom-separator">
+						<strong>East </strong>&nbsp;: <span id="east_coord"></span>
+					</p>
+
+					<p>
+						<strong>North: </strong><span id="noth_coord"></span>
+					</p>
+					<p class="bottom-separator"></p>
+					  
 					</div>
 				</td>
 			</tr>
@@ -214,43 +235,58 @@
 
 			</tr>
 			<tr>
-				<td colspan="5">Right of way and other uses:</td>
+				<td colspan="5" ><span style="margin:10px 0px; display:block;">Right of way and other uses:</span></td>
 
 			</tr>
 
 			<tr>
 				<td colspan="5">
-					<div class="container-fluid">
-						<div class="row-fluid">
-							<div class="span6">Persons with Interests:<span id="personwithint"></span>
-								</div>
-						</div>
-						<div class="row-fluid">
-							<div class="span6">Signatory Name _ _ _ _ _ _ _ _ _ _ _ _ _
-								_ _ _ _ _ _ _ _ _</div>
-							<div class="span3">Signature _ _ _ _ _ _ _ _ _ _ _ _</div>
-							<div class="span2">Date _ _ _ _ _ _ _ _</div>
+				
+				<div id="personwithInterset" style="margin-bottom:15px">
+			<table class="amendbeforeAfterTable">
+				<tr>
+					<th>Person of Interest</th>
+					<th>Name</th>
+				</tr>
 
+				<tbody id="_personwithInterset">
 
-						</div>
-						<div class="row-fluid">
-							<div class="span6">Signatory Name _ _ _ _ _ _ _ _ _ _ _ _ _
-								_ _ _ _ _ _ _ _ _</div>
-							<div class="span3">Signature _ _ _ _ _ _ _ _ _ _ _ _</div>
-							<div class="span2">Date _ _ _ _ _ _ _ _</div>
+				</tbody>
+			</table>
+		</div>
+					<div id="deceasedPerson" style="margin-bottom:15px">
+			<table class="amendbeforeAfterTable">
+				<tr>
+					<th>Deceased Person  </th>
+					<th>Name</th>
+				</tr>
 
+				<tbody id="_deceasedPerson">
 
-						</div>
-
-					</div>
+				</tbody>
+			</table>
+		</div>
+			
+						
+				
 
 				</td>
 
 
 
 			</tr>
+			
 			<tr>
-				<td colspan="5">
+			<td colspan="6">
+			 <div class="container-fluid" >
+			  <div id ="adjudication_personnameCustomDiv"></div>
+			 
+			   </div>
+			
+			</td>
+			</tr>
+			<tr class="pageBreak" >
+				<td colspan="6">
 					<p>
 						<strong>For Official use only:</strong>
 					</p>
@@ -287,28 +323,33 @@
 
 					</div>
 					<div class="row-fluid">
-						<div class="span4">Name of Adjudicator:<strong><span id="trustedInter"></span></strong></div> </div>
+						<div class="span4">Name of Adjudicator:<strong><span id="trustedInter"></span></strong></div>
 						<div class="span4">Signature _ _ _ _ _ _ _ _ _ _ _ _</div>
 						<div class="span4">Date &nbsp;&nbsp;_ _ _ _ _ _ _</div>
 					</div>
 
 				</td>
-				<td valign="top">
-					<p class="bottom-separator">
-						<strong>Coordinates: </strong>
-					</p>
-					<p class="bottom-separator">
-						<strong>East </strong>&nbsp;: <span id="east_coord"></span>
-					</p>
-
-					<p>
-						<strong>North: </strong><span id="noth_coord"></span>
-					</p>
-					<p class="bottom-separator">
-				</td>
+			
 			</tr>
 
 		</table>
+		
+			<div id="vertexList" >
+			<div class="vertexAlign" > Vertex List:</div>
+			<table class="amendbeforeAfterTable">
+			
+				<tr>
+				<th>S.No.</th>
+					<th>X Coordinates</th>
+					<th>Y Coordinates</th>
+				</tr>
+
+				<tbody id="vertexBody">
+
+				</tbody>
+			</table>
+</div>
+		
 		<div>
 			<button id="print-btn" class="btn v-top-20" style="float: right"
 				onclick="print_templ();">Print</button>
@@ -347,11 +388,21 @@
 		   ${lastName}
 		</td>
 		<td>
- 				&nbsp;
+ {{if (personSubType.person_type_gid!=3)}} &nbsp; {{/if}}
+
+{{if (personSubType.person_type_gid==3)}} Yes {{/if}}
 		</td>
 		<td>
-		     &nbsp;
+{{if (personSubType.person_type_gid!=4)}} &nbsp; {{/if}}
+
+{{if (personSubType.person_type_gid==4)}} Yes {{/if}}
 		</td>
+<td>
+{{if (personSubType.person_type_gid!=5)}} &nbsp; {{/if}}
+
+{{if (personSubType.person_type_gid==5)}} Yes {{/if}}
+		</td>
+
 		<td>
 		   {{if gender}}${gender.gender}{{/if}}
 		</td>
@@ -362,11 +413,14 @@
 		  {{if marital_status}}${marital_status.maritalStatus}{{/if}} 
 		</td>
 		<td>
-		   ${citizenship}
+		    {{if citizenship_id}}${citizenship_id.citizenname}{{/if}} 
 		</td>
-		<td class="vill_address">
+		<!--<td class="vill_address">
 		      
-		</td>
+		</td>-->
+<td>
+&nbsp;
+</td>
 		<td>
 {{if (!resident_of_village)}} No {{/if}}
 
@@ -413,5 +467,41 @@
   </td>
   
 
+ </tr>
+</script>
+<script id="_personwithInterestTemp" type="text/x-jquery-tmpl">
+ <tr>                                                                        
+  <td>
+	${number}
+  </td>
+  
+  <td>
+  ${name}
+  </td>
+ </tr>
+</script>
+<script id="_deceasedPersonTemp" type="text/x-jquery-tmpl">
+ <tr>                                                                        
+  <td>
+	${number}
+  </td>
+  
+  <td>
+  ${name}
+  </td>
+ </tr>
+</script>
+<script id="vertexTemp" type="text/x-jquery-tmpl">
+ <tr> 
+<td>
+	${index}
+  </td>                                                                       
+  <td>
+	${x}
+  </td>
+  
+  <td>
+  ${y}
+  </td>
  </tr>
 </script>

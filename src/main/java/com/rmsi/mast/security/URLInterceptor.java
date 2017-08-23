@@ -35,6 +35,8 @@ public class URLInterceptor extends HandlerInterceptorAdapter {
 			request.getSession().setAttribute("url", "./report/");
 			//System.out.println("Into Studio ----------");
 		}
+		
+		
 		else{
 			String param = getQueryString(request.getQueryString());
 			if(param == null){

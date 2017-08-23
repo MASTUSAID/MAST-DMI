@@ -1,6 +1,7 @@
 
 package com.rmsi.mast.studio.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -57,6 +58,49 @@ public class ProjectHamletHibernateDAO extends GenericHibernateDAO<ProjectHamlet
 	}
 
 		
+	}
+
+	@Override
+	public long getHamletIdbyCode(String hamletCode,String projectName) {
+		try {
+			Query query = getEntityManager().createQuery("Select ph.id from ProjectHamlet ph where ph.hamletCode = :hamletCode and ph.projectName=:projectName");
+			@SuppressWarnings("unchecked")
+			List<Long> hamletList = query.setParameter("hamletCode", hamletCode).setParameter("projectName", projectName).getResultList();
+			
+
+			if(hamletList.size() > 0){
+				return hamletList.get(0);
+			}		
+			else
+			{
+				return 0;
+			}
+		} catch (Exception e) {
+
+			logger.error(e);
+			return 0;
+		}
+	}
+
+	@Override
+	public List<String> getHamletCodesbyProject(String projectName) {
+		try {
+			Query query = getEntityManager().createQuery("Select ph.hamletCode from ProjectHamlet ph where ph.projectName = :projname");
+			List<String> hamletList = query.setParameter("projname", projectName).getResultList();
+			
+
+			if(hamletList.size() > 0){
+				return hamletList;
+			}		
+			else
+			{
+				return new ArrayList<String>();
+			}
+		} catch (Exception e) {
+
+			logger.error(e);
+			return  new ArrayList<String>();
+		}
 	}
 	
 }

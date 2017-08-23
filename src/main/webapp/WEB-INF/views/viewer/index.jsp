@@ -51,9 +51,9 @@
 	int pos = urlLang.indexOf("=");
 	if(pos > -1){
 		if(urlLang.contains("#")){
-			lang = urlLang.substring(++pos,urlLang.length()-1);
+	lang = urlLang.substring(++pos,urlLang.length()-1);
 		}else{
-			lang = urlLang.substring(++pos);
+	lang = urlLang.substring(++pos);
 		}
 	}else{
 		lang = "en";
@@ -191,6 +191,7 @@ var lang = "<%=lang%>";
 
 <script src="<c:url value="resources/scripts/Cloudburst-Viewer.js"  />"
 	type="text/javascript"></script>
+
 
 
 <script language="javascript">
@@ -338,6 +339,8 @@ var lang = "<%=lang%>";
 									//var viewer = new cloudburst.Viewer("map", options,maploaded);
 									var viewer = new Cloudburst.Viewer("map-tab", options,maploaded);
 									viewProjectName(activeproject);
+									
+									
 									//By Aparesh
 									//for hide work commitment tab
 									/* if(loggedUser.roles.length==1 && loggedUser.roles[0].name=="ROLE_PUBLICUSER"){
@@ -422,29 +425,34 @@ var lang = "<%=lang%>";
 	var token = null;
 	var roles = '<%=s%>';
 	var useremail='<%=principal%>';
-	
-	$(document).ready(
-			function() {
-				
-				$('.splash').meerkat({
-					background: 'url(resources/images/studio/bg-splash.png) repeat-x left top',
-					height: '100%',
-					width: '100%',
-					position: 'center',
-					animationIn: 'none',
-					animationOut: 'fade',
-					animationSpeed: 500,
-					timer: 2,
-					removeCookie: '.reset'
-				});
-				
-		// Added by prashant to REMOVE LAnd records div for public user
-		if(roles=='ROLE_PUBLICUSER' || roles=='ROLE_USER')
-		$('#tab2').remove();
-	});
-	
-	
-</script>
+
+		$(document)
+				.ready(
+						function() {
+
+							$('.splash')
+									.meerkat(
+											{
+												background : 'url(resources/images/studio/bg-splash.png) repeat-x left top',
+												height : '100%',
+												width : '100%',
+												position : 'center',
+												animationIn : 'none',
+												animationOut : 'fade',
+												animationSpeed : 500,
+												timer : 2,
+												removeCookie : '.reset'
+											});
+
+							// Added by prashant to REMOVE LAnd records div for public user
+							if (roles == 'ROLE_PUBLICUSER'
+									|| roles == 'ROLE_USER')
+								$('#tab2').remove();
+						});
+	</script>
+
+<div id="intersectionDialog" title="Spatial Validation"
+				style="display: none;"></div>
 
 	<div id="container">
 		<!--  header  -->
@@ -481,16 +489,20 @@ var lang = "<%=lang%>";
 
 		<!--  Main Toolbar  -->
 		<div class="toolBarBG">
-			<div
-				class="default-project">
+			<div class="default-project">
 				<div class="btn-wrap">
-					
-					<button class="btn " title="Go to Default Project" onclick="javascript:defaultProject();"><i class="fa fa-folder"></i>Default</button>
-					
-					
+
+					<button id="defaultbutton" class="btn" style="visibility: hidden;"
+						title="Go to Default Project"
+						onclick="javascript:defaultProject();">
+						<i class="fa fa-folder"></i>Default
+					</button>
+
+
 
 				</div>
 			</div>
+
 			<div
 				style="float: right; width: 10%; postion: relative; height: 34px; padding-top: 4px;">
 				<div style="padding-top: 5px; padding-left: 0px;">
@@ -500,20 +512,21 @@ var lang = "<%=lang%>";
 					</select>
 				</div>
 			</div>
-	
+
 			<div style="float: right; postion: relative; height: 38px;">
 				<div id="toolbar" class="toolbar">
 					<div class="fg-buttonset fg-buttonset-single">
 
 						<ul id="mycarousel" class="jcarousel-skin-tango" lang="cy">
-							
-							
-							<li id="li-intersection"><button id="intersection" title="Spatial Validation"
+
+
+							<li id="li-intersection"><button id="intersection"
+									title="Spatial Validation"
 									class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
 									<img
 										src="<c:url value="resources/images/viewer/toolbar/intersections.png" />" />
 								</button></li>
-								
+
 							<li id="li-openproject"><button id="openproject"
 									title="Open Project"
 									class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
@@ -780,16 +793,6 @@ var lang = "<%=lang%>";
 
 					</td>
 
-
-
-
-
-
-
-
-
-
-
 					<td valign="top" style="width: 100%">
 						<div id="map">
 							<span id="collapse" class="collapse_left"></span>
@@ -838,6 +841,48 @@ var lang = "<%=lang%>";
 					</td>
 				</tr>
 			</table>
+			<!-- Popup for spatial validation -->
+
+			<div id="validation-dialog-form" title="Spatial Validation"
+				style="display: none;">
+
+
+
+				<form class="cmxform" id="spatialValidationformID" action=""
+					onsubmit="return false;">
+
+					<fieldset>
+
+						<div id="radioSpatial">
+							<div class="bottom-clr-5">
+								<input class="selectSpatial" name="spatial_validation"
+									type="radio" value="1" id="pre-selectAll"
+									onclick="handleClick(this)" title="Select all" /><label
+									for="pre-english">Select all</label>
+							</div>
+							<div class="bottom-clr-5">
+								<input class="selectlang" name="spatial_validation" type="radio"
+									value="2" id="pre-selectRect" onclick="handleClick(this)"
+									title="Select by rectangle" /><label for="pre-swahili">Select
+									by rectangle</label>
+							</div>
+							<div class="bottom-clr-5">
+								<input class="selectlang" name="spatial_validation" type="radio"
+									value="3" id="pre-wahili" onclick="handleClick(this)"
+									title="Select by hamlet" /><label for="pre-selectHam">Select
+									by hamlet</label>
+							</div>
+							<div id="hamletSpatial" style="display: none">
+								<select name="hamletSpatialId" id="hamletSpatialId">
+								</select>
+
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<!-- End Popup -->
+
 			<div id="printDiv" style="display: none;"></div>
 			<!-- <a href="http://www.rmsi.com" target="_blank"><spanclass="poweredBy"></span></a> -->
 
@@ -879,6 +924,30 @@ var lang = "<%=lang%>";
 
 			</ul>
 		</div>
+		<div id="print-dialog-form" title="Print Preference"
+				style="display: none;">
+
+
+
+				<form class="cmxform" id="printformID" action=""
+					onsubmit="return false;">
+
+					<fieldset>
+
+
+						<p>
+							<label for="email">Select your choice</label>
+						</p>
+						<div id="radioPrint">
+							<input class="selectPrint" name="print" type="radio" value="1"
+								id="pre-one" /><label for="pre-one">Parcel Details</label> <input
+								class="selectPrint" name="print" type="radio" value="2"
+								id="pre-two" /><label for="pre-two">Map Layout</label>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		
 		<!--  End Context Menu -->
 	</div>
 	<div id="querycontent" title="Query Builder"></div>
@@ -915,5 +984,43 @@ var lang = "<%=lang%>";
 		<span class="footer-s">© RMSI 2015. All rights reserved.</span>
 	</div>
 
+
+	<script language="javascript">
+		var currentValue = 0;
+		var spatial_validType = "";
+		function handleClick(myRadio) {
+			$('#hamletSpatial').hide();
+			console.log(myRadio.title);
+			spatial_validType = myRadio.title;
+
+			if (myRadio.value == "3") {
+
+				jQuery.ajax({
+					url : "landrecords/hamletname/" + activeProject,
+					async : false,
+					success : function(data) {
+
+						hamletList = data;
+						jQuery("#hamletSpatialId").empty();
+						jQuery("#hamletSpatialId").append(
+								jQuery("<option></option>").attr("value", 0)
+										.text("Please Select"));
+						jQuery.each(hamletList, function(i, hamletobj) {
+
+							jQuery("#hamletSpatialId").append(
+									jQuery("<option></option>").attr("value",
+											hamletobj.id).text(
+											hamletobj.hamletName));
+
+						});
+
+					}
+				});
+				jQuery("#hamletSpatial").show();
+
+			}
+
+		}
+	</script>
 </body>
 </html>

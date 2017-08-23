@@ -1435,6 +1435,14 @@ text-align:center;
 	
 		
 		
+.setOverflow{
+	
+	overflow-y:scroll;
+	height:150px;
+	
+}
+		
+		
 	@media print 
 {
 

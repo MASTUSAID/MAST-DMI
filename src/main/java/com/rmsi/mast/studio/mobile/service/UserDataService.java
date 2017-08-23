@@ -17,8 +17,10 @@ import com.rmsi.mast.studio.domain.NonNaturalPerson;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SourceDocument;
 import com.rmsi.mast.studio.domain.SpatialUnit;
+import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 
 /**
  * @author shruti.thakur
@@ -47,6 +49,8 @@ public interface UserDataService {
 	 * This will be used to insert data in Source Document and Save Files
 	 * 
 	 * @param sourceDocument
+	 * @param mpFile
+	 * @param documentsDir
 	 * @return
 	 */
 	SourceDocument uploadMultimedia(SourceDocument sourceDocument,
@@ -57,12 +61,18 @@ public interface UserDataService {
 	 * survey via mobile
 	 * 
 	 * @param spatialUnit
+	 * @param nextOfKinList
+	 * @param deceasedPersonList
 	 * @param naturalPersonList
 	 * @param nonNaturalPersonList
 	 * @param socialTenureList
+	 * @param customAttributeList
+	 * @param attributeValuesMap
 	 * @return
 	 */
 	Long syncSurveyProjectData(SpatialUnit spatialUnit,
+			List<SpatialunitDeceasedPerson>deceasedPersonList,
+			List<SpatialUnitPersonWithInterest> nextOfKinList,
 			List<NaturalPerson> naturalPersonList,
 			List<NonNaturalPerson> nonNaturalPersonList,
 			List<SocialTenureRelationship> socialTenureList,

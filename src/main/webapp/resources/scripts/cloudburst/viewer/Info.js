@@ -274,15 +274,12 @@ var onResponse = function (response) {
 	if (response.features.length > 0) {
 		var popupInfo = "";
 		var features=response.features;
-		var tmp=[];
 		for (var int = 0; int < features.length; int++) {	
 			if(features[int].gml.featureType =='spatial_unit' && features[int].attributes.project_name!=activeProject)
-				tmp.push(features[int]);
+				features.splice(int, 1);
 			
 		}
-		for (var j = 0; j < tmp.length; j++) {
-			features.pop(tmp[j]);
-		}
+
 		var popupInfo = '';
 		popupInfo += '<html><body>';				//Info diplay in popup
 		for(var i=0;i<features.length;i++){

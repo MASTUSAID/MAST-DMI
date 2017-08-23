@@ -375,7 +375,7 @@
 
 .actions-btn {}
 .actions-btn a{
-  width: 16px;
+  width: 17px;
   height: 16px;
   margin-right: 10px;
   background:url(../../images/action-btn.png) no-repeat;
@@ -719,7 +719,8 @@ filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);
 .filter-details { margin-bottom: 10px;}
 
 .filter-details label,
-.landrecords22 label {
+.landrecords22 label ,
+#addAttributeformID label{
 	display: block;
 	margin-bottom: 5px;
 	font-weight:bold;
@@ -728,7 +729,9 @@ filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);
 .landrecords22 input[type="text"],
 #land-record input[type="text"],
 .filter-details select,
-.landrecords22 select {
+.landrecords22 select , 
+#addAttributeformID select,
+#radioSpatial select{
   display: inline-block;
 /*	height: 20px;*/
 	padding: 4px 6px;
@@ -749,6 +752,12 @@ filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);
 	-moz-transition: border linear .2s, box-shadow linear .2s;
 	-o-transition: border linear .2s, box-shadow linear .2s;
 	transition: border linear .2s, box-shadow linear .2s;
+}
+#radioSpatial select{
+  width: 226px;
+}
+#radioSpatial {
+  padding: 10px 0;
 }
 .filter-details .btn { margin-top:19px;}
 .filter-details select {
@@ -782,6 +791,11 @@ filter:progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 
 .landrecords22 select {
+  width: 215px;
+  display:block;
+  margin-bottom: 8px!important;
+}
+#addAttributeformID select {
   width: 215px;
   display:block;
   margin-bottom: 8px!important;
@@ -834,6 +848,7 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
 
 .btn1.padding0{
 padding: 0 12px;
+float:right;
 }
 
 .btn.padding1{
@@ -853,8 +868,22 @@ height: 26px;
 .btn:first-child {
 *margin-left:0;
 }
-
-
+.generate {
+	
+position:absolute; 
+right: 5px; 
+color:rgb(0, 136, 204); 
+border:1px solid rgb(0, 136, 204); 
+border-radius: 5px; 
+margin-top: -3px; 
+padding: 2px 6px; 
+cursor: pointer;
+ background: #fff; 
+ z-index: 999;
+}
+.bottom-clr-5 {
+  margin-bottom: 5px;
+}
 @media screen and (max-height: 800px){
 
 

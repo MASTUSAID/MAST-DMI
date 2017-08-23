@@ -5,6 +5,7 @@ package com.rmsi.mast.studio.mobile.service;
 
 import java.util.List;
 
+import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.Gender;
 import com.rmsi.mast.studio.domain.GroupType;
 import com.rmsi.mast.studio.domain.LandType;
@@ -125,6 +126,8 @@ public interface SpatialUnitService {
 	 * @return
 	 */
 	LandType getLandTypeById(int landTypeId);
+
+	Citizenship getCitizenship(int value);
 
 
 }

@@ -198,17 +198,17 @@
 				<a href="#">Hamlet</a>
 			</h3>
 			<div style="height: 150px">
-				<a onclick="javascript:newHamlet();" id="project_saveNew"
+				<a onclick="javascript:newHamlet('new');" id="project_saveNew"
 					class="btn02" style="display: block;"><span class="NewBTN">New</span></a>
 
 				<div id=temporaryHamletDiv></div>
 				
 			</div>
 			<h3>
-				<a href="#">Project Adjudicator</a>
+				<a href="#">Land Adjudication Committee Member(s)</a>
 			</h3>
 			<div style="height: 150px">
-				<a onclick="javascript:addTempAdjudicator();" id="project_saveNew"
+				<a onclick="javascript:addTempAdjudicator('new');" id="project_saveNew"
 					class="btn02" style="display: block;"><span class="NewBTN">New</span></a>
 
 				<div id=temporaryAdjDiv></div>
@@ -264,7 +264,7 @@
 
 		<tr>		
 			<td colspan="1">
-				<input type="checkbox" id="${name}" name="project_user" value="${id}" class='userCheckbox' onClick="manageProjLink(this);"/> ${name}
+				<input type="checkbox" id="${username}" name="project_user" value="${id}" class='userCheckbox' onClick="manageProjLink(this);"/> ${username}
 				
 			</td>
 			<!--<td class="tr-${email}"colspan="2" >
@@ -667,6 +667,26 @@
     </td> 
 </tr>
 -->
+
+
+<!--  Village Code and Pin Code added -->
+<tr>
+
+ <td>
+       <label class="lblint">Village Code</label> 
+    </td>
+    <td>
+        <input type="textbox" name="villagecode" id="villagecode" value="" />
+    </td>
+
+ <td>
+       <label class="lblint">Village Postal Code</label> 
+    </td>
+    <td>
+        <input type="textbox" name="villagepostalcode" id="villagepostalcode" value="" />
+    </td>
+
+</tr>
       <!--  textbox for village_chairman,approving_executive, district_officer added  RMIS NK-->  
 
       <tr>
@@ -682,17 +702,19 @@
     <td>
         <input type="textbox" name="executiveofficer" id="executiveofficerId" value="" />
     </td>
-     <td>
-        <label class="lblint">District Officer</label>
+     
+
+    
+</tr>
+  <tr>
+<td>
+        <label class="lblint">District Land Officer</label>
     </td>
     <td>
         <input type="textbox" name="districtofficer" id="districtofficerId" value="" />
     </td>
 
-
-    
 </tr>
-  
     
     
     

@@ -44,7 +44,7 @@ implements SpatialUnitTempDao {
 	public Integer AllSpatialUnitTemp(String defaultProject) {
 		Integer count=0;
 		try {
-			Query query = getEntityManager().createQuery("Select count(*) from SpatialUnitTemp st where st.project = :project_name");
+			Query query = getEntityManager().createQuery("Select count(*) from SpatialUnitTemp st where st.project = :project_name and st.active=true");
 			List<?> spatialUnitlst = query.setParameter("project_name", defaultProject).getResultList();		
 			
 			if(null!=spatialUnitlst&&spatialUnitlst.size() > 0){
@@ -82,7 +82,7 @@ implements SpatialUnitTempDao {
 	@Override
 	public List<Long> findUsinforUKAGeneration(String project, String hamletCode) {
 		try {
-			Query query = getEntityManager().createQuery("Select st.usin from SpatialUnitTemp st where (st.project = :project_name and st.hamlet_Id.hamletCode = :hamletCode ) and (st.active=true and st.propertyno is null) order by st.usin asc");
+			Query query = getEntityManager().createQuery("Select st.usin from SpatialUnitTemp st where (st.project = :project_name and st.hamlet_Id.hamletCode = :hamletCode ) and (st.active=true and (st.propertyno is null or st.propertyno='')) order by st.usin asc");
 			List<Long> usinList = query.setParameter("project_name", project).setParameter("hamletCode", hamletCode).getResultList();		
 
 			if(usinList.size() > 0){

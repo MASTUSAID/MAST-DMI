@@ -11,10 +11,12 @@
 			<input type="hidden" id="hid-bbox" name="hid-bbox" value="">
 			<input type="hidden" id="wmc" name="wmc" value="">
 			<input type="hidden" id="hid-compiledBy" name="hid-compiledBy" value="">
+			
 			<input type="hidden" id="mapScale" name="mapScale" value="">
 			<input type="hidden" id="templateType" name="templateType" value="print-tmpl-landscape">
 			<input type="hidden" id="access_land_sld_file" name="access_land_sld_file" value="">
 			<input type="hidden" id="cosmetic_sld_file" name="cosmetic_sld_file" value="">
+			<input type="hidden" id="project_name" name="project_name" value="">
 			<dl class="styleForm">
 				
 				<dd style="display:none"><label for="Template">Template</label></dd>
@@ -27,70 +29,18 @@
 				</dd>
 				
 				<dd><label for="tit" id="map_title">Map Title</label></dd>
-				<dd><input type ="text" value = "" class="int" id ="title" name="title"/></dd>
-				
-				<!-- dd><label for="Scale">Map Scale</label></dd>
-				
-				<dd>
-					<select id="mapScale" name="mapScale" class="slt">					
-									       
-					</select>
-					
-				</dd>
-				
-				
-				<dd><label id="lblexportformat" for="Format">Export Format</label></dd>
-				
-				<dd>
-					<select id="exportFormat" name="exportFormat" class="slt">					
-					<option value="html">HTML</option>										
-					<option value="pdf">PDF</option>				       
-					</select>
-					
-				</dd>
-				
-				<dd><label for="papersize">Paper Size</label></dd>
-				
-				<dd>
-					<select id="papersize" name="papersize" class="slt">					
-					<option value="a3">A3</option>					
-					
-					<option value="a4">A4</option>				       
-					</select>
-					
-				</dd>
-				
-				
-				<dd><label for="Res">Resolution</label></dd>
-				
-				<dd>
-					<select id="resolution" name="resolution" class="slt">										
-					<option value="600">600</option>	
-					<option value="800">800</option>					
-					</select>
-					
-				</dd>
-				
-				
-				<dd><label for="desc">Description</label></dd>
-				
-				<dd>
-				<textarea name="description" id="description" value="" 
-				cols=60 rows=2 style="height:50px;width:100%;"></textarea>				
-				</dd-->
-				
-				
+				<dd><input type ="text" value = "" class="int" id ="title" name="title"/></dd>	
 				
 			</dl>
 			
 			</div>
             
 </div>
-</br>
+<br/>
 <div class="buttons btn-holder-float">
 	
 	<span class="lesserbtn">
-		<input id="btnPrint" type="button" value="Print" onclick="javascript:printMap();" /> 
+		<input id="btnPrint" type="button" value="Print" onclick="javascript:printChoice();" /> 
 		</span>
 	</div>
 </form>	

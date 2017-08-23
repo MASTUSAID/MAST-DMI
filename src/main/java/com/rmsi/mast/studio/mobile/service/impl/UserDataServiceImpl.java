@@ -21,18 +21,22 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rmsi.mast.studio.dao.PersonTypeDAO;
 import com.rmsi.mast.studio.dao.UserDAO;
 import com.rmsi.mast.studio.domain.AttributeValues;
 import com.rmsi.mast.studio.domain.NaturalPerson;
 import com.rmsi.mast.studio.domain.NonNaturalPerson;
 import com.rmsi.mast.studio.domain.Person;
+import com.rmsi.mast.studio.domain.PersonType;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SourceDocument;
 import com.rmsi.mast.studio.domain.SpatialUnit;
+import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.domain.Status;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.WorkflowStatusHistory;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.mobile.dao.AttributeOptionsDao;
 import com.rmsi.mast.studio.mobile.dao.AttributeValuesDao;
 import com.rmsi.mast.studio.mobile.dao.NaturalPersonDao;
@@ -41,11 +45,14 @@ import com.rmsi.mast.studio.mobile.dao.PersonDao;
 import com.rmsi.mast.studio.mobile.dao.SocialTenureDao;
 import com.rmsi.mast.studio.mobile.dao.SourceDocumentDao;
 import com.rmsi.mast.studio.mobile.dao.SpatialUnitDao;
+import com.rmsi.mast.studio.mobile.dao.SpatialUnitPersonWithInterestDao;
 import com.rmsi.mast.studio.mobile.dao.StatusDao;
 import com.rmsi.mast.studio.mobile.dao.UserDataDao;
 import com.rmsi.mast.studio.mobile.dao.WorkflowStatusHistoryDao;
 import com.rmsi.mast.studio.mobile.service.SurveyProjectAttributeService;
 import com.rmsi.mast.studio.mobile.service.UserDataService;
+import com.rmsi.mast.viewer.dao.SpatialUnitDeceasedPersonDao;
+import com.rmsi.mast.viewer.service.LandRecordsService;
 
 /**
  * @author shruti.thakur
@@ -92,7 +99,15 @@ public class UserDataServiceImpl implements UserDataService {
 
 	@Autowired
 	SourceDocumentDao sourceDocumentDao;
-
+	
+	@Autowired
+	SpatialUnitPersonWithInterestDao spatialUnitPersonWithInterestDao;
+	
+	@Autowired
+	SpatialUnitDeceasedPersonDao spatialUnitDeceasedPersonDao;
+	
+	@Autowired PersonTypeDAO personTypeDAO;
+ 
 	private static final Logger logger = Logger
 			.getLogger(UserDataServiceImpl.class.getName());
 
@@ -130,6 +145,8 @@ public class UserDataServiceImpl implements UserDataService {
 	@Override
 	@Transactional(noRollbackFor = Exception.class)
 	public Long syncSurveyProjectData(SpatialUnit spatialUnit,
+			List<SpatialunitDeceasedPerson>deceasedPersonList,
+			List<SpatialUnitPersonWithInterest> nextOfKinList,
 			List<NaturalPerson> naturalPersonList,
 			List<NonNaturalPerson> nonNaturalPersonList,
 			List<SocialTenureRelationship> socialTenureList,
@@ -204,7 +221,7 @@ public class UserDataServiceImpl implements UserDataService {
 						 * social_tenure_relationship
 						 */
 
-						socialTenure = socialTenureList.get(i);
+						socialTenure = socialTenureList.get(0);
 
 						socialTenure.setUsin(usin);
 
@@ -220,12 +237,12 @@ public class UserDataServiceImpl implements UserDataService {
 						 */
 
 						attributeValuesDao.addAttributeValues(
-								attributeValuesMap.get("NaturalPerson").get(i),
+								attributeValuesMap.get("NaturalPerson").get(i++),
 								socialTenure.getPerson_gid().getPerson_gid());
 						attributeValuesDao
 								.addAttributeValues(
 										attributeValuesMap.get("SocialTenure")
-												.get(i++), gid);
+												.get(0), gid);
 					}
 				}
 				/**
@@ -244,6 +261,9 @@ public class UserDataServiceImpl implements UserDataService {
 							naturalPersonList.get(0).getFirstName());
 
 					naturalPersonList.get(0).setActive(true);
+					
+					//setting person subtype administrator for non natural person
+					naturalPersonList.get(0).setPersonSubType(personTypeDAO.findById(4l, false));
 
 					gid = naturalPersonDao.addNaturalPerson(
 							naturalPersonList.get(0)).getPerson_gid();
@@ -287,6 +307,16 @@ public class UserDataServiceImpl implements UserDataService {
 							.get("SocialTenure").get(0), gid);
 				}
 
+				/**
+				 * 6. Adding nextOfKin to database
+				 */
+				if(nextOfKinList.size() > 0){
+					spatialUnitPersonWithInterestDao.addNextOfKin(nextOfKinList, usin);
+				}
+				
+				if(deceasedPersonList.size() > 0){
+					spatialUnitDeceasedPersonDao.addDeceasedPerson(deceasedPersonList, usin);
+				}
 				/**
 				 * Managing Workflow Status History after saving all data to the
 				 * datatbase
@@ -389,12 +419,21 @@ public class UserDataServiceImpl implements UserDataService {
 				File serverFile = new File(documentsDir + File.separator
 						+ sourceDocument.getGid() + "." + fileExtension);
 
-				BufferedOutputStream outputStream = new BufferedOutputStream(
-						new FileOutputStream(serverFile));
+				if(serverFile.length()<=0)
+				{
+				logger.error("file not exist");	
+					
+				}
+				else{
+					BufferedOutputStream outputStream = new BufferedOutputStream(
+							new FileOutputStream(serverFile));
 
-				outputStream.write(document);
+					outputStream.write(document);
 
-				outputStream.close();
+					outputStream.close();
+				}
+				
+				
 			}
 		} catch (MultipartException | IOException ex) {
 
@@ -657,10 +696,20 @@ public class UserDataServiceImpl implements UserDataService {
 				attribsList.add(attributeValues);
 				attributeValues = new AttributeValues();
 			}
-			if (StringUtils.isNotEmpty(naturalPerson.getCitizenship())) {
-				long attributeId = 42;
+			if (StringUtils.isNotEmpty(naturalPerson.getCitizenship_id().toString())) {
+				Long attributeId = 42L;
+				
+				String value = attributeOptionsDao.getAttributeOptionsId(
+						attributeId.intValue(), (int) naturalPerson
+								.getCitizenship_id().getId());
+				if (value == null) {
+					System.out.println("Null value for AttributeID:"
+							+ attributeId);
+					throw new NullPointerException();
+				}
+				
 				attributeValues.setParentuid(naturalPerson.getPerson_gid());
-				attributeValues.setValue(naturalPerson.getCitizenship());
+				attributeValues.setValue(value);
 				attributeValues.setUid(surveyProjectAttribute
 						.getSurveyProjectAttributeId(attributeId, project));
 				attribsList.add(attributeValues);
@@ -672,6 +721,24 @@ public class UserDataServiceImpl implements UserDataService {
 				attributeValues.setParentuid(naturalPerson.getPerson_gid());
 				attributeValues.setValue(naturalPerson.getResident_of_village()
 						.toString());
+				attributeValues.setUid(surveyProjectAttribute
+						.getSurveyProjectAttributeId(attributeId, project));
+				attribsList.add(attributeValues);
+				attributeValues = new AttributeValues();
+			}
+			if (StringUtils.isNotEmpty(naturalPerson.getPersonSubType()
+					.toString())) {
+				Long attributeId = 54L;
+				String value = attributeOptionsDao.getAttributeOptionsId(
+						attributeId.intValue(), (int) naturalPerson
+								.getPersonSubType().getPerson_type_gid());
+				if (value == null) {
+					System.out.println("Null value for AttributeID:"
+							+ attributeId);
+					throw new NullPointerException();
+				}
+				attributeValues.setParentuid(naturalPerson.getPerson_gid());
+				attributeValues.setValue(value);
 				attributeValues.setUid(surveyProjectAttribute
 						.getSurveyProjectAttributeId(attributeId, project));
 				attribsList.add(attributeValues);

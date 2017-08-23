@@ -34,12 +34,12 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 			}		
 			else
 			{
-				return null;
+				return new ArrayList<SocialTenureRelationship>();
 			}
 		} catch (Exception e) {
 
 			logger.error(e);
-			return null;
+			return new ArrayList<SocialTenureRelationship>();
 		}
 		
 		
@@ -192,6 +192,26 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 		}
 	
 
+
+	}
+
+	@Override
+	public boolean updateSharePercentage(String alias, long personGid) {
+
+		try{
+
+			String qry = "UPDATE SocialTenureRelationship st SET st.sharePercentage = :alias where st.person_gid.person_gid =:personGid";
+			Query query = getEntityManager().createQuery(qry).setParameter("alias", alias).setParameter("personGid", personGid);
+			int count = query.executeUpdate();
+			if(count > 0){
+				return true;
+			}else{
+				return false;
+			}
+		}catch(Exception e){
+			logger.error(e);
+			return false;
+		}
 
 	}
 

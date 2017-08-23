@@ -77,7 +77,7 @@ public class UserController {
 					if(objuser.getManager_name()!=null  && !objuser.getManager_name().isEmpty())
 					{
 						User objtemp=userService.findUserByUserId(Integer.parseInt(objuser.getManager_name()));
-						reportingTo=objtemp.getName();
+						reportingTo=objtemp.getUsername();
 						objuser.setReportingTo(reportingTo);
 					}else
 					{
@@ -187,14 +187,14 @@ public class UserController {
 		String userId="";
 		String defProjName="";
 		String pass="";
-		String name_user;
+		String name;
 
 		User user = null;
 		user=new User();
 		try{		
 			userId = ServletRequestUtils.getRequiredStringParameter(request, "hid_userid");
 			userName = ServletRequestUtils.getRequiredStringParameter(request, "name");
-			name_user = ServletRequestUtils.getRequiredStringParameter(request, "name_user");
+			name = ServletRequestUtils.getRequiredStringParameter(request, "name_user");
 			emailId = ServletRequestUtils.getRequiredStringParameter(request, "email");
 			defProjName = ServletRequestUtils.getRequiredStringParameter(request, "defaultproject");
 			pass=ServletRequestUtils.getRequiredStringParameter(request, "password");
@@ -218,8 +218,8 @@ public class UserController {
 
 			}
 
-			user.setName(userName);
-			user.setName_user(name_user);
+			user.setName(name);
+			user.setUsername(userName);
 			user.setEmail(emailId);
 			user.setDefaultproject(defProjName);
 			user.setManager_name("");

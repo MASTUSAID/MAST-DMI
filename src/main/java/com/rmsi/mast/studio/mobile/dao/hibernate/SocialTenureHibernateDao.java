@@ -57,7 +57,7 @@ public class SocialTenureHibernateDao extends
 	public List<SocialTenureRelationship> findSocailTenureByUsin(Long usin) {
 		String query = "select str.* from social_tenure_relationship "
 				+ "str inner join spatial_unit su on su.usin = str.usin where"
-				+ " su.usin =" + usin;
+				+ " su.usin =" + usin +"and str.isactive=true";
 
 		try {
 

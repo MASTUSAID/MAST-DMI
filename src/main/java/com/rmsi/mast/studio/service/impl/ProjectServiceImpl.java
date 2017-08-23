@@ -434,6 +434,32 @@ public class ProjectServiceImpl implements ProjectService {
 		
 	}
 
+	@Override
+	public ProjectHamlet findHamletById(long hamletId) {
+		return projectHamletDAO.findById(hamletId, false);
+	}
+
+	@Override
+	public long getHamletIdbyCode(String hamletcode,String projectName) {
+		return projectHamletDAO.getHamletIdbyCode(hamletcode,projectName);
+	}
+
+	@Override
+	public boolean deletHamletbyId(long hamlet_id) {
+		 try {
+			projectHamletDAO.makeTransientByID(hamlet_id);
+			return true;
+		} catch (Exception e) {
+			logger.error(e);
+			return false;
+		}
+	}
+
+	@Override
+	public List<String> getHamletCodesbyProject(String projectName) {
+		return projectHamletDAO.getHamletCodesbyProject(projectName);
+	}
+
 
 
 	

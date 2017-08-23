@@ -68,9 +68,9 @@ public class ThemeController implements ServletContextAware {
 			String absolutePath = context.getRealPath(request.getContextPath());
 			//System.out.println("------- AbsolutePtah: " + absolutePath);
 			
-			int index = absolutePath.lastIndexOf("\\");
+			int index = absolutePath.lastIndexOf(File.separator);
 			//System.out.println("----index value: " + index);
-			absolutePath = absolutePath.substring(0, index) + "\\resources\\temp\\sld\\" + fileName;
+			absolutePath = absolutePath.substring(0, index) +File.separator+"resources"+File.separator+"temp"+File.separator+"sld"+File.separator+fileName;
 			//System.out.println("------- Absolute Path: " + absolutePath);
 			
 			//Write the SLD file on the disk

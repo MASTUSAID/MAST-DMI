@@ -12,6 +12,10 @@ public interface ProjectHamletDAO extends GenericDAO<ProjectHamlet, Long> {
 	List<ProjectHamlet> findHamlets(String projname);
 
 	void deleteEntries(String projectName);
+
+	long getHamletIdbyCode(String hamletcode,String projectName);
+
+	List<String> getHamletCodesbyProject(String projectName);
 	
 	
 }

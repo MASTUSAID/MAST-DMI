@@ -169,9 +169,9 @@ var CreateEditUser = function (_userId) {
 						username=$("#name").val();
 						
 						if(user_ManagerList[i].active!=false){
-						if(username!=manager.name)
+						if(username!=manager.username)
 						{
-        			jQuery("#manager_name").append(jQuery("<option></option>").attr("value", manager.id).text(manager.name)); 
+        			jQuery("#manager_name").append(jQuery("<option></option>").attr("value", manager.id).text(manager.username)); 
         			}
 					}
         		}); 
@@ -235,7 +235,7 @@ var CreateEditUser = function (_userId) {
         
         jQuery.each(user_ManagerList, function (i, manager) { 
 if(user_ManagerList[i].active==true){		
-			jQuery("#manager_name").append(jQuery("<option></option>").attr("value", manager.id).text(manager.name)); 
+			jQuery("#manager_name").append(jQuery("<option></option>").attr("value", manager.id).text(manager.username)); 
 			}
 		}); 
         

@@ -169,6 +169,9 @@ public class SpatialUnit implements Serializable {
 	
 	private Boolean active;
 	
+	@Column(name = "hamlet_id")
+	private int hamletId;
+	
 	/*
 	 * @OneToMany(fetch=FetchType.EAGER)
 	 * 
@@ -176,7 +179,14 @@ public class SpatialUnit implements Serializable {
 	 * socialTenureRelationships;
 	 */
 
-	
+	public int getHamletId() {
+		return hamletId;
+	}
+
+	public void setHamletId(int hamletId) {
+		this.hamletId = hamletId;
+	}
+
 	public Unit getMeasurementUnit() {
 		return measurementUnit;
 	}

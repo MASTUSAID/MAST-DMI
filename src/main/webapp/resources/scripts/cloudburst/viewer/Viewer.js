@@ -89,7 +89,7 @@ Cloudburst.Viewer = OpenLayers.Class({
 					var bounds = new OpenLayers.Bounds(bbox[0], bbox[1], bbox[2], bbox[3]);
 					var maxRes=(bbox[2]- bbox[0])/256;                
 					cosmeticStatus=data.cosmetic;
-					
+
 					var Scale = new OpenLayers.Control.Scale();
 
 					//******************* Add Map to DIV ******************************************
@@ -509,7 +509,7 @@ Cloudburst.Viewer = OpenLayers.Class({
 
 					map.events.register('zoomend', this, function() {
 						var zoomlevel = map.getZoom();
-						
+
 						$('#scale-interval').val(zoomlevel);
 					});
 
@@ -842,6 +842,7 @@ jQuery(document).ready(function() {
 	var $mapitems = $("#tab1")
 	$mapitems.click(function(event) {
 
+
 		$('#sidebar').show();
 		$('#collapse').show();
 	});
@@ -850,6 +851,7 @@ jQuery(document).ready(function() {
 	var $itemsland = $("#tab2")
 
 	$itemsland.click(function(event) {
+		$("#defaultbutton").css("visibility","hidden");
 		var landRecords = new LandRecords("landRecords");
 		$('#sidebar').hide();
 		$('#collapse').hide();

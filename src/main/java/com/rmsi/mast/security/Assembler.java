@@ -21,7 +21,7 @@ public class Assembler {
 
 		//String userName = userEntity.getEmail();
 		//changed by Prashant from email to username
-		String userName = userEntity.getName();
+		String userName = userEntity.getUsername();
 		String password  = userEntity.getPassword();
 		boolean enabled = userEntity.getActive();
 		boolean accountNonExpired = userEntity.getActive();

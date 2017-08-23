@@ -28,10 +28,13 @@ public interface AttributeValuesDao extends GenericDAO<AttributeValues, Long> {
 	 * It will fetch attribute value, id and listing 
 	 * 
 	 * @param parentUid
+	 * @param attributeCategoryId
 	 * @return
 	 */
-	List<String> getAttributeValueandId(long parentUid);
-
+	List<Object> getAttributeValueandId(long parentUid, int attributeCategoryId);
+	
 	boolean checkEntieswithUid(List<Long> uids);
+
+	Long getAttributeKeyById(long person_gid, long uid);
 	
 }

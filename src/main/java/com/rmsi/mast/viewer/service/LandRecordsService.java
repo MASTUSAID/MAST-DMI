@@ -5,11 +5,11 @@ package com.rmsi.mast.viewer.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.MetaValue;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rmsi.mast.studio.domain.AttributeCategory;
 import com.rmsi.mast.studio.domain.AttributeValues;
+import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.EducationLevel;
 import com.rmsi.mast.studio.domain.Gender;
 import com.rmsi.mast.studio.domain.GroupType;
@@ -21,6 +21,7 @@ import com.rmsi.mast.studio.domain.NonNaturalPerson;
 import com.rmsi.mast.studio.domain.OccupancyType;
 import com.rmsi.mast.studio.domain.Person;
 import com.rmsi.mast.studio.domain.PersonType;
+import com.rmsi.mast.studio.domain.ProjectAdjudicator;
 import com.rmsi.mast.studio.domain.ProjectArea;
 import com.rmsi.mast.studio.domain.ShareType;
 import com.rmsi.mast.studio.domain.SlopeValues;
@@ -34,6 +35,7 @@ import com.rmsi.mast.studio.domain.fetch.AttributeValuesFetch;
 import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTemp;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonadministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
 import com.rmsi.mast.studio.domain.fetch.Usertable;
@@ -578,17 +580,94 @@ public interface LandRecordsService {
 	@Transactional
 	boolean saveAttributealues(AttributeValues tmpvalue);
 
+	/**
+	 * @param usin
+	 * @return List<Personwithinterest>
+	 */
 	List<SpatialunitPersonwithinterest> findpersonInterestByUsin(Long usin);
-
+	
+	/**
+	 * 
+	 * @param project_name
+	 * @return list<SpatialUnit>
+	 */
 	List<SpatialUnitTemp> findSpatialUnitforUKAGeneration(String project);
 	
+	/**
+	 * @category Persist
+	 * @param spatialunitmp
+	 */
 	@Transactional
 	void addSpatialUnitTemp(SpatialUnitTemp spatialunitmp);
-
+	
+	/**
+	 * 
+	 * @param project
+	 * @param hamletCode
+	 * @return list<usin> to generate UKA
+	 */
+	 
 	List<Long> findUsinforUKAGeneration(String project, String hamletCode);
+	
+	/**
+	 * @update Uka value
+	 * @param usin
+	 * @param uka
+	 * @return boolean
+	 */
 	@Transactional
 	boolean updateUKAnumber(Long long1, String uka);
 	
+	/**
+	 * @category Persist
+	 * @param spi SpatialunitPersonwithinterest object
+	 * @return boolean
+	 */
+	@Transactional
+	boolean addnxtTokin(SpatialunitPersonwithinterest spi);
 	
+	@Transactional
+	boolean deletePersonWithInterest(Long id);
+
+	List<PersonType> AllPersonType();
+
+	List<SpatialUnitTable> getSpatialUnitByBbox(String bbox, String project_name);
+
+	AttributeValues getAttributeValue(Long value_key);
+
+	Long getAttributeKey(long person_gid, long uid);
+
+	boolean findExistingHamlet(long hamlet_id);
+
+	List<SpatialunitDeceasedPerson> findDeceasedPersonByUsin(Long usin);
+
+	@Transactional
+	boolean saveDeceasedPerson(SpatialunitDeceasedPerson spdeceased);
+
+	@Transactional
+	boolean deleteDeceasedPerson(Long id);
+	
+	@Transactional
+	boolean deleteAllVertexLabel();
+
+	@Transactional
+	boolean addAllVertexLabel(int k, String lat, String lon);
+
+	ProjectAdjudicator findAdjudicatorByID(int witness1);
+	
+	@Transactional
+	boolean updateSharePercentage(String alias, long personGid);
+
+
+	Citizenship findcitizenship(long citizenship);
+
+	List<Citizenship> findAllCitizenShip();
+
+
+	@Transactional
+	boolean deleteNaturalImage(Long id);
+
+	boolean checkActivePerson(Long id);
+
 
 }

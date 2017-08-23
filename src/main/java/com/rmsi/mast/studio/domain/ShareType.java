@@ -21,6 +21,9 @@ public class ShareType implements Serializable {
 
 	@Column(name = "share_type", nullable = false)
 	private String shareType;
+	
+	@Column(name = "share_type_sw")
+	private String shareType_sw;
 
 	public ShareType() {
 		super();
@@ -41,4 +44,13 @@ public class ShareType implements Serializable {
 	public void setShareType(String shareType) {
 		this.shareType = shareType;
 	}
+
+	public String getShareType_sw() {
+		return shareType_sw;
+	}
+
+	public void setShareType_sw(String shareType_sw) {
+		this.shareType_sw = shareType_sw;
+	}
+	
 }

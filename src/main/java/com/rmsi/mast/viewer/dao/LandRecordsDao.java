@@ -37,10 +37,14 @@ public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
 	Integer searchSize(String usinStr, String ukaNumber, String projname,
 			String dateto, String datefrom, Long status);
 
+	List<SpatialUnitTable> getSpatialUnitByBbox(String bbox, String project_name);
+
+	boolean findExistingHamlet(long hamlet_id);
+
+	boolean deleteAllVertexLabel();
+
+	boolean addAllVertexLabel(int k, String lat, String lon);
 
 
-
-		
-	
 
 }

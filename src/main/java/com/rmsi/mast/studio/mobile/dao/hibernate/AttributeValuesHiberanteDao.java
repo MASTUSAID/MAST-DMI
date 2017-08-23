@@ -77,16 +77,17 @@ public class AttributeValuesHiberanteDao extends
 	}
 
 	@Override
-	public List<String> getAttributeValueandId(long parentUid) {
+	public List<Object> getAttributeValueandId(long parentUid, int attributeCategoryId) {
 
 		try {
 			String query = "select spa.id, av.value, am.listing, am.datatype_id from attribute av "
 					+ "inner join surveyprojectattributes spa on spa.uid = av.uid "
 					+ "inner join attribute_master am on spa.id = am.id where "
-					+ "av.parentuid =" + parentUid;
+					+ "av.parentuid =" + parentUid + "and am."
+							+ "attributecategoryid = " + attributeCategoryId ;
 			
 			@SuppressWarnings("unchecked")
-			List<String> attributes = getEntityManager().createNativeQuery(
+			List<Object> attributes = getEntityManager().createNativeQuery(
 					query).getResultList();
 
 			if (attributes.size() > 0) {
@@ -99,7 +100,7 @@ public class AttributeValuesHiberanteDao extends
 		}
 		return null;
 	}
-
+	
 	@Override
 	public boolean checkEntieswithUid(List<Long> uids) 
 	{
@@ -117,6 +118,30 @@ public class AttributeValuesHiberanteDao extends
 			logger.error(ex);
 		}
 		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Long getAttributeKeyById(long person_gid, long uid) {
+
+		try {
+			Query query = getEntityManager().createQuery("Select av.attributevalueid from AttributeValues av where av.parentuid = :person_gid and av.uid =:uid");
+			List<Long> keyValue =  query.setParameter("person_gid", person_gid).setParameter("uid", uid).getResultList();
+
+
+			if(keyValue.size() > 0){
+				return keyValue.get(0).longValue();
+			}		
+			else
+			{
+				return null;
+			}
+		} catch (Exception e) {
+
+			logger.error(e);
+			return null;
+		}
+
 	}
 	
 }

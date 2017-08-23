@@ -14,191 +14,191 @@ var activeLayerURL = null;
 
 
 Cloudburst.Navi = function(_map) {
-	
+
 	var selection_vector = new OpenLayers.Layer.Vector("selection_vector", {
-	        reportError: true,
-	        projection: "EPSG:4326",
-	        isBaseLayer: false,
-	        visibility: true,        
-	        displayInLayerSwitcher: false
-	    });
-	    _map.addLayers([selection_vector]);
-		
+		reportError: true,
+		projection: "EPSG:4326",
+		isBaseLayer: false,
+		visibility: true,        
+		displayInLayerSwitcher: false
+	});
+	_map.addLayers([selection_vector]);
+
 
 	mapControls = {
 
-		zoomin : new OpenLayers.Control.ZoomBox({
-			title : "Zoom in box",
-			out : false
-		}),
-		zoomout : new OpenLayers.Control.ZoomBox({
-			title : "Zoom out box",
-			out : true
-		}),
-		pan : new OpenLayers.Control.Pan({
-			title : "Pan"
-			//displayClass: "olControlDragPan"
-			
-		}),
-		measurelength : new OpenLayers.Control.Measure(OpenLayers.Handler.Path,
-				{
-					persist : true,
-					displayClass:"olControlDefault",
-					eventListeners : {
-						measure : function(evt) {
-							handleFinalMeasurement(evt);
-							// getActualMeasure(evt.measure,evt.units,evt.order,'t');
-						},
-						measurepartial : function(evt) {
-							handlePartialMeasurement(evt);
-							// getActualMeasure(evt.measure,evt.units,evt.order,'p');
-						},
-						activate : function(evt) {
-							measurementToolActivated();
+			zoomin : new OpenLayers.Control.ZoomBox({
+				title : "Zoom in box",
+				out : false
+			}),
+			zoomout : new OpenLayers.Control.ZoomBox({
+				title : "Zoom out box",
+				out : true
+			}),
+			pan : new OpenLayers.Control.Pan({
+				title : "Pan"
+					//displayClass: "olControlDragPan"
 
-						}
+			}),
+			measurelength : new OpenLayers.Control.Measure(OpenLayers.Handler.Path,
+					{
+				persist : true,
+				displayClass:"olControlDefault",
+				eventListeners : {
+					measure : function(evt) {
+						handleFinalMeasurement(evt);
+						// getActualMeasure(evt.measure,evt.units,evt.order,'t');
+					},
+					measurepartial : function(evt) {
+						handlePartialMeasurement(evt);
+						// getActualMeasure(evt.measure,evt.units,evt.order,'p');
+					},
+					activate : function(evt) {
+						measurementToolActivated();
+
 					}
-				}),
-		measurearea : new OpenLayers.Control.Measure(
-				OpenLayers.Handler.Polygon, {
-					persist : true,
-					displayClass:"olControlDefault",
-					eventListeners : {
-						measure : function(evt) {
-							handleFinalMeasurement(evt);
-							// getActualMeasure(evt.measure,evt.units,evt.order,'t');
-						},
-						measurepartial : function(evt) {
-							handlePartialMeasurement(evt);
-							// getActualMeasure(evt.measure,evt.units,evt.order,'p');
-						},
-						activate : function(evt) {
-							measurementToolActivated();
+				}
+					}),
+					measurearea : new OpenLayers.Control.Measure(
+							OpenLayers.Handler.Polygon, {
+								persist : true,
+								displayClass:"olControlDefault",
+								eventListeners : {
+									measure : function(evt) {
+										handleFinalMeasurement(evt);
+										// getActualMeasure(evt.measure,evt.units,evt.order,'t');
+									},
+									measurepartial : function(evt) {
+										handlePartialMeasurement(evt);
+										// getActualMeasure(evt.measure,evt.units,evt.order,'p');
+									},
+									activate : function(evt) {
+										measurementToolActivated();
 
-						}
-					}
-				}),
-		selectfeature:new OpenLayers.Control.DrawFeature(
-				selection_vector, OpenLayers.Handler.Point, {
-		        	displayClass:"olControlInfo",
-		            callbacks: {
-		                done: function (p) {
-		                    var pointFeature = new OpenLayers.Feature.Vector(p);
-		                    
-		                    if(OpenLayers.Map.activelayer.selectable){
-			                	var objSelect = new Selection(pointFeature, OpenLayers.Map.activelayer);
-			                	filter = objSelect.creationSelectionCriteria(this);
-			                	
-			                	objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
-			                	objSelect.displayResult(filter, true);
-			                	OpenLayers.Map.activelayer.selectFilter = filter;
-		                	}else{
-		                		jAlert('Layer is not selectable', 'Selection');
-		                	}
-		                   
-		                }
-		            }
-		        }),
-		selectbox : new OpenLayers.Control.DrawFeature(
-				selection_vector, OpenLayers.Handler.RegularPolygon, {
-		            handlerOptions: {
-		                sides: 4,
-						irregular:true
-		            },
-		            displayClass:"olControlDefault",
-		            callbacks: {
-		                done: function (p) {
-		                	var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-		                	if(OpenLayers.Map.activelayer.selectable){
-			                	var objSelect = new Selection(multipolygon, OpenLayers.Map.activelayer);
-			                	filter = objSelect.creationSelectionCriteria(this);
-			                	objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
-			                	objSelect.displayResult(filter, true);
-			                	OpenLayers.Map.activelayer.selectFilter = filter;
-		                	}else{
-		                		jAlert('Layer is not selectable', 'Selection');
-		                	}
-							
-							//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
-		                }
-		            }
-		        }),
-		selectpolygon : new OpenLayers.Control.DrawFeature(
-				selection_vector, OpenLayers.Handler.Polygon, {
-					displayClass:"olControlDefault",
-		            callbacks: {
-		                done: function (p) {
-		                	//var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-		                	var multipolygon = new OpenLayers.Feature.Vector(p);
-		                	var objSelect = new Selection(multipolygon, OpenLayers.Map.activelayer);
-		                	if(OpenLayers.Map.activelayer.selectable){
-			                	filter = objSelect.creationSelectionCriteria(this);
-			                	objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
-			                	objSelect.displayResult(filter);
-			                	OpenLayers.Map.activelayer.selectFilter = filter;
-		                	}else{
-		                		jAlert('Layer is not selectable', 'Selection');
-		                	}
-							
-							//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
-		                }
-		            }
-		        }),
-		info : new OpenLayers.Control(
-			{
-			displayClass:"olControlInfo",	
-			activate : function() {
-				var handlerOptions = {
-					'single' : true,
-					'double' : false,
-					'pixelTolerance' : 0,
-					'stopSingle' : false,
-					'stopDouble' : false
-				};
-				this.handler = new OpenLayers.Handler.Click(this, {
-					'click' : onClick
-				}, handlerOptions);
-				this.protocol = new OpenLayers.Protocol.HTTP({ /* "http://cp947sw:8080/geoserver/wms?" */
-					url : OpenLayers.Map.activelayer.url,
-					format : new OpenLayers.Format.WMSGetFeatureInfo()
-				});
-				OpenLayers.Control.prototype.activate.call(this);
-			}
+									}
+								}
+							}),
+							selectfeature:new OpenLayers.Control.DrawFeature(
+									selection_vector, OpenLayers.Handler.Point, {
+										displayClass:"olControlInfo",
+										callbacks: {
+											done: function (p) {
+												var pointFeature = new OpenLayers.Feature.Vector(p);
 
-		}),
+												if(OpenLayers.Map.activelayer.selectable){
+													var objSelect = new Selection(pointFeature, OpenLayers.Map.activelayer);
+													filter = objSelect.creationSelectionCriteria(this);
 
-		maptip : new OpenLayers.Control.GetFeature({
-			//protocol : OpenLayers.Protocol.WFS.fromWMSLayer(null,mapTipOptions),
-			box : false,
-			click : false,
-			clickout : false,
-			hover : true,
-			clickTolerance : 6,
-			maxFeatures : 1
-		}),
-		intersection : new OpenLayers.Control.DrawFeature(
-				selection_vector, OpenLayers.Handler.RegularPolygon, {
-		            handlerOptions: {
-		                sides: 4,
-						irregular:true
-		            },
-		            displayClass:"olControlDefault",
-		            callbacks: {
-		                done: function (p) {
-		                	var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-		                	if(OpenLayers.Map.activelayer.selectable){
-			                	var objIntersection = new Intersection(multipolygon, OpenLayers.Map.activelayer);
-			                	filter = objIntersection.creationSelectionCriteria(this);
-			                	objIntersection.displayResult(filter, true);
-			                	OpenLayers.Map.activelayer.selectFilter = filter;
-		                	}else{
-		                		jAlert('Layer is not selectable', 'Selection');
-		                	}
-							
-							//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
-		                }
-		            }
-		        }),
+													objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
+													objSelect.displayResult(filter, true);
+													OpenLayers.Map.activelayer.selectFilter = filter;
+												}else{
+													jAlert('Layer is not selectable', 'Selection');
+												}
+
+											}
+										}
+									}),
+									selectbox : new OpenLayers.Control.DrawFeature(
+											selection_vector, OpenLayers.Handler.RegularPolygon, {
+												handlerOptions: {
+													sides: 4,
+													irregular:true
+												},
+												displayClass:"olControlDefault",
+												callbacks: {
+													done: function (p) {
+														var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
+														if(OpenLayers.Map.activelayer.selectable){
+															var objSelect = new Selection(multipolygon, OpenLayers.Map.activelayer);
+															filter = objSelect.creationSelectionCriteria(this);
+															objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
+															objSelect.displayResult(filter, true);
+															OpenLayers.Map.activelayer.selectFilter = filter;
+														}else{
+															jAlert('Layer is not selectable', 'Selection');
+														}
+
+														//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
+													}
+												}
+											}),
+											selectpolygon : new OpenLayers.Control.DrawFeature(
+													selection_vector, OpenLayers.Handler.Polygon, {
+														displayClass:"olControlDefault",
+														callbacks: {
+															done: function (p) {
+																//var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
+																var multipolygon = new OpenLayers.Feature.Vector(p);
+																var objSelect = new Selection(multipolygon, OpenLayers.Map.activelayer);
+																if(OpenLayers.Map.activelayer.selectable){
+																	filter = objSelect.creationSelectionCriteria(this);
+																	objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
+																	objSelect.displayResult(filter);
+																	OpenLayers.Map.activelayer.selectFilter = filter;
+																}else{
+																	jAlert('Layer is not selectable', 'Selection');
+																}
+
+																//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
+															}
+														}
+													}),
+													info : new OpenLayers.Control(
+															{
+																displayClass:"olControlInfo",	
+																activate : function() {
+																	var handlerOptions = {
+																			'single' : true,
+																			'double' : false,
+																			'pixelTolerance' : 0,
+																			'stopSingle' : false,
+																			'stopDouble' : false
+																	};
+																	this.handler = new OpenLayers.Handler.Click(this, {
+																		'click' : onClick
+																	}, handlerOptions);
+																	this.protocol = new OpenLayers.Protocol.HTTP({ /* "http://cp947sw:8080/geoserver/wms?" */
+																		url : OpenLayers.Map.activelayer.url,
+																		format : new OpenLayers.Format.WMSGetFeatureInfo()
+																	});
+																	OpenLayers.Control.prototype.activate.call(this);
+																}
+
+															}),
+
+															maptip : new OpenLayers.Control.GetFeature({
+																//protocol : OpenLayers.Protocol.WFS.fromWMSLayer(null,mapTipOptions),
+																box : false,
+																click : false,
+																clickout : false,
+																hover : true,
+																clickTolerance : 6,
+																maxFeatures : 1
+															}),
+															intersection :new OpenLayers.Control.DrawFeature(
+																	selection_vector, OpenLayers.Handler.RegularPolygon, {
+																		handlerOptions: {
+																			sides: 4,
+																			irregular:true
+																		},
+																		displayClass:"olControlDefault",
+																		callbacks: {
+																			done: function (p) {
+																				var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
+																				if(OpenLayers.Map.activelayer.selectable){
+																					var objIntersection = new Intersection(multipolygon, OpenLayers.Map.activelayer);
+																					filter = objIntersection.creationSelectionCriteria(this);
+																					objIntersection.displayResult(filter, true);
+																					OpenLayers.Map.activelayer.selectFilter = filter;
+																				}else{
+																					jAlert('Layer is not selectable', 'Selection');
+																				}
+
+																				//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
+																			}
+																		}
+																	}),
 	};
 
 	mapControls["maptip"].events.register("hoverfeature", this, hoverResponse);
@@ -206,7 +206,7 @@ Cloudburst.Navi = function(_map) {
 
 	//mapControls["measurelength"].setImmediate(true);
 	//mapControls["measurearea"].setImmediate(true);
-	
+
 	var history = new OpenLayers.Control.NavigationHistory({
 		id : "history"
 	});
@@ -224,7 +224,7 @@ Cloudburst.Navi = function(_map) {
 	selectLayers.push(map.activelayer);
 	//mapControls['selectbox'].setLayers(selectLayers);
 	//mapControls['selectpolygon'].setLayers(selectLayers);
-	
+
 	//mapControls["selectbox"].events.register("selected", this, onSLDSelectResponse);
 	//mapControls["selectpolygon"].events.register("selected", this, onSLDSelectResponse);
 
@@ -239,9 +239,9 @@ Cloudburst.Navi = function(_map) {
 			control.deactivate();
 
 		}*/
-		
+
 		//remove unsaved markup and deactive current tool
-		
+		$("#defaultbutton").css("visibility","hidden");
 		removeDeactiveMarkupTool();
 		tabSwitch();
 		switch (e.currentTarget.id) {
@@ -255,6 +255,8 @@ Cloudburst.Navi = function(_map) {
 			Cloudburst.Navi.prototype.toggleControl("pan");
 			break;
 		case 'info':
+			removeDeactiveMarkupTool();
+
 			Cloudburst.Navi.prototype.toggleControl("info");
 			break;
 		case 'measurelength':
@@ -283,7 +285,7 @@ Cloudburst.Navi = function(_map) {
 			history.nextTrigger();
 			break;
 		case 'fullview':
-			
+
 			_map.zoomToExtent( OpenLayers.Map.activelayer.getMaxExtent(),18);
 			break;
 		case 'zoomtolayer':
@@ -312,22 +314,90 @@ Cloudburst.Navi = function(_map) {
 			}else{
 				clearSelection(true);
 			}
-			
+				break;
 		case 'intersection' :
-			Cloudburst.Navi.prototype.toggleControl("intersection");	
-			
-			
+			spatialDialog = $( "#validation-dialog-form" ).dialog({
+				autoOpen: false,
+				height: 230,
+				width: 234,
+				resizable: true,
+				modal: true,
+				
+				buttons: {
+					"Ok": function() 
+					{
+						
+						var selected = $("#radioSpatial input[type='radio']:checked");
+					if (selected.length > 0) {
+						spatial_validation= selected.val();
+							if(spatial_validation=="2")
+							{
+							Cloudburst.Navi.prototype.toggleControl("intersection");
+							spatialDialog.dialog( "destroy" );
+							}
+							
+							else if(spatial_validation=="1")
+							{
+							
+							var objIntersection = new Intersection("allBounds", OpenLayers.Map.activelayer);
+							filter = objIntersection.creationSelectionCriteria("check");
+							objIntersection.displayResult(filter, true);
+							OpenLayers.Map.activelayer.selectFilter = filter;
+							spatialDialog.dialog( "destroy" );
+							}
+							else{
+								
+								var hamlet_Id=$("#hamletSpatialId").val();
+								if(hamlet_Id!=0){
+									
+									var objIntersection = new Intersection("allBounds", OpenLayers.Map.activelayer);
+									filter = objIntersection.creationSelectionCriteria("check",hamlet_Id);
+									objIntersection.displayResult(filter, true);
+									OpenLayers.Map.activelayer.selectFilter = filter;
+									spatialDialog.dialog( "destroy" );
+										
+								}
+								
+								else{
+									
+									
+									alert("Please Select Hamlet ");
+								}
+								
+							}
+						}
+						
+						
+					},
+					"Cancel": function() 
+					{
+						spatialDialog.dialog( "destroy" );
+						spatialDialog.dialog( "close" );
+					}
+				},
+				close: function() {
+					spatialDialog.dialog( "destroy" );
+
+				}
+			});
+			$('input:radio[name="spatial_validation"][value="2"]').prop('checked', true);
+			spatial_validType="Select by rectangle";
+			$('#hamletSpatial').hide();
+			spatialDialog.dialog( "open" );	
+				
+
+
 			/*
 			var sel_clonedLayer = map.getLayersByName("clone")[0];
 			if(sel_clonedLayer != undefined){
 				map.removeLayer(sel_clonedLayer);
 			}
-			
+
         	 if(markers){
         		 markers.clearMarkers();
         	 }
-        	*/
-            break;
+			 */
+			break;
 		default:
 		}
 	});
@@ -346,10 +416,10 @@ Cloudburst.Navi = function(_map) {
 
 
 var onSLDSelectResponse = function(response){
-		
+
 	OpenLayers.Map.activelayer.selectFilter=response.filters[0];
 	alert(OpenLayers.Map.activelayer.selectFilter);
-	
+
 };
 
 var onResponse = function(response) {
@@ -371,9 +441,9 @@ var onResponse = function(response) {
 
 		jQuery("#InfoTemplate").tmpl(null,
 
-		{
+				{
 			attrsList : attrs
-		}
+				}
 
 		).appendTo("#infoBody");
 
@@ -400,7 +470,7 @@ Cloudburst.Navi.prototype.toggle = function() {
 };
 
 Cloudburst.Navi.prototype.toggleControl = function(element) {
-	
+
 	for (key in mapControls) {
 		var control = mapControls[key];
 
@@ -413,29 +483,29 @@ Cloudburst.Navi.prototype.toggleControl = function(element) {
 		}
 
 	}
-	
+
 	/* Deactive search bound controls*/
 	for (boundCtrlKey in boundControls) {
 		var ctrl = boundControls[boundCtrlKey];
 		ctrl.deactivate();
 	}
-	
+
 	/* Deactive markup controls*/
 	for (key1 in markupControls) {
 		var control = markupControls[key1];
 		control.deactivate();
 	}
-	
+
 	/* Deactive editControls_issue controls of issue
 	for (key_issue in editControls_issue) {
 		var control = editControls_issue[key_issue];
 			control.deactivate();
 	}
-	*/	
+	 */	
 };
 
 function tabSwitch(){
-	
+
 	$('#tab').tabs("select","#map-tab");
 	$('#sidebar').show();
 	$('#collapse').show();

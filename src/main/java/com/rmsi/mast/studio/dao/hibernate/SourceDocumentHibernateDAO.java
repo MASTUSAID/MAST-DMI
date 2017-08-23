@@ -135,5 +135,52 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
 		
 	}
 
+	@Override
+	public boolean deleteNaturalPersonImage(Long id) {		
+		try {
+			
+			Query query = getEntityManager().createQuery("UPDATE SourceDocument sd SET sd.active = false  where sd.person_gid = :id");
+			
+			query.setParameter("id",id);
+
+			int rows = query.executeUpdate();
+			
+			if(rows>0)
+			{
+				return true;
+			}
+			else{
+				return false;
+}
+		} catch (Exception e) {
+			logger.error(e);
+			return false;
+		}
+	
+}
+
+	@Override
+	public boolean checkPersonImage(Long id) {
+		
+		try {
+			Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.person_gid.person_gid = :person_gid");
+			List<SourceDocument> documentlist = query.setParameter("person_gid", id).getResultList();		
+
+			if(documentlist.size() > 0){
+				return documentlist.get(0).isActive();
+			}		
+			else
+			{
+				return false;
+			}
+		} catch (Exception e) {
+
+			logger.error(e);
+			return false;
+		}
+		
+		
+	}
+
 
 }

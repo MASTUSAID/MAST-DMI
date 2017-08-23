@@ -114,7 +114,9 @@ Cloudburst.Toolbar = OpenLayers
 				 * ui-tooltip-light ui-tooltip-shadow', tip: {
 				 * 
 				 * width: 20, height: 10 } } });
+				 * 
 				 */
+				
 				var navi = new Cloudburst.Navi(this.map);
 
 				var toolbutton = showToolButtons(loggedin_user_role);
@@ -122,7 +124,7 @@ Cloudburst.Toolbar = OpenLayers
 				var layermanager = new Cloudburst.LayerManager(map,
 						"tabs-LayerManager");
 				$("#sidebar").tabs();
-
+				
 				$("#toolbar button")
 						.bind(
 								"click",
@@ -228,6 +230,7 @@ Cloudburst.Toolbar = OpenLayers
 												map, layermanager);
 										break;
 									case 'openproject':
+										jQuery("#defaultbutton").css("visibility","visible");
 										//var openproject = new Cloudburst.OpenProject(map, "sidebar");
 										var openproject = new Cloudburst.UserProjects(map, "sidebar");
 										break;

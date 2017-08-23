@@ -18,6 +18,10 @@ public interface SourceDocumentDAO extends GenericDAO<SourceDocument, Integer> {
 
 	SourceDocument getDocumentByPerson(Long person_gid);
 
+	boolean deleteNaturalPersonImage(Long id);
+
+	boolean checkPersonImage(Long id);
+
 	
 	
 }

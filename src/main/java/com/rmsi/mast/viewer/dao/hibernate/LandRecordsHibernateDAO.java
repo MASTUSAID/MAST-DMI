@@ -26,7 +26,7 @@ implements LandRecordsDao {
 		try {
 			Query query = getEntityManager().createQuery("Select su from SpatialUnitTable su where su.project = :project_name and su.active=true order by su.usin desc");
 			List<SpatialUnitTable> spatialUnit = query.setParameter("project_name", defaultProject).getResultList();
-			
+
 
 			if(spatialUnit.size() > 0){
 				return spatialUnit;
@@ -55,6 +55,8 @@ implements LandRecordsDao {
 			{
 				return true;
 			}
+
+
 		} catch (Exception e) {
 
 			logger.error(e);
@@ -90,7 +92,7 @@ implements LandRecordsDao {
 	@Override
 	public List<SpatialUnitTable> search(String usinStr, String ukaNumber,String projname , String dateto, String datefrom,Long status,Integer startpos) 
 	{
-		
+
 		ArrayList<Long> newUsin=new ArrayList<Long>();
 		try 
 		{
@@ -114,20 +116,21 @@ implements LandRecordsDao {
 			{
 				queryStr.append("and su.status.workflowStatusId=:workflowStatusId ");
 			}
-
+			//added 4-sep-15
+			queryStr.append("order by su.usin desc ");
 			Query query = getEntityManager().createQuery(queryStr.toString());
 			query.setParameter("project_name", projname);
 
 			if(ukaNumber!="")
 			{
-				query.setParameter("propertyno","%" +ukaNumber+"%");
+				query.setParameter("propertyno","%" +ukaNumber.trim()+"%");
 			}
 			if(usinStr!="")
 			{
 				for (String retval: usinStr.split(",")){
-			        newUsin.add(Long.parseLong(retval));
-			      }
-				 
+					newUsin.add(Long.parseLong(retval.trim()));
+				}
+
 				query.setParameter("usin",newUsin);
 			}
 			if(!dateto.isEmpty() || !datefrom.isEmpty())
@@ -184,8 +187,8 @@ implements LandRecordsDao {
 
 	@Override
 	public String findukaNumberByUsin(Long id) {
-		
-		
+
+
 		try {
 			Query query = getEntityManager().createQuery("Select su from SpatialUnitTable su where su.usin = :usin and su.active = true");
 			@SuppressWarnings("unchecked")
@@ -204,7 +207,7 @@ implements LandRecordsDao {
 			logger.error(e);
 			return "";
 		}
-		
+
 	}
 
 	@Override
@@ -255,7 +258,7 @@ implements LandRecordsDao {
 
 	@Override
 	public boolean deleteSpatial(Long id) {
-		
+
 		try {
 			Query query = getEntityManager().createQuery("UPDATE SpatialUnitTable su SET su.active = false  where su.usin = :usin");
 			int updateFinal = query.setParameter("usin",id).executeUpdate();	
@@ -275,9 +278,9 @@ implements LandRecordsDao {
 	@Override
 	public Integer searchSize(String usinStr, String ukaNumber,
 			String projname, String dateto, String datefrom, Long status) {
-		
-			Integer count=0;
-		
+
+		Integer count=0;
+
 		ArrayList<Long> newUsin=new ArrayList<Long>();
 		try 
 		{
@@ -312,9 +315,9 @@ implements LandRecordsDao {
 			if(usinStr!="")
 			{
 				for (String retval: usinStr.split(",")){
-			        newUsin.add(Long.parseLong(retval));
-			      }
-				 
+					newUsin.add(Long.parseLong(retval));
+				}
+
 				query.setParameter("usin",newUsin);
 			}
 			if(!dateto.isEmpty() || !datefrom.isEmpty())
@@ -333,17 +336,94 @@ implements LandRecordsDao {
 			if(spatialUnit.size() > 0){
 				count=Integer.valueOf (spatialUnit.get(0).toString());
 			}		
-		
+
 		} catch (Exception e) {
 
 			logger.error(e);
-		
+
 		}
-		
+
 		return count;
-	
+
 	}
 
+	@Override
+	public List<SpatialUnitTable> getSpatialUnitByBbox(String bbox,String project_name) {
+
+		List<SpatialUnitTable> spatialUnit =new ArrayList<SpatialUnitTable>();
+		try {
+
+			Query query = getEntityManager().createNativeQuery("SELECT * from spatial_unit where ST_WITHIN(the_geom, ST_MakeEnvelope("+bbox+",4326)) and (project_name="+"'"+project_name+"'"+" and active=true) ",SpatialUnitTable.class);
+			spatialUnit = query.getResultList();
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+		return spatialUnit;			
+
+	}
+
+	@Override
+	public boolean findExistingHamlet(long hamlet_id) {
+		try {
+			Query query = getEntityManager().createQuery("Select su from SpatialUnitTable su where su.hamlet_Id.id = :hamlet_id");
+			@SuppressWarnings("unchecked")
+			List<SpatialUnitTable> spatialUnitlst = query.setParameter("hamlet_id", hamlet_id).getResultList();	
+			if(spatialUnitlst.size() > 0){
+				return true;
+			}		
+			else
+			{
+				return false;
+			}
+		} catch (Exception e) {
+
+			logger.error(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean deleteAllVertexLabel() {
+
+		try {
+			Query query = getEntityManager().createNativeQuery("DELETE FROM vertexlabel");
+			int spatialUnit = query.executeUpdate();
+
+
+			if(spatialUnit> 0){
+				return true;
+			}		
+			else
+			{
+				return true;
+			}
+		} catch (Exception e) {
+
+			logger.error(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean addAllVertexLabel(int k, String lat, String lon) {try {
+		Query query = getEntityManager().createNativeQuery("insert into vertexlabel(gid,the_geom) values("+k+",ST_SetSRID(ST_MakePoint("+lon+","+lat+"), 4326));");
+		int spatialUnit = query.executeUpdate();
+
+
+		if(spatialUnit> 0){
+			return true;
+		}		
+		else
+		{
+			return true;
+		}
+	} catch (Exception e) {
+
+		logger.error(e);
+		return false;
+	}
+	}
 
 
 }

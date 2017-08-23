@@ -46,6 +46,7 @@ import com.rmsi.mast.studio.service.RoleService;
 import com.rmsi.mast.studio.service.UnitService;
 import com.rmsi.mast.studio.service.UserService;
 import com.rmsi.mast.studio.util.SaveProject;
+import com.rmsi.mast.viewer.service.LandRecordsService;
 
 /**
  * @author Aparesh.Chakraborty
@@ -59,7 +60,8 @@ public class ProjectController {
 	@Autowired
 	ProjectService projectService;
 	
-
+	@Autowired
+	LandRecordsService landRecordsService;
 
 	@Autowired
 	RoleService roleService;
@@ -137,7 +139,7 @@ public class ProjectController {
 		String[] hamlet_name=null;
 		String[] hamlet_alias=null;
 		String[] hamlet_code=null;
-		int hamlet_length=0;
+		//int hamlet_length=0;
 	
 		try {
 			projectName = ServletRequestUtils.getRequiredStringParameter(request, "name");
@@ -147,7 +149,7 @@ public class ProjectController {
 			} catch (Exception e) {
 				logger.error(e);
 			}
-			hamlet_length=ServletRequestUtils.getRequiredIntParameter(request, "hamlets_length");
+			//hamlet_length=ServletRequestUtils.getRequiredIntParameter(request, "hamlets_length");
 			try {
 				hamlet_name=ServletRequestUtils.getRequiredStringParameters(request, "hamletName");
 				hamlet_alias=ServletRequestUtils.getRequiredStringParameters(request, "hamletAlias");
@@ -284,6 +286,8 @@ public class ProjectController {
 			String districtOfficer="";
 			String villageChairman="";
 			String approvingExecutive="";
+			String villagecode="";
+			String villagepostalcode="";
 			
 		//districtOfficer,villageChairman,approvingExecutive
 			
@@ -353,6 +357,18 @@ public class ProjectController {
 						
 					logger.error(e);
 				}
+				try {
+					villagecode= ServletRequestUtils.getRequiredStringParameter(request, "villagecode");
+				} catch (Exception e) {
+						
+					logger.error(e);
+				}
+				try {
+					villagepostalcode= ServletRequestUtils.getRequiredStringParameter(request, "villagepostalcode");
+				} catch (Exception e) {
+						
+					logger.error(e);
+				}
 				
 				
 				
@@ -377,6 +393,8 @@ public class ProjectController {
 				projectArea.setVillageChairman(villageChairman);
 				projectArea.setApprovingExecutive(approvingExecutive);
 				projectArea.setDistrictOfficer(districtOfficer);
+				projectArea.setVillage_code(villagecode);
+				projectArea.setAddress(villagepostalcode);
 				
 				projectAreaList.add(projectArea);
 				
@@ -464,18 +482,30 @@ public class ProjectController {
 				adjObj.setProjectName(projectName);
 				projectService.addAdjudicatorDetails(adjObj);
 			}
-			projectService.deleteHamletByProject(projectName);
+			//projectService.deleteHamletByProject(projectName);
 			
-				ProjectHamlet hamletObj=new ProjectHamlet();
+				List<String> hamlettmplst = projectService.getHamletCodesbyProject(projectName);
 				
-				for (int j = 0; j < hamlet_length; j++) {
-					hamletObj.setHamletName(hamlet_name[j]);
-					hamletObj.setHamletNameSecondLanguage(hamlet_alias[j]);
-					hamletObj.setHamletCode(hamlet_code[j]);
-					hamletObj.setProjectName(projectName);
-					projectService.addHamlets(hamletObj);
+				List<ProjectHamlet>hamletObjtmp=new ArrayList<ProjectHamlet>();
+	//Must check the code after 1-Oct-15 for HamletList use.
+					for (int j = 0; j < hamlet_name.length; j++) {
+						ProjectHamlet hamletObj=new ProjectHamlet();
+							hamletObj.setHamletName(hamlet_name[j]);
+							hamletObj.setHamletNameSecondLanguage(hamlet_alias[j]);
+							hamletObj.setHamletCode(hamlet_code[j]);
+							hamletObj.setProjectName(projectName);
+							hamletObj.setCount(0);
+							if(!hamlettmplst.contains(hamlet_code[j]))
+								projectService.addHamlets(hamletObj);
+					}
 					
-				}
+			/*//	hamletObjtmp.removeAll(hamlettmplst);
+				for (int i = 0; i < hamletObjtmp.size(); i++) {
+					
+					projectService.addHamlets(hamletObjtmp.get(i));
+				}*/
+				
+				
 					
 				
 			
@@ -782,5 +812,19 @@ public class ProjectController {
 	}
 	
 	/* ************@RMSI/NK add for country,region, district,village,hamlet * start ***1-5 ***********/
+	
+	
+	@RequestMapping(value = "/studio/project/delethamlet/{hamletcode}/{projectName}", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean deleteHamlet (@PathVariable String hamletcode,@PathVariable String projectName) {
+		
+		long hamlet_id=projectService.getHamletIdbyCode(hamletcode,projectName);
+		boolean check=landRecordsService.findExistingHamlet(hamlet_id);
+		if(!check)	
+		return projectService.deletHamletbyId(hamlet_id);
+		else
+			return false;
+		
+	}
 	
 }

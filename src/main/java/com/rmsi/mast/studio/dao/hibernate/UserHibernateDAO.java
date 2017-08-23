@@ -23,7 +23,7 @@ UserDAO {
 	public User findByName(String name) {
 
 		List<User> user =
-				getEntityManager().createQuery("Select u from User u where u.name = :name").setParameter("name", name).getResultList();
+				getEntityManager().createQuery("Select u from User u where u.username = :name").setParameter("name", name).getResultList();
 
 		if(user.size() > 0)
 			return user.get(0);
@@ -57,7 +57,7 @@ UserDAO {
 	public User findByUniqueName(String username)
 	{
 		List<User> user =
-				getEntityManager().createQuery("Select u from User u where u.active = true and u.name = :name").setParameter("name", username).getResultList();
+				getEntityManager().createQuery("Select u from User u where u.active = true and u.username = :name").setParameter("name", username).getResultList();
 
 		if(user.size() > 0)
 			return user.get(0);
@@ -117,7 +117,7 @@ UserDAO {
 	//Added by PBJ
 	public User findUserByUserId(Integer id){
 		try {
-			List<User> user = getEntityManager().createQuery("Select u from User u where u.id = :id order by u.name").setParameter("id", id).getResultList();
+			List<User> user = getEntityManager().createQuery("Select u from User u where u.id = :id").setParameter("id", id).getResultList();
 			System.out.println(user);
 			if(user.size() > 0)
 				return user.get(0);
@@ -172,7 +172,7 @@ UserDAO {
 	public boolean duplicatevalidate(String userName) {
 
 		try {
-			Query query = getEntityManager().createQuery("Select u from User u where lower(u.name) = :name");
+			Query query = getEntityManager().createQuery("Select u from User u where lower(u.username) = :name");
 
 			query.setParameter("name",userName.toLowerCase());
 

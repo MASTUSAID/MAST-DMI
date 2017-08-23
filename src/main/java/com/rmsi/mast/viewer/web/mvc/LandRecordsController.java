@@ -1,6 +1,13 @@
 package com.rmsi.mast.viewer.web.mvc;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,13 +15,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.eclipse.birt.report.engine.api.impl.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -26,8 +40,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.rmsi.mast.custom.dto.CcroDto;
 import com.rmsi.mast.studio.domain.AttributeCategory;
 import com.rmsi.mast.studio.domain.AttributeValues;
+import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.EducationLevel;
 import com.rmsi.mast.studio.domain.Gender;
 import com.rmsi.mast.studio.domain.GroupType;
@@ -55,6 +71,7 @@ import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
 import com.rmsi.mast.studio.domain.fetch.ProjectTemp;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTemp;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonadministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
 import com.rmsi.mast.studio.domain.fetch.Usertable;
@@ -63,8 +80,7 @@ import com.rmsi.mast.studio.mobile.service.UserDataService;
 import com.rmsi.mast.studio.service.ProjectService;
 import com.rmsi.mast.studio.service.UserService;
 import com.rmsi.mast.viewer.service.LandRecordsService;
-
-
+import com.rmsi.mast.studio.domain.Citizenship;
 
 @Controller
 public class LandRecordsController {
@@ -96,7 +112,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/tenuretype/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/tenuretype/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ShareType> tenureList()
 	{
@@ -108,7 +124,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/socialtenure/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/socialtenure/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SocialTenureRelationship> socialTenureList(@PathVariable Long id)
 	{
@@ -117,7 +133,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/spatialunitlist/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/spatialunitlist/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SpatialUnitTable> allspatialUnitList()
 	{
@@ -126,7 +142,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/editattribute/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/editattribute/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SpatialUnitTable> editAttribute(@PathVariable Long id)
 	{
@@ -136,7 +152,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/landrecords/updateuka", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/viewer/landrecords/updateuka", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean updateUkaNum(HttpServletRequest request, HttpServletResponse response)
 	{
@@ -157,7 +173,7 @@ public class LandRecordsController {
 
 
 			return landRecordsService.update(spatialUnit);
-			 
+
 
 		} catch (ServletRequestBindingException e) {
 
@@ -165,7 +181,10 @@ public class LandRecordsController {
 			return false;
 
 		}
-	}
+	}*/
+
+
+
 
 	@RequestMapping(value = "/viewer/landrecords/updateattributes", method = RequestMethod.POST)
 	@ResponseBody
@@ -212,7 +231,7 @@ public class LandRecordsController {
 		int land_type=0;
 		String usinStr="";
 
-		SpatialUnitTable spatialUnit= new SpatialUnitTable();
+
 
 		try {
 			Usin = ServletRequestUtils.getRequiredLongParameter(request, "primary");
@@ -259,7 +278,11 @@ public class LandRecordsController {
 			quality_soil=ServletRequestUtils.getRequiredIntParameter(request, "soil_quality");
 			land_type=ServletRequestUtils.getRequiredIntParameter(request, "land_type");
 
-			spatialUnit.setUsin(Usin);
+
+			SpatialUnitTable spatialUnit=landRecordsService.findSpatialUnitbyId(Usin).get(0);	
+
+
+			//spatialUnit.setUsin(Usin);
 			spatialUnit.setType(type);
 			spatialUnit.setHouseType(houseType);
 			spatialUnit.setHousehidno(househidno);
@@ -277,8 +300,8 @@ public class LandRecordsController {
 			spatialUnit.setPostal_code(postal_code);
 			spatialUnit.setProject(project_name);
 			spatialUnit.setActive(true);
-
-			spatialUnit.setPropertyno(uka_propertyno);
+			if(uka_propertyno!="")
+				spatialUnit.setPropertyno(uka_propertyno);
 			spatialUnit.setStatusUpdateTime(new Date());
 			spatialUnit.setNeighbor_east(neighbour_east);
 			spatialUnit.setNeighbor_north(neighbour_north);
@@ -484,22 +507,33 @@ public class LandRecordsController {
 				Date now = new Date();
 				dateto = sdfDate.format(now);
 			}
-			else if(dateto!="")
+			/*else if(dateto!="")
 			{
-				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");//dd/MM/yyyy
+				SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");
+				SimpleDateFormat sdfDate1 = new SimpleDateFormat("yyyy-MM-dd");//dd/MM/yyyy
 				Date date = sdfDate.parse(dateto);
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(date);
 				calendar.add(Calendar.DATE, 1);
-				dateto = sdfDate.format(calendar.getTime());
-			}
+				dateto = sdfDate1.format(calendar.getTime());
+			}*/
 			if(datefrom=="")
 
 			{
 
 				datefrom="1990-01-01 00:00:00";
 			}
-
+			/*else if(datefrom!="")
+			{
+				SimpleDateFormat sdfDate1 = new SimpleDateFormat("yyyy-MM-dd");//dd/MM/yyyy
+				SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");//dd/MM/yyyy
+				
+				Date date = sdfDate.parse(datefrom);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.add(Calendar.DATE, 1);
+				datefrom = sdfDate1.format(calendar.getTime());
+			}*/
 			return landRecordsService.search(UsinStr,UkaNumber,projname,dateto,datefrom,status,startpos);
 
 
@@ -512,7 +546,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/status/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/status/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Status> listdata()
 	{
@@ -533,7 +567,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/naturalperson/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/naturalperson/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<NaturalPerson> naturalPerson(@PathVariable Long id)
 	{
@@ -545,7 +579,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/nonnaturalperson/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/nonnaturalperson/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<NonNaturalPerson> nonnaturalPerson(@PathVariable Long id)
 	{
@@ -553,7 +587,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/gendertype/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/gendertype/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Gender> genderList()
 	{
@@ -561,7 +595,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/maritalstatus/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/maritalstatus/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<MaritalStatus> maritalStatusList()
 	{
@@ -579,7 +613,7 @@ public class LandRecordsController {
 		Long id=0L;
 		String name="";
 		Long genderid=0L;
-		String tenure="";
+		//	String tenure="";
 		int maritalid=0;
 		long persontype=1;
 		String first_name="";
@@ -587,55 +621,58 @@ public class LandRecordsController {
 		String last_name="";
 		String mobile_number="";
 		int age = 0;
-		String occupation="";
-		Long education=0l;
+		/*String occupation="";
+		Long education=0l;*/
 		int length_natural=0;
 		String project_name="";
 
-		int owner_natural;
-		int resd_village;
-		String admin="";
-		String citizenship="";
+		/*int owner_natural;
+		int resd_village;*/
+		/*String admin="";*/
+		long citizenship=0;
 		int newnatural_length=0;
 		long usin=0;
+		long person_subType=0;
 
 
 		NaturalPerson naturalPerson= new NaturalPerson();
+		Citizenship citizenshipobj=new Citizenship();
 		try {
 			try {
 				id = ServletRequestUtils.getRequiredLongParameter(request, "natural_key");
 			} catch (Exception e2) {
 				logger.error(e2);
 			}
-			
+
 			try {
 				usin = ServletRequestUtils.getRequiredLongParameter(request, "natural_usin");
 			} catch (Exception e) {
 				logger.error(e);
 			}
-			name = ServletRequestUtils.getRequiredStringParameter(request, "name");
+			//name = ServletRequestUtils.getRequiredStringParameter(request, "name");
 			first_name = ServletRequestUtils.getRequiredStringParameter(request, "fname");
 			middle_name = ServletRequestUtils.getRequiredStringParameter(request, "mname");
 			last_name = ServletRequestUtils.getRequiredStringParameter(request, "lname");
 			mobile_number = ServletRequestUtils.getRequiredStringParameter(request, "mobile_natural");
-			occupation = ServletRequestUtils.getRequiredStringParameter(request, "occ");
-			education = ServletRequestUtils.getRequiredLongParameter(request, "edu");
+			/*occupation = ServletRequestUtils.getRequiredStringParameter(request, "occ");
+			education = ServletRequestUtils.getRequiredLongParameter(request, "edu");*/
 			try {
 				age= ServletRequestUtils.getRequiredIntParameter(request, "age");
 			} catch (Exception e1) {
 				logger.error(e1);
 			}
 			maritalid= ServletRequestUtils.getRequiredIntParameter(request, "marital_status");
+
 			//occupational_age= ServletRequestUtils.getRequiredIntParameter(request, "occ_age");
 			genderid = ServletRequestUtils.getRequiredLongParameter(request, "gender");
-			tenure = ServletRequestUtils.getRequiredStringParameter(request, "tenure");
+			//tenure = ServletRequestUtils.getRequiredStringParameter(request, "tenure");
 			length_natural= ServletRequestUtils.getRequiredIntParameter(request, "natual_length");
 			project_name= ServletRequestUtils.getRequiredStringParameter(request, "projectname_key");
 
-			owner_natural= ServletRequestUtils.getRequiredIntParameter(request, "owner_nat");
-			resd_village= ServletRequestUtils.getRequiredIntParameter(request, "resident");
-			admin= ServletRequestUtils.getRequiredStringParameter(request, "administrator");
-			citizenship= ServletRequestUtils.getRequiredStringParameter(request, "citizenship");
+			//owner_natural= ServletRequestUtils.getRequiredIntParameter(request, "owner_nat");
+			//resd_village= ServletRequestUtils.getRequiredIntParameter(request, "resident");
+			/*admin= ServletRequestUtils.getRequiredStringParameter(request, "administrator");*/
+			citizenship= ServletRequestUtils.getRequiredLongParameter(request, "citizenship");
 
 			try {
 				newnatural_length=ServletRequestUtils.getRequiredIntParameter(request, "newnatural_length");
@@ -643,18 +680,22 @@ public class LandRecordsController {
 				logger.error(e);
 			}
 
+			person_subType=ServletRequestUtils.getRequiredLongParameter(request, "person_subType");
+
 			if(id!=0){
-				naturalPerson.setPerson_gid(id);
+				naturalPerson=landRecordsService.naturalPersonById(id).get(0);
+
 			}
-			naturalPerson.setAlias(name);
-			naturalPerson.setTenure_Relation(tenure);
+			naturalPerson.setAlias(first_name);
+			//naturalPerson.setTenure_Relation(tenure);
 			naturalPerson.setFirstName(first_name);
 			naturalPerson.setMiddleName(middle_name);
 			naturalPerson.setLastName(last_name);
 			naturalPerson.setMobile(mobile_number);
-			naturalPerson.setOccupation(occupation);
+			//naturalPerson.setOccupation(occupation);
 			naturalPerson.setOwner(false);
-			if(owner_natural==1){
+			 
+			/*if(owner_natural==1){
 				naturalPerson.setOwner(true);	
 			}
 
@@ -663,17 +704,22 @@ public class LandRecordsController {
 			{
 				naturalPerson.setResident_of_village(true);
 
+			}*/
+			//naturalPerson.setAdministator(admin);
+			if(citizenship!=0){
+				citizenshipobj= landRecordsService.findcitizenship(citizenship);
+				naturalPerson.setCitizenship_id(citizenshipobj);
 			}
-			naturalPerson.setAdministator(admin);
-			naturalPerson.setCitizenship(citizenship);
+				
+			
 
 
-			if(education!=0)
+		/*	if(education!=0)
 			{
 				EducationLevel educationObj = landRecordsService.findEducationById(education);
 				naturalPerson.setEducation(educationObj);
 
-			}
+			}*/
 			if(age!=0){
 				naturalPerson.setAge(age);		
 			}
@@ -697,6 +743,13 @@ public class LandRecordsController {
 				naturalPerson.setMarital_status(maritalIdObj);
 			}
 
+			if(person_subType!=0)
+			{
+
+				PersonType personsubTypeObj = landRecordsService.findPersonTypeById(person_subType);
+				naturalPerson.setPersonSubType(personsubTypeObj);
+
+			}
 
 			//AttributeValues attributeValues=new AttributeValues();
 
@@ -721,17 +774,13 @@ public class LandRecordsController {
 			}
 
 			//For updating in Attribute Values Table
-			try {
-				userDataService.updateNaturalPersonAttribValues(naturalPerson,project_name);
-			} catch (Exception e) {
-				logger.error(e);
-			}
+
 
 			NaturalPerson naturalobj = landRecordsService.editnatural(naturalPerson);
-			
+
 			if(id==0)
 			{
-				
+
 				SocialTenureRelationship socialtenuretmp = landRecordsService.findAllSocialTenureByUsin(usin).get(0);
 				socialtenuretmp.setGid(0);
 				socialtenuretmp.setPerson_gid(naturalobj);
@@ -746,8 +795,8 @@ public class LandRecordsController {
 				socialTenureRelationship.setTenureclass_id(socialtenuretmp.getTenureclass_id());
 				socialTenureRelationship.setUsin(usin);*/
 				landRecordsService.edittenure(socialtenuretmp);
-				
-				
+
+
 			}
 
 			if(newnatural_length!=0)
@@ -773,6 +822,11 @@ public class LandRecordsController {
 
 
 
+			}
+			try {
+				userDataService.updateNaturalPersonAttribValues(naturalobj,project_name);
+			} catch (Exception e) {
+				logger.error(e);
 			}
 
 			return naturalobj;
@@ -883,99 +937,101 @@ public class LandRecordsController {
 		int id=0;
 		Long type=0L;
 		int length=0;
-		String startDate="";
-		String endDate="";
 		long usin=0;
 		long persontype=0;
 		int occid=0;
 		int tenureclassid=0;
-		int duration=0;
+		int resident_tenure=0;
+	
 		String project_tenure="";
 
-		SocialTenureRelationship socialTenureRelationship= new SocialTenureRelationship();
+		//SocialTenureRelationship socialTenureRelationship= new SocialTenureRelationship();
 
 		try {
 			id = ServletRequestUtils.getRequiredIntParameter(request, "tenure_key");
 			type = ServletRequestUtils.getRequiredLongParameter(request, "tenure_type");
-
-			startDate = ServletRequestUtils.getRequiredStringParameter(request, "start_date");
-			endDate = ServletRequestUtils.getRequiredStringParameter(request, "end_date");
-
-			occid = ServletRequestUtils.getRequiredIntParameter(request, "occtype_id");
-			tenureclassid = ServletRequestUtils.getRequiredIntParameter(request, "tenureclass_id");
+			//tenureclassid = ServletRequestUtils.getRequiredIntParameter(request, "tenureclass_id");
 			usin = ServletRequestUtils.getRequiredLongParameter(request, "usin");
 			persontype= ServletRequestUtils.getRequiredLongParameter(request, "person_gid");
 			length =ServletRequestUtils.getRequiredIntParameter(request, "tenure_length");
 			project_tenure=ServletRequestUtils.getRequiredStringParameter(request, "projectname_key3");
+			resident_tenure=ServletRequestUtils.getRequiredIntParameter(request, "tenure_resident");
+			List<SocialTenureRelationship> socialTenuretmplst = landRecordsService.findAllSocialTenureByUsin(usin);
 
-			//	AttributeValues attributeValues=new AttributeValues();
 
 			if(length>0)
 			{
+
 				for (int i = 0; i <length; i++) {
+					long uid=0l;
+					for (int j = 0; j < socialTenuretmplst.size(); j++) {
 
-					StringBuilder sb = new StringBuilder();
-					sb.append("alias");
-					sb.append(i);
-					String alias=sb.toString();
-					Long value_key=0l;
+						StringBuilder sb = new StringBuilder();
+						sb.append("alias");
+						sb.append(i);
+						String alias=sb.toString();
+						Long value_key=0l;
 
-					alias=ServletRequestUtils.getRequiredStringParameter(request,"alias_tenure"+i);
-					value_key=ServletRequestUtils.getRequiredLongParameter(request,"alias_tenure_key"+i);
-					if(value_key!=0)
-					{
-						landRecordsService.updateAttributeValues(value_key,alias);
-					}
+
+						value_key=ServletRequestUtils.getRequiredLongParameter(request,"alias_tenure_key"+i);
+						Long attributeKey=0L;
+						if(value_key!=0){
+
+							AttributeValues attributefetch = landRecordsService.getAttributeValue(value_key);
+							uid=attributefetch.getUid();
+							attributeKey = landRecordsService.getAttributeKey(socialTenuretmplst.get(j).getGid(),uid);
+						}
+
+						alias=ServletRequestUtils.getRequiredStringParameter(request,"alias_tenure"+i);
+						if(attributeKey!=0)
+						{
+							landRecordsService.updateAttributeValues(attributeKey,alias);
+						}
+					}	
 				}
 
-			}
-
-			Date datestart=null;
-			Date dateend=null;
-			try {
-				SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-
-				datestart = sdfDate.parse(startDate);
-				dateend = sdfDate.parse(endDate);
-				duration=dateend.getYear()-datestart.getYear();
-
-			} catch (ParseException e) {
-
-				logger.error(e);
-			}
-
-			socialTenureRelationship.setGid(id);
-			if(type!=0){
-
-				ShareType tenuretypeobj = landRecordsService.findTenureType(type);
-				socialTenureRelationship.setShare_type(tenuretypeobj);
-
 
 			}
-			Person personObj = landRecordsService.findPersonGidById(persontype);
-			socialTenureRelationship.setPerson_gid(personObj);
 
-			OccupancyType occupancytypeObj = landRecordsService.findOccupancyTyoeById(occid);
-			socialTenureRelationship.setOccupancy_type_id(occupancytypeObj);
 
-			TenureClass tenureclassobj = landRecordsService.findtenureClasseById(tenureclassid);
-			socialTenureRelationship.setTenureclass_id(tenureclassobj);
+			for (int i = 0; i < socialTenuretmplst.size(); i++) {
 
-			//socialTenureRelationship.setShare(share);
-			socialTenureRelationship.setSocial_tenure_startdate(datestart);
-			socialTenureRelationship.setSocial_tenure_enddate(dateend);
-			socialTenureRelationship.setUsin(usin);
-			socialTenureRelationship.setIsActive(true);
-			socialTenureRelationship.setTenure_duration(duration);
+				SocialTenureRelationship socialTenureRelationship=landRecordsService.findSocialTenureByGid(socialTenuretmplst.get(i).getGid()).get(0);
+				//socialTenureRelationship.setGid(socialTenuretmplst.get(i).getGid());
+				if(type!=0){
 
-			//For Updating tenure in AttributeValues
-			try {
-				userDataService.updateTenureAttribValues(socialTenureRelationship, project_tenure);
-			} catch (Exception e) {
-				logger.error(e);
+					ShareType tenuretypeobj = landRecordsService.findTenureType(type);
+					socialTenureRelationship.setShare_type(tenuretypeobj);
+
+
+				}
+				
+				socialTenureRelationship.setResident(false);
+				TenureClass tenureclassobj = landRecordsService.findtenureClasseById(1);
+				if(resident_tenure==2)
+				{
+					socialTenureRelationship.setResident(true);
+					tenureclassobj = landRecordsService.findtenureClasseById(2);
+				}
+				
+				socialTenureRelationship.setTenureclass_id(tenureclassobj);
+				
+				
+
+				//For Updating tenure in AttributeValues
+				try {
+					userDataService.updateTenureAttribValues(socialTenureRelationship, project_tenure);
+				} catch (Exception e) {
+					logger.error(e);
+				}
+				try {
+					landRecordsService.edittenure(socialTenureRelationship);
+				} catch (Exception e) {
+					logger.error(e);
+					return false;
+				}
 			}
-
-			return landRecordsService.edittenure(socialTenureRelationship);
+			return true;
 
 		} catch (ServletRequestBindingException e) {
 
@@ -1090,7 +1146,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/socialtenure/edit/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/socialtenure/edit/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SocialTenureRelationship> SocialTenurebyGidList(@PathVariable Integer id)
 	{
@@ -1100,7 +1156,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/multimedia/edit/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/multimedia/edit/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SourceDocument> MultimediaList(@PathVariable Long id)
 	{
@@ -1109,7 +1165,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/multimedia/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/multimedia/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SourceDocument> MultimediaGidList(@PathVariable Long id)
 	{
@@ -1123,8 +1179,8 @@ public class LandRecordsController {
 	public boolean  deleteMultimedia(@PathVariable Long id)
 	{
 
-		landRecordsService.deleteMultimedia(id);
-		return true;
+		return landRecordsService.deleteMultimedia(id);
+
 
 	}
 
@@ -1156,7 +1212,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/educationlevel/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/educationlevel/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<EducationLevel> educationList()
 	{
@@ -1165,7 +1221,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/landusertype/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/landusertype/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<LandUseType> landUserList()
 	{
@@ -1173,7 +1229,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/tenureclass/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/tenureclass/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<TenureClass> tenureclassList()
 	{
@@ -1181,15 +1237,22 @@ public class LandRecordsController {
 		return landRecordsService.findAllTenureClass();
 	}
 
-	@RequestMapping(value = "/viewer/ukanumber/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/ukanumber/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String ukaNumberByUsin(@PathVariable Long id)
 	{
 
 		return landRecordsService.findukaNumberByUsin(id);
 	}
+	@RequestMapping(value = "/viewer/landrecords/hamletname/{project}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<ProjectHamlet> findAllHamlet(@PathVariable String project)
+	{
 
-	@RequestMapping(value = "/viewer/occupancytype/", method = RequestMethod.GET)
+		return projectService.findHamletByProject(project);
+	}
+
+	@RequestMapping(value = "/viewer/landrecords/occupancytype/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<OccupancyType> OccTypeList()
 	{
@@ -1197,7 +1260,7 @@ public class LandRecordsController {
 		return landRecordsService.findAllOccupancyTypes();
 	}
 
-	@RequestMapping(value = "/viewer/attributecategory/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/attributecategory/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AttributeCategory> attribList()
 	{
@@ -1206,7 +1269,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/getCCRO/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/getCCRO/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SpatialUnitTable> CCROList(@PathVariable Long id, Principal principal)
 	{
@@ -1237,7 +1300,7 @@ public class LandRecordsController {
 
 	}
 
-/*	@RequestMapping(value = "/viewer/gethamlet/{projectname}", method = RequestMethod.GET)
+	/*	@RequestMapping(value = "/viewer/gethamlet/{projectname}", method = RequestMethod.GET)
 	@ResponseBody
 	public String HamletbyUsin(@PathVariable String projectname)
 	{
@@ -1246,9 +1309,9 @@ public class LandRecordsController {
 		return project.getProjectAreas().get(0).getVillage();
 
 	}
-*/
+	 */
 
-	@RequestMapping(value = "/viewer/attributedata/{categoryid}/{parentid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/attributedata/{categoryid}/{parentid}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<AttributeValuesFetch> attributeDataList(@PathVariable long categoryid,@PathVariable long parentid)
 	{
@@ -1257,7 +1320,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/naturalpersondata/{personid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/naturalpersondata/{personid}", method = RequestMethod.GET)
 	@ResponseBody
 	public Person naturalPersonList(@PathVariable long personid)
 	{
@@ -1277,7 +1340,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/uploadweb/", method = RequestMethod.POST)
+	@RequestMapping(value = "/viewer/landrecords/uploadweb/", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadSpatialData(MultipartHttpServletRequest request, HttpServletResponse response , Principal principal)
 	{	
@@ -1301,6 +1364,7 @@ public class LandRecordsController {
 			}
 
 			byte[] document = null;
+
 			while(file.hasNext()) 
 			{
 				String fileName = file.next();
@@ -1315,12 +1379,12 @@ public class LandRecordsController {
 				if (originalFileName != "") {
 					document = mpFile.getBytes();
 				}
+
 				String uploadFileName = null;
 
 				String tmpDirPath=request.getSession().getServletContext().getRealPath(File.separator);
 
 				String outDirPath=tmpDirPath.replace("mast", "")+"resources"+File.separator+"documents"+File.separator+projectName+File.separator+"webupload";
-
 
 				File outDir=new File(outDirPath);
 				boolean exists = outDir.exists();
@@ -1332,7 +1396,7 @@ public class LandRecordsController {
 
 
 				sourceDocument.setScanedSourceDoc(originalFileName);
-				uploadFileName=("resources"+File.separator+"documents"+File.separator+projectName+File.separator+"webupload");
+				uploadFileName=("resources/documents/"+projectName+"/webupload");
 				sourceDocument.setLocScannedSourceDoc(uploadFileName);
 				sourceDocument.setEntity_name(document_name);
 				sourceDocument.setComments(document_comments);
@@ -1345,11 +1409,13 @@ public class LandRecordsController {
 				Integer id = sourceDocument.getGid();
 
 				try {
-
 					FileOutputStream uploadfile = new FileOutputStream(outDirPath+File.separator+ id+"."+fileExtension);
 					uploadfile.write(document);
 					uploadfile.flush();
 					uploadfile.close();
+
+					//use for Compression if needed
+					// return compressPicture(outDirPath,id,fileExtension);
 					return "Success";
 
 				} 
@@ -1370,7 +1436,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/sourcedocument/{usinId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/sourcedocument/{usinId}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SourceDocument> sourcedocumentList(@PathVariable long usinId)
 	{
@@ -1391,22 +1457,36 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/download/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/download/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public String  download(@PathVariable Long id, HttpServletRequest request){
+	public void  download(@PathVariable Long id, HttpServletRequest request,HttpServletResponse response){
 
 		SourceDocument doc = landRecordsService.getDocumentbyGid(id);
 		String fileName = doc.getScanedSourceDoc();
 		String fileType = fileName.substring(fileName.indexOf(".")+1,fileName.length()).toLowerCase();
 		//Object path_temp = request.getSession().getServletContext().getRealPath(File.separator);
-		String filepath=doc.getLocScannedSourceDoc()+File.separator+id+"."+fileType;
+		String filepath=request.getSession().getServletContext().getRealPath(File.separator).replace("mast", "")+doc.getLocScannedSourceDoc()+File.separator+id+"."+fileType;
+		Path path = Paths.get(filepath);
+		try 
+		{
+			byte[] data = Files.readAllBytes(path);
 
-		return filepath;
+			response.setContentLength(data.length);
+			OutputStream out = response.getOutputStream();
+			out.write(data);
+			out.flush();
+			out.close();
+
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+
 
 	}
 
 
-	@RequestMapping(value = "/viewer/Adjuticator/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/Adjuticator/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SpatialUnitTable> AdjuticatorList(Principal principal ,@PathVariable Long id)
 	{
@@ -1437,7 +1517,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/projectarea/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/projectarea/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ProjectArea> updateFinal(Principal principal){
 
@@ -1449,7 +1529,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/soilquality/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/soilquality/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SoilQualityValues> soilQualityList()
 	{
@@ -1457,7 +1537,7 @@ public class LandRecordsController {
 		return landRecordsService.findAllsoilQuality();
 	}
 
-	@RequestMapping(value = "/viewer/slope/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/slope/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SlopeValues> slopeList()
 	{
@@ -1466,7 +1546,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/typeofland/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/typeofland/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<LandType> landTypeList()
 	{
@@ -1474,7 +1554,7 @@ public class LandRecordsController {
 		return landRecordsService.findAllLandType();
 	}
 
-	@RequestMapping(value = "/viewer/grouptype/", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/grouptype/", method = RequestMethod.GET)
 	@ResponseBody
 	public List<GroupType> groupTypeList()
 	{
@@ -1484,7 +1564,7 @@ public class LandRecordsController {
 
 
 
-	@RequestMapping(value = "/viewer/personbyusin/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/personbyusin/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SocialTenureRelationship> personByUsin(@PathVariable Long id)
 	{
@@ -1492,7 +1572,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/ccrodownload/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/ccrodownload/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> ccrodownload(@PathVariable Long id){
 
@@ -1541,7 +1621,7 @@ public class LandRecordsController {
 
 
 
-	@RequestMapping(value = "/viewer/getpersontype/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/getpersontype/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public Integer getpersontypeByUsin(@PathVariable Long id)
 	{
@@ -1568,7 +1648,7 @@ public class LandRecordsController {
 		return null;
 	}
 
-	@RequestMapping(value = "/viewer/getinstitutename/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/getinstitutename/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String Institute(@PathVariable Long id)
 	{
@@ -1588,7 +1668,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/ccroinstituteperson/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/ccroinstituteperson/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public String InstitutePerson(@PathVariable Long id)
 	{
@@ -1607,7 +1687,7 @@ public class LandRecordsController {
 
 
 
-	@RequestMapping(value = "/viewer/personadmin/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/personadmin/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> PersonAdmin(@PathVariable Long id)
 	{
@@ -1637,7 +1717,7 @@ public class LandRecordsController {
 
 
 
-	@RequestMapping(value = "/viewer/spatialunit/{project}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/spatialunit/{project}", method = RequestMethod.GET)
 	@ResponseBody
 	public Integer totalRecords(Principal principal,@PathVariable String project)
 	{
@@ -1655,7 +1735,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/changeccrostatus/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/changeccrostatus/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean changeStatus(@PathVariable Long id,Principal principal)
 	{
@@ -1682,14 +1762,14 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/spatialunit/{project}/{startfrom}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/spatialunit/{project}/{startfrom}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SpatialUnitTemp> spatialUnitList(@PathVariable String project,@PathVariable Integer startfrom)
 	{
 		return landRecordsService.findAllSpatialUnitTemp(project,startfrom);
 	}
 
-	@RequestMapping(value = "/viewer/spatialfalse/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/spatialfalse/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean spatialUnitList(@PathVariable Long id)
 	{
@@ -1697,7 +1777,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/shownatural/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/shownatural/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SocialTenureRelationship> showDeletedNatural(@PathVariable Long id)
 	{
@@ -1711,14 +1791,14 @@ public class LandRecordsController {
 		return objtemp;
 	}
 
-	@RequestMapping(value = "/viewer/addnatural/{gid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/addnatural/{gid}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean addDeletedNatural(@PathVariable Long gid)
 	{
 		return landRecordsService.addDeletedPerson(gid);
 	}
 
-	@RequestMapping(value = "/viewer/shownonnatural/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/shownonnatural/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<SocialTenureRelationship> showDeletedNonNatural(@PathVariable Long id)
 	{
@@ -1732,7 +1812,7 @@ public class LandRecordsController {
 		return objtemp;
 	}
 
-	@RequestMapping(value = "/viewer/addnonnatural/{gid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/addnonnatural/{gid}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean addDeletedNonNatural(@PathVariable Long gid)
 	{
@@ -1832,7 +1912,7 @@ public class LandRecordsController {
 
 	}
 
-	@RequestMapping(value = "/viewer/adminfetch/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/adminfetch/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<PersonAdministrator> adminList(@PathVariable Long id)
 	{
@@ -1853,28 +1933,31 @@ public class LandRecordsController {
 
 	@RequestMapping(value = "/viewer/landRecords/check/naturalimage/{person_gid}/{admin_id}", method = RequestMethod.GET)
 	@ResponseBody
-	public String naturalImageUrl(@PathVariable Long person_gid,@PathVariable Long admin_id )
+	public List<String> naturalImageUrl(@PathVariable Long person_gid,@PathVariable Long admin_id )
 	{
 		SourceDocument sourcetemp=new SourceDocument();
+		ArrayList<String> resulttmp=new ArrayList<String>();
 		if(person_gid!=0)
 			sourcetemp=landRecordsService.getdocumentByPerson(person_gid);
 
 		else if(admin_id!=0)
 			sourcetemp=landRecordsService.getdocumentByAdminId(admin_id);
 
-		if(sourcetemp!=null)
+		if(sourcetemp!=null && sourcetemp.isActive())
 		{
+			resulttmp.add(sourcetemp.getEntity_name());
+			resulttmp.add(sourcetemp.getLocScannedSourceDoc()+"/"+sourcetemp.getGid()+".jpg");
 
-			return sourcetemp.getLocScannedSourceDoc()+"/"+sourcetemp.getGid()+".jpg";
+			return resulttmp;
 		}
 		else{
-			return "";	
+			return resulttmp;	
 		}
 
 	}
 
 
-	@RequestMapping(value = "/viewer/upload/personimage/", method = RequestMethod.POST)
+	@RequestMapping(value = "/viewer/landrecords/upload/personimage/", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadNaturalImage(MultipartHttpServletRequest request, HttpServletResponse response , Principal principal)
 	{	
@@ -1929,13 +2012,13 @@ public class LandRecordsController {
 				MultipartFile mpFile = request.getFile(fileName);
 
 				String originalFileName = mpFile.getOriginalFilename();
-				SourceDocument sourceDocument = new SourceDocument();
+				SourceDocument sourceDocument1 = new SourceDocument();
 				if(person_gid!=0)
-					sourceDocument = landRecordsService.getdocumentByPerson(person_gid);
+					sourceDocument1 = landRecordsService.getdocumentByPerson(person_gid);
 				if(admin_id!=0)
-					sourceDocument = landRecordsService.getdocumentByAdminId(admin_id);
-				if(sourceDocument==null)
-					sourceDocument = new SourceDocument();
+					sourceDocument1 = landRecordsService.getdocumentByAdminId(admin_id);
+				if(sourceDocument1==null)
+					sourceDocument1 = new SourceDocument();
 				String fileExtension = originalFileName.substring(originalFileName.indexOf(".") + 1,originalFileName.length()).toLowerCase();
 
 				if (originalFileName != "") {
@@ -1956,30 +2039,37 @@ public class LandRecordsController {
 				}
 
 
-				sourceDocument.setScanedSourceDoc(originalFileName);
+				sourceDocument1.setScanedSourceDoc(originalFileName);
 
-				uploadFileName=("resources"+File.separator+"documents"+File.separator+projectName+File.separator+"multimedia");
+				uploadFileName=("resources/documents/"+projectName+"/multimedia");
 
-				sourceDocument.setLocScannedSourceDoc(uploadFileName);
+				sourceDocument1.setLocScannedSourceDoc(uploadFileName);
 				if(person_gid!=0)
-					sourceDocument.setPerson_gid(person_gid);
+					sourceDocument1.setPerson_gid(person_gid);
 				if(admin_id!=0)
-					sourceDocument.setAdminid(admin_id);
-				sourceDocument.setEntity_name(document_name);
-				sourceDocument.setComments(document_comments);
-				sourceDocument.setActive(true);
-				sourceDocument.setRecordation(new Date());
-				sourceDocument.setUsin(usin);
+					sourceDocument1.setAdminid(admin_id);
+				sourceDocument1.setEntity_name(document_name);
+				sourceDocument1.setComments(document_comments);
+				
+				sourceDocument1.setActive(true);
+				try {
+					sourceDocument1.setRecordation(new Date());
+					sourceDocument1.setUsin(usin);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				sourceDocument1 =  landRecordsService.saveUploadedDocuments(sourceDocument1);
 
-				sourceDocument =  landRecordsService.saveUploadedDocuments(sourceDocument);
-
-				Integer id = sourceDocument.getGid();
+				Integer id = sourceDocument1.getGid();
 
 				try {
 					FileOutputStream uploadfile = new FileOutputStream(outDirPath+File.separator+ id+"."+fileExtension);
 					uploadfile.write(document);
 					uploadfile.flush();
 					uploadfile.close();
+					//use it for compression if needed
+					// return compressPicture(outDirPath,id,fileExtension);
 					return "Success";
 
 				} 
@@ -2001,7 +2091,7 @@ public class LandRecordsController {
 
 
 
-	@RequestMapping(value = "/viewer/administrator/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/administrator/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public PersonAdministrator findadminByID(@PathVariable Long id)
 	{
@@ -2132,7 +2222,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/existingadmin/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/existingadmin/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<PersonAdministrator> deletedAdminList(@PathVariable Long id)
 	{
@@ -2149,7 +2239,7 @@ public class LandRecordsController {
 		return personadminList;
 	}
 
-	@RequestMapping(value = "/viewer/addadmin/{adminId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/addadmin/{adminId}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean existingadminList(@PathVariable Long adminId)
 	{
@@ -2160,7 +2250,7 @@ public class LandRecordsController {
 	}
 
 
-	@RequestMapping(value = "/viewer/naturalcustom/{project}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/naturalcustom/{project}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> naturalCustom(@PathVariable String project)
 	{
@@ -2168,8 +2258,8 @@ public class LandRecordsController {
 		return landRecordsService.findnaturalCustom(project);
 
 	}
-	
-	@RequestMapping(value = "/viewer/personofinterest/{usin}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/viewer/landrecords/personofinterest/{usin}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> personWithInterest(@PathVariable Long usin)
 	{
@@ -2181,13 +2271,23 @@ public class LandRecordsController {
 		}
 		return tempList;
 	}
-	@RequestMapping(value = "/viewer/autogenerateuka/{project}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/landrecords/deceasedperson/{usin}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpatialunitDeceasedPerson> deceasedPerson(@PathVariable Long usin)
+	{
+
+		return landRecordsService.findDeceasedPersonByUsin(usin);
+
+	}
+
+
+	@RequestMapping(value = "/viewer/landrecords/autogenerateuka/{project}", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean autogenerateUKA(@PathVariable String project)
 	{
 		/*List<SpatialUnitTemp> spatialunit =landRecordsService.findSpatialUnitforUKAGeneration(project);
 		String village=projectService.findProjectByName(project).getProjectAreas().get(0).getVillage_code();
-		
+
 		try {
 			for (int i = 0; i < spatialunit.size(); i++) {
 				SpatialUnitTemp spatialunitmp=spatialunit.get(i);
@@ -2195,7 +2295,7 @@ public class LandRecordsController {
 				spatialunitmp.getHamlet_Id().setCount(spatialunitmp.getHamlet_Id().getCount()+1);
 				projectService.saveHamlet(spatialunitmp.getHamlet_Id());
 				landRecordsService.addSpatialUnitTemp(spatialunitmp);
-				
+
 			}
 		} catch (Exception e) {
 			logger.error(e);
@@ -2208,28 +2308,736 @@ public class LandRecordsController {
 				String hamletCode=projecthamlets.get(i).getHamletCode();
 				int count=0;
 				List<Long> usinList =landRecordsService.findUsinforUKAGeneration(project,hamletCode);
-				
+
 				for (int j = 0; j < usinList.size(); j++) {
 					String uka=village+"/"+hamletCode+"/"+(projecthamlets.get(i).getCount()+j+1);
-					
+
 					count=projecthamlets.get(i).getCount()+j+1;
 					landRecordsService.updateUKAnumber(usinList.get(j),uka);
-					
+
 				}
 				if(count!=0)
 				{
 					projecthamlets.get(i).setCount(count);
 					projectService.saveHamlet(projecthamlets.get(i));
-						
-					
+
+
+
 				}
-				
+
 			}
+			return true;
+
 		} catch (Exception e) {
 			logger.error(e);
 			return false;
 		}
+
+
+	}
+	@RequestMapping(value = "/viewer/landrecords/updatehamlet/{project}", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean updateUkaNum(HttpServletRequest request, HttpServletResponse response, @PathVariable String project)
+	{
+		long Usin = 0;
+		long HamletId=0;
+
+		//SpatialUnitTable spatialunit=new SpatialUnitTable();
+		try {
+			Usin = ServletRequestUtils.getRequiredLongParameter(request, "primeryky");
+			HamletId = ServletRequestUtils.getRequiredLongParameter(request, "hamlet_id");
+
+			String village=projectService.findProjectByName(project).getProjectAreas().get(0).getVillage_code();
+			SpatialUnitTable spatialunit=landRecordsService.findSpatialUnitbyId(Usin).get(0);
+			ProjectHamlet projectHamlet=projectService.findHamletById(HamletId);
+			spatialunit.setHamlet_Id(projectHamlet);
+
+
+			spatialunit.setPropertyno(village+"/"+projectHamlet.getHamletCode()+"/"+(projectHamlet.getCount()+1));
+			projectHamlet.setCount(projectHamlet.getCount()+1);
+			projectService.addHamlets(projectHamlet);
+			return landRecordsService.update(spatialunit);
+
+
+		} catch (ServletRequestBindingException e) {
+
+			logger.error(e);
+			return false;
+
+		}
+	}
+
+
+
+	@RequestMapping(value = "/viewer/landrecords/personwithinterest/{usin}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpatialunitPersonwithinterest> nxtTokin(@PathVariable Long usin)
+	{
+
+		List<SpatialunitPersonwithinterest> personList = landRecordsService.findpersonInterestByUsin(usin);
+
+		return personList;
+
+	}
+
+
+
+	@RequestMapping(value = "/viewer/landrecords/updatepwi", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean updatepwi(HttpServletRequest request, HttpServletResponse response)
+	{
+		long Usin = 0;
+		String name="";
+		long id=0;
+
+
+		SpatialunitPersonwithinterest spi= new SpatialunitPersonwithinterest();
+
+		try {
+			Usin = ServletRequestUtils.getRequiredLongParameter(request, "usin_kin");
+			name = ServletRequestUtils.getRequiredStringParameter(request, "name_kin");
+			id = ServletRequestUtils.getRequiredLongParameter(request, "id_kin");
+
+			if(id!=0)
+				spi.setId(id);
+			spi.setPersonName(name);
+			spi.setUsin(Usin);
+
+
+
+			return landRecordsService.addnxtTokin(spi);
+
+
+		} catch (ServletRequestBindingException e) {
+
+			logger.error(e);
+			return false;
+
+		}
+	}
+	@RequestMapping(value = "/viewer/landrecords/deletekin/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean deletePersonWithInterest(@PathVariable Long id)
+	{
+
+		return landRecordsService.deletePersonWithInterest(id);
+
+	}
+
+	@RequestMapping(value = "/viewer/landrecords/personsubtype", method = RequestMethod.GET)
+	@ResponseBody
+	public List<PersonType> PersonTypelst()
+	{
+
+		return landRecordsService.AllPersonType();
+
+	}
+	@RequestMapping(value = "/viewer/landrecords/hamletbyusin/{usin}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SpatialUnitTable> hamletName(@PathVariable long usin)
+	{
+
+		return landRecordsService.findSpatialUnitbyId(usin);
+
+	}
+
+
+	@RequestMapping(value = "/viewer/landrecords/updatedeceased", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean updateDeceasedPerson(HttpServletRequest request, HttpServletResponse response)
+	{
+		long Usin = 0;
+		String firstname="";
+		String middlename="";
+		String lastname="";
+		long id=0;
+
+
+		SpatialunitDeceasedPerson spdeceased= new SpatialunitDeceasedPerson();
+
+		try {
+			Usin = ServletRequestUtils.getRequiredLongParameter(request, "usin_deceased");
+			firstname = ServletRequestUtils.getRequiredStringParameter(request, "d_firstname");
+			middlename = ServletRequestUtils.getRequiredStringParameter(request, "d_middlename");
+			lastname = ServletRequestUtils.getRequiredStringParameter(request, "d_lastname");
+			id = ServletRequestUtils.getRequiredLongParameter(request, "deceased_key");
+
+			if(id!=0)
+				spdeceased.setId(id);
+			spdeceased.setFirstname(firstname);
+			spdeceased.setMiddlename(middlename);
+			spdeceased.setLastname(lastname);
+			spdeceased.setUsin(Usin);
+
+
+
+			return landRecordsService.saveDeceasedPerson(spdeceased);
+
+
+		} catch (ServletRequestBindingException e) {
+
+			logger.error(e);
+			return false;
+
+		}
+	}
+	@RequestMapping(value = "/viewer/landrecords/deletedeceased/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean deleteDeceasedPerson(@PathVariable Long id)
+	{
+
+		return landRecordsService.deleteDeceasedPerson(id);
+
+	}
+
+
+	@RequestMapping(value = "/viewer/landrecords/validator/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public String personValidator(@PathVariable Long id)
+	{
+
+		List<SocialTenureRelationship> socialTenureRelationshiptmp=landRecordsService.findAllSocialTenureByUsin(id);
+		List<SpatialunitPersonwithinterest> spatialunitPersonwithinteresttmp= landRecordsService.findpersonInterestByUsin(id);
+		List<SpatialunitDeceasedPerson> spatialunitDeceasedPersontmp=landRecordsService.findDeceasedPersonByUsin(id);
+		List<String> personSubType=new ArrayList<String>();
+		List<String> personAge=new ArrayList<String>();
+
+
+		for (int i = 0; i < socialTenureRelationshiptmp.size(); i++) {
+
+			if(socialTenureRelationshiptmp.get(i).getPerson_gid().getPerson_type_gid().getPerson_type_gid()==1)
+
+			{
+
+				NaturalPerson naturalPerson=landRecordsService.naturalPersonById(socialTenureRelationshiptmp.get(i).getPerson_gid().getPerson_gid()).get(0);
+				
+				try {
+					if(naturalPerson.getPersonSubType().getPerson_type_gid()==3){
+						personSubType.add("Owner");
+						if(naturalPerson.getAge()>=18)
+						{
+							personAge.add("Adult");
+						}
+						else{
+							personAge.add("Minor");
+						}
+					}
+
+					else if(naturalPerson.getPersonSubType().getPerson_type_gid()==4)
+						personSubType.add("Admin");
+					else if(naturalPerson.getPersonSubType().getPerson_type_gid()==5)
+						personSubType.add("Guard");
+				} catch (Exception e) {
+					logger.error(e);
+					return "Please specify person subtype";
+				}
+				
+
+				if(personSubType.size()==socialTenureRelationshiptmp.size())
+				{
+					//Case-1 for Owner and Admin
+					if(socialTenureRelationshiptmp.get(i).getShare_type().getGid()==4){
+						if((!personSubType.contains("Guard") && personSubType.contains("Owner")) && personSubType.contains("Admin"))
+						{
+							if(spatialunitDeceasedPersontmp.size()>1)
+								return "Only one deceased persons are allowed";
+							/*if(personSubType.size()>2)
+								return "Only two administrators are allowed";*/
+							if(personAge.contains("Adult")){
+								
+								if(spatialunitDeceasedPersontmp.size()>0){
+									/*if(spatialunitPersonwithinteresttmp.size()>0)
+									{
+										return "Success";
+
+									}
+									else{
+										return "Add person of interest";
+
+									}*/
+									return "Success";
+								}
+								else{
+
+									return "Add deceased person";
+								}		
+							}
+							else{
+								
+								return "Owner is minor";
+							}
+							
+
+						}
+						else if((!personSubType.contains("Guard") && !personSubType.contains("Owner")) && personSubType.contains("Admin")){
+							
+							if(spatialunitDeceasedPersontmp.size()>0 && spatialunitDeceasedPersontmp.size()<=1)
+							{
+							
+								return "Success";
+							}
+							else if(spatialunitDeceasedPersontmp.size()>1)
+							{
+								return "Only one deceased persons are allowed";
+							}
+							else if(spatialunitDeceasedPersontmp.size()==0)
+							{
+								return "Add deceased person";
+
+							}
+						}
+						else{
+							return "Tenure type is tenancy in probate,provide inputs accordingly";
+						}
+						
+					}
+				
+					
+					
+
+					// Case-2 for Only Owner
+					if(socialTenureRelationshiptmp.get(i).getShare_type().getGid()==1 ||socialTenureRelationshiptmp.get(i).getShare_type().getGid()==2 || socialTenureRelationshiptmp.get(i).getShare_type().getGid()==3 ){
+						if((!personSubType.contains("Admin") && !personSubType.contains("Guard")) && personSubType.contains("Owner"))
+						{
+							if(spatialunitDeceasedPersontmp.size()>0)
+							{
+								return "Remove deceased person";
+							}
+
+							else if(personAge.contains("Minor"))
+							{
+								return "All owner must be adult";
+							}
+							
+							else if(socialTenureRelationshiptmp.get(i).getShare_type().getGid()==2)
+							{
+								if(personSubType.size()==1){
+									return "Success";	
+								}
+								
+								else{
+									return "For the selected tenure number of Owner must be one";	
+								}
+								
+							}
+							else if((socialTenureRelationshiptmp.get(i).getShare_type().getGid()==3 ||socialTenureRelationshiptmp.get(i).getShare_type().getGid()==1 ))
+							{
+								if(personSubType.size()>=2){
+									return "Success";	
+								}
+								
+								else{
+									return "For the selected tenure number of Owner must be more than one";
+								}
+
+							}
+							/*else {
+								
+								return "Condition not fulfilled";
+							}*/
+						}
+						else{
+							
+							return "Tenure Mismatched";
+						}
+					}
+				
+
+
+				/*	// Case-3  Only Admin
+					if(personSubType.contains("Admin") && !personSubType.contains("Owner") && !personSubType.contains("Guard"))
+					{
+						
+						if(spatialunitDeceasedPersontmp.size()>0 && spatialunitDeceasedPersontmp.size()<=2)
+						{
+						
+							return "Success";
+						}
+						else if(spatialunitDeceasedPersontmp.size()>2)
+						{
+							return "Only two deceased persons are allowed";
+						}
+						else if(spatialunitDeceasedPersontmp.size()==0)
+						{
+							return "Add deceased person";
+
+						}
+
+					}
+					else{
+						return "Tenure type is tenancy in probate,provide inputs accordingly";
+					}*/
+
+					// Case-4 Owner And Guardian
+					
+					if(socialTenureRelationshiptmp.get(i).getShare_type().getGid()==5){
+						if(personSubType.contains("Guard") && personSubType.contains("Owner") && !personSubType.contains("Admin"))
+						{
+
+							if(spatialunitDeceasedPersontmp.size()>0)
+							{
+								return "Remove deceased person";
+							}
+
+
+							else if(personAge.contains("Adult"))
+							{
+								return "All Owner must be minor";
+							}
+
+							else if(spatialunitPersonwithinteresttmp.size()>0)
+							{
+								return "Remove person of interest";
+
+							}
+							else{
+
+								return "Success";
+							}
+
+						}
+						
+						else{
+							
+							return "Tenure type is Guardian(minor),provide inputs accordingly";
+						}
+						
+					}
+					
+					
+
+				/*	// Case-5 Admin And Guardian
+					if(personSubType.contains("Guard") && personSubType.contains("Admin") && !personSubType.contains("Owner")){
+
+						if(spatialunitDeceasedPersontmp.size()>0){
+
+							return "Remove guardian";
+						}
+						else{
+							return "Remove administrator and add Minor";
+						}
+
+					}
+
+					// Case-6 Admin And Guardian and Owner
+
+					if(personSubType.contains("Guard") && personSubType.contains("Admin") && personSubType.contains("Owner"))
+					{
+						return "Invalid Data";	
+
+					}*/
+				}
+
+			}
+			else if(socialTenureRelationshiptmp.get(i).getPerson_gid().getPerson_type_gid().getPerson_type_gid()==2)
+			{
+				if(socialTenureRelationshiptmp.get(i).getShare_type().getGid()==6)
+				return "Success";
+				else
+				return	 "Tenure Mismatched";	
+			}
+			
+		}
+
+		return "Invalid Data";
+
+
+	}
+	@RequestMapping(value = "/viewer/landrecords/deceasedpersonbyid/{usin}", method = RequestMethod.GET)
+	@ResponseBody
+	public ArrayList<String> deceasedPersonAdjudication(@PathVariable Long usin)
+	{
+		ArrayList<String> tempList =new ArrayList<String>();
+		List<SpatialunitDeceasedPerson> deceasedobj = landRecordsService.findDeceasedPersonByUsin(usin);
+		for (int i = 0; i < deceasedobj.size(); i++) {
+
+			String name=deceasedobj.get(i).getFirstname()+" "+deceasedobj.get(i).getMiddlename()+" "+deceasedobj.get(i).getLastname();
+			tempList.add(name);
+		}
+		return tempList;	
+	}
+	@RequestMapping(value = "/viewer/landrecords/vertexlabel", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean vertexLabel(HttpServletRequest request, HttpServletResponse response)
+	{
+
+		try {
+			String vertexData = request.getParameter("vertexList");
+			//ArrayList<Double> bbox=new ArrayList<Double>();
+			if(landRecordsService.deleteAllVertexLabel())
+
+			{
+
+				String[] arr= vertexData.split(",");
+				int serialId=1;
+				for (int i = 0; i <arr.length;) {
+
+
+
+					landRecordsService.addAllVertexLabel(serialId,arr[i+1],arr[i]);
+					serialId++;
+					i=i+2;
+				}
+
+
+			}
+			return true;
+		} catch (Exception e) {
+			logger.error(e);
+			return false;
+		}
+
+
+	}
+	@RequestMapping(value = "/viewer/landrecords/ccronew/{usin}", method = RequestMethod.GET)
+	@ResponseBody
+	public CcroDto ccroDetails(@PathVariable Long usin)
+	{
+		CcroDto tmpdto=new CcroDto();
+		HashMap<String,String> personUrl=new HashMap<String, String>(); // for url against person
+		List<String> admin = new ArrayList<String>(); // for admin name
+		List<String> name = new ArrayList<String>(); // for natural person name
+		String institute=""; // for institute name
+		List<String> sharepercentage= new ArrayList<String>(); // for share percentage in case multiple tenancy
+		List<String> guardianName= new ArrayList<String>(); // for Guardian List
+		List<String> guardianUrl=new ArrayList<String>(); // for guardian Url
+
+		SpatialUnitTable spa= landRecordsService.findSpatialUnitbyId(usin).get(0);
+		ProjectArea projectArea= landRecordsService.findProjectArea(spa.getProject()).get(0);
+		List<SocialTenureRelationship> socialtenure = landRecordsService.findAllSocialTenureByUsin(usin);
+		HashMap<String,Long> personalogGid= new HashMap<String, Long>();
+
+
+		for (int i = 0; i < socialtenure.size(); i++) {
+			Person person=socialtenure.get(i).getPerson_gid();
+			if(person.getPerson_type_gid().getPerson_type_gid()==1)
+			{
+				NaturalPerson naturalPerson= landRecordsService.naturalPersonById(person.getPerson_gid()).get(0);
+				if(naturalPerson.getPersonSubType().getPerson_type_gid()==3){
+					SourceDocument sourceDocument =landRecordsService.getdocumentByPerson(naturalPerson.getPerson_gid());
+					String personname=naturalPerson.getFirstName()+" "+naturalPerson.getLastName();
+					if(naturalPerson.getMiddleName()!=null)
+					personname=naturalPerson.getFirstName()+" "+naturalPerson.getMiddleName()+" "+naturalPerson.getLastName();
+					personUrl.put(personname,"Url");
+					name.add(personname);
+
+					personalogGid.put(personname, naturalPerson.getPerson_gid());
+
+					sharepercentage.add(socialtenure.get(i).getSharePercentage()+"%");
+					if(sourceDocument!=null && sourceDocument.isActive()){
+
+						String fileName=sourceDocument.getScanedSourceDoc();
+						String fileType = fileName.substring(fileName.indexOf(".")+1,fileName.length()).toLowerCase();
+						personUrl.put(personname, sourceDocument.getLocScannedSourceDoc()+"/"+sourceDocument.getGid()+"."+fileType);
+					}
+
+
+				}
+				else if(naturalPerson.getPersonSubType().getPerson_type_gid()==4)
+				{
+					String personname=naturalPerson.getFirstName()+" "+naturalPerson.getLastName();
+					if(naturalPerson.getMiddleName()!=null)
+					personname=naturalPerson.getFirstName()+" "+naturalPerson.getMiddleName()+" "+naturalPerson.getLastName();
+					admin.add(personname);
+				}
+					
+
+				else if(naturalPerson.getPersonSubType().getPerson_type_gid()==5){
+					
+					String personname=naturalPerson.getFirstName()+" "+naturalPerson.getLastName();
+					if(naturalPerson.getMiddleName()!=null)
+					personname=naturalPerson.getFirstName()+" "+naturalPerson.getMiddleName()+" "+naturalPerson.getLastName();
+					guardianName.add(personname);
+					SourceDocument sourceDocument =landRecordsService.getdocumentByPerson(naturalPerson.getPerson_gid());
+					guardianUrl.add("Url");
+					if(sourceDocument!=null && sourceDocument.isActive()){
+
+						String fileName=sourceDocument.getScanedSourceDoc();
+						String fileType = fileName.substring(fileName.indexOf(".")+1,fileName.length()).toLowerCase();
+						guardianUrl.add(sourceDocument.getLocScannedSourceDoc()+"/"+sourceDocument.getGid()+"."+fileType);
+					}
+
+
+				}
+
+
+			}
+
+			else if(person.getPerson_type_gid().getPerson_type_gid()==2)
+			{
+				NonNaturalPerson nonNaturalPerson=landRecordsService.nonnaturalPersonById(person.getPerson_gid()).get(0);
+				NaturalPerson naturalPerson= landRecordsService.naturalPersonById(nonNaturalPerson.getPoc_gid()).get(0);
+				SourceDocument sourceDocument =landRecordsService.getdocumentByPerson(naturalPerson.getPerson_gid());
+				String personname=naturalPerson.getFirstName()+" "+naturalPerson.getLastName();
+				if(naturalPerson.getMiddleName()!=null)
+				personname=naturalPerson.getFirstName()+" "+naturalPerson.getMiddleName()+" "+naturalPerson.getLastName();
+				personUrl.put(personname,"Url");
+				name.add(personname);
+				institute=nonNaturalPerson.getInstitutionName();
+				if(sourceDocument!=null && sourceDocument.isActive()){
+
+					String fileName=sourceDocument.getScanedSourceDoc();
+					String fileType = fileName.substring(fileName.indexOf(".")+1,fileName.length()).toLowerCase();
+					personUrl.put(personname, sourceDocument.getLocScannedSourceDoc()+"/"+sourceDocument.getGid()+"."+fileType);
+				}
+
+
+			}
+
+		}
+
+		try {
+			tmpdto.setPersonName_url(personUrl);
+			tmpdto.setInstitute(institute);
+			tmpdto.setName(name);
+			tmpdto.setPerson_type(socialtenure.get(0).getPerson_gid().getPerson_type_gid().getPerson_type_gid());
+			tmpdto.setOwnership(socialtenure.get(0).getShare_type().getGid());
+			tmpdto.setDlo(projectArea.getDistrictOfficer());
+			tmpdto.setVillagechairman(projectArea.getVillageChairman());
+			tmpdto.setVillageexecutive(projectArea.getApprovingExecutive());
+			tmpdto.setNeighbour_east(spa.getNeighbor_east());
+			tmpdto.setNeighbour_north(spa.getNeighbor_north());
+			tmpdto.setNeighbour_south(spa.getNeighbor_south());
+			tmpdto.setNeighbour_west(spa.getNeighbor_west());
+			tmpdto.setHamlet(spa.getHamlet_Id().getHamletName());
+			tmpdto.setProposeduse(spa.getProposedUse().getLandUseType_sw());
+			tmpdto.setAddress(projectArea.getAddress());
+			tmpdto.setAdminName(admin);
+
+			tmpdto.setSharepercentage(sharepercentage);
+			tmpdto.setResident(socialtenure.get(0).isResident());
+			tmpdto.setUka(spa.getPropertyno());
+			tmpdto.setUsin(spa.getUsin());
+			tmpdto.setPersonwithGid(personalogGid);
+			tmpdto.setGuardian(guardianName);
+			tmpdto.setGuardianUrl(guardianUrl);
+		} catch (Exception e) {
+			logger.error(e);
+		}
+
+
+
+		return tmpdto;	
+	}
+
+	@RequestMapping(value = "/viewer/landrecords/updateshare", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean updateShare(HttpServletRequest request, HttpServletResponse response)
+	{
+		int length_share=0;
+
+		try {
+			length_share=ServletRequestUtils.getRequiredIntParameter(request, "length_person");
+
+			if(length_share>0)
+			{
+				for (int i = 0; i <length_share; i++) {
+
+					String alias="";
+					long personGid=0;
+					try {
+						alias=ServletRequestUtils.getRequiredStringParameter(request,"alias_person"+i);
+						personGid=ServletRequestUtils.getRequiredLongParameter(request,"person_gid"+i);
+						landRecordsService.updateSharePercentage(alias,personGid);
+					} catch (ServletRequestBindingException e) {
+						logger.error(e);
+						return false;
+					}
+
+
+				}
+
+				return true;
+
+			}
+			else
+				return false;
+		} catch (ServletRequestBindingException e) {
+			logger.error(e);
+			return false;
+		}
+
+
+
+
+	}
+
+
+// compression method to compress image file
 	
-	return true;
-}
+	@SuppressWarnings("unused")
+	private String compressPicture(String outDirPath, Integer id,String fileExtension) {
+
+		File compressedImageFile=new File(outDirPath+File.separator+ id+"."+fileExtension);
+		float k = 1.0f;
+		try {
+			while (compressedImageFile.length() > 50*1024 ){
+				File input =  new File(outDirPath+File.separator+ id+"."+fileExtension);
+				BufferedImage image = ImageIO.read(input);
+
+				compressedImageFile = new File(outDirPath+File.separator+ id+"."+fileExtension);
+				OutputStream os =new FileOutputStream(compressedImageFile);
+
+				Iterator<ImageWriter>writers =  ImageIO.getImageWritersByFormatName(fileExtension);
+				ImageWriter writer = (ImageWriter) writers.next();
+
+				ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+				writer.setOutput(ios);
+
+				ImageWriteParam param = writer.getDefaultWriteParam();
+
+				param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+				param.setCompressionQuality((float) (0.5*k));
+				writer.write(null, new  IIOImage(image, null, null), param);
+
+
+				os.flush();
+				os.close();
+				ios.flush();
+				ios.close();
+				writer.dispose();
+
+				k = (float) (k*0.5);
+			}
+			return "Success";
+
+		} catch (FileNotFoundException e) {
+			logger.error(e);
+			return "Error";
+		} catch (IOException e) {
+			logger.error(e);
+			return "Error";
+		}
+
+	}
+
+	@RequestMapping(value = "/viewer/landrecords/citizenship/", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Citizenship> citizenList()
+	{
+
+		return landRecordsService.findAllCitizenShip();
+
+
+
+	}
+	
+	
+
+	@RequestMapping(value = "/viewer/landrecords/deletenaturalphoto/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public String  deleteNaturalImage(@PathVariable Long id)
+	{
+
+		if(landRecordsService.checkActivePerson(id)==false)
+		{
+			return "false";
+		}
+		else{
+			landRecordsService.deleteNaturalImage(id);
+			return "true";
+		}
+	
+	}
+
 }
