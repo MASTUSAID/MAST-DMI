@@ -17,6 +17,7 @@ import com.rmsi.mast.studio.domain.Savedquery;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserProject;
 import com.rmsi.mast.studio.domain.UserRole;
+import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.ProjectTemp;
 
 
@@ -40,7 +41,8 @@ public interface ProjectService {
 	void updateProject(Project project);
 
 	Project findProjectById(Long id);
-	List<Project> findAllProjects();	
+	List<Project> findAllProjects();
+        List<ProjectDetails> getAllProjectsDetails();
 	Project findProjectByName(String name);	
 	List<Bookmark> getBookmarksByProject(String project);
 	List<Savedquery> getSavedqueryByProject(String project);

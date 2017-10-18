@@ -53,21 +53,6 @@ html,body {
 	padding-top: 15%;
 	text-align: center;
 }
-	
-/*
-input {
-    -moz-transition: all 0s ease-in-out 0s;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 3px 3px 3px 3px;
-    outline: medium none;
-    height: 24px;
-}
-input:focus {
-    border: 1px solid #666666;
-    box-shadow: 0 0 5px #666666;
-}
-
-*/
 
 .logo{padding-top: 10px;}
 
@@ -1128,4 +1113,22 @@ overflow-y: auto; /*for vertical scroll bar */
 .labelHeader{
 	color:#00254f;
 	 font-weight:bold;
+}
+
+.deleteLink{
+    color: #aa0000 !important;
+    font-weight: normal;
+}
+
+.addLink{
+    color: #3388ff !important;
+    font-weight: normal;
+}
+
+.signatureImage{
+    width: 100px; 
+    height: 50px;
+    border: #aaa solid 1px;
+    vertical-align: middle;
+    display: none;
 }

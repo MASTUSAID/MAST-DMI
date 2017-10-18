@@ -36,7 +36,7 @@ public class UserProject implements Serializable {
 	
     @Id
 	@SequenceGenerator(name="pk_user_project_id_seq",sequenceName="user_project_id_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.AUTO,generator="pk_user_project_id_seq") 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_user_project_id_seq") 
 	@Column(name="id", unique=true, nullable=false) 
 	
     

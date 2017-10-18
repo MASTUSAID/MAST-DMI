@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="babe54cb-1ba3-4856-82bf-997eeac24e9c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="364"/>
+	<parameter name="CLAIMANT_NAME" class="java.lang.String"/>
+	<parameter name="VILLAGE" class="java.lang.String"/>
+	<parameter name="HAMLET" class="java.lang.String"/>
+	<parameter name="CLAIM_NUMBER" class="java.lang.String"/>
+	<parameter name="CLAIM_DATE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="742" splitType="Stretch">
+			<staticText>
+				<reportElement x="38" y="106" width="158" height="20" uuid="72eb4886-7f94-4963-9b3f-174f9e74dc38"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Jina:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="133" width="158" height="20" uuid="57fe4384-cb4c-43f7-b606-701bbd58f16f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kijiji:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="160" width="158" height="20" uuid="bf795adc-5bda-4bce-a194-57581006c2b9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kitongoji:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="187" width="158" height="20" uuid="9fb20842-3d89-46d4-8008-57d693760b41"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Namba ya Stakabadhi:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="214" width="158" height="20" uuid="947d049f-5265-4f82-8068-515408df572b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tarehe ya maombi:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="421" y="67" width="50" height="20" uuid="5ad78b3a-6d1e-45ef-8918-2ec07b841943"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Tarehe:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="258" width="504" height="20" uuid="27435f34-6caf-48b3-8e30-9b430faf9bc0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ndugu Mwombaji]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="285" width="504" height="20" uuid="73171f18-8ff2-47a4-8070-3d451a6e2e9d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Yah: Taarifa ya Kukataliwa Maombi ya kupewa Hati Miliki ya Kimila]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="312" width="504" height="60" uuid="b2dbaa21-3240-4f25-b061-ad34c1c2aada"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Rejea maombi yako ya kumilikishwa ardhi yaliyofanywa hivi karibuni wakati wa kupima ardhi katika kijiji na kitongoji tajwa hapo juu. Tunasikitika kukujulisha kuwa maombi yako yamekataliwa kutokana na sababu zifuatazo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="372" width="504" height="17" uuid="2364f79e-c036-4072-a7a2-a44c56ef11c8"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[(Weka  alama ya  Vema (V) panapohusika)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="52" y="401" width="12" height="12" uuid="c28bd198-e6ad-4adb-a725-2ff4e9d68552"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="77" y="401" width="465" height="20" uuid="e2386d0f-0a42-4a17-b292-15c2edbd306f"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="30.0"/>
+				</textElement>
+				<text><![CDATA[Mgogoro wa ardhi unaokuhusu haujatatuliwa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="428" width="465" height="20" uuid="c68cdac3-6842-4504-b571-b7bc6eb8557c"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="30.0"/>
+				</textElement>
+				<text><![CDATA[Umekikuka sheria ndogo za kijiji  kuhusu ardhi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="509" width="56" height="20" uuid="101f163c-5642-4f95-b418-e63c91cccacd"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="30.0"/>
+				</textElement>
+				<text><![CDATA[Mengineyo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="52" y="428" width="12" height="12" uuid="992bf6ca-1a0c-4c9a-bcda-0da945d80eb2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="77" y="455" width="465" height="20" uuid="e7ae0969-986e-4fd3-8399-3123e61527dc"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="30.0"/>
+				</textElement>
+				<text><![CDATA[Umekiuka Mpango wa Matumizi Bora ya ardhi ya Kijiji]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="482" width="465" height="20" uuid="7db8edc5-8d18-4ffc-b0d5-fde6ed3583e1"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="30.0"/>
+				</textElement>
+				<text><![CDATA[Umekiuka Sheria za Uhifadhi wa Mazingira zinazohusu kijiji chako]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="52" y="455" width="12" height="12" uuid="f6a7f8fb-ca73-4293-a007-7526a1590876"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="52" y="482" width="12" height="12" uuid="7895d1af-e782-4c3b-880d-91ed7e5c6d18"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="52" y="509" width="12" height="12" uuid="4a61dd45-80b2-457a-b882-78feb390258b"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="38" y="559" width="504" height="34" uuid="ecd123a4-4889-443d-a481-5ea224d5a42e"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Uamuzi huu umepitishwa na Halmashauri ya Kijiji. Endapo utakuwa na swali au jambo lolote kuhusiana na kukataliwa maombi yako, peleka madai yako kwa Afisa Mtendaji wa Kijiji.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="603" width="504" height="20" uuid="391d1135-5406-4ea0-b5e1-957f3cf0bf9c"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Wako katika Ujenzi wa Taifa,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="664" width="504" height="78" uuid="ea4da2ff-b00f-45f9-87b3-9a098fc949b6"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="11" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Afisa Mtendaji wa Kijiji
+
+Nakala kwa:
+Afisa Ardhi wa Wilaya
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="196" y="106" width="359" height="20" uuid="b8840573-7fac-4ce4-9e8a-b3a4919c45b4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CLAIMANT_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="25" width="555" height="20" uuid="2c226857-09cb-46fa-a4fe-a826cfa550f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Fomu ya Kukataliwa Maombi]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="196" y="133" width="359" height="20" uuid="7db2517a-fd08-43a6-8520-5e968b13b3a1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{VILLAGE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="160" width="359" height="20" uuid="75fcc6b5-20e7-40eb-ad9d-c9601dad181b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{HAMLET}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="187" width="359" height="20" uuid="254fd2c5-fce0-4042-8dd3-409c7bc8ce73"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CLAIM_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="196" y="214" width="359" height="20" uuid="2f927ae1-9a6a-465d-832d-93c2b4329d6f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CLAIM_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="471" y="67" width="81" height="20" uuid="5737e0fd-23fe-4575-bfe6-4b3e4e78c6e5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new Date().getTime())]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="138" y="524" width="404" height="1" uuid="75c3c44b-937b-4036-a028-75a7ceb771f1"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="52" y="546" width="490" height="1" uuid="48650b4a-6580-46cb-9b00-a95a5774cd47"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+</jasperReport>

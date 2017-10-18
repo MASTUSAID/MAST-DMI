@@ -28,7 +28,7 @@ public class NonNaturalPerson extends Person implements Serializable {
 	@Column(name="phone_number")
 	private String phoneNumber;
 	
-	private long poc_gid;
+	private Long poc_gid;
 	
 	private boolean active;
 	
@@ -80,11 +80,11 @@ public class NonNaturalPerson extends Person implements Serializable {
 		this.active = active;
 	}
 
-	public long getPoc_gid() {
+	public Long getPoc_gid() {
 		return poc_gid;
 	}
 
-	public void setPoc_gid(long poc_gid) {
+	public void setPoc_gid(Long poc_gid) {
 		this.poc_gid = poc_gid;
 	}
 	

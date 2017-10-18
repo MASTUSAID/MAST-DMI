@@ -302,10 +302,10 @@ function toggleButtons() {
 }
 
 function closeDialog(dialog){
-
 	$("#"+dialog).remove();
 	$("#layerSwitcherContent").show();
-	$("#sidebar").tabs( "remove" , 1 );
+        $("#sidebar").find(".ui-tabs-nav li:eq(1)").remove();
+        $("#sidebar").tabs("refresh");
 	
 	//remove feature and deactive the markup tool when close tab 
 		removeDeactiveMarkupTool();
@@ -375,11 +375,12 @@ function clearSelection(clearResultGrid, _lyr){
 		
 }
 
-function addTab(tool,_template){	
-	$("#sidebar").tabs( "remove" , 1 );
-	$("#sidebar").tabs( "add" , '#tabs-Tool' , tool , [1] );			
-	$("#tabs-Tool").append(_template);        		
-	$("#sidebar").tabs( "select" , 1 );
+function addTab(tool,_template){
+        $( "#sidebar" ).find(".ui-tabs-nav li:eq(1)").remove();
+        $("<li><a href='#tabs-Tool'>" + tool + "</a></li>").appendTo("#sidebar .ui-tabs-nav");
+        $("#sidebar").tabs("refresh");
+        $("#tabs-Tool").append(_template);
+        $('#sidebar').tabs("option", "active", $('#sidebar a[href="#tabs-Tool"]').parent().index());
 }
 
 

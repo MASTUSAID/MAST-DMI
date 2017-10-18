@@ -23,8 +23,8 @@ public class AttributeMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "ATTRIBUTE_MASTER_ID_GENERATOR", sequenceName = "ATTRIBUTE_MASTER_ID_SEQ")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "ATTRIBUTE_MASTER_ID_GENERATOR")
+	@SequenceGenerator(name = "ATTRIBUTE_MASTER_ID_GENERATOR", sequenceName = "ATTRIBUTE_MASTER_ID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ATTRIBUTE_MASTER_ID_GENERATOR")
 	private long id;
 
 	private String alias;

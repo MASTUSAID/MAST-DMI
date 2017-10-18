@@ -16,8 +16,8 @@ public class WorkflowStatusHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "sunit_workflow_status_history_id", sequenceName = "sunit_workflow_status_history_seq")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "sunit_workflow_status_history_id")
+	@SequenceGenerator(name = "sunit_workflow_status_history_id", sequenceName = "sunit_workflow_status_history_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sunit_workflow_status_history_id")
 	private long status_hist_id;
 	private long usin;
 	private int workflow_status_id;

@@ -14,8 +14,8 @@ public class ProjectSpatialData implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "PROJECT_SPATIAL_DATA_ID_GENERATOR", sequenceName = "PROJECT_SPATIAL_DATA_ID_SEQ")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "PROJECT_SPATIAL_DATA_ID_GENERATOR")
+	@SequenceGenerator(name = "PROJECT_SPATIAL_DATA_ID_GENERATOR", sequenceName = "PROJECT_SPATIAL_DATA_ID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJECT_SPATIAL_DATA_ID_GENERATOR")
 	private Integer id;
 
 	@Column(name = "file_extension")

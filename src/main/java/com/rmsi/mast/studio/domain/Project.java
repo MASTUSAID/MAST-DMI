@@ -167,8 +167,8 @@ public class Project implements Serializable, Cloneable {
 		this.height = height;
 	}
 
-	@SequenceGenerator(name="PROJECT_ID_GENERATOR", sequenceName="project_id_seq")
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="PROJECT_ID_GENERATOR")	
+	@SequenceGenerator(name="PROJECT_ID_GENERATOR", sequenceName="project_id_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROJECT_ID_GENERATOR")	
 	@Column(name="id", insertable = false, updatable = false, unique=true, nullable=false)
 	public Integer getId() {
 		return this.id;

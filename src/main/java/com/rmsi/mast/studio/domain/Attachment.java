@@ -57,7 +57,7 @@ public class Attachment implements Serializable,Comparator<Attachment> {
 
 
 	@Id 	
-	@SequenceGenerator(name="ATTACHMENT_ASSOCIATIONID_GENERATOR", sequenceName="attachment_associationid_seq")
+	@SequenceGenerator(name="ATTACHMENT_ASSOCIATIONID_GENERATOR", sequenceName="attachment_associationid_seq", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ATTACHMENT_ASSOCIATIONID_GENERATOR")
 	@Column(name="associationid", unique=true, nullable=false)
 	

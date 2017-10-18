@@ -36,7 +36,7 @@ public class ProjectBaselayer implements Serializable {
     
     @Id
 	@SequenceGenerator(name="pk_project_baselayer_id_seq",sequenceName="project_baselayer_id_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.AUTO,generator="pk_project_baselayer_id_seq") 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_project_baselayer_id_seq") 
 	@Column(name="id", unique=true, nullable=false) 
 
 	public Integer getId() {

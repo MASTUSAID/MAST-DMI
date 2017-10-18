@@ -21,8 +21,8 @@ public class PersonAdministrator implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "PERSON_ADMIN_ID_GENERATOR", sequenceName = "personadmin_gid_seq")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "PERSON_ADMIN_ID_GENERATOR")
+	@SequenceGenerator(name = "PERSON_ADMIN_ID_GENERATOR", sequenceName = "personadmin_gid_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PERSON_ADMIN_ID_GENERATOR")
 	private Long adminid;
 
 	private String address;

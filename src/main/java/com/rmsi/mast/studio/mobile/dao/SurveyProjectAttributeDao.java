@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.rmsi.mast.studio.mobile.dao;
 
@@ -10,30 +10,21 @@ import com.rmsi.mast.studio.domain.AttributeMaster;
 import com.rmsi.mast.studio.domain.AttributeValues;
 import com.rmsi.mast.studio.domain.Surveyprojectattribute;
 
-/**
- * @author shruti.thakur
- *
- */
-public interface SurveyProjectAttributeDao extends
-		GenericDAO<Surveyprojectattribute, Long> {
+public interface SurveyProjectAttributeDao extends GenericDAO<Surveyprojectattribute, Long> {
 
-	List<AttributeMaster> getSurveyAttributes(String projectId);
+    List<AttributeMaster> getSurveyAttributes(String projectId);
 
-	List<AttributeValues> getSurveyAttributeValues(String projectId);
+    List<AttributeValues> getSurveyAttributeValues(String projectId);
 
-	Surveyprojectattribute getSurveyProjectAttributeId(long attributeId,
-			String projectId);
+    Surveyprojectattribute getSurveyProjectAttributeId(long attributeId, String projectId);
 
-	boolean updatesurveyProject(Surveyprojectattribute surveyprojectattribute);
-	
-	
-	boolean  surveyAttributesByName(long id, String name, Integer attributeorder,Long attributecategory);
+    List<Surveyprojectattribute> getSurveyProjectAttributes(String projectId);
 
-	boolean deleteMappedAttribute(List<Long> uids);
+    boolean updatesurveyProject(Surveyprojectattribute surveyprojectattribute);
 
-	List<String> findnaturalCustom(String project);
-	
-	
-	
-	
+    boolean surveyAttributesByName(long id, String name, Integer attributeorder, Long attributecategory);
+
+    boolean deleteMappedAttribute(List<Long> uids);
+
+    List<String> findnaturalCustom(String project);
 }

@@ -20,8 +20,8 @@ public class AttributeValues implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "ATTRIBUTE_VALUE_ID_GENERATOR", sequenceName = "ATTRIBUTE_VALUE_ID_SEQ")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "ATTRIBUTE_VALUE_ID_GENERATOR")
+	@SequenceGenerator(name = "ATTRIBUTE_VALUE_ID_GENERATOR", sequenceName = "ATTRIBUTE_VALUE_ID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ATTRIBUTE_VALUE_ID_GENERATOR")
 	private Long attributevalueid;
 
 	private Long parentuid;

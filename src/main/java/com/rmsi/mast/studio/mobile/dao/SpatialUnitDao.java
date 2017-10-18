@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.SpatialUnit;
+import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
 
 /**
  * @author Shruti.Thakur
@@ -55,4 +56,8 @@ public interface SpatialUnitDao extends GenericDAO<SpatialUnit, Long> {
 	 * @return
 	 */
 	List<SpatialUnit> findSpatialUnitByStatusId(String projectId, int statusId);
+        
+        List<ClaimBasic> getClaimsBasicByStatus(String projectId, int statusId);
+        
+        List<ClaimBasic> getClaimsBasicByProject(String projectId);
 }

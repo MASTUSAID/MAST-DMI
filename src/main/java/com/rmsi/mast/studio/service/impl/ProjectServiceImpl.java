@@ -43,6 +43,7 @@ import com.rmsi.mast.studio.domain.Savedquery;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserProject;
 import com.rmsi.mast.studio.domain.UserRole;
+import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.ProjectTemp;
 import com.rmsi.mast.studio.service.MaptipService;
 import com.rmsi.mast.studio.service.ProjectService;
@@ -281,6 +282,11 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAO.findAllProjects();
 	}
 
+        @Override
+        public List<ProjectDetails> getAllProjectsDetails(){
+            return projectDAO.getAllProjectsDetails();
+        }
+        
 	@Override
 	//@Cacheable(cacheName = "projectFBNCache")
 	public Project findProjectByName(String name) {

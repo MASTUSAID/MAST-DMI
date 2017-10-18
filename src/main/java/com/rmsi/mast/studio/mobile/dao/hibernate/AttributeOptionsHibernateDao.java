@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.rmsi.mast.studio.mobile.dao.hibernate;
 
@@ -18,54 +18,54 @@ import com.rmsi.mast.studio.mobile.dao.AttributeOptionsDao;
  */
 @Repository
 public class AttributeOptionsHibernateDao extends
-		GenericHibernateDAO<AttributeOptions, Integer> implements
-		AttributeOptionsDao {
-	private static final Logger logger = Logger.getLogger(AttributeOptionsHibernateDao.class);
+        GenericHibernateDAO<AttributeOptions, Integer> implements
+        AttributeOptionsDao {
 
-	@Override
-	public List<AttributeOptions> getAttributeOptions(Long attributeId) {
+    private static final Logger logger = Logger.getLogger(AttributeOptionsHibernateDao.class);
 
-		String query = "select a from AttributeOptions a where a.attributeId = :attributeId";
+    @Override
+    public List<AttributeOptions> getAttributeOptions(Long attributeId) {
 
-		try {
-			@SuppressWarnings("unchecked")
-			List<AttributeOptions> attributeOptions = getEntityManager()
-					.createQuery(query)
-					.setParameter("attributeId", (int) (long) attributeId)
-					.getResultList();
+        String query = "select a from AttributeOptions a where a.attributeId = :attributeId";
 
-			if (!attributeOptions.isEmpty()) {
-				return attributeOptions;
-			}
-		} catch (Exception ex) {
-			logger.error(ex);
-			
-		}
-		return null;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public String getAttributeOptionsId(Integer attributeId,int parentid) 
-	{
-		String query = "select a.id from AttributeOptions a where a.attributeId = :attributeId "
-				+ "and a.parentId =:parentId";
+        try {
+            @SuppressWarnings("unchecked")
+            List<AttributeOptions> attributeOptions = getEntityManager()
+                    .createQuery(query)
+                    .setParameter("attributeId", (int) (long) attributeId)
+                    .getResultList();
 
-		try {
-			List<Integer> attributeids = getEntityManager()
-					.createQuery(query)
-					.setParameter("attributeId",attributeId)
-					.setParameter("parentId",parentid)
-					.getResultList();
+            if (!attributeOptions.isEmpty()) {
+                return attributeOptions;
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
 
-			if (attributeids!=null && attributeids.size()>0) {
-				return attributeids.get(0).toString();
-			}
-		} catch (Exception ex) {
-			logger.error(ex);
-			
-		}
-		return null;
-	}
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public String getAttributeOptionsId(Integer attributeId, int parentid) {
+        String query = "select a.id from AttributeOptions a where a.attributeId = :attributeId "
+                + "and a.parentId =:parentId";
+
+        try {
+            List<Integer> attributeids = getEntityManager()
+                    .createQuery(query)
+                    .setParameter("attributeId", attributeId)
+                    .setParameter("parentId", parentid)
+                    .getResultList();
+
+            if (attributeids != null && attributeids.size() > 0) {
+                return attributeids.get(0).toString();
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+
+        }
+        return null;
+    }
 
 }

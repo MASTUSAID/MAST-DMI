@@ -175,7 +175,7 @@ Cloudburst.LayerManager = function (_map, _searchdiv) {
 
                 var toggleMinus = 'resources/images/viewer/fade-in-arrow.png';
                 var togglePlus = 'resources/images/viewer/fade-out-arrow.png';
-                var $subHead = $('tbody: th:first-child');
+                var $subHead = $('#layermanagerBody tbody th:first-child');
 
                 $subHead.prepend('<img src="' + toggleMinus + '"alt="" />');
                 $('img', $subHead).addClass('clickable').click(function () {

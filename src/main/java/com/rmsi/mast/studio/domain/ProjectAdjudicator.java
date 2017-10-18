@@ -4,52 +4,62 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the project_adjudicators database table.
- * 
+ *
  */
 @Entity
-@Table(name="project_adjudicators")
+@Table(name = "project_adjudicators")
 public class ProjectAdjudicator implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = "PROJECT_ADJUDICATOR_ID_GENERATOR", sequenceName = "project_adjudicators_id_seq")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "PROJECT_ADJUDICATOR_ID_GENERATOR")
-	private Integer id;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="adjudicator_name")
-	private String adjudicatorName;
+    @Id
+    @SequenceGenerator(name = "PROJECT_ADJUDICATOR_ID_GENERATOR", sequenceName = "project_adjudicators_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJECT_ADJUDICATOR_ID_GENERATOR")
+    private Integer id;
 
-	@Column(name="project_name")
-	private String projectName;
+    @Column(name = "adjudicator_name")
+    private String adjudicatorName;
 
-	public ProjectAdjudicator() {
-	}
+    @Column(name = "project_name")
+    private String projectName;
 
-	public Integer getId() {
-		return this.id;
-	}
+    @Column(name = "signature_path")
+    private String signaturePath;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public ProjectAdjudicator() {
+    }
 
-	public String getAdjudicatorName() {
-		return this.adjudicatorName;
-	}
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setAdjudicatorName(String adjudicatorName) {
-		this.adjudicatorName = adjudicatorName;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getProjectName() {
-		return this.projectName;
-	}
+    public String getAdjudicatorName() {
+        return this.adjudicatorName;
+    }
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
+    public void setAdjudicatorName(String adjudicatorName) {
+        this.adjudicatorName = adjudicatorName;
+    }
 
+    public String getProjectName() {
+        return this.projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getSignaturePath() {
+        return signaturePath;
+    }
+
+    public void setSignaturePath(String signaturePath) {
+        this.signaturePath = signaturePath;
+    }
 }

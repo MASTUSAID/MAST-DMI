@@ -13,6 +13,9 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.rmsi.mast.studio.util.JsonDateSerializer;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 /**
  * Entity implementation class for Entity: SourceDocument
@@ -23,214 +26,235 @@ import com.rmsi.mast.studio.util.JsonDateSerializer;
 @Table(name = "source_document")
 public class SourceDocument implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = "SOURCE_DOCUMENT_ID_GENERATOR", sequenceName = "SOURCE_DOCUMENT_GID_SEQ")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SOURCE_DOCUMENT_ID_GENERATOR")
-	private int gid;
+    @Id
+    @SequenceGenerator(name = "SOURCE_DOCUMENT_ID_GENERATOR", sequenceName = "SOURCE_DOCUMENT_GID_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SOURCE_DOCUMENT_ID_GENERATOR")
+    private int gid;
 
-	private String id;
+    private String id;
 
-	private boolean active;
+    private boolean active;
 
-	private Date recordation;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date recordation;
 
-	@Column(name = "scanned_source_document")
-	private String ScanedSourceDoc;
+    @Column(name = "scanned_source_document")
+    private String ScanedSourceDoc;
 
-	@Column(name = "location_scanned_source_document")
-	private String locScannedSourceDoc;
+    @Column(name = "location_scanned_source_document")
+    private String locScannedSourceDoc;
 
-	@Column(name = "quality_type")
-	private String qualityType;
+    @Column(name = "quality_type")
+    private String qualityType;
 
-	@Column(name = "social_tenure_inventory_type")
-	private String socialTenureInvantoryType;
+    @Column(name = "social_tenure_inventory_type")
+    private String socialTenureInvantoryType;
 
-	@Column(name = "spatial_unit_inventory_type")
-	private String spatilaUnitInventoryType;
+    @Column(name = "spatial_unit_inventory_type")
+    private String spatilaUnitInventoryType;
 
-	private String comments;
+    private String comments;
 
-	private int srs_id;
+    private int srs_id;
 
-	@Column(name = "source_doc_admin_unit_id")
-	private int sourceDoc;
+    @Column(name = "source_doc_admin_unit_id")
+    private int sourceDoc;
 
-	private String mediaType;
+    private String mediaType;
 
-	private Long usin;
+    private Long usin;
 
-	private String entity_name;
+    private String entity_name;
 
-	private int househld_gid;
+    private int househld_gid;
 
-	private Long person_gid;
+    private Long person_gid;
 
-	@Column(name = "social_tenure_gid", nullable = false)
-	private Integer social_tenure_gid;
-	
-	
-	
-	private Long adminid;
-	
-	
+    @Column(name = "social_tenure_gid", nullable = false)
+    private Integer social_tenure_gid;
 
-	public SourceDocument() {
-		super();
-	}
+    @Column(name = "dispute_id")
+    private Long disputeId;
 
-	public int getGid() {
-		return this.gid;
-	}
+    @ManyToOne
+    @JoinColumn(name = "document_type")
+    private DocumentType documentType;
 
-	public void setGid(int gid) {
-		this.gid = gid;
-	}
+    private Long adminid;
 
-	public String getId() {
-		return this.id;
-	}
+    public SourceDocument() {
+        super();
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public int getGid() {
+        return this.gid;
+    }
 
-	@JsonSerialize(using = JsonDateSerializer.class)
-	public Date getRecordation() {
-		return this.recordation;
-	}
+    public void setGid(int gid) {
+        this.gid = gid;
+    }
 
-	public void setRecordation(Date recordation) {
-		this.recordation = recordation;
-	}
+    public String getId() {
+        return this.id;
+    }
 
-	public String getScanedSourceDoc() {
-		return this.ScanedSourceDoc;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setScanedSourceDoc(String ScanedSourceDoc) {
-		this.ScanedSourceDoc = ScanedSourceDoc;
-	}
+    @JsonSerialize(using = JsonDateSerializer.class)
+    public Date getRecordation() {
+        return this.recordation;
+    }
 
-	public String getLocScannedSourceDoc() {
-		return this.locScannedSourceDoc;
-	}
+    public void setRecordation(Date recordation) {
+        this.recordation = recordation;
+    }
 
-	public void setLocScannedSourceDoc(String locScannedSourceDoc) {
-		this.locScannedSourceDoc = locScannedSourceDoc;
-	}
+    public String getScanedSourceDoc() {
+        return this.ScanedSourceDoc;
+    }
 
-	public String getQualityType() {
-		return this.qualityType;
-	}
+    public void setScanedSourceDoc(String ScanedSourceDoc) {
+        this.ScanedSourceDoc = ScanedSourceDoc;
+    }
 
-	public void setQualityType(String qualityType) {
-		this.qualityType = qualityType;
-	}
+    public String getLocScannedSourceDoc() {
+        return this.locScannedSourceDoc;
+    }
 
-	public String getSocialTenureInvantoryType() {
-		return this.socialTenureInvantoryType;
-	}
+    public void setLocScannedSourceDoc(String locScannedSourceDoc) {
+        this.locScannedSourceDoc = locScannedSourceDoc;
+    }
 
-	public void setSocialTenureInvantoryType(String socialTenureInvantoryType) {
-		this.socialTenureInvantoryType = socialTenureInvantoryType;
-	}
+    public String getQualityType() {
+        return this.qualityType;
+    }
 
-	public String getSpatilaUnitInventoryType() {
-		return this.spatilaUnitInventoryType;
-	}
+    public void setQualityType(String qualityType) {
+        this.qualityType = qualityType;
+    }
 
-	public void setSpatilaUnitInventoryType(String spatilaUnitInventoryType) {
-		this.spatilaUnitInventoryType = spatilaUnitInventoryType;
-	}
+    public String getSocialTenureInvantoryType() {
+        return this.socialTenureInvantoryType;
+    }
 
-	public String getComments() {
-		return this.comments;
-	}
+    public void setSocialTenureInvantoryType(String socialTenureInvantoryType) {
+        this.socialTenureInvantoryType = socialTenureInvantoryType;
+    }
 
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
+    public String getSpatilaUnitInventoryType() {
+        return this.spatilaUnitInventoryType;
+    }
 
-	public int getSrs_id() {
-		return this.srs_id;
-	}
+    public void setSpatilaUnitInventoryType(String spatilaUnitInventoryType) {
+        this.spatilaUnitInventoryType = spatilaUnitInventoryType;
+    }
 
-	public void setSrs_id(int srs_id) {
-		this.srs_id = srs_id;
-	}
+    public String getComments() {
+        return this.comments;
+    }
 
-	public int getSourceDoc() {
-		return this.sourceDoc;
-	}
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
 
-	public void setSourceDoc(int sourceDoc) {
-		this.sourceDoc = sourceDoc;
-	}
+    public int getSrs_id() {
+        return this.srs_id;
+    }
 
-	public String getEntity_name() {
-		return entity_name;
-	}
+    public void setSrs_id(int srs_id) {
+        this.srs_id = srs_id;
+    }
 
-	public void setEntity_name(String entity_name) {
-		this.entity_name = entity_name;
-	}
+    public int getSourceDoc() {
+        return this.sourceDoc;
+    }
 
-	public int getHousehld_gid() {
-		return this.househld_gid;
-	}
+    public void setSourceDoc(int sourceDoc) {
+        this.sourceDoc = sourceDoc;
+    }
 
-	public void setHousehld_gid(int househld_gid) {
-		this.househld_gid = househld_gid;
-	}
+    public String getEntity_name() {
+        return entity_name;
+    }
 
-	public Long getUsin() {
-		return usin;
-	}
+    public void setEntity_name(String entity_name) {
+        this.entity_name = entity_name;
+    }
 
-	public void setUsin(Long usin) {
-		this.usin = usin;
-	}
+    public int getHousehld_gid() {
+        return this.househld_gid;
+    }
 
-	public Long getPerson_gid() {
-		return person_gid;
-	}
+    public void setHousehld_gid(int househld_gid) {
+        this.househld_gid = househld_gid;
+    }
 
-	public void setPerson_gid(Long person_gid) {
-		this.person_gid = person_gid;
-	}
+    public Long getUsin() {
+        return usin;
+    }
 
-	public Integer getSocial_tenure_gid() {
-		return social_tenure_gid;
-	}
+    public void setUsin(Long usin) {
+        this.usin = usin;
+    }
 
-	public void setSocial_tenure_gid(Integer social_tenure_gid) {
-		this.social_tenure_gid = social_tenure_gid;
-	}
+    public Long getPerson_gid() {
+        return person_gid;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public void setPerson_gid(Long person_gid) {
+        this.person_gid = person_gid;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public Integer getSocial_tenure_gid() {
+        return social_tenure_gid;
+    }
 
-	public String getMediaType() {
-		return mediaType;
-	}
+    public void setSocial_tenure_gid(Integer social_tenure_gid) {
+        this.social_tenure_gid = social_tenure_gid;
+    }
 
-	public void setMediaType(String mediaType) {
-		this.mediaType = mediaType;
-	}
-	
-	public Long getAdminid() {
-		return adminid;
-	}
+    public boolean isActive() {
+        return active;
+    }
 
-	public void setAdminid(Long adminid) {
-		this.adminid = adminid;
-	}
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public Long getAdminid() {
+        return adminid;
+    }
+
+    public void setAdminid(Long adminid) {
+        this.adminid = adminid;
+    }
+
+    public Long getDisputeId() {
+        return disputeId;
+    }
+
+    public void setDisputeId(Long disputeId) {
+        this.disputeId = disputeId;
+    }
+
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
 }

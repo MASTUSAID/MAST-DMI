@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ccro" pageWidth="595" pageHeight="842" columnWidth="527" leftMargin="34" rightMargin="34" topMargin="28" bottomMargin="10" uuid="34e83ee4-79a7-4e09-8eed-721ca4bfad0c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="OwnersForSignature" uuid="751763e3-9b88-4600-a4f6-1ae67bbfbd07">
+		<parameter name="APP_URL" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="fullName" class="java.lang.String">
+			<fieldDescription><![CDATA[fullName]]></fieldDescription>
+		</field>
+		<field name="id" class="java.lang.Long">
+			<fieldDescription><![CDATA[id]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="VC_DATE" class="java.util.Date"/>
+	<parameter name="VILLAGE" class="java.lang.String"/>
+	<parameter name="VILLAGE_ADDRESS" class="java.lang.String"/>
+	<parameter name="APP_URL" class="java.lang.String"/>
+	<parameter name="CHAIR_PERSON" class="java.lang.String"/>
+	<parameter name="EXECUTIVE_PERSON" class="java.lang.String"/>
+	<parameter name="DLO_OFFICER" class="java.lang.String"/>
+	<parameter name="SUBREPORT_PATH" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EXECUTIVE_PERSON_SIGNATURE" class="java.lang.String"/>
+	<parameter name="CHAIR_PERSON_SIGNATURE" class="java.lang.String"/>
+	<parameter name="DLO_OFFICER_SIGNATURE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="ownerNames" class="java.lang.String">
+		<fieldDescription><![CDATA[ownerNames]]></fieldDescription>
+	</field>
+	<field name="statusId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[statusId]]></fieldDescription>
+	</field>
+	<field name="certDate" class="java.util.Date">
+		<fieldDescription><![CDATA[certDate]]></fieldDescription>
+	</field>
+	<field name="naturalOwners" class="java.util.List">
+		<fieldDescription><![CDATA[naturalOwners]]></fieldDescription>
+	</field>
+	<field name="hamletName" class="java.lang.String">
+		<fieldDescription><![CDATA[hamletName]]></fieldDescription>
+	</field>
+	<field name="uka" class="java.lang.String">
+		<fieldDescription><![CDATA[uka]]></fieldDescription>
+	</field>
+	<field name="pois" class="java.util.List">
+		<fieldDescription><![CDATA[pois]]></fieldDescription>
+	</field>
+	<field name="ownershipTypeId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[ownershipTypeId]]></fieldDescription>
+	</field>
+	<field name="adjudicator1" class="java.lang.String">
+		<fieldDescription><![CDATA[adjudicator1]]></fieldDescription>
+	</field>
+	<field name="tenureClass" class="java.lang.String">
+		<fieldDescription><![CDATA[tenureClass]]></fieldDescription>
+	</field>
+	<field name="applicationDate" class="java.util.Date">
+		<fieldDescription><![CDATA[applicationDate]]></fieldDescription>
+	</field>
+	<field name="duration" class="java.lang.Double">
+		<fieldDescription><![CDATA[duration]]></fieldDescription>
+	</field>
+	<field name="existingUse" class="java.lang.String">
+		<fieldDescription><![CDATA[existingUse]]></fieldDescription>
+	</field>
+	<field name="neighborNorth" class="java.lang.String">
+		<fieldDescription><![CDATA[neighborNorth]]></fieldDescription>
+	</field>
+	<field name="usin" class="java.lang.Long">
+		<fieldDescription><![CDATA[usin]]></fieldDescription>
+	</field>
+	<field name="proposedUse" class="java.lang.String">
+		<fieldDescription><![CDATA[proposedUse]]></fieldDescription>
+	</field>
+	<field name="acquisitionType" class="java.lang.String">
+		<fieldDescription><![CDATA[acquisitionType]]></fieldDescription>
+	</field>
+	<field name="landType" class="java.lang.String">
+		<fieldDescription><![CDATA[landType]]></fieldDescription>
+	</field>
+	<field name="ownershipType" class="java.lang.String">
+		<fieldDescription><![CDATA[ownershipType]]></fieldDescription>
+	</field>
+	<field name="projectName" class="java.lang.String">
+		<fieldDescription><![CDATA[projectName]]></fieldDescription>
+	</field>
+	<field name="personsForSignature" class="java.util.List">
+		<fieldDescription><![CDATA[personsForSignature]]></fieldDescription>
+	</field>
+	<field name="nonNaturalOwners" class="java.util.List">
+		<fieldDescription><![CDATA[nonNaturalOwners]]></fieldDescription>
+	</field>
+	<field name="relationshipType" class="java.lang.String">
+		<fieldDescription><![CDATA[relationshipType]]></fieldDescription>
+	</field>
+	<field name="neighborEast" class="java.lang.String">
+		<fieldDescription><![CDATA[neighborEast]]></fieldDescription>
+	</field>
+	<field name="certNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[certNumber]]></fieldDescription>
+	</field>
+	<field name="deceasedPersons" class="java.util.List">
+		<fieldDescription><![CDATA[deceasedPersons]]></fieldDescription>
+	</field>
+	<field name="claimType" class="java.lang.String">
+		<fieldDescription><![CDATA[claimType]]></fieldDescription>
+	</field>
+	<field name="neighborWest" class="java.lang.String">
+		<fieldDescription><![CDATA[neighborWest]]></fieldDescription>
+	</field>
+	<field name="neighborSouth" class="java.lang.String">
+		<fieldDescription><![CDATA[neighborSouth]]></fieldDescription>
+	</field>
+	<field name="adjudicator2" class="java.lang.String">
+		<fieldDescription><![CDATA[adjudicator2]]></fieldDescription>
+	</field>
+	<field name="recorder" class="java.lang.String">
+		<fieldDescription><![CDATA[recorder]]></fieldDescription>
+	</field>
+	<field name="acres" class="java.lang.Double">
+		<fieldDescription><![CDATA[acres]]></fieldDescription>
+	</field>
+	<field name="fileNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[fileNumber]]></fieldDescription>
+	</field>
+	<field name="hasNonResident" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[hasNonResident]]></fieldDescription>
+	</field>
+	<field name="startDate" class="java.util.Date">
+		<fieldDescription><![CDATA[startDate]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="760" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="0" y="501" width="261" height="257" uuid="b2a79c54-c933-4cb2-9837-cb748c881435"/>
+			</rectangle>
+			<rectangle radius="8">
+				<reportElement x="3" y="504" width="255" height="251" uuid="a6899e0f-bd98-41a4-bfcd-62a7fe53795b"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle radius="10">
+				<reportElement x="266" y="501" width="261" height="257" uuid="aee9250e-5f8c-4ed1-8770-72aab9b344a9"/>
+			</rectangle>
+			<frame>
+				<reportElement x="3" y="507" width="255" height="248" uuid="1a7c7087-b367-4920-839b-f22fc268ba6c"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="149" width="255" height="18" uuid="dc5fc533-d88c-4dec-8aac-77d014fbfbc4"/>
+					<box topPadding="0" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Mashariki inapakana na <b>" + $F{neighborEast} + "</b>"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="113" width="255" height="18" uuid="b131a6ad-c265-40ca-a550-98494b1c6920"/>
+					<box topPadding="0" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Kusini inapakana na <b>" + $F{neighborSouth} + "</b>"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="93" width="255" height="18" uuid="b3d21904-02f8-41bc-b118-3205ff56201f"/>
+					<box topPadding="0" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Kaskazini inapakana na <b>" + $F{neighborNorth} + "</b>"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="167" width="255" height="30" uuid="420f1608-2c62-4a06-9acb-9a23cf7ebff3"/>
+					<box leftPadding="10" rightPadding="10"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Kama inavyoonyesha katika mchoro/ramani  hapa kulia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="18" width="255" height="16" uuid="45894562-7494-4031-9227-f236c3a44ac9"/>
+					<box leftPadding="0" rightPadding="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[(Maelezo kamili ya eneo na mipaka yake)]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="39" width="255" height="29" uuid="b2c9f746-436e-406e-a76a-a142c2cf5104"/>
+					<box topPadding="0" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+					<textElement verticalAlignment="Top" markup="html">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Ardhi hii yenye eneo lenye ukubwa wa <b>ekari " + 
+$F{acres}.toString() + 
+"</b>.<br>" +
+"Iko katika Kitongoji cha <b>" + $F{hamletName}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="255" height="18" uuid="63bee738-69fd-4920-a487-250b4328d15e"/>
+					<box leftPadding="0" rightPadding="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[JEDWALI]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="131" width="255" height="18" uuid="66f20c84-5d65-4146-8ec3-15e66ef3165d"/>
+					<box topPadding="0" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Magharibi inapakana na <b>" + $F{neighborWest} + "</b>"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="78" width="255" height="17" uuid="9a944d86-7fe2-4fcd-a368-9e3dc8e40a3b"/>
+					<box leftPadding="10" rightPadding="10"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Mipaka:]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="356" y="-11" width="171" height="16" uuid="12e70a87-1580-4146-b70e-867d252f70ea"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Fomu ya Ardhi ya Vijiji Na. 21]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="10" width="527" height="19" uuid="0e8a9120-fd57-4ed9-8dba-7f5eba82657f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JAMHURI YA MUUNGANO WA TANZANIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="317" y="56" width="128" height="20" uuid="c8735a76-a4e6-4ab6-aa4d-db6d592ce0a1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isItalic="false" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Namba ya Hati ya Hakimiliki:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="317" y="76" width="128" height="20" uuid="0dd3ac5f-6c39-4a70-b2c9-8e026a5c10f2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isItalic="false" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Namba ya UKA:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="436" y="56" width="95" height="20" uuid="7eaa50a9-ce58-4cf6-b015-4a24cbf688eb"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{certNumber}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="436" y="76" width="95" height="20" uuid="0426fc52-9e0b-4399-bc9b-ebcf11eac3d9"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uka}]]></textFieldExpression>
+			</textField>
+			<rectangle radius="10">
+				<reportElement x="0" y="127" width="527" height="369" uuid="6b08a6d6-3f45-41a5-ab4b-e5ab70e1ce4c"/>
+			</rectangle>
+			<rectangle radius="8">
+				<reportElement x="3" y="130" width="521" height="363" uuid="bcea3e08-e35c-4dc4-bdad-1476f58a25e9"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="137" width="521" height="16" uuid="eef1dee7-7ec0-4f18-8c67-cada480a5b5d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[SHERIA YA ARDHI YA VIJIJI, 1999]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="172" width="521" height="23" uuid="b4e9ec92-7f45-4e15-a6f3-5b373c162ad3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[HATI YA HAKIMILIKI YA KIMILA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="195" width="521" height="18" uuid="1f53404e-cb90-4a1d-8e6a-a0ab0631d8d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[(CHINI YA FUNGU LA 25)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="3" y="213" width="521" height="76" uuid="11cd3d47-37bf-46f4-9a4e-8889260c4aa5"/>
+				<box topPadding="7" leftPadding="10" bottomPadding="0" rightPadding="10"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Leo tarehe <b>" +
+($P{VC_DATE} == null ? "..............." : Integer.toString($P{VC_DATE}.getDate())) + 
+"</b> mwezi <b>" +
+($P{VC_DATE} == null ? "..............." : Integer.toString($P{VC_DATE}.getMonth()+1)) + 
+"</b> mwaka <b>" +
+($P{VC_DATE} == null ? "..............." : Integer.toString($P{VC_DATE}.getYear()+1900)) + 
+"</b>. Hii ni kuthibitisha kwamba Halmashauri ya Kijiji cha <b>" + $P{VILLAGE_ADDRESS} + "</b> " +
+"imetoa kwa " + $F{ownerNames} + " hakimiliki ya kimila (itaitwa “hakimiliki”) juu ya " + 
+"ardhi iliyofafanuliwa katika Jedwali (humu ndani itaitwa “ardhi”) " + 
+($F{hasNonResident} ? "kwa kipindi cha miaka ............... " : "kwa <b>kipindi kisicho na Kikomo</b> ") +
+"tangu tarehe <b>" +
+($F{startDate} == null ? "..............." : Integer.toString($F{startDate}.getDate())) + 
+"</b> mwezi <b>" +
+($F{startDate} == null ? "..............." : Integer.toString($F{startDate}.getMonth()+1)) + 
+"</b> mwaka <b>" +
+($F{startDate} == null ? "..............." : Integer.toString($F{startDate}.getYear()+1900)) + 
+"</b> kwa maudhui na tafsiri " + 
+"halisi ya Sheria ya Ardhi ya Vijiji na kwa kuzingatia vipengele vyake na kanuni zozote zinazotungwa " + 
+"chini ya sheria hiyo au sheria mbadala au marekebisho yake na kwa mujibu wa masharti yafuatayo:"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="292" width="37" height="18" uuid="ea36a528-905b-4f45-a5b6-6aebb66ba33d"/>
+				<box leftPadding="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[i)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="322" width="37" height="18" uuid="0decae91-b540-492d-a02f-e22e87d3b446"/>
+				<box leftPadding="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[ii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="292" width="484" height="30" uuid="44295739-90b0-4a63-9ec4-cd765a318186"/>
+				<box leftPadding="0" rightPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mkazi atalipa kodi ya mwaka ya Shs ........... kabla ya tarehe ........... ya mwezi ........... kila mwaka (kama inahusika).]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="40" y="322" width="484" height="18" uuid="46c9f3bb-f211-4d59-baf0-8ec6ee2e941b"/>
+				<box topPadding="2" leftPadding="0" bottomPadding="0" rightPadding="15"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" markup="html">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ardhi itatumika kwa ajili ya <b>" + $F{proposedUse} + "</b>"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="340" width="484" height="18" uuid="616dcf56-3d32-476b-b7c1-88d925578efe"/>
+				<box leftPadding="0" rightPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mkazi atawajibika kuhifadhi mazingira (ardhi na maji)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="340" width="37" height="18" uuid="bc9c3169-d3ad-4ea2-b8f9-7d96f2a1f530"/>
+				<box leftPadding="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[iii)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="358" width="37" height="18" uuid="183488fa-3f18-4156-9147-b5b542edb28c"/>
+				<box leftPadding="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[iv)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="358" width="484" height="30" uuid="868e336e-d29a-46b8-9614-67a775887df6"/>
+				<box leftPadding="0" rightPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mkazi atahakikisha kwamba mipaka ya ardhi inalindwa na kutunzwa na idumu kuwa bayana kwa kipindi chote cha hakimiliki.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="388" width="37" height="18" uuid="3399357a-03c4-4bf6-9627-48a5458528b8"/>
+				<box leftPadding="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[v)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="388" width="484" height="18" uuid="d5cec122-81f8-478c-bd95-0cfe6beff21c"/>
+				<box leftPadding="0" rightPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mkazi ataheshimu na kuhifadhi haki za njia zilizopo.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="3" y="406" width="37" height="18" uuid="f63265c4-2939-4b2c-be24-d6a754df892f"/>
+				<box leftPadding="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[vi)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="406" width="484" height="30" uuid="3c4cfb7f-53f1-4729-82b5-5350fb7ac80a"/>
+				<box leftPadding="0" rightPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Uhakilishi wa hakimiliki kwa mtu yeyote au kikundi chochote cha watu ambao kwa kawaida si wakazi wa kijiji lazima uidhinishwe na Halmashauri ya Kijiji.]]></text>
+			</staticText>
+			<rectangle radius="8">
+				<reportElement x="269" y="504" width="255" height="251" uuid="15d1df3e-f2eb-4450-98db-eb681b1dfc77"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<image scaleImage="RealSize" hAlign="Center" vAlign="Middle">
+				<reportElement x="275" y="515" width="244" height="229" uuid="f99fd725-4bae-4930-b6bf-f535f9a93320"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{APP_URL} + "/viewer/parcelmap/map/" + $F{usin}.toString()]]></imageExpression>
+			</image>
+			<break>
+				<reportElement x="0" y="759" width="100" height="1" uuid="bc7fc0ed-b046-408c-a924-85da2563c579"/>
+			</break>
+			<staticText>
+				<reportElement x="3" y="152" width="521" height="16" uuid="4ba86570-cf6d-4920-96fa-f0ae3103a0c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[(Na. 5 ya 1999)]]></text>
+			</staticText>
+		</band>
+		<band height="579" splitType="Prevent">
+			<subreport>
+				<reportElement x="0" y="252" width="527" height="137" uuid="7b238737-4741-4734-8000-5d4300154b30">
+					<printWhenExpression><![CDATA[$F{ownershipTypeId} == 6]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_PATH}]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="5" width="57" height="20" uuid="4f0914e1-42cf-4944-9ce4-b7b5d6923f0c"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Jina kamili:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="5" width="312" height="20" uuid="1699ba42-9bb6-44f2-8581-c9c0895b1105"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CHAIR_PERSON}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="39" width="30" height="20" uuid="37383bae-92c7-46bd-916c-086d6b21f4b7"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Saini:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="369" y="63" width="150" height="150" uuid="4b1f9189-c4d8-4c20-a7f4-aeb6db689bc9"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="369" y="5" width="150" height="56" uuid="084b944b-dfbb-48bf-8c18-3d389da833ce"/>
+				<box leftPadding="10" rightPadding="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[LAKIRI/MHURI 
+WA 
+HALMASHAURI 
+YA KIJIJI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="61" width="57" height="20" uuid="454a98d9-ca62-4606-a949-4fbbaf590ec8"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Anuani:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="61" width="312" height="20" uuid="2a431ef6-0b49-41a4-bd19-84d1b2b3568b"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{VILLAGE_ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="82" width="312" height="20" uuid="ee01086f-6526-4653-9fba-8eecdb8b2aff"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Mwenyekiti wa Kijiji"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="82" width="57" height="20" uuid="c31b6fb0-f0fc-4b63-9644-81b4b21d9bdd"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Wadhifa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="150" width="30" height="20" uuid="3ab6925c-b7b9-4512-be46-f38c3bc905ad"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Saini:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="116" width="57" height="20" uuid="40cadf69-4c69-4996-bb3e-a1c674326a82"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Jina kamili:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="172" width="312" height="20" uuid="1e70a125-32c9-45b8-a8a4-0f80cf13f071"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{VILLAGE_ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="116" width="312" height="20" uuid="d45e100b-ab07-4da9-890a-83c4c0f80894"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EXECUTIVE_PERSON}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="172" width="57" height="20" uuid="d0cbd8f9-9281-407c-9efe-dc2ac5ae183d"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Anuani:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="57" y="193" width="312" height="20" uuid="19226dc8-91ed-440e-a217-aceba8b38689"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Afisa Mtendaji wa Kijiji"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="193" width="57" height="20" uuid="56bfda8e-6ce3-4eb1-9c8e-4a253af8fad2"/>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Wadhifa:]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement positionType="Float" x="0" y="252" width="519" height="156" uuid="86eaf76f-1086-42c1-8673-7a5c37fe4f0d">
+					<printWhenExpression><![CDATA[$F{ownershipTypeId} != 6]]></printWhenExpression>
+				</reportElement>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="OwnersForSignature" uuid="d46110fb-448d-4b50-b01e-8c4cd6f38ed0">
+						<datasetParameter name="APP_URL">
+							<datasetParameterExpression><![CDATA[$P{APP_URL}]]></datasetParameterExpression>
+						</datasetParameter>
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{personsForSignature})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="156" width="519">
+						<textField isStretchWithOverflow="true">
+							<reportElement x="3" y="39" width="227" height="20" uuid="e1555a9c-9548-4a9e-a1b6-20da8084236b"/>
+							<box topPadding="2"/>
+							<textElement verticalAlignment="Top">
+								<font size="11" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{fullName}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="0" y="11" width="230" height="20" uuid="79efcbd9-e3b3-47d7-b925-3e37ede1344f"/>
+							<textElement verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[Jina]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="230" y="11" width="126" height="20" uuid="432f425e-a96d-460f-a915-4c13cc603921"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[Saini/dole gumba ]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="230" y="63" width="126" height="20" uuid="7b3ba9e1-3241-4035-8e3b-b21e657cb4e0"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[…………………………]]></text>
+						</staticText>
+						<image hAlign="Center">
+							<reportElement x="369" y="0" width="150" height="150" uuid="98e8bddd-c43b-4eec-b2ef-73c63bf94450"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<imageExpression><![CDATA[$P{APP_URL} + "/viewer/landrecords/personphoto/" + $F{id}.toString()]]></imageExpression>
+						</image>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="231" width="527" height="20" uuid="d7713a0b-2aa6-4173-85a4-e75dbf24ee86"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ownershipTypeId} == 2 ? "Mmiliki (" + ($F{hasNonResident} ? "Sio mkazi" : "Mkazi") + ")" : "") +
+($F{ownershipTypeId} == 1 || $F{ownershipTypeId} == 3 ? "Wamiliki (" + ($F{hasNonResident} ? "Sio Wakazi" : "Wakazi") + ")" : "") + 
+($F{ownershipTypeId} == 5 ? "Msimamizi" : "") +
+($F{ownershipTypeId} == 4 ? "Msimamizi wa Mirathi (" + ($F{hasNonResident} ? "Sio mkazi" : "Mkazi") + ")" : "") +
+($F{ownershipTypeId} == 6 && $F{nonNaturalOwners} != null && $F{nonNaturalOwners}.size() > 0 ? "Mmiliki (" + ((com.rmsi.mast.studio.domain.fetch.InstitutionSummary)$F{nonNaturalOwners}.get(0)).getInstututionName() + ")" : "")]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement positionType="Float" x="0" y="408" width="519" height="170" uuid="e1c5b57c-469f-4e6a-8179-7842dac529bb"/>
+				<staticText>
+					<reportElement positionType="Float" x="369" y="0" width="150" height="20" uuid="ad6c082b-1e37-424e-84c0-71603e8e63ba"/>
+					<box leftPadding="10" rightPadding="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[LAKIRI]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="369" y="20" width="150" height="150" uuid="3839811e-8e66-4f7d-bc16-e69be8836c46"/>
+				</rectangle>
+				<image scaleImage="RealSize">
+					<reportElement x="320" y="20" width="16" height="150" uuid="e3ebdb36-a800-4786-8f0e-3044bf341aac"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<imageExpression><![CDATA[$P{APP_URL} + "/resources/images/breket.jpg"]]></imageExpression>
+				</image>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="23" width="320" height="45" uuid="73eecdd0-adb1-4709-be5b-fdb90b0277d2"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement verticalAlignment="Middle" markup="html">
+						<font size="11" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Imegongwa Lakiri ya Halmashauri ya<br>" +
+"Wilaya ya Iringa na kusainiwa leo<br>" +
+"Tarehe <b>" +
+($F{certDate} == null ? "" : Integer.toString($F{certDate}.getDate())) + 
+"</b> Mwezi <b>" +
+($F{certDate} == null ? "" : Integer.toString($F{certDate}.getMonth()+1)) + 
+"</b> Mwaka <b>" +
+($F{certDate} == null ? "" : Integer.toString($F{certDate}.getYear()+1900)) + 
+"</b>"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="82" width="57" height="20" uuid="69624a85-a511-449c-b263-63f9a3c85f4f"/>
+					<box leftPadding="0"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Jina:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="57" y="82" width="263" height="20" uuid="52bc8479-c347-4fdc-a63e-938fe9657b15"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{DLO_OFFICER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="123" width="30" height="20" uuid="56fa6c1f-13c8-4172-a546-5b9a371eed38"/>
+					<box leftPadding="0"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Saini:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="57" y="146" width="263" height="20" uuid="dce3aba3-6233-4f0e-8a78-e9c13eee5496"/>
+					<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Afisa Ardhi Mteule wa Wilaya"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="146" width="57" height="20" uuid="f0468273-5ea9-47bb-aeea-151917d13c4c"/>
+					<box leftPadding="0"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Wadhifa:]]></text>
+				</staticText>
+				<image>
+					<reportElement positionType="Float" x="58" y="104" width="80" height="40" uuid="2357c0a3-918d-4b1d-8ee3-11ee657e558c">
+						<printWhenExpression><![CDATA[$P{DLO_OFFICER_SIGNATURE} != "0"]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[$P{APP_URL} + "/studio/project/getsignature/" + $P{DLO_OFFICER_SIGNATURE}]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="30" y="123" width="290" height="20" uuid="d9094eca-4510-4f8a-9bfd-e102ad867c5d">
+						<printWhenExpression><![CDATA[$P{DLO_OFFICER_SIGNATURE} == "0"]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="0"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[……………………………………………………………]]></text>
+				</staticText>
+			</frame>
+			<image>
+				<reportElement x="60" y="25" width="70" height="35" uuid="2181f06c-8cf1-41a3-b8c6-bfa878594dbd">
+					<printWhenExpression><![CDATA[$P{CHAIR_PERSON_SIGNATURE} != "0"]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{APP_URL} + "/studio/project/getsignature/" + $P{CHAIR_PERSON_SIGNATURE}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="30" y="39" width="339" height="20" uuid="f7c2d698-c64c-496b-8ef0-ccd3df679b57">
+					<printWhenExpression><![CDATA[$P{CHAIR_PERSON_SIGNATURE} == "0"]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[ ………………………………………]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="150" width="339" height="20" uuid="40ac4fde-c12e-46b7-8cda-4f6060bc7c59">
+					<printWhenExpression><![CDATA[$P{EXECUTIVE_PERSON_SIGNATURE} == "0"]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[ ………………………………………]]></text>
+			</staticText>
+			<image>
+				<reportElement x="60" y="136" width="70" height="35" uuid="d047d124-1ee6-4b52-b365-78a01c57054d">
+					<printWhenExpression><![CDATA[$P{EXECUTIVE_PERSON_SIGNATURE} != "0"]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{APP_URL} + "/studio/project/getsignature/" + $P{EXECUTIVE_PERSON_SIGNATURE}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

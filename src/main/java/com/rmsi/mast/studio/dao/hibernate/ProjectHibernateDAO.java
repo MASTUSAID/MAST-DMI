@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.domain.Project;
+import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 
 
 @Repository
@@ -33,7 +34,7 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 	
 	public List<String> getProjectNames(){
 		
-		TypedQuery<String> query = getEntityManager().createQuery("Select p.name from Project p", String.class);
+		TypedQuery<String> query = getEntityManager().createQuery("Select p.name from Project p order by p.name", String.class);
 		return query.getResultList();
 	}
 
@@ -73,6 +74,11 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 		return project;
 	}
 
+        @Override
+        public List<ProjectDetails> getAllProjectsDetails(){
+            return getEntityManager().createQuery("Select p from ProjectDetails p order by p.name").getResultList();
+        }
+        
 	@SuppressWarnings("unchecked")
 	public List<Project> getAllUserProjects() {
 		//String hqlstr= "Select p from Project p inner join ProjectLayergroup plg on p.name = plg.projectBean.name"; 

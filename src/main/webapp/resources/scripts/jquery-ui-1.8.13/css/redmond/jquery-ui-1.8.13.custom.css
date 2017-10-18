@@ -599,3 +599,10 @@ padding: 0px 0 0px 0;
 #complaint_accordion .ui-widget-content { border: 1px solid #CBD8E9; background:url('images/patternbg-form.gif') left top; color: #222222; }
 
 #complaint_accordion .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #CBD8E9; font-weight: bold; color: #e17009; }
+
+.ui-accordion .ui-accordion-header { display: block; cursor: pointer; position: relative; margin-top: 2px; padding: 10px 10px 10px 25px; zoom: 1; }
+.ui-accordion .ui-accordion-icons { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-noicons { padding-left: .7em; }
+.ui-accordion .ui-accordion-icons .ui-accordion-icons { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
+.ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; overflow: auto; zoom: 1; }

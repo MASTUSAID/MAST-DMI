@@ -18,8 +18,8 @@ public class Gender implements Serializable {
 
 	@Id
 	@Column(name = "gender_id")
-	@SequenceGenerator(name = "GENDER_ID_GENERATOR", sequenceName = "GENDER_ID_SEQ")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "GENDER_ID_GENERATOR")
+	@SequenceGenerator(name = "GENDER_ID_GENERATOR", sequenceName = "GENDER_ID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GENDER_ID_GENERATOR")
 	private long genderId;
 
 	@Column(nullable = false)

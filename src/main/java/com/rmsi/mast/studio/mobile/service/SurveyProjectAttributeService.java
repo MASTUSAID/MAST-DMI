@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.rmsi.mast.studio.domain.AttributeMaster;
+import com.rmsi.mast.studio.domain.ClaimType;
 import com.rmsi.mast.studio.domain.ProjectAdjudicator;
 import com.rmsi.mast.studio.domain.ProjectHamlet;
+import com.rmsi.mast.studio.domain.Surveyprojectattribute;
+import com.rmsi.mast.studio.mobile.transferobjects.Property;
 
 /**
  * @author shruti.thakur
@@ -26,14 +29,13 @@ public interface SurveyProjectAttributeService {
 	List<AttributeMaster> getSurveyAttributesByProjectId(String projectId);
 
 	/**
-	 * This will fetch attribute values from AttributeValues through
-	 * SurveyProjectAttributes
+	 * Returns list of properties by project id and property status
 	 * 
-	 * @param projectId
-	 * @param statusId
+	 * @param projectId Project id
+	 * @param statusId Property status code. If 0 value is provided, properties with all statuses will be returned.
 	 * @return
 	 */
-	Map<Long, List<List<Object>>> getSurveyAttributeValuesByProjectId(String projectId, int statusId);
+	List<Property> getProperties(String projectId, int statusId);
 
 	/**
 	 * This will fetch SurveyProjectId based on attributeId and projectId
@@ -45,6 +47,9 @@ public interface SurveyProjectAttributeService {
 	 */
 	Long getSurveyProjectAttributeId(long attributeId, String projectId);
 
+        /** Returns list of survey project attributes by project ID (name)*/
+        List<Surveyprojectattribute> getSurveyProjectAttributes(String projectId);
+        
 	/**
 	 * This will fetch list of adjudicators by project id
 	 * 

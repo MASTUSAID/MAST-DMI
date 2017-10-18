@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Offline build</actionName>
+            <displayName>Offline build</displayName>
+            <goals>
+                <goal>--offline</goal>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
+        <action>
+            <actionName>CUSTOM-WAR Exploded</actionName>
+            <displayName>WAR Exploded</displayName>
+            <goals>
+                <goal>war:exploded</goal>
+            </goals>
+        </action>
+    </actions>

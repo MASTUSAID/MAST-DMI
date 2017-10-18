@@ -6,15 +6,6 @@ var AttributeCategoryList=null;
 function MasterAttribute(_selectedItem)
 {
 	selectedItem=_selectedItem;
-
-	/*if( jQuery("#masterAttrFormDiv").length<=0){
-
-			displayRefreshedMasterAttr('All');
-
-		}
-		else{*/
-
-
 	jQuery.ajax({
 		url: "dataType/",
 		async:false,
@@ -24,7 +15,6 @@ function MasterAttribute(_selectedItem)
 		}
 	});
 
-
 	jQuery.ajax({
 		url: "attribcategory/",
 		async:false,
@@ -33,11 +23,7 @@ function MasterAttribute(_selectedItem)
 
 		}
 	});
-
-
 	displayRefreshedMasterAttr('All');
-
-
 }
 
 function displayRefreshedMasterAttr(_attrcategory)
@@ -65,10 +51,7 @@ function displayRefreshedMasterAttr(_attrcategory)
 
 				jQuery("#masterAttrTemplate").tmpl(data).appendTo("#masterAttrsRowData");
 
-
 				jQuery("#masterAttr_btnNew").show();
-
-
 
 				jQuery.each(DataList, function (i, _dataobj) {
 					if(DataList[i].datatypeId!=5){
@@ -78,15 +61,9 @@ function displayRefreshedMasterAttr(_attrcategory)
 				jQuery("#category_sel").append(jQuery("<option></option>").attr("value", 0).text("All"));
 
 				jQuery.each(AttributeCategoryList, function (i, _categoryobj) { 
-
-
 					jQuery("#category").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName)); 
 					jQuery("#category_sel").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName));
-
-
 				}); 
-
-
 
 				$("#masterAttrTable").tablesorter({ 
 					headers: {7: {sorter: false  },  5: {  sorter: false } },	
@@ -94,12 +71,9 @@ function displayRefreshedMasterAttr(_attrcategory)
 					.tablesorterPager({ container: $("#masterAttr_pagerDiv"), positionFixed: false })
 					.tablesorterFilter({ filterContainer: $("#masterAttr_txtSearch"),                           
 						filterColumns: [0],
-						filterCaseSensitive: false,
-						//filterWaitTime:1000 
+						filterCaseSensitive: false
 					});
-
 			});		
-
 		}
 	});
 }
@@ -124,9 +98,6 @@ function displaymasterAttr(){
 	jQuery("#masterAttrTable").show();
 	jQuery("#masterAttr_btnNew").show();
 }
-
-
-
 
 var savemasterAttrData= function () 
 {	
@@ -169,9 +140,6 @@ var savemasterAttrData= function ()
 
 }
 
-
-
-
 function savemasterAttr()
 {	
 	$("#addAttributeformID").validate({
@@ -207,8 +175,6 @@ function savemasterAttr()
 
 	}
 } 
-
-
 
 var deleteAttribute= function (id,alias) 
 {	
@@ -300,7 +266,6 @@ function  displaySelectedCategory (id)
 }
 
 function cancelMasterAttr()
-
 {
 	displayRefreshedMasterAttr();
 	attrDialog.dialog("destroy");
@@ -309,11 +274,6 @@ function cancelMasterAttr()
 
 
 }
-
-
-
-
-
 
 function editmasterAttr(id)
 {
@@ -378,7 +338,6 @@ function editmasterAttr(id)
 
 }
 
-
 function updateEditAttribute()
 {
 
@@ -419,7 +378,6 @@ function updateEditAttribute()
 }
 
 function updateAttribute()
-
 {
 
 

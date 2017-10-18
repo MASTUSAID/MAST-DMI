@@ -20,7 +20,7 @@ public class UserReporting implements Serializable {
 
 
 	@Id
-	@SequenceGenerator(name="USER_REPORTING_ID_GENERATOR", sequenceName="USER_REPORTING_ID")
+	@SequenceGenerator(name="USER_REPORTING_ID_GENERATOR", sequenceName="USER_REPORTING_ID", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_REPORTING_ID_GENERATOR")
 	@Column(unique=true, nullable=false)
 	public Integer getId() {

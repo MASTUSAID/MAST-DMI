@@ -1,0 +1,1333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ClaimsProfile" pageWidth="595" pageHeight="842" columnWidth="511" leftMargin="42" rightMargin="42" topMargin="20" bottomMargin="20" uuid="6555954a-fb27-40b3-a24d-87b379171c73">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="176"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 6">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 6_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 6_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 6_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 7_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="ClaimsStat" uuid="fbbc7418-33b2-4532-b2a3-16be73ead8b4">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="collected" class="java.lang.Integer">
+			<fieldDescription><![CDATA[collected]]></fieldDescription>
+		</field>
+		<field name="denied" class="java.lang.Integer">
+			<fieldDescription><![CDATA[denied]]></fieldDescription>
+		</field>
+		<field name="claimType" class="java.lang.String">
+			<fieldDescription><![CDATA[claimType]]></fieldDescription>
+		</field>
+		<field name="approved" class="java.lang.Integer">
+			<fieldDescription><![CDATA[approved]]></fieldDescription>
+		</field>
+		<variable name="CountRecorded" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{collected}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountApproved" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{approved}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountDenied" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{denied}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="OwnershipTypes" uuid="b204a8e8-07ac-4ef7-aff1-cf6648c76fab">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="females" class="java.lang.Integer">
+			<fieldDescription><![CDATA[females]]></fieldDescription>
+		</field>
+		<field name="males" class="java.lang.Integer">
+			<fieldDescription><![CDATA[males]]></fieldDescription>
+		</field>
+		<field name="ownershipType" class="java.lang.String">
+			<fieldDescription><![CDATA[ownershipType]]></fieldDescription>
+		</field>
+		<field name="total" class="java.lang.Integer">
+			<fieldDescription><![CDATA[total]]></fieldDescription>
+		</field>
+		<variable name="CountMale" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{males}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountFemales" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{females}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountTotal" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="CcroOccurrence" uuid="7d94fa95-1e72-4f79-8e06-f889445c446f">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="females" class="java.lang.Integer">
+			<fieldDescription><![CDATA[females]]></fieldDescription>
+		</field>
+		<field name="males" class="java.lang.Integer">
+			<fieldDescription><![CDATA[males]]></fieldDescription>
+		</field>
+		<field name="total" class="java.lang.Integer">
+			<fieldDescription><![CDATA[total]]></fieldDescription>
+		</field>
+		<field name="occurrence" class="java.lang.Integer"/>
+		<variable name="CountMale" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{males}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountFemales" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{females}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountTotal" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="ClaimantsAge" uuid="f30d4943-0c92-4dde-90ec-a02cd90b32aa">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="ageGroup" class="java.lang.String">
+			<fieldDescription><![CDATA[ageGroup]]></fieldDescription>
+		</field>
+		<field name="femaleCount" class="java.lang.Integer">
+			<fieldDescription><![CDATA[femaleCount]]></fieldDescription>
+		</field>
+		<field name="maleCount" class="java.lang.Integer">
+			<fieldDescription><![CDATA[maleCount]]></fieldDescription>
+		</field>
+		<field name="total" class="java.lang.Integer">
+			<fieldDescription><![CDATA[total]]></fieldDescription>
+		</field>
+		<variable name="CountMale" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{maleCount}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountFemales" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{femaleCount}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountTotal" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="Disputes" uuid="de804b3f-c404-4049-b8a3-7c808a871d0d">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="disputeType" class="java.lang.String">
+			<fieldDescription><![CDATA[disputeType]]></fieldDescription>
+		</field>
+		<field name="resolved" class="java.lang.Integer">
+			<fieldDescription><![CDATA[resolved]]></fieldDescription>
+		</field>
+		<field name="unresolved" class="java.lang.Integer">
+			<fieldDescription><![CDATA[unresolved]]></fieldDescription>
+		</field>
+		<field name="total" class="java.lang.Integer">
+			<fieldDescription><![CDATA[total]]></fieldDescription>
+		</field>
+		<variable name="CountResolved" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{resolved}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountUnresolved" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{unresolved}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="CountTotal" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{total}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<parameter name="VILLAGE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="claimsStatList" class="java.util.List">
+		<fieldDescription><![CDATA[claimsStatList]]></fieldDescription>
+	</field>
+	<field name="uniqueFemales" class="java.lang.Integer">
+		<fieldDescription><![CDATA[uniqueFemales]]></fieldDescription>
+	</field>
+	<field name="uniqueFemalesDenied" class="java.lang.Integer">
+		<fieldDescription><![CDATA[uniqueFemalesDenied]]></fieldDescription>
+	</field>
+	<field name="uniqueMales" class="java.lang.Integer">
+		<fieldDescription><![CDATA[uniqueMales]]></fieldDescription>
+	</field>
+	<field name="uniqueMalesDenied" class="java.lang.Integer">
+		<fieldDescription><![CDATA[uniqueMalesDenied]]></fieldDescription>
+	</field>
+	<field name="ownershipTypeStatList" class="java.util.List">
+		<fieldDescription><![CDATA[ownershipTypeStatList]]></fieldDescription>
+	</field>
+	<field name="ccroOccurrenceStatList" class="java.util.List">
+		<fieldDescription><![CDATA[ccroOccurrenceStatList]]></fieldDescription>
+	</field>
+	<field name="disputes" class="java.util.List">
+		<fieldDescription><![CDATA[disputes]]></fieldDescription>
+	</field>
+	<field name="claimantsAgeList" class="java.util.List">
+		<fieldDescription><![CDATA[claimantsAgeList]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="11" width="511" height="33" uuid="7294ae9d-a8e4-43a6-ac3c-75cf3419e783"/>
+				<box>
+					<bottomPen lineWidth="1.25" lineStyle="Double"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claims profile report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="26" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy hh:mm">
+				<reportElement x="419" y="0" width="92" height="20" uuid="3b3f27c0-f16c-4c22-84a2-2b1edc629ea3"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="354" y="0" width="65" height="20" uuid="40d11243-40a5-4540-97bb-22bb0e27eb60"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Generated on:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="35" height="20" uuid="06cc01a6-7fb0-4578-86fd-9975237f0cd4"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Village:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="35" y="0" width="303" height="20" uuid="94035f67-176c-4e8f-9545-60bbc71c3c5e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{VILLAGE}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="22" width="511" height="1" uuid="ef40ca20-d2c6-4eaa-b664-489c488e3459"/>
+				<graphicElement>
+					<pen lineWidth="1.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="502" splitType="Stretch">
+			<staticText>
+				<reportElement x="7" y="7" width="100" height="20" uuid="1da0d0c3-d1a0-445b-b970-e0841337815f"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Claim Types]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="7" y="27" width="265" height="149" uuid="fe066e7e-8951-4f71-8db7-97524c54314b"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ClaimsStat" uuid="52351255-6e21-4b1c-a5ab-7f7049b14de9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{claimsStatList})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="84" uuid="302b24fc-9a97-45f3-ae7f-bd3dfb518fa5">
+						<jr:columnHeader style="table_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="84" height="25" uuid="dc2b51d2-aa82-4675-bd54-344ca6e1499e"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Claim type]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="84" height="20" uuid="e63424e5-0400-444b-8945-c349f0142250"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="84" height="20" uuid="1706d17e-9d30-4cf2-ba83-b918655b6ed6"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{claimType}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="dff7f035-cf49-4015-a870-289fd5e07b74">
+						<jr:columnHeader style="table_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="25" uuid="359c7468-e7dc-4beb-9f10-1339a00c8c92"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Recorded]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="6ae41c8b-a560-49c8-a7d1-8d65d006a7dd"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountRecorded}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="f0ee5b5d-c178-4fd2-9b46-d4b0182485f5"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{collected}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="9e9fddec-6f99-44e0-9c0f-51b94f6236e2">
+						<jr:columnHeader style="table_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="25" uuid="c805e382-29ac-4af6-a9f1-cbf80ec49a4c"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Approved]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="fcf6704c-feaf-41c0-ba22-091bdf11a63f"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountApproved}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="6153ff01-1c98-4a66-b1a7-a9c2d8261579"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="2a063b6d-7323-449d-a582-52252c2d9c97">
+						<jr:columnHeader style="table_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="25" uuid="832ed8c8-d9ad-472e-a944-cb3112b60559"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Denied]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="aa80028f-0f9c-4f3f-b02b-32777b7814af"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountDenied}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="20" uuid="075b0adf-3326-4768-934c-857b4ebaa014"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{denied}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="298" y="7" width="183" height="20" uuid="fe07bbc0-81de-4274-bb59-4f025caacb8a"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unique Claimants (All)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="27" width="87" height="20" uuid="5e3ba17a-d820-4945-9728-744e92210e89"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Male]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="385" y="27" width="60" height="20" uuid="354efbcd-8267-4112-82af-eb5f64534882"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueMales}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="47" width="87" height="20" uuid="bb449dda-0d8e-4f07-afce-3e3d693029bd"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Female]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="385" y="47" width="60" height="20" uuid="52e87b4d-c8dc-4ee4-9ad4-36f03ec6ee3a"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueFemales}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 %">
+				<reportElement x="445" y="47" width="60" height="20" uuid="5b25c431-006b-4611-96aa-56435e066901"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueMales}+$F{uniqueFemales} <=0 ? 0 : (double)$F{uniqueFemales}/($F{uniqueMales}+$F{uniqueFemales})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 %">
+				<reportElement x="445" y="27" width="60" height="20" uuid="20695108-cd99-4e23-9c0b-ada9d223fe1b"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueMales}+$F{uniqueFemales} <=0 ? 0 : (double)$F{uniqueMales}/($F{uniqueMales}+$F{uniqueFemales})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="67" width="60" height="20" uuid="3696b4e4-e60a-4b04-b60a-13d828da8736"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uniqueFemales}+$F{uniqueMales}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 %">
+				<reportElement x="445" y="67" width="60" height="20" uuid="c0698c87-7907-4814-936b-02cd616f0eb5"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uniqueMales}+$F{uniqueFemales} <=0 ? 0 : 1]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="67" width="87" height="20" uuid="a27dc5d1-e80e-401f-af3f-39c25288c41f"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="385" y="136" width="60" height="20" uuid="81c5f9a5-8723-4033-a694-4e32bc76c990"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueFemalesDenied}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="116" width="60" height="20" uuid="5826d823-04dc-4d6c-a405-fa31f020fe9b"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueMalesDenied}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="96" width="207" height="20" uuid="80624c6a-cc3f-469c-a17b-877251e37725"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unique claimants (Denied CCRO)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="116" width="87" height="20" uuid="18a9ec29-06bb-4a67-80ef-7043cac8339f"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Male]]></text>
+			</staticText>
+			<textField pattern="#,##0 %">
+				<reportElement x="445" y="136" width="60" height="20" uuid="01f8d3a6-bf2b-4697-87ec-18d5d8da70d4"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueMalesDenied}+$F{uniqueFemalesDenied} <=0 ? 0 : (double)$F{uniqueFemalesDenied}/($F{uniqueMalesDenied}+$F{uniqueFemalesDenied})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="156" width="60" height="20" uuid="a811b003-da87-442d-9bb6-d0ce1dc54ea4"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uniqueFemalesDenied}+$F{uniqueMalesDenied}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 %">
+				<reportElement x="445" y="156" width="60" height="20" uuid="53604173-049a-4b8a-b14a-127804116440"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uniqueMalesDenied}+$F{uniqueFemalesDenied} <=0 ? 0 : 1]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0 %">
+				<reportElement x="445" y="116" width="60" height="20" uuid="b016df37-31b5-4ed5-90f6-4e61afc90190"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{uniqueMalesDenied}+$F{uniqueFemalesDenied} <=0 ? 0 : (double)$F{uniqueMalesDenied}/($F{uniqueMalesDenied}+$F{uniqueFemalesDenied})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="298" y="156" width="87" height="20" uuid="72efb7b5-e6a8-4531-b43c-c2ec7613d8f2"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="136" width="87" height="20" uuid="fc207be7-8ddf-4e85-a289-517193762681"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Female]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 4" style="table 4" positionType="Float" x="7" y="283" width="498" height="50" uuid="9007505b-dcb8-4f88-ad5b-4ec71d0dbff8"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="OwnershipTypes" uuid="e33c2669-872e-4788-89df-2b89a421f7f9">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ownershipTypeStatList})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="274" uuid="f07e912d-d4e3-4610-9f7e-d175b5f6978c">
+						<jr:columnHeader style="table 4_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="274" height="25" uuid="d6e827b5-7991-41a0-a387-5788e3afd0ba"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tenancy Type]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="274" height="20" uuid="4f0903d2-fa57-4601-ab2e-5bd31202915a"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="274" height="20" uuid="5f11eb4f-3641-4721-b587-16f2605755c0"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{ownershipType}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="75" uuid="a0f0a022-23b6-4e53-9ccd-ab542d05421b">
+						<jr:columnHeader style="table 4_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="75" height="25" uuid="66510bd4-e4a4-49e4-8152-40c5dd17e2ee"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Male]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="20" uuid="c168a204-f0c6-4e11-8cc4-5795219a5d28"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountMale}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="20" uuid="8d718650-53db-4062-b07a-20b031d5df09"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{males}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="75" uuid="5f665531-4220-4bc7-a196-8f0e56413a4b">
+						<jr:columnHeader style="table 4_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="75" height="25" uuid="e90431f5-a3cd-4ed8-9015-8f843e773e59"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Female]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="20" uuid="ef3a979e-70b0-4b71-9a88-4e7a4366ec92"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountFemales}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="20" uuid="aeb0eb64-2beb-4ebb-a153-2d272c57c5aa"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{females}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="75" uuid="c0be7848-dd13-4677-a694-098392862dff">
+						<jr:columnHeader style="table 4_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="75" height="25" uuid="c93cfc54-cf3b-46dc-bfee-f72c58740676"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="20" uuid="2b0e2896-9554-4260-aa78-644c725c346b"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountTotal}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 4_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="20" uuid="74001f41-03e4-4b9b-aeb4-a3773d32fc73"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="263" width="183" height="20" uuid="f9c8b699-bfca-4215-80b0-06bd19e13dd9"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Approved Tenancy Types]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="340" width="197" height="20" uuid="d07b9a45-b237-4706-af0d-19073ae21f20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Approved CCROs by Unique Claimants]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 5" style="table 5" positionType="Float" x="7" y="360" width="498" height="60" uuid="dff31e40-c414-4154-951b-37e2d7a0d59f"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="CcroOccurrence" uuid="c15b7894-784d-46b3-8657-bd397dbee1ab">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{ccroOccurrenceStatList})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="227" uuid="d0e2137e-e82f-4403-82a0-4c593e65fad3">
+						<jr:columnHeader style="table 5_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="227" height="25" uuid="9699e629-fbee-4c30-b20d-eca979b283d4"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Claimants with number of approved CCROs]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_TD" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="227" height="20" uuid="8b181fe5-1b53-4da5-b85e-e8c7810565d8"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table 5_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="227" height="20" uuid="82e04871-7f7e-4176-9066-b296e7da2a27"/>
+								<box leftPadding="2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{occurrence}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="3547a761-2683-428a-a3f1-71806227e98b">
+						<jr:columnHeader style="table 5_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="9a2db363-bed4-4b5f-8731-06e5f96f6127"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Male]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="90" height="20" uuid="b68cd2e9-f778-4187-8ac3-c670e5f65c53"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountMale}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 5_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="124fe25c-da5f-46b7-ad16-2b805e794f73"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{males}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="6ee30601-f071-45f7-a239-52617b1845a9">
+						<jr:columnHeader style="table 5_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="be22ef12-6b3d-4639-94ac-c4f1bc4c16e5"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Female]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="90" height="20" uuid="2c83756d-68f5-4094-bce6-5347ecc0b428"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountFemales}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 5_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="2b70e346-3838-42de-8c41-1ebab6119771"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{females}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="6748576c-0c3b-42d9-8032-c1f89e5004a8">
+						<jr:columnHeader style="table 5_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="078c5a2c-b345-434e-8a40-9c68a4d86876"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 4_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="90" height="20" uuid="ec57f739-8458-447d-9b75-6fdea52b5476"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountTotal}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 5_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="8f2e9fd7-7694-4004-8526-5b5182fd31aa"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="181" width="197" height="20" uuid="2aa148fb-59a2-4897-a4b8-823daaaa57f8"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Age disaggregation of unique claimants]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 6" style="table 6" positionType="Float" x="7" y="201" width="498" height="57" uuid="dea6d38a-bd1d-4d1d-9a54-f7673b8a48d4"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="ClaimantsAge" uuid="587926b8-0459-4806-8d55-b5776c6efb69">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{claimantsAgeList})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="222" uuid="3df05fac-8953-4929-a9f8-736807c4d082">
+						<jr:columnHeader style="table 6_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="222" height="25" uuid="402490d6-269e-44fe-9428-5d62a10fdeb2"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Age group]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 6_TD" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="222" height="20" uuid="0d06e471-b31b-46b0-80b2-d6790765af10"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="222" height="20" uuid="b54903ea-eef6-40bd-9741-57f652a3fa6a"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{ageGroup}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="2ce0a941-a4d3-4bd5-8c76-6e98687789f2">
+						<jr:columnHeader style="table 6_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="0f3d9b8e-d4cd-4a49-902e-6ff7088d1d2d"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Male]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="c160dfb7-676d-4967-b28e-b2a0411de6ba"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountMale}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="4c747b5d-9821-4348-85a0-082015f39de6"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{maleCount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="94350c4d-10c4-498e-af21-f6fd2d84d11a">
+						<jr:columnHeader style="table 6_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="63cb4ba2-52f1-4259-814d-44ca17eb9e8a"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Female]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="35cdb6ed-6a89-483e-8cb6-cf8bf498e489"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountFemales}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="f17c8528-820d-4b8b-8704-ab051fdce1ab"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{femaleCount}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="95" uuid="38df6eef-8303-4da5-9d51-f325e79a06ed">
+						<jr:columnHeader style="table 6_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="95" height="25" uuid="ea103577-c065-4d4b-b586-5290a19b09fd"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="95" height="20" uuid="02530198-7c93-48bd-bf02-ccfde02e2ea3"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountTotal}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 6_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="95" height="20" uuid="8bbfee7a-a344-4411-9ddd-28f1862f717b"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement positionType="Float" x="7" y="425" width="197" height="20" uuid="d157322b-a464-4591-a392-c7667fae9b38"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Disputes]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 7" style="table 7" positionType="Float" x="7" y="445" width="498" height="52" uuid="f809266a-3e6d-46de-9290-5f451eb286a6"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="Disputes" uuid="623e0970-5880-43da-8c7e-01d4b19b7d3c">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{disputes})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="227" uuid="fb0ebf20-1ca3-433d-b201-f69fea6a634e">
+						<jr:columnHeader style="table 7_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="227" height="25" uuid="c16715b3-f141-42f5-ba9c-aae646bffbf0"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Dispute type]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 7_TD" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="227" height="20" uuid="a0796f5c-9512-4fce-a9de-b6c75f3cda61"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="227" height="20" uuid="89a609f4-3645-4ad1-8482-219178b33644"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{disputeType}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="af870bc1-2667-4613-aca7-babf4c9a3f65">
+						<jr:columnHeader style="table 7_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="c3095ba5-ec60-4ef8-a5ce-1e2663fd36e2"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Resolved]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="44169f16-0507-4412-bc6a-5c54e7ed1dfe"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountResolved}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="14f73ce7-2237-4ddc-94e3-9441d0227d8b"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{resolved}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="69a46ddf-73ad-41ac-9eeb-43562b844399">
+						<jr:columnHeader style="table 7_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="3ab9e0ea-33eb-4052-a588-a704bd51773c"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Unresolved]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="ea211751-0bfd-4946-98a5-7791afd53f81"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountUnresolved}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="000d56e9-91e4-4e5d-841c-b9af25cde1a2"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{unresolved}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="9cf14051-8d06-4d04-84e6-bb1041c12a12">
+						<jr:columnHeader style="table 7_CH" height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="25" uuid="ae9dace8-ab9d-443e-98ee-b815b2d3acd7"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="57de82b7-9900-496a-8b42-9e71bbbc7e5b"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle">
+									<font isBold="true" isItalic="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{CountTotal}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 7_TD" height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="90" height="20" uuid="d593ee36-7af0-4ed8-b02e-80aefa8ba02d"/>
+								<box leftPadding="2"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="391" y="0" width="80" height="16" uuid="c541dfb4-1fe8-4509-9dd8-fea59767f14c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="471" y="0" width="40" height="16" uuid="0a1c4b84-bfa6-4217-a57f-19a83d316eb5"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

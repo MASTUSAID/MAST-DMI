@@ -85,10 +85,10 @@
                "openlayers/MapQuestOSM.js",
                "openlayers/LayerSwitcherNew.js",
                "openlayers/UndoRedo.js",
-               "jquery-1.7.1/jquery-1.7.1.min.js",               
+               "jquery-1.8.3/jquery-1.8.3.min.js",               
                "jquery-1.6.3/jquery.cookie.js",
                "jquery-1.6.3/jquery.formHints.js",
-               "jquery-ui-1.8.13/jquery-ui-1.8.13.custom.min.js",
+               "jquery-ui-1.12.1/jquery-ui.min.js",
                "jquery-i18n/jquery.i18n.js",
                "jquery-localize/jquery.localize.js",
                "jquery-meerkat/jquery.meerkat.1.3.min.js",
@@ -123,7 +123,6 @@
                "/cloudburst/viewer/Toolbar.js",
                "/cloudburst/viewer/Navi.js",
                "/cloudburst/viewer/Search.js",
-               "/cloudburst/viewer/Print.js",
                "/cloudburst/viewer/ZoomToXY.js",
                "/cloudburst/viewer/ExportData.js",
                "/cloudburst/viewer/Bookmark.js",
@@ -147,12 +146,11 @@
                "mtl-script/osgridref.js",
                "/cloudburst/viewer/UserProjects.js",
                "/cloudburst/viewer/LandRecords.js",
-               "/cloudburst/viewer/CCRO.js",
-               "/cloudburst/viewer/land-adjudication.js",
                "/cloudburst/viewer/mapLoader.js",
-			   "/cloudburst/viewer/mapImage.js",
-			   "/cloudburst/viewer/proj4js-combined.js",
-			   "/cloudburst/viewer/Intersection.js"
+                "/cloudburst/viewer/mapImage.js",
+                "/cloudburst/viewer/proj4js-combined.js",
+                "/cloudburst/viewer/Intersection.js",
+                "jsgrid/jsgrid.min.js"
                
             ]; // etc.
         }
@@ -169,8 +167,4 @@
     }
 })();
 
-/**
- * Constant: VERSION_NUMBER
- */
-Cloudburst.VERSION_NUMBER="0.1";
 var undoredo = null;

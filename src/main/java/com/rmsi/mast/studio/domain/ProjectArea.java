@@ -6,319 +6,372 @@ import javax.persistence.*;
 
 import java.util.Date;
 
-
 /**
  * The persistent class for the project_area database table.
- * @author Prashant.Nigam
  */
 @Entity
-@Table(name="project_area")
-public class ProjectArea implements Serializable 
-{
-	private static final long serialVersionUID = 1L;
+@Table(name = "project_area")
+public class ProjectArea implements Serializable {
 
-	@Id
-	@SequenceGenerator(name="PROJECT_AREA_AREAID_GENERATOR", sequenceName="PROJECT_AREA_GID_SEQ")
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="PROJECT_AREA_AREAID_GENERATOR")
-	@Column(name="area_id")
-	private Long areaId;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="village_chairman")
-	private String villageChairman;
+    @Id
+    @SequenceGenerator(name = "PROJECT_AREA_AREAID_GENERATOR", sequenceName = "PROJECT_AREA_GID_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJECT_AREA_AREAID_GENERATOR")
+    @Column(name = "area_id")
+    private Long areaId;
 
-	@Column(name="approving_executive")
-	private String approvingExecutive;
+    @Column(name = "village_chairman")
+    private String villageChairman;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="village_chairman_approval_date")
-	private Date villageChairmanApprovalDate;
+    @Column(name = "approving_executive")
+    private String approvingExecutive;
 
-	@Column(name="district_officer")
-	private String districtOfficer;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "village_chairman_approval_date")
+    private Date villageChairmanApprovalDate;
 
-	@Column(name="authority_approve")
-	private Boolean authorityApprove;
+    @Column(name = "district_officer")
+    private String districtOfficer;
 
-	@Column(name="bounding_box")
-	private String boundingBox;
+    @Column(name = "authority_approve")
+    private Boolean authorityApprove;
 
-	private String category;
+    @Column(name = "bounding_box")
+    private String boundingBox;
 
-	private String province;
+    private String category;
 
-	private String city;
+    private String province;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="executive_approval_date")
-	private Date executiveApprovalDate;
+    private String city;
 
-	private String municipality;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "executive_approval_date")
+    private Date executiveApprovalDate;
 
-	@Column(name="country_name")
-	private String countryName;
+    private String municipality;
 
-	@Column(name="district_name")
-	private String districtName;
+    @Column(name = "country_name")
+    private String countryName;
 
-	@Column(name="executive_approve")
-	private Boolean executiveApprove;
+    @Column(name = "district_name")
+    private String districtName;
 
-	private Integer gid;
+    @Column(name = "executive_approve")
+    private Boolean executiveApprove;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="initiation_date")
-	private Date initiationDate;
+    private Integer gid;
 
-	private String location;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "initiation_date")
+    private Date initiationDate;
 
-	private String perimeter;
+    private String location;
 
-	private Integer projectid;
+    private String perimeter;
 
-	private String region;
+    private Integer projectid;
 
-	@Column(name="state_name")
-	private String stateName;
+    private String region;
 
-	//@Column(name="village")
-	private String village;
+    @Column(name = "state_name")
+    private String stateName;
 
-	private String wards;
+    private String village;
 
-	private String village_code;
-	private String address;
+    private String wards;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="recommendation_date")
-	private Date recommendationDate;
+    private String village_code;
+    private String address;
 
-	@Column(name="name")
-	private String projectName;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "recommendation_date")
+    private Date recommendationDate;
 
-	public ProjectArea() {
-	}
+    @Column(name = "name")
+    private String projectName;
 
-	public Long getAreaId() {
-		return this.areaId;
-	}
+    @Column(name = "region_code")
+    private String regionCode;
 
-	public void setAreaId(Long areaId) {
-		this.areaId = areaId;
-	}
+    @Column(name = "vc_meeting_date")
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date vcMeetingDate;
+    
+    @Column(name = "village_chairman_signature")
+    String villageChairmanSignaturePath;
+    
+    @Column(name = "village_executive_signature")
+    String villageExecutiveSignaturePath;
+    
+    @Column(name = "district_officer_signature")
+    String districtOfficerSignaturePath;
+    
+    public ProjectArea() {
+    }
 
-	public String getApprovingExecutive() {
-		return this.approvingExecutive;
-	}
+    public Long getAreaId() {
+        return this.areaId;
+    }
 
-	public void setApprovingExecutive(String approvingExecutive) {
-		this.approvingExecutive = approvingExecutive;
-	}
-
-	public Boolean getAuthorityApprove() {
-		return this.authorityApprove;
-	}
-
-	public void setAuthorityApprove(Boolean authorityApprove) {
-		this.authorityApprove = authorityApprove;
-	}
-
-	public String getBoundingBox() {
-		return this.boundingBox;
-	}
-
-	public void setBoundingBox(String boundingBox) {
-		this.boundingBox = boundingBox;
-	}
-
-	public String getCategory() {
-		return this.category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public String getCity() {
-		return this.city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public Date getExecutiveApprovalDate() {
-		return this.executiveApprovalDate;
-	}
-
-	public void setExecutiveApprovalDate(Date executiveApprovalDate) {
-		this.executiveApprovalDate = executiveApprovalDate;
-	}
-
-	public Boolean getExecutiveApprove() {
-		return this.executiveApprove;
-	}
-
-	public void setExecutiveApprove(Boolean executiveApprove) {
-		this.executiveApprove = executiveApprove;
-	}
-
-	public Integer getGid() {
-		return this.gid;
-	}
-
-	public void setGid(Integer gid) {
-		this.gid = gid;
-	}
-
-	public Date getInitiationDate() {
-		return this.initiationDate;
-	}
-
-	public void setInitiationDate(Date initiationDate) {
-		this.initiationDate = initiationDate;
-	}
-
-	public String getLocation() {
-		return this.location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getPerimeter() {
-		return this.perimeter;
-	}
-
-	public void setPerimeter(String perimeter) {
-		this.perimeter = perimeter;
-	}
-
-	public Integer getProjectid() {
-		return this.projectid;
-	}
-
-	public void setProjectid(Integer projectid) {
-		this.projectid = projectid;
-	}
-
-	public Date getRecommendationDate() {
-		return this.recommendationDate;
-	}
-
-	public void setRecommendationDate(Date recommendationDate) {
-		this.recommendationDate = recommendationDate;
-	}
-
-	public String getRegion() {
-		return this.region;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	public String getStateName() {
-		return this.stateName;
-	}
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-	public String getVillage() {
-		return this.village;
-	}
-
-	public void setVillage(String village) {
-		this.village = village;
-	}
-
-	public String getWards() {
-		return this.wards;
-	}
-
-	public void setWards(String wards) {
-		this.wards = wards;
-	}
-	public String getProvince() {
-		return this.province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-	public String getMunicipality() {
-		return this.municipality;
-	}
-
-	public void setMunicipality(String municipality) {
-		this.municipality = municipality;
-	}
-
-	public String getCountryName() {
-		return this.countryName;
-	}
-
-	public void setCountryName(String countryName) {
-		this.countryName = countryName;
-	}
-
-	public String getDistrictName() {
-		return this.districtName;
-	}
-
-	public void setDistrictName(String districtName) {
-		this.districtName = districtName;
-	}
-
-	public String getVillageChairman() {
-		return villageChairman;
-	}
-
-	public void setVillageChairman(String villageChairman) {
-		this.villageChairman = villageChairman;
-	}
-
-	public Date getVillageChairmanApprovalDate() {
-		return villageChairmanApprovalDate;
-	}
-
-	public void setVillageChairmanApprovalDate(Date villageChairmanApprovalDate) {
-		this.villageChairmanApprovalDate = villageChairmanApprovalDate;
-	}
-
-	public String getDistrictOfficer() {
-		return districtOfficer;
-	}
-
-	public void setDistrictOfficer(String districtOfficer) {
-		this.districtOfficer = districtOfficer;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	public String getVillage_code() {
-		return village_code;
-	}
-
-	public void setVillage_code(String village_code) {
-		this.village_code = village_code;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	
+    public void setAreaId(Long areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getApprovingExecutive() {
+        return this.approvingExecutive;
+    }
+
+    public void setApprovingExecutive(String approvingExecutive) {
+        this.approvingExecutive = approvingExecutive;
+    }
+
+    public Boolean getAuthorityApprove() {
+        return this.authorityApprove;
+    }
+
+    public void setAuthorityApprove(Boolean authorityApprove) {
+        this.authorityApprove = authorityApprove;
+    }
+
+    public String getBoundingBox() {
+        return this.boundingBox;
+    }
+
+    public void setBoundingBox(String boundingBox) {
+        this.boundingBox = boundingBox;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Date getExecutiveApprovalDate() {
+        return this.executiveApprovalDate;
+    }
+
+    public void setExecutiveApprovalDate(Date executiveApprovalDate) {
+        this.executiveApprovalDate = executiveApprovalDate;
+    }
+
+    public Boolean getExecutiveApprove() {
+        return this.executiveApprove;
+    }
+
+    public void setExecutiveApprove(Boolean executiveApprove) {
+        this.executiveApprove = executiveApprove;
+    }
+
+    public Integer getGid() {
+        return this.gid;
+    }
+
+    public void setGid(Integer gid) {
+        this.gid = gid;
+    }
+
+    public Date getInitiationDate() {
+        return this.initiationDate;
+    }
+
+    public void setInitiationDate(Date initiationDate) {
+        this.initiationDate = initiationDate;
+    }
+
+    public String getLocation() {
+        return this.location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getPerimeter() {
+        return this.perimeter;
+    }
+
+    public void setPerimeter(String perimeter) {
+        this.perimeter = perimeter;
+    }
+
+    public Integer getProjectid() {
+        return this.projectid;
+    }
+
+    public void setProjectid(Integer projectid) {
+        this.projectid = projectid;
+    }
+
+    public Date getRecommendationDate() {
+        return this.recommendationDate;
+    }
+
+    public void setRecommendationDate(Date recommendationDate) {
+        this.recommendationDate = recommendationDate;
+    }
+
+    public String getRegion() {
+        return this.region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getRegionCode() {
+        return regionCode;
+    }
+
+    public void setRegionCode(String regionCode) {
+        this.regionCode = regionCode;
+    }
+
+    public String getStateName() {
+        return this.stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public String getVillage() {
+        return this.village;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
+    }
+
+    public String getWards() {
+        return this.wards;
+    }
+
+    public void setWards(String wards) {
+        this.wards = wards;
+    }
+
+    public String getProvince() {
+        return this.province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getMunicipality() {
+        return this.municipality;
+    }
+
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
+
+    public String getCountryName() {
+        return this.countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public String getDistrictName() {
+        return this.districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
+
+    public String getVillageChairman() {
+        return villageChairman;
+    }
+
+    public void setVillageChairman(String villageChairman) {
+        this.villageChairman = villageChairman;
+    }
+
+    public Date getVillageChairmanApprovalDate() {
+        return villageChairmanApprovalDate;
+    }
+
+    public void setVillageChairmanApprovalDate(Date villageChairmanApprovalDate) {
+        this.villageChairmanApprovalDate = villageChairmanApprovalDate;
+    }
+
+    public String getDistrictOfficer() {
+        return districtOfficer;
+    }
+
+    public void setDistrictOfficer(String districtOfficer) {
+        this.districtOfficer = districtOfficer;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getVillage_code() {
+        return village_code;
+    }
+
+    public void setVillage_code(String village_code) {
+        this.village_code = village_code;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Date getVcMeetingDate() {
+        return vcMeetingDate;
+    }
+
+    public void setVcMeetingDate(Date vcMeetingDate) {
+        this.vcMeetingDate = vcMeetingDate;
+    }
+
+    public String getVillageChairmanSignaturePath() {
+        return villageChairmanSignaturePath;
+    }
+
+    public void setVillageChairmanSignaturePath(String villageChairmanSignaturePath) {
+        this.villageChairmanSignaturePath = villageChairmanSignaturePath;
+    }
+
+    public String getVillageExecutiveSignaturePath() {
+        return villageExecutiveSignaturePath;
+    }
+
+    public void setVillageExecutiveSignaturePath(String villageExecutiveSignaturePath) {
+        this.villageExecutiveSignaturePath = villageExecutiveSignaturePath;
+    }
+
+    public String getDistrictOfficerSignaturePath() {
+        return districtOfficerSignaturePath;
+    }
+
+    public void setDistrictOfficerSignaturePath(String districtOfficerSignaturePath) {
+        this.districtOfficerSignaturePath = districtOfficerSignaturePath;
+    }
 }

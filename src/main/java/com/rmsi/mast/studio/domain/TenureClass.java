@@ -13,43 +13,65 @@ import javax.persistence.*;
 @Table(name = "tenure_class")
 public class TenureClass implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name = "tenureclass_id")
-	private int tenureId;
+    @Id
+    @Column(name = "tenureclass_id")
+    private int tenureId;
 
-	@Column(name = "tenure_class", nullable = false)
-	private String tenureClass;
-	
-	private boolean active;
+    @Column(name = "tenure_class", nullable = false)
+    private String tenureClass;
 
-	public TenureClass() {
-		super();
-	}
+    @Column(name = "tenure_class_sw", nullable = false)
+    private String tenureClassSw;
+    
+    @Column
+    private boolean active;
 
-	public int getTenureId() {
-		return this.tenureId;
-	}
+    @Column(name = "for_adjudication")
+    private boolean forAdjudication;
 
-	public void setTenureId(int tenureId) {
-		this.tenureId = tenureId;
-	}
+    public TenureClass() {
+        super();
+    }
 
-	public String getTenureClass() {
-		return this.tenureClass;
-	}
+    public int getTenureId() {
+        return this.tenureId;
+    }
 
-	public void setTenureClass(String tenureClass) {
-		this.tenureClass = tenureClass;
-	}
+    public void setTenureId(int tenureId) {
+        this.tenureId = tenureId;
+    }
 
-	public boolean isActive() {
-		return active;
-	}
+    public String getTenureClass() {
+        return this.tenureClass;
+    }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+    public void setTenureClass(String tenureClass) {
+        this.tenureClass = tenureClass;
+    }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isForAdjudication() {
+        return forAdjudication;
+    }
+
+    public void setForAdjudication(boolean forAdjudication) {
+        this.forAdjudication = forAdjudication;
+    }
+
+    public String getTenureClassSw() {
+        return tenureClassSw;
+    }
+
+    public void setTenureClassSw(String tenureClassSw) {
+        this.tenureClassSw = tenureClassSw;
+    }
 }

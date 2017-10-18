@@ -14,43 +14,49 @@ import javax.persistence.*;
 @Table(name = "share_type")
 public class ShareType implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static final int SHARE_MULTIPLE_COMMON = 1;
+    public static final int SHARE_SINGLE = 2;
+    public static final int SHARE_MULTIPLE_JOINT = 3;
+    public static final int SHARE_ADMINISTRATOR = 4;
+    public static final int SHARE_GUARDIAN = 5;
+    public static final int SHARE_INSTITUTION = 6;
 
-	@Id
-	private int gid;
+    @Id
+    private int gid;
 
-	@Column(name = "share_type", nullable = false)
-	private String shareType;
-	
-	@Column(name = "share_type_sw")
-	private String shareType_sw;
+    @Column(name = "share_type", nullable = false)
+    private String shareType;
 
-	public ShareType() {
-		super();
-	}
+    @Column(name = "share_type_sw")
+    private String shareType_sw;
 
-	public int getGid() {
-		return gid;
-	}
+    public ShareType() {
+        super();
+    }
 
-	public void setGid(int gid) {
-		this.gid = gid;
-	}
+    public int getGid() {
+        return gid;
+    }
 
-	public String getShareType() {
-		return shareType;
-	}
+    public void setGid(int gid) {
+        this.gid = gid;
+    }
 
-	public void setShareType(String shareType) {
-		this.shareType = shareType;
-	}
+    public String getShareType() {
+        return shareType;
+    }
 
-	public String getShareType_sw() {
-		return shareType_sw;
-	}
+    public void setShareType(String shareType) {
+        this.shareType = shareType;
+    }
 
-	public void setShareType_sw(String shareType_sw) {
-		this.shareType_sw = shareType_sw;
-	}
-	
+    public String getShareType_sw() {
+        return shareType_sw;
+    }
+
+    public void setShareType_sw(String shareType_sw) {
+        this.shareType_sw = shareType_sw;
+    }
+
 }

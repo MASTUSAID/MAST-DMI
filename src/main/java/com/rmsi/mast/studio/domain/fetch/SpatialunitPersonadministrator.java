@@ -15,8 +15,8 @@ public class SpatialunitPersonadministrator implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SPATIAL_PERSON_ADMIN_ID_GENERATOR", sequenceName = "spatialunit_personadministrator_seq")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SPATIAL_PERSON_ADMIN_ID_GENERATOR")
+	@SequenceGenerator(name = "SPATIAL_PERSON_ADMIN_ID_GENERATOR", sequenceName = "spatialunit_personadministrator_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SPATIAL_PERSON_ADMIN_ID_GENERATOR")
 	private Long gid;
 
 	//bi-directional many-to-one association to PersonAdministrator

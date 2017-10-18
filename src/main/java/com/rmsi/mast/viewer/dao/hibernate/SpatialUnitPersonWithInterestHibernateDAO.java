@@ -12,40 +12,32 @@ import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
 import com.rmsi.mast.viewer.dao.SpatialUnitPersonWithInterestDao;
 
-
-
 @Repository
 public class SpatialUnitPersonWithInterestHibernateDAO extends GenericHibernateDAO<SpatialunitPersonwithinterest, Long>
-implements SpatialUnitPersonWithInterestDao {
-	private static final Logger logger = Logger.getLogger(LandRecordsHibernateDAO.class);
+        implements SpatialUnitPersonWithInterestDao {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<SpatialunitPersonwithinterest> findByUsin(Long usin) {
+    private static final Logger logger = Logger.getLogger(LandRecordsHibernateDAO.class);
 
-		try {
-			
-			Query query = getEntityManager().createQuery("Select sp from SpatialunitPersonwithinterest sp where sp.usin = :usin order by sp.id asc ");
-			List<SpatialunitPersonwithinterest> personinterest = query.setParameter("usin", usin).getResultList();
-			
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<SpatialunitPersonwithinterest> findByUsin(Long usin) {
 
-			if(personinterest.size() > 0){
-				return personinterest;
-			}		
-			else
-			{
-				return new ArrayList<SpatialunitPersonwithinterest>();
-			}
-		} catch (Exception e) {
+        try {
 
-			logger.error(e);
-			return new ArrayList<SpatialunitPersonwithinterest>();
-		}
+            Query query = getEntityManager().createQuery("Select sp from SpatialunitPersonwithinterest sp where sp.usin = :usin order by sp.id asc ");
+            List<SpatialunitPersonwithinterest> personinterest = query.setParameter("usin", usin).getResultList();
 
-	}
-	
+            if (personinterest.size() > 0) {
+                return personinterest;
+            } else {
+                return new ArrayList<SpatialunitPersonwithinterest>();
+            }
+        } catch (Exception e) {
+
+            logger.error(e);
+            return new ArrayList<SpatialunitPersonwithinterest>();
+        }
+
+    }
+
 }
-
-
-
-

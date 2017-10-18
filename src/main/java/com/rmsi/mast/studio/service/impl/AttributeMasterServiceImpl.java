@@ -14,90 +14,85 @@ import com.rmsi.mast.studio.domain.AttributeCategory;
 import com.rmsi.mast.studio.domain.AttributeMaster;
 import com.rmsi.mast.studio.domain.DatatypeId;
 import com.rmsi.mast.studio.service.AttributeMasterService;
-import com.rmsi.mast.viewer.web.mvc.LandRecordsController;
 
 @Service
-public class AttributeMasterServiceImpl implements AttributeMasterService 
-{
-	
-	private static final Logger logger = Logger.getLogger(AttributeMasterServiceImpl.class);
-	
-	@Autowired
-	private AttributeMasterDAO attributemasterDAO;
+public class AttributeMasterServiceImpl implements AttributeMasterService {
 
-	@Autowired
-	private DataTypeIdDAO dataTypeIdDAO;
-	
-	@Autowired
-	private AttributeCategoryDAO attributecategoryDAO;
+    private static final Logger logger = Logger.getLogger(AttributeMasterServiceImpl.class);
 
-	@Autowired
-	private ProjectAttributeDAO  projectAttributeDAO;
-	
-	@Override
-	public DatatypeId findDataTypeById(long id) 
-	{	
-		return dataTypeIdDAO.findById(id, false);
-		
-	}
-	
-	@Override
-	public AttributeMaster addAttributeMaster(AttributeMaster attributemaster) {
-		try {
-			return attributemasterDAO.makePersistent(attributemaster);
-		} catch (Exception e) {
-			logger.error(e);
-		}
-		return null;
-	}
+    @Autowired
+    private AttributeMasterDAO attributemasterDAO;
 
-	@Override
-	public List<AttributeMaster> findAllAttributeMasater() {
-		return attributemasterDAO.findAllAttributeMaster();
-	}
+    @Autowired
+    private DataTypeIdDAO dataTypeIdDAO;
 
-	@Override
-	public boolean deleteAttribute(Long id) {
-		return attributemasterDAO.deleteEntry(id);
-	}
+    @Autowired
+    private AttributeCategoryDAO attributecategoryDAO;
 
-	@Override
-	public AttributeCategory findCategoryById(long id) {
-		return attributecategoryDAO.findById(id, false);
-	}
+    @Autowired
+    private ProjectAttributeDAO projectAttributeDAO;
 
-	@Override
-	public List<AttributeMaster> displaySelectedCategory(Long id) {
-		return attributemasterDAO.selectedCategory(id);
-		
-	}
+    @Override
+    public DatatypeId findDataTypeById(long id) {
+        return dataTypeIdDAO.findById(id, false);
 
-	@Override
-	public List<AttributeMaster> displayAttribute(Long uid) {
-		return attributemasterDAO.selectedList(uid);
-	}
+    }
 
-	@Override
-	public boolean checkduplicate(long categoryId, String alias,String fieldName) {
-		return attributemasterDAO.duplicatevalidate(categoryId , alias, fieldName);
-	}
+    @Override
+    public AttributeMaster addAttributeMaster(AttributeMaster attributemaster) {
+        try {
+            return attributemasterDAO.makePersistent(attributemaster);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return null;
+    }
 
-	@Override
-	public boolean checkdeleteAttribute(Long id) {
-		return projectAttributeDAO.checkdeleteAttribute(id);
-	}
+    @Override
+    public List<AttributeMaster> findAllAttributeMasater() {
+        return attributemasterDAO.findAllAttributeMaster();
+    }
 
-	@Override
-	public List<AttributeMaster> findbyAttributeId(Long id) {
-		return attributemasterDAO.findByAttributeId(id);
-	}
+    @Override
+    public boolean deleteAttribute(Long id) {
+        return attributemasterDAO.deleteEntry(id);
+    }
 
-	@Override
-	public boolean checkeditduplicate(long id,long categoryId, String alias,
-			String fieldName) {
-		return attributemasterDAO.duplicateEditvalidate(id,categoryId , alias, fieldName);
-	}
+    @Override
+    public AttributeCategory findCategoryById(long id) {
+        return attributecategoryDAO.findById(id, false);
+    }
 
-	
+    @Override
+    public List<AttributeMaster> displaySelectedCategory(Long id) {
+        return attributemasterDAO.selectedCategory(id);
+
+    }
+
+    @Override
+    public List<AttributeMaster> displayAttribute(Long uid) {
+        return attributemasterDAO.selectedList(uid);
+    }
+
+    @Override
+    public boolean checkduplicate(long categoryId, String alias, String fieldName) {
+        return attributemasterDAO.duplicatevalidate(categoryId, alias, fieldName);
+    }
+
+    @Override
+    public boolean checkdeleteAttribute(Long id) {
+        return projectAttributeDAO.checkdeleteAttribute(id);
+    }
+
+    @Override
+    public List<AttributeMaster> findbyAttributeId(Long id) {
+        return attributemasterDAO.findByAttributeId(id);
+    }
+
+    @Override
+    public boolean checkeditduplicate(long id, long categoryId, String alias,
+            String fieldName) {
+        return attributemasterDAO.duplicateEditvalidate(id, categoryId, alias, fieldName);
+    }
+
 }
-

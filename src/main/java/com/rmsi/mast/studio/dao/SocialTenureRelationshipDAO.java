@@ -11,6 +11,8 @@ public interface SocialTenureRelationshipDAO extends GenericDAO<SocialTenureRela
 	List<SocialTenureRelationship> findbyUsin(Long id);
 
 	List<SocialTenureRelationship> findByGid(Integer id);
+        
+        SocialTenureRelationship getSocialTenure(long id);
 
 	boolean deleteTenure(Long id);
 

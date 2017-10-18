@@ -17,7 +17,6 @@ div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,block
 	{
 	margin: 0;
 	padding: 0;
-	
 }
 
 h1 {
@@ -110,7 +109,7 @@ border:0px;
 }
 
 .loader {
-	left: 30px;
+	left: 200px;
 	position: absolute;
 	top: 104px;
 	z-index: 111;
@@ -120,7 +119,6 @@ div#container {
 	position: relative; /* needed for footer positioning*/
 	margin: 0 auto; /* center, not in IE5 */
 	width: 100%;
-	background: #f0f0f0;
 	height: auto !important; /* real browsers */
 	height: 100%; /* IE6: treaded as min-height*/
 	min-height: 100%; /* real browsers */
@@ -153,7 +151,7 @@ padding:0;
 	margin: 0;
 	height:100%;
 	overflow: hidden;	
-	/*background: #98BCDA;*/
+        background: #FFFFFF;
 	float:left;
 	width:100%;
 	whitespace: nowrap;
@@ -168,134 +166,6 @@ padding:0;
 	overflow: hidden;
 	background: #ffffff;
 	
-}
-
-#sidebar {
-	background:#d9eafe url(../../images/viewer/bg-Sidebar.gif) repeat-x; 
-	float: left;
-	height: 89%;
-	/*width: 382px;*/
-	width: 378px;
-	top: 0px;
-	border-top: 1px solid #EEEEEE;
-	overflow: auto;
-	left: 0px;
-	margin-top: 0px;
-	z-index: 1111;
-}
-
-#bottombar {
-	background: none repeat scroll 0 0 #EEEEEE;
-	border-top: 1px solid #EEEEEE;
-	float: right;
-	height: 38%;
-	/*left: 382px;*/
-	overflow: auto;
-	position: absolute;
-	/*top: 436px;*/
-	bottom: 0px;
-	*bottom: -8px;
-	width: 890px;
-	z-index: 1010;
-	margin-bottom:0.49em;
-	overflow-y:hidden;
-	width:100%;
-	left:-3px;
-}
-
-.collapse_left {
-	background-image: url("../../images/viewer/Slide-left.png");
-	width: 25px;
-	height: 26px;
-	background-repeat: no-repeat;
-	float: left;
-	font-weight: bold;
-	margin-top: 250px;
-	padding: 2px;
-	position: absolute;
-	z-index: 1111;
-	
-}
-
-.collapse_right {
-	background-image: url("../../images/viewer/slide-right.png");
-	width: 25px;
-	height: 26px;
-	background-repeat: no-repeat;
-	float: left;
-	font-weight: bold;
-	margin-top: 250px;
-	padding: 2px;
-	position: absolute;
-	z-index: 1111;
-}
-
-
-
-
-
-.poweredBy
-{
-	background-image: url("../../images/viewer/RMSI_logo.png");
-	width: 84px;
-	height: 34px;
-	background-repeat: no-repeat;
-	float: right;
-	/*left: 800px;		By Aparesh*/
-	right: 14px;
-	padding: 0px;
-	position: absolute;
-	text-align: center;
-	bottom: -7px;
-	z-index: 1009;
-	*z-index: 801;
-	*background-image: url("../../images/viewer/RMSI_logo.png");
-	*height: 19px;
-	*width: 138px;
-	*bottom: 0px;
-}
-
-
-
-
-
-
-
-
-
-.bottom_collapse {
-	background-image: url("../../images/viewer/slide-up.png");
-	width: 34px;
-	height: 25px;
-	background-repeat: no-repeat;
-	float: right;
-	font-weight: bold;
-	/*left: 800px;		By Aparesh*/
-	left: 410px;
-	margin-top: 306px;
-	padding: 0px;
-	position: absolute;
-	text-align: center;
-	bottom: 0px;
-	z-index: 1111;
-	*z-index:99999;	
-}
-
-.bottom_collapse_down {
-	background-image: url("../../images/viewer/slide-down.png");
-	width: 34px;
-	height: 25px;
-	background-repeat: no-repeat;
-	float: right;
-	font-weight: bold;
-	/*left: 800px;		By Aparesh*/
-	left: 410px;
-	margin-top: 306px;
-	padding: 0px;
-	position: absolute;
-	text-align: center;
-	bottom: 0px;
-	z-index: 1111;
 }
 
 #shadowVer div {
@@ -641,9 +511,9 @@ a.fg-button {
 }
 
 .ui-dialog {
-/* 	background: none repeat scroll 0 0 /*#5B5B5B*/   #aaaaaa; */
 	-webkit-box-shadow: 4px 4px 2px #E6E6E6; /* Safari and Chrome */
 	box-shadow: 4px 4px 2px #E6E6E6;
+        z-index: 1100 !important;
 }
 
 .ui-dialog  .ui-dialog-content {
@@ -790,35 +660,6 @@ select.int {
 	height: 30px;
 }
 
-.olControlOverviewMapMaximizeButton {
-	bottom: 15px;
-	position:relative;
-	z-index:1005;
-	*z-index:1090;
-}
-
-.olControlOverviewMapMinimizeButton {
-	bottom: 15px;
-	z-index:1005;
-	*z-index:9999999;
-}
-
-.olControlOverviewMapElement {
-	background-color: #FFFFFF;
-	border: 1px solid #DDDDDD;
-	border-radius: 0 0 0 0;
-	padding: 10px 18px 10px 10px;
-	opacity: 0.9;
-	filter: alpha(opacity =   90);
-}
-
-div.olMap {
-	background: none repeat scroll 0 0 #98BCDA;
-	cursor: default;
-	margin: 0 !important;
-	padding: 0 !important;
-	z-index: 0;
-}
 /********* custom dialog *********/
 .dialog-v {
 	padding: 0 10px;
@@ -1446,7 +1287,7 @@ th img {
 }
 
 .celladjust_one {
-	color:##00254F;
+	color:#00254F;
 	padding-top: 5px;
 	padding-left: 5px;
 	font-weight: bold;
@@ -1559,7 +1400,7 @@ overflow:hidden;
 	/*top: 125px;	Aparesh*/
 	width: 100%;
 	margin-left: -8px;
-	z-index: 1111;
+	z-index: 101;
 }
 
 /******************  Info popup ********************/
@@ -1965,7 +1806,7 @@ button.mapbl-button {
 	right: 0;
 	width: 70%;
 	border-right: 1px solid #FFFFFF;
-	z-index: 999;
+	z-index: 99;
 }
 
 .scaleline-c {
@@ -1985,7 +1826,7 @@ button.mapbl-button {
 }
 
 .olControlScale {
-	bottom: 15px;
+	bottom: 7px;
 	color: #000000;
 	display: block;
 	font-size: smaller;
@@ -2106,7 +1947,7 @@ input.btn-dyna:hover {
 
 .markuptexttooltip {
 	position: absolute;
-	z-index: 1000;
+	z-index: 100;
 }
 /*-------------------------------------*/
 .layerwidth_cross {
@@ -2132,35 +1973,10 @@ overflow:hidden;
 line-height:1.3em;
 }
 
-
-
 #header .widthheader {
 	width: 100%;
 	height:69px;
-	overflow:hidden;
-	//background:url('../../images/viewer/bg-picture.jpg') no-repeat top right; 
-	
-}
-
-.olControlScaleLine {
-	bottom: 10px;
-	display: block;
-	font-size: xx-small;
-	left: 10px;
-	font-weight: bold;
-	color: black;
-	font-size: 0.8em;
-	cursor: text;
-	}
-
-div.olControlMousePosition {
-	bottom: 15px;
-	color: black;
-	display: block;
-	font-size: 0.8em;
-	font-weight: bold;
-	right: 40px;
-	cursor: text;
+	overflow:hidden;	
 }
 
 .cellcolor_text {
@@ -2306,10 +2122,6 @@ div.olControlMousePosition {
 	padding: 0;
 }
 
-.ui-widget-header {
-/* 	background: none repeat scroll 0 0 /*#FFFFFF*/   #aaaaaa; */
-}
-
 .ui-tabs .ui-tabs-panel {
 	background: none repeat scroll 0 0 transparent;
 	border: 0px solid #EEEEEE;
@@ -2353,23 +2165,79 @@ div.olControlMousePosition {
 .layer-td-one {
 	padding-right: 0px;
 }
-/*Commented by Amitabh for generic cursors
-.olControlDragPanActive {
-	cursor: url(../cursors/pan.cur) 16 16, url(../cursors/pan.cur), auto;
+
+#sidebar {
+	background:#d9eafe url(../../images/viewer/bg-Sidebar.gif) repeat-x; 
+	float: left;
+	height: 89%;
+	/*width: 382px;*/
+	width: 378px;
+	top: 0px;
+	border-top: 1px solid #EEEEEE;
+	overflow: auto;
+	left: 0px;
+	margin-top: 0px;
+	z-index: 1099;
 }
 
-.olControlDragPanActive.olDragDown {
-	cursor: url(../cursors/pandown.cur) 16 16, url(../cursors/pandown.cur),
-		auto;
+.collapse_left {
+	background-image: url("../../images/viewer/Slide-left.png");
+	width: 25px;
+	height: 26px;
+	background-repeat: no-repeat;
+	float: left;
+	font-weight: bold;
+	margin-top: 250px;
+	padding: 2px;
+	position: absolute;
+	z-index: 1099;
+	
 }
 
-.olControlZoomBoxActive {
-	cursor: crosshair;
+.collapse_right {
+	background-image: url("../../images/viewer/slide-right.png");
+	width: 25px;
+	height: 26px;
+	background-repeat: no-repeat;
+	float: left;
+	font-weight: bold;
+	margin-top: 250px;
+	padding: 2px;
+	position: absolute;
+	z-index: 1099;
 }
 
-.zoomoutActive {
-	cursor: crosshair;
-}*/
+.bottom_collapse {
+	background-image: url("../../images/viewer/slide-up.png");
+	width: 34px;
+	height: 25px;
+	background-repeat: no-repeat;
+	float: right;
+	font-weight: bold;
+	/*left: 800px;		By Aparesh*/
+	left: 410px;
+	margin-top: 306px;
+	padding: 0px;
+	position: absolute;
+	text-align: center;
+	bottom: 0px;
+	z-index: 1099;
+}
+
+.bottom_collapse_down {
+	background-image: url("../../images/viewer/slide-down.png");
+	width: 34px;
+	height: 25px;
+	background-repeat: no-repeat;
+	float: right;
+	font-weight: bold;
+	margin-top: 306px;
+	padding: 0px;
+	position: absolute;
+	text-align: center;
+	bottom: 0px;
+	z-index: 1099;
+}
 
 .bottom_statusbar {
 	
@@ -2380,7 +2248,97 @@ div.olControlMousePosition {
 	width: 100%;
 	opacity: 0.8;
 	filter: alpha(opacity = 60);
-	z-index: 950;
+	z-index: 1097;
+}
+
+#bottombar {
+	background: none repeat scroll 0 0 #EEEEEE;
+	border-top: 1px solid #EEEEEE;
+	float: right;
+	height: 38%;
+	/*left: 382px;*/
+	overflow: auto;
+	position: absolute;
+	/*top: 436px;*/
+	bottom: 0px;
+	*bottom: -8px;
+	width: 890px;
+	z-index: 1099;
+	margin-bottom:0.49em;
+	overflow-y:hidden;
+	width:100%;
+}
+
+.olControlPanZoomBar, 
+.olControlScaleLine,
+.olControlScale,
+.olControlMousePosition,
+.olControlOverviewMapMaximizeButton,
+.olControlOverviewMapMinimizeButton,
+.olControlOverviewMap {
+    z-index: 1098 !important;
+}
+
+.olControlScaleLine {
+	bottom: 10px;
+	display: block;
+	font-size: xx-small;
+	left: 10px;
+	font-weight: bold;
+	color: black;
+	font-size: 0.8em;
+	cursor: text;
+        z-index: 1098 !important;
+	}
+
+div.olControlMousePosition {
+	bottom: 7px;
+	color: black;
+	display: block;
+	font-size: 0.8em;
+	font-weight: bold;
+	right: 40px;
+	cursor: text;
+        z-index: 1098 !important;
+}
+
+.olControlOverviewMapMaximizeButton {
+	bottom: 15px;
+	position:relative;
+}
+
+.olControlOverviewMapMinimizeButton {
+	bottom: 15px;
+}
+
+.olControlOverviewMapElement {
+	background-color: #FFFFFF;
+	border: 1px solid #DDDDDD;
+	border-radius: 0 0 0 0;
+	padding: 10px 18px 10px 10px;
+	opacity: 0.9;
+	filter: alpha(opacity =   90);
+}
+
+div.olMap {
+	background: none repeat scroll 0 0 #98BCDA;
+	cursor: default;
+	margin: 0 !important;
+	padding: 0 !important;
+	z-index: 0;
+}
+
+.olMapViewport div:first-child, .olMapViewport .olLayerDiv, .olMapViewport .olLayerDiv *{
+    /**z-index: 500 !important;*/
+}
+
+
+.olControlInfoActive {
+	cursor: pointer;
+}
+
+.olControlDefaultActive {
+	cursor: default;
 }
 
 .ui-widget-content a {
@@ -2391,13 +2349,6 @@ textarea {
 	resize: none;
 }
 
-.olControlInfoActive {
-	cursor: pointer;
-}
-
-.olControlDefaultActive {
-	cursor: default;
-}
 
 .mssdisplay {
 
@@ -2513,7 +2464,7 @@ ul.menuBar li ul {
 	top: 1em;
 	visibility: hidden;
 	width: 10em;
-	z-index: 1000;
+	z-index: 100;
 	background-color: #fff;
 	border: 1px solid #000;
 	border-top: 0;
@@ -2538,7 +2489,7 @@ ul.menuBar li ul li a {
 	margin: 0;
 	padding: 0 0 0 5%;
 	width: 100%;
-	width: 105% %;
+	width: 105%;
 	color: #000;
 }
 
@@ -2553,7 +2504,7 @@ ul.menuBar li.submenu:hover ul {
 
 ul.menuBar li.submenu:hover ul li {
 	color: #c00;
-	margin: 5;
+	margin: 5px;
 }
 
 ul.menuBar li.submenu:hover ul li:hover {
@@ -2625,7 +2576,10 @@ table.tablesorter {
     width: 100%;
 	border: 1px solid #dbdbdb;
 	border-collapse: collapse; /* 'cellspacing' equivalent */
+}
 
+table.tablesorter tr:hover td{
+    background: #dbedff;
 }
 
 table.tablesorter td:last-child {
@@ -3417,7 +3371,7 @@ background: transparent url('../../images/viewer/create_legal.png') left top no-
 
 .backtoParent {
 position: absolute;
-z-index: 1111;
+z-index: 101;
 text-align: right;
 right: 10px;
 margin: 0.2em 0 0 0;
@@ -3676,8 +3630,6 @@ background: transparent url('../../images/viewer/existing_issue_24.png') no-repe
  
 }
 
-
-
 .modal {
     display:    none;
     position:   fixed;
@@ -3692,8 +3644,6 @@ background: transparent url('../../images/viewer/existing_issue_24.png') no-repe
                 no-repeat;
 }
 
-/* When the body has the loading class, we turn
-   the scrollbar off with overflow:hidden */
 body.loading {
     overflow: hidden;   
 }

@@ -24,8 +24,8 @@ public class Surveyprojectattribute implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "SURVEYPROJECTATTRIBUTES_UID_GENERATOR", sequenceName = "SURVEYPROJECTATTRIBUTES_UID_SEQ")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "SURVEYPROJECTATTRIBUTES_UID_GENERATOR")
+	@SequenceGenerator(name = "SURVEYPROJECTATTRIBUTES_UID_GENERATOR", sequenceName = "SURVEYPROJECTATTRIBUTES_UID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SURVEYPROJECTATTRIBUTES_UID_GENERATOR")
 	private Long uid;
 
 	public Long getUid() {

@@ -22,8 +22,8 @@ public class ProjectRegion implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="PROJECT_REGION_GID_GENERATOR", sequenceName="PROJECT_REGION_GID_SEQ")
-	@GeneratedValue(strategy=GenerationType.AUTO, generator="PROJECT_REGION_GID_GENERATOR")
+	@SequenceGenerator(name="PROJECT_REGION_GID_GENERATOR", sequenceName="PROJECT_REGION_GID_SEQ", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROJECT_REGION_GID_GENERATOR")
 	private Integer gid;
 
 	@Column(name="country_name")

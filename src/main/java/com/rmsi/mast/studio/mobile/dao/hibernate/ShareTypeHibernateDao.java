@@ -42,5 +42,4 @@ public class ShareTypeHibernateDao extends
 		}
 		return null;
 	}
-
 }

@@ -56,7 +56,7 @@
 
 
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName" value="java:comp/env/jdbc/Cloudburst" />
+		<property name="jndiName" value="java:comp/env/jdbc/mast" />
 	</bean>
 
 
@@ -102,14 +102,6 @@
 		<!-- Changes the locale when a 'locale' request parameter is sent; e.g. 
 			/?locale=de -->
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
-		<!-- <mvc:interceptor> <mvc:mapping path="/" /> <bean class="com.rmsi.cloudburst.studio.security.RequestAuthenticationInterceptor" 
-			/> </mvc:interceptor> -->
-			<mvc:interceptor><mvc:mapping path="/studio" />
-				<bean class="com.rmsi.mast.security.URLInterceptor" />
-			</mvc:interceptor>
-			<mvc:interceptor><mvc:mapping path="/viewer" />
-				<bean class="com.rmsi.mast.security.URLInterceptor" />
-			</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
