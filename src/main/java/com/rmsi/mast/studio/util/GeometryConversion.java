@@ -1,5 +1,6 @@
 package com.rmsi.mast.studio.util;
 
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,8 +16,10 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
+
 import org.apache.log4j.Logger;
 import org.hibernate.annotations.common.util.impl.Log_$logger;
+import org.postgis.MultiLineString;
 
 /**
  * This class will be used in converting Geometry Type to String and vice-versa
@@ -89,5 +92,7 @@ public class GeometryConversion {
 
         return new Point(getCoordinateSequence(wkt), new GeometryFactory(new PrecisionModel(), 4326));
     }
+    
+   
 
 }

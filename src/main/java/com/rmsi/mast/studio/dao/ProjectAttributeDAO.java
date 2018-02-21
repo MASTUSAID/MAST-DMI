@@ -24,9 +24,7 @@ public interface ProjectAttributeDAO extends GenericDAO<Surveyprojectattribute, 
 
 	void deleteByProjectName(String name);
 
-	
-
-	
+    List<Surveyprojectattribute> displaySelectedCategoryById(Long uid,String name, Integer id);
 
 
 }

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTemp;
 import com.rmsi.mast.viewer.dao.SpatialUnitTempDao;
@@ -17,10 +19,13 @@ public class SpatialUnitTempHibernateDAO extends GenericHibernateDAO<SpatialUnit
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<SpatialUnitTemp> findOrderedSpatialUnit(String defaultProject, int startfrom) {
+    public List<SpatialUnitTemp> findOrderedSpatialUnit(String defaultProject, int id) {
         try {
-            Query query = getEntityManager().createQuery("Select st from SpatialUnitTemp st where st.project = :project_name and st.active=true order by st.usin desc");
-            List<SpatialUnitTemp> spatialUnitlst = query.setParameter("project_name", defaultProject).setFirstResult(startfrom).setMaxResults(20).getResultList();
+        	//Query query = getEntityManager().createQuery("Select st from SpatialUnitTemp st where st.projectnameid = :Id and st.isactive=true order by st.usin desc");
+        	// List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).getResultList();
+            Query query = getEntityManager().createQuery("Select st from SpatialUnitTemp st where st.projectnameid = :Id and st.isactive=true");
+            //List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).setFirstResult(startfrom).setMaxResults(20).getResultList();
+            List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).getResultList();
 
             if (spatialUnitlst.size() > 0) {
                 return spatialUnitlst;
@@ -33,22 +38,37 @@ public class SpatialUnitTempHibernateDAO extends GenericHibernateDAO<SpatialUnit
         }
     }
 
-    @Override
-    public Integer AllSpatialUnitTemp(String defaultProject) {
-        Integer count = 0;
+   
+    
+   /* @Override
+    public List<SpatialUnitTemp> AllSpatialUnitTemp(Integer id) {
+       // Integer count = 0;
         try {
-            Query query = getEntityManager().createQuery("Select count(*) from SpatialUnitTemp st where st.project = :project_name and st.active=true");
-            List<?> spatialUnitlst = query.setParameter("project_name", defaultProject).getResultList();
+            //Query query = getEntityManager().createQuery("Select count(*) from SpatialUnitTemp st where st.project = :project_name and st.active=true");
+            Query query = getEntityManager().createQuery("Select count(*) from SpatialUnit st where st.projectnameid = :Id and st.isactive=true");
+            List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).getResultList();
+        	 Query query = getEntityManager().createQuery("Select st from SpatialUnitTemp st where st.projectnameid = :Id and st.isactive=true");
+        	    List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).getResultList();
 
             if (null != spatialUnitlst && spatialUnitlst.size() > 0) {
 
                 count = Integer.valueOf(spatialUnitlst.get(0).toString());
             }
+        	    if (spatialUnitlst.size() > 0) {
+                    return spatialUnitlst;
+                } else {
+                    return null;
+                }  
+        	    
         } catch (Exception e) {
             logger.error(e);
         }
-        return count;
-    }
+        return null;
+    }*/
+    
+    
+    
+    
 
     @SuppressWarnings("unchecked")
     @Override
@@ -108,5 +128,44 @@ public class SpatialUnitTempHibernateDAO extends GenericHibernateDAO<SpatialUnit
         return false;
 
     }
+
+	@Override
+	public List<SpatialUnitTemp> AllSpatialUnitTemp(Integer id) {
+		// TODO Auto-generated method stub
+		
+		try {
+            //Query query = getEntityManager().createQuery("Select count(*) from SpatialUnitTemp st where st.project = :project_name and st.active=true");
+           /* Query query = getEntityManager().createQuery("Select count(*) from SpatialUnit st where st.projectnameid = :Id and st.isactive=true");
+            List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).getResultList();*/
+        	 Query query = getEntityManager().createQuery("Select st from SpatialUnitTemp st where st.projectnameid = :Id and st.isactive=true");
+        	    List<SpatialUnitTemp> spatialUnitlst = query.setParameter("Id", id).getResultList();
+
+           /* if (null != spatialUnitlst && spatialUnitlst.size() > 0) {
+
+                count = Integer.valueOf(spatialUnitlst.get(0).toString());
+            }*/
+        	    if (spatialUnitlst.size() > 0) {
+                    return spatialUnitlst;
+                } 
+        	    else {
+                    return null;
+                }  
+        	    
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return null;
+    }
+
+	@Override
+	public Integer AllSpatialUnitTemp(String defaultProject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
+		
+	
+
+	
 
 }

@@ -10,10 +10,11 @@ import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 public interface ProjectDAO extends GenericDAO<Project, Long> {
 	
 	Project findByName(String name);
+	Project findByProjectId(Integer name);
 
 	List<String> getProjectNames();
 	
-	boolean deleteProject(String name);
+	boolean deleteProject(Integer id);
 	
 	List<Project> findAllProjects();
 	
@@ -24,4 +25,6 @@ public interface ProjectDAO extends GenericDAO<Project, Long> {
 	List<Project> getProjectsByOwner(String email);
 
 	boolean checkduplicatename(String projectName);
+
+	List<Project> getAllProjectsNames();
 }

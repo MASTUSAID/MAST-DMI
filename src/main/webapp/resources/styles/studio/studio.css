@@ -1,13 +1,5 @@
-    font-family: 'Arial';
-    src: url('../../fonts/OpenSans-Light-webfont.eot');
-    src: url('../../fonts/OpenSans-Light-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../../fonts/OpenSans-Light-webfont.woff') format('woff'),
-         url('../../fonts/OpenSans-Light-webfont.ttf') format('truetype'),
-         url('../../fonts/OpenSans-Light-webfont.svg#OpenSansLight') format('svg');
-    font-weight: normal;
-    font-style: normal;
- 
-}
+
+
 
 
 
@@ -17,12 +9,12 @@ html,body {
 	height: 100%; /* needed for container min-height */
 	width: 100%;
 	background: url(../../images/background_image.png) repeat-x;
-	a
+
 	color: #666;
 	overflow:hidden;
 	
 	/*font-family:arial,helvetica,clean,sans-serif;*/
-	font-family: Lucida Grande, Lucida Sans, Arial, sans-serif;
+	
 	font-size:12px;
 	*font-size:small;
 	*font:x-small
@@ -120,12 +112,12 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 
 table.tablesorter td
 {
-	border-right:1px solid #f2f3f3;
+	border-right:1px solid #ddd;
 }
 
 .ui-widget-content {
     background: none repeat scroll 0 0 #F9F9F9;
-    border: 0px solid #DDDDDD;
+    border: 1px solid #362e58;
     color: #000;
 }
 
@@ -158,12 +150,12 @@ table.tablesorter td
 }
 
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
-    color: #666666;
+        color: #004289;
     text-decoration: none;
 }
 
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
-    /*color: #CC2127;*/
+  color: #fff;
     text-decoration: none;
 }
 
@@ -339,7 +331,7 @@ top:25px;
 
 table.tablesorter tr.even:hover td,
 table.tablesorter tr.odd:hover td {
-    background-color: lightGoldenRodYellow;
+    background-color: #fcf2c8;
 }
 
 
@@ -359,8 +351,9 @@ table.tablesorter tr.odd:hover td {
 }
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-    font-family: "OpenSansLight";
-    font-size: 1em;
+   
+    font-size: 14px;
+	font: normal 14px 'titilliumregular', sans-serif;
 }
 
 /* project.html css fix */
@@ -416,7 +409,7 @@ table.tablesorter tr.odd:hover td {
 	/* background-color: #DDDDDD; */
 }
 #project_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #project_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -437,7 +430,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #layer_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #layer_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -458,7 +451,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #layergroup_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #layergroup_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -479,7 +472,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #user_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px; 
+	margin-bottom:0.0em; width:30%;padding-left:35%; 
 }
 #user_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -500,7 +493,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #masterAttr_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #masterAttr_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -520,7 +513,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #projectData_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #projectData_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -541,7 +534,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #landrecords_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%; padding-left:450px;
+	margin-bottom:0.0em; width:30%; padding-left:35%;
 	background:#f00!important;
 }
 #landrecords_pagerDiv .cell_adjust{
@@ -565,7 +558,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #role_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #role_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -589,7 +582,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #bookmark_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #bookmark_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -610,7 +603,7 @@ table.tablesorter tr.odd:hover td {
 	background-color: #DDDDDD;
 }
 #maptip_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #maptip_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;background-color: #DDDDDD;
@@ -633,7 +626,7 @@ table.tablesorter tr.odd:hover td {
 	/*background-color: #DDDDDD;*/
 }
 #calendar_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #calendar_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -735,7 +728,7 @@ overflow:hidden;
 	background-color: #DDDDDD;
 }
 #dbconn_pagerDiv .table_adjust{
-	margin-bottom:0.0em; width:30%;padding-left:320px;
+	margin-bottom:0.0em; width:30%;padding-left:35%;
 }
 #dbconn_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;background-color: #DDDDDD;
@@ -852,10 +845,10 @@ font-weight:bold;
 
 a.btn02 {
     background: transparent url('../../images/viewer/bg_button_a.png') no-repeat scroll top right;
-    color: #004eff;
+    color: #8ac000;
     display: block;
     float: right;
-    font: normal 12px arial, sans-serif;
+
     height: 22px;
     margin-right: 6px;
     padding-right: 5px; /* sliding doors padding */
@@ -863,6 +856,8 @@ a.btn02 {
 	cursor:pointer;
 }
 
+
+a.btn02:hover { color: #d59145!important;}
 a.btnprojectattr {
       display: none;
 
@@ -954,22 +949,27 @@ border:0px;
 
 label.searchLbl
 {
-padding:0.7em 0 0 0;
+padding:0.5em 0 0 0;
+display: none;
 }
 
 
 
 .ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default
 	{
-	background:#e4e4e4 url('../../images/viewer/bggreyHeader.png') left top repeat-x;
-	border: 1px solid #f7f8fa;
+	/*background:#e4e4e4 url('../../images/viewer/bggreyHeader.png') left top repeat-x;
+	border: 1px solid #f7f8fa;*/
+	
+	background: #f7f7f9;
+    border: 1px solid #ddd;
 	}
 	
 	
 	
 	
-	.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #A6C9E2; background:#f7f8fa url('../../images/viewer/active_Blue.png') left bottom repeat-x; font-weight: bold; color: #e17009; }
+	.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #362e58; background: #362e58; font-weight: bold; color: #e17009; }
 	
+
 	.inputint input
 	{
 	width:200px;
@@ -1112,7 +1112,8 @@ overflow-y: auto; /*for vertical scroll bar */
 }
 .labelHeader{
 	color:#00254f;
-	 font-weight:bold;
+	 font-weight:normal;
+	 font-size: 14px;
 }
 
 .deleteLink{
@@ -1132,3 +1133,11 @@ overflow-y: auto; /*for vertical scroll bar */
     vertical-align: middle;
     display: none;
 }
+
+#user_txtSearch{
+background: url(../../images/search.png) no-repeat 5px 3px;
+padding-left: 25px;
+padding-right: 20px;
+
+}
+.searchLbl{ display: none;}.

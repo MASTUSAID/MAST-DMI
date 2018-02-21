@@ -1,44 +1,41 @@
-
-
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import java.util.List;
 
 
 /**
- * The persistent class for the projection database table.
+ * The persistent class for the la_ext_projection database table.
  * 
  */
 @Entity
+@Table(name="la_ext_projection")
 public class Projection implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String code;
-	private String description;
-	private Integer id;
-	private String tenantid;
-	//private Set<Layer> layers;
-	//private Set<Project> projects1;
-	//private Set<Project> projects2;
-
-    public Projection() {
-    }
-
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public String getCode() {
-		return this.code;
+	private Integer projectionid;
+
+	private String description;
+
+	private Boolean isactive;
+
+	@Column(name="projection",unique=true)
+	private String projection;
+
+	public Projection() {
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public Integer getProjectionid() {
+		return this.projectionid;
 	}
 
+	public void setProjectionid(Integer projectionid) {
+		this.projectionid = projectionid;
+	}
 
 	public String getDescription() {
 		return this.description;
@@ -48,57 +45,22 @@ public class Projection implements Serializable {
 		this.description = description;
 	}
 
-
-	public Integer getId() {
-		return this.id;
+	public Boolean getIsactive() {
+		return this.isactive;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
 	}
 
-
-	public String getTenantid() {
-		return this.tenantid;
+	public String getProjection() {
+		return this.projection;
 	}
 
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
+	public void setProjection(String projection) {
+		this.projection = projection;
 	}
 
-	//bi-directional many-to-one association to Layer
-//	@JsonIgnore
-//	@OneToMany(mappedBy="projectionBean")
-//	public Set<Layer> getLayers() {
-//		return this.layers;
-//	}
-//	@JsonIgnore
-//	public void setLayers(Set<Layer> layers) {
-//		this.layers = layers;
-//	}
 	
 
-	//bi-directional many-to-one association to Project
-//	@JsonIgnore
-//	@OneToMany(mappedBy="projection1")
-//	public Set<Project> getProjects1() {
-//		return this.projects1;
-//	}
-//	@JsonIgnore
-//	public void setProjects1(Set<Project> projects1) {
-//		this.projects1 = projects1;
-//	}
-//	
-//
-//	//bi-directional many-to-one association to Project
-//	@JsonIgnore
-//	@OneToMany(mappedBy="projection2")
-//	public Set<Project> getProjects2() {
-//		return this.projects2;
-//	}
-//	@JsonIgnore
-//	public void setProjects2(Set<Project> projects2) {
-//		this.projects2 = projects2;
-//	}
-	
 }

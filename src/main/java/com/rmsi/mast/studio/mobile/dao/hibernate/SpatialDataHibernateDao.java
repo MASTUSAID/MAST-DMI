@@ -35,18 +35,24 @@ public class SpatialDataHibernateDao  extends GenericHibernateDAO<ProjectSpatial
 	}
 
 	@Override
-	public List<ProjectSpatialData> getProjectSpatialDataByProjectId(String projectId) {
-		String query = "select p from ProjectSpatialData p where p.name = :projectId";
-
+	public List<ProjectSpatialData> getProjectSpatialDataByProjectId(Integer projectId) {
+		String query = "select p from ProjectSpatialData p where p.projectnameid = :projectId";
+try{
 		@SuppressWarnings("unchecked")
 		List<ProjectSpatialData> projectSpatialData = getEntityManager().createQuery(query)
 				.setParameter("projectId", projectId).getResultList();
+
 		 
 		if (projectSpatialData != null && projectSpatialData.size() > 0) {
 			return projectSpatialData;
 		}
 
 		return null;
+}
+catch(Exception e){
+	e.printStackTrace();
+	return null;
+}
 	}
 
 }

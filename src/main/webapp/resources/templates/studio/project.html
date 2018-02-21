@@ -157,6 +157,8 @@
                 </table>
             </div>
 
+			
+			<!---
             <h3>
                 <a href="#">Hamlet</a>
             </h3>
@@ -177,6 +179,9 @@
                 <div id=temporaryAdjDiv></div>
 
             </div>
+			
+			-->
+			
 
             <h3>
                 <a href="#">Disclaimer</a>
@@ -245,36 +250,46 @@
             ${name}
             </td>         
             <td>
-            {{if (projectAreas.length>0)}}
-            ${projectAreas[0].countryName}
-            {{/if}}
+			 {{if (projectArea.length)}}
+            {{if (projectArea[0].laSpatialunitgroup1!=null)}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy1!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy1.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>
             <td>
-            {{if (projectAreas.length>0)}}
-            ${projectAreas[0].region}
-            {{/if}}
+			 {{if (projectArea.length)}}
+            {{if (projectArea[0].laSpatialunitgroup2!=null)}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy2!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy2.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>
             <td>
-            {{if (projectAreas.length>0)}}
-            ${projectAreas[0].districtName}
-            {{/if}}
+			 {{if (projectArea.length)}}
+            {{if (projectArea[0].laSpatialunitgroup3!=null)}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy3!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy3.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>
             <td>
-            {{if (projectAreas.length>0)}}
-            ${projectAreas[0].village}
-            {{/if}}
+			 {{if (projectArea.length)}}
+            {{if (projectArea[0].laSpatialunitgroup3!=null)}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy3!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy3.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>  
-            <!-- <td>
-            {{if (projectAreas.length>0)}}
-            ${projectAreas[0].hamlet}
-            {{/if}}
-            </td> --> 
-
             <td align="center">
             <a href="javascript:createEditProject('${name}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
             </td>
             <td align="center">
-            <a href="javascript:deleteProject('${name}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+            <a href="javascript:deleteProject('${name}', '${projectnameid}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
             </td>
             <!--td align="center">
             <a href="javascript:openProjectMapTab('${name}');"><img src="../Content/images/admin/map_preview.png" /></a>
@@ -318,22 +333,33 @@
             <label class="lblint">Projection</label>
             </td>
             <td>    
+			<!--
             {{if (projection)}}
             <input type="textbox" name="projection.code" id="projection" value="${projection.code}" />    
             {{else}}
             <input type="textbox" name="projection.code" id="project_Projection" value="" />        
             {{/if}}
+			-->
+			
+			<select name="projection_code" id = "projection_code">
+              <option  value="">Please Select</option>         
+            </select>
             </td>
 
             <td>
             <label class="lblint">Display Projection</label>
             </td>
             <td>
+			<!--
             {{if (displayProjection)}}  
             <input type="textbox" name="displayProjection.code" id="displayProjection" value="${displayProjection.code}" /> 
             {{else}}
             <input type="textbox" name="displayProjection.code" id="displayProjection" value="" />
             {{/if}}          
+			-->
+			<select name="displayProjection_code" id = "displayProjection_code">
+              <option  value="">Please Select</option>         
+            </select>
             </td>
 
             </tr>
@@ -360,14 +386,14 @@
             <label class="lblint">Zoom Levels</label>
             </td>
             <td>
-            <input type="textbox" name="numzoomlevels" id="numzoomlevels" value="${numzoomlevels}" />        
+            <input type="textbox" name="numzoomlevels" id="numzoomlevels" value="${zoomlevelextent}" />        
 
             </td>
             <td>
             <label class="lblint">Restricted Extent</label>
             </td>
             <td>
-            <input type="textbox" name="restrictedextent" id="restrictedextent" value="${restrictedextent}" />
+            <input type="textbox" name="restrictedextent" id="restrictedextent" value="${minextent}" />
             </td>
 
             </tr>
@@ -376,7 +402,7 @@
             <label class="lblint">Output Format</label>
             </td>
             <td>
-            <select name="outputFormat.name" id="project_outputFormat">
+            <select name="project_outputFormat" id="project_outputFormat">
             <option  value="">Please Select</option>         
             </select>
             </td>
@@ -385,7 +411,7 @@
             </td>
 
             <td>
-            <select name="unit.name" id="project_unit">
+            <select name="project_unit" id="project_unit">
             <option  value="">Please Select</option>			
 
             </select>
@@ -410,10 +436,10 @@
 
             </tr-->
 
+			<!--
             <tr>
-            <!--td>&nbsp;</td-->
-
-            <!--td>
+            <td>&nbsp;</td>
+			<td>
             <input type="hidden" id="active" name="active" value="${active}" />
             {{if (active)}}       
             <input type="checkbox" id="active1" name="active1" value="${active}"  CHECKED onClick="changeActiveValue(this);" />   Active        
@@ -421,7 +447,7 @@
             <input type="checkbox" id="active1" name="active1" value="${active}" onClick="changeActiveValue(this);"/>   Active 
             {{/if}}
 
-            </td-->
+            </td
             <td>&nbsp;</td>
             <td>
             <input type="hidden" id="cosmetic" name="cosmetic" value="${cosmetic}"/>
@@ -439,6 +465,8 @@
             </td>
             </tr>
 
+			-->
+			
             <tr>
             <td>
             <label class="lblint">Active Layer</label>
@@ -473,7 +501,7 @@
         <script id="ProjectTemplateLayergroup" type="text/x-jquery-tmpl">
             <tr>		
             <td  colspan="2">
-            <input type="checkbox" id="${name}" name="selectedLayergroups" value="${name}" class='layergroupCheckbox' onChange="populateActivelayer(this);"/> ${name}
+            <input type="checkbox" id="${layergroupid}" name="selectedLayergroups" value="${layergroupid}" class='layergroupCheckbox' onChange="populateActivelayer(this);"/> ${name}
 
             </td>
 
@@ -486,9 +514,9 @@
         </script>
 
         <script id="ProjectTemplateBaselayer" type="text/x-jquery-tmpl">
-            <tr id="tr-${name}">		
+            <tr id="tr-${baselayerEn}">		
             <td  colspan="2">
-            <input type="checkbox" id="${name}" name="selectedBaselayer" value="${name}" class='baselayerCheckbox' /> ${name}
+            <input type="radio" id="${baselayerid}" name="selectedBaselayer" value="${baselayerid}" class='baselayerCheckbox' /> ${baselayerEn}
             </td>	
 
             <td>
@@ -513,7 +541,7 @@
                 <label class="lblint">Region</label>    
             </td>
             <td>    
-                <select class="pagesize" id="regionId" name="regionId">
+                <select class="pagesize" id="regionId" name="regionId" onchange="getregionval(this);">
                 <option selected="selected"  value="">select</option>            
                 </select>  
             </td>
@@ -521,41 +549,47 @@
     
             <tr>
             <td>
-                <label class="lblint">District</label>  
+                <label class="lblint">Province</label>  
             </td>
             <td>
-                <select class="pagesize" id="districtId" name="districtId">
+                <select class="pagesize" id="districtId" name="districtId" onchange="getcommunetval(this);" >
                 <option selected="selected"  value="">select</option>           
                 </select>
             </td>
             <td>
-                <label class="lblint">Region Code</label>
+                <!-- <label class="lblint">Region </label> -->
+				  <label class="lblint">Commune</label>  
             </td>
             <td>    
-                <input type="textbox" name="regioncode" id="regioncode" value="" /> 
+                <!-- <input type="textbox" name="regioncode" id="regioncode" value="" />  -->
+				<select class="pagesize" id="CommuneId" name="CommuneId" onchange="getplaceval(this);" >
+                <option selected="selected"  value="">select</option>           
+                </select>
             </td>
             </tr>
 
             <tr>
             <td>
-                <label class="lblint">Village</label>
+                <label class="lblint">place</label>
             </td>
             <td>    
-                <select class="pagesize" id="villageId" name="villageId">
+                <select class="pagesize" id="placeId" name="placeId">
                 <option selected="selected"  value="">select</option>
                 </select>  
             </td>
             <td>
-                <label class="lblint">Village certificate number</label> 
+               <label class="lblint">Certificate number</label> <!--Village certificate number -->
+				
             </td>
             <td>
-                <input type="textbox" name="villagecode" id="villagecode" value="" />
+                 <input type="textbox" name="villagecode" id="villagecode" value="" /> 
+				
             </td>
             </tr>
 
             <tr>
             <td>
-                <label class="lblint">Village Postal Code</label> 
+                <label class="lblint">Postal Code</label> <!-- Village Postal Code-->
             </td>
             <td>
                 <input type="textbox" name="villagepostalcode" id="villagepostalcode" value="" />
@@ -570,7 +604,7 @@
     
             <tr>
             <td>
-                <label class="lblint">Village Chairman</label> 
+                <label class="lblint">Authorized Chairman</label> <!-- Village Chairman-->
             </td>
             <td>
                 <input type="textbox" name="villagechairman" id="villagechairmanId" value="" />
@@ -585,7 +619,7 @@
     
             <tr>
             <td>
-                <label class="lblint">Village Chairman Signature</label> 
+                <label class="lblint">Authorized Chairman Signature</label> <!-- Village Chairman Signature-->
             </td>
             <td>
                 <img src="" id="imgSignatureVillageChairman" alt="Signature" class="signatureImage" />
@@ -616,7 +650,7 @@
     
             <tr>
                 <td>
-                    <label class="lblint">District Land Officer</label>
+                    <label class="lblint">Land Officer</label> <!-- District Land Officer-->
                 </td>
                 <td>
                     <input type="textbox" name="districtofficer" id="districtofficerId" value="" />
@@ -631,7 +665,7 @@
     
             <tr>
                 <td>
-                    <label class="lblint">District Land Officer Signature</label>
+                    <label class="lblint">Land Officer Signature</label> <!-- District Land Officer Signature-->
                 </td>
                 <td>
                     <img src="" id="imgSignatureDistrictOfficer" alt="Signature" class="signatureImage" />
@@ -672,15 +706,13 @@
     </script>
 
     <script type="text/javascript">
-        function getvillageval(sel) {
-            alert(sel.value);
-            getHamletOnVillageChange(sel.value);
+        function getcommunetval(sel) {
+            getCommuneOnProvinceChange(sel.value);
         }
     </script>
 
     <script type="text/javascript">
-        function gethamletval(sel) {
-            alert(sel.value);
+        function getplaceval(sel) {
             getHamletOnVillageChange(sel.value);
         }
     </script>

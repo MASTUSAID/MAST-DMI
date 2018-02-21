@@ -4,48 +4,41 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-/**
- * Entity implementation class for Entity: AttributeOptions
- *
- */
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
-@Table(name = "attribute_options")
+@Table(name = "la_ext_attributeoptions")
 public class AttributeOptions implements Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
-		
+	@SequenceGenerator(name="Attribute_option_sequence",sequenceName="la_ext_attributeoptions_attributeoptionsid_seq", allocationSize=1) 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="Attribute_option_sequence") 
+	private Integer attributeoptionsid;
+
 	private String optiontext;
-		
-	@Column(name = "attribute_id")
-	private int attributeId;
+
+	private Integer parentid;
+
+
+	@ManyToOne
+	@JoinColumn(name="attributemasterid")
+	@JsonIgnore
+	private AttributeMaster attributeMaster;
 	
-	@Column(name = "parent_id")
-	private int parentId;
-	
-//	@ManyToOne
-//	@JoinColumn(name ="attribute_id")
-//	private AttributeMaster attributeId;
-		
-	public int getParentId() {
-		return parentId;
+
+	public AttributeOptions() {
+		super();
 	}
 
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
+	public Integer getAttributeoptionsid() {
+		return attributeoptionsid;
 	}
 
-	private String optiontext_second_language;
-
-	public String getOptiontext_second_language() {
-		return optiontext_second_language;
-	}
-
-	public void setOptiontext_second_language(String optiontext_second_language) {
-		this.optiontext_second_language = optiontext_second_language;
+	public void setAttributeoptionsid(Integer attributeoptionsid) {
+		this.attributeoptionsid = attributeoptionsid;
 	}
 
 	public String getOptiontext() {
@@ -56,32 +49,23 @@ public class AttributeOptions implements Serializable {
 		this.optiontext = optiontext;
 	}
 
-	public void setAttributeId(int attributeId) {
-		this.attributeId = attributeId;
+	public Integer getParentid() {
+		return parentid;
 	}
 
-	public int getAttributeId() {
-		return attributeId;
+	public void setParentid(Integer parentid) {
+		this.parentid = parentid;
 	}
+
+	public AttributeMaster getAttributeMaster() {
+		return attributeMaster;
+	}
+
+	public void setAttributeMaster(AttributeMaster attributeMaster) {
+		this.attributeMaster = attributeMaster;
+	}
+
+
 	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/*public AttributeMaster getAttributeId() {
-		return attributeId;
-	}
-
-	public void setAttributeId(AttributeMaster attributeId) {
-		this.attributeId = attributeId;
-	}*/
-
-	public AttributeOptions() {
-		super();
-	}
-   
+	
 }

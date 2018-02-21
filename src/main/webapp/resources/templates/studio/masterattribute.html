@@ -3,7 +3,10 @@
 
 		$(function() 
 		{
-			
+			 _Optext_Id=1;
+
+            $("#my_option_divId").hide();
+			$("#option_typeId").empty();
 
 			$("#masterAttr_btnNew").on("click", function() 
 			{
@@ -64,10 +67,20 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 			<thead>
 
 				<tr>
+				
+				<td colspan="1">
+						<div class="project_cell_adjust styleForm">
+							<label class="">Category type :</label>&nbsp; <select
+								name="category_type" id="category_type"
+								onchange="displayCategoryType(this);">
+							</select>
+						</div>
+					</td>
+
 
 					<td colspan="1">
 						<div class="project_cell_adjust styleForm">
-							<label class="searchLbl">Category :</label>&nbsp; <select
+							<label class=""> Category :</label>&nbsp; <select
 								name="category_sel" id="category_sel"
 								onchange="displayCategory(this);">
 							</select>
@@ -93,6 +106,8 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 					<th>Type</th>
 
 					<th>Size</th>
+					
+					<th>Category Type</th>
 
 					<th class="no-sort">Edit</th>
 					<th class="no-sort">Delete</th>
@@ -163,40 +178,41 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 		<script id="masterAttrTemplate" type="text/x-jquery-tmpl">
        <tr>
             <td>
-                ${alias}
+                ${fieldaliasname}
             </td> 
 			<td>
-                ${alias_second_language}
+                ${fieldaliasname}
             </td>                      
 			<td>
                 ${fieldname}
             </td>           
             <td>
-                ${datatypeIdBean.datatype}
+                ${laExtAttributedatatype.datatype}
             </td>
 			<td>
                 ${size}
             </td>  
+			
+			<td>
+			{{if laExtAttributecategory}}  ${laExtAttributecategory.categorytype.typename}{{/if}}
+            </td>  
+<td align="center">
+{{if (!masterattribute)}}
+       		<a href="javascript:editmasterAttr('${attributemasterid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+    {{else}}
+	
+ {{/if}}       
+</td>
 
-{{if (!master_attrib)}}
-       <td align="center">
-				<a href="javascript:editmasterAttr('${id}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-            </td>
-           <td align="center">
-				<a href="javascript:deleteAttribute('${id}','${alias}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
-           </td>	
-			{{/if}}
-			
-			{{if (master_attrib)}}
-       <td align="center">
-				&nbsp;
-            </td>
-           <td align="center">
-				&nbsp;
-           </td>	
-			{{/if}}
-			
-        </tr>
+ <td align="center">
+{{if (!masterattribute)}}
+	<a href="javascript:deleteAttribute('${attributemasterid}','${alias}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
+{{else}}
+	
+ {{/if}}                 
+</td>	
+
+   </tr>
          
 </script>
 
@@ -251,34 +267,50 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 				id="alias" value="" class="text ui-widget-content ui-corner-all">
 				<br>
 
-			<label for="email">Alias Other Language </label> <input type="text"
-				name="alias_other" id="alias_other" value=""
-				class="text ui-widget-content ui-corner-all">
-				<br>
-				 <label
-				for="email">Field Name</label> <input type="text" name="fieldName"
-				id="fieldName" value="" class="text ui-widget-content ui-corner-all">
-				<br>
-
-			<label for="email">Data Type</label> <br> <select name="type"
-				id="type"><br><br>
-				<option value="" class="text ui-widget-content ui-corner-all">Please
-					Select</option><br>
-					
+			<label for="email">Alias Other Language </label> 
+			<input type="text"  name="alias_other" id="alias_other" value="" class="text ui-widget-content ui-corner-all"><br>
 			
-			</select> <br> <label for="email">Size</label> <input type="text"
-				name="size" id="size" value=""
-				class="text ui-widget-content ui-corner-all">
-				<br> <label
-				for="email">Category</label> <br> <select name="category"
-				id="category"><br><br>
-				<option value="" class="text ui-widget-content ui-corner-all">Please
-					Select</option><br>
+			<label for="email">Field Name</label> 
+    		 <input type="text" name="fieldName" id="fieldName" value="" class="text ui-widget-content ui-corner-all">	<br>
+				 
 
-			</select> <br><label for="email">Mandatory</label>&nbsp; <input
-				type="checkbox" id="mandatory" name="mandatory" value="${mandatory}"
-				onClick="changeMandatoryValue(this);" />
+			<label for="email">Data Type</label> <br>
+			<select name="type" id="type" onchange="changeDataType(this);"><br><br>
+				<option value="" class="text ui-widget-content ui-corner-all" >Please Select</option><br>
+			</select>
 
+			<br> <label for="email">Size</label> <input type="text"name="size" id="size" value="" 	class="text ui-widget-content ui-corner-all"><br>
+			
+			<label for="email">Category Type</label> <br> 
+			<select name="category_type_sel" id="category_type_sel" onchange="changeCatType(this);"><br><br>
+				<option value="" class="text ui-widget-content ui-corner-all">
+				Please  Select</option><br>
+			</select><br>
+			
+			
+
+			<label for="email">Category</label> <br> 
+			<select name="category" id="category"><br><br>
+				<option value="" class="text ui-widget-content ui-corner-all">Please Select</option><br>
+			</select>
+
+			
+			<br><label for="email">Mandatory</label>&nbsp; 
+			<input 	type="checkbox" id="mandatory" name="mandatory" value="${mandatory}" onClick="changeMandatoryValue(this.value);" />
+
+			<br><br>
+			
+			
+			
+			<div id="my_option_divId">
+			<button type="button" onClick="addoptionDiv();" ><span class="ui-button-text">Add Field</span></button>
+			<br>
+			
+				<div id="option_typeId">
+				
+				<div>
+				<br>
+			</div>
 
 		</fieldset>
 	</form>
@@ -293,5 +325,14 @@ function displayCategory(sel)
 	
 	displaySelectedCategory(sel.value);
 } 
+
+function displayCategoryType(sel)
+{
+	
+	displaySelectedCategoryBytype(sel.value);
+} 
+
+
+
 
 </Script>

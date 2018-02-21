@@ -7,55 +7,72 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="dispute_status")
+@Table(name="la_ext_disputestatus")
 public class DisputeStatus implements Serializable {
-    public static final int STATUS_ACTIVE = 1;
-    public static final int STATUS_RESOLVED = 2;
     
     private static final long serialVersionUID = 1L;
-
-    @Id
-    private int code;
-    @Column
-    private String name;
-    @Column(name = "name_other_lang")
-    private String nameOtherLang;
-    @Column
-    boolean active;
+    
     
     public DisputeStatus(){
-        
+    	
     }
 
-    public int getCode() {
-        return code;
-    }
+    @Id
+    private int disputestatusid;
+    
+    private String disputestatus;
+    private String disputestatus_en;
+    private Boolean isactive;
 
-    public void setCode(int code) {
-        this.code = code;
-    }
 
-    public String getName() {
-        return name;
-    }
+	public int getDisputestatusid() {
+		return disputestatusid;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
-    public String getNameOtherLang() {
-        return nameOtherLang;
-    }
+	public void setDisputestatusid(int disputestatusid) {
+		this.disputestatusid = disputestatusid;
+	}
 
-    public void setNameOtherLang(String nameOtherLang) {
-        this.nameOtherLang = nameOtherLang;
-    }
 
-    public boolean isActive() {
-        return active;
-    }
+	public String getDisputestatus() {
+		return disputestatus;
+	}
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+
+	public void setDisputestatus(String disputestatus) {
+		this.disputestatus = disputestatus;
+	}
+
+
+	public String getDisputestatus_en() {
+		return disputestatus_en;
+	}
+
+
+	public void setDisputestatus_en(String disputestatus_en) {
+		this.disputestatus_en = disputestatus_en;
+	}
+
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

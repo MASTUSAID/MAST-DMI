@@ -56,9 +56,11 @@ public class UserRoleHibernateDAO extends GenericHibernateDAO<UserRole, Long>
 
 	@SuppressWarnings("unchecked")
 	public boolean deleteUserRoleByUser(Integer id) {
+		Long lo = new Long(id);
+		
 		try{
 			String qry = "Delete from UserRole ur where ur.user.id =:id";
-			Query query = getEntityManager().createQuery(qry).setParameter("id", id);
+			Query query = getEntityManager().createQuery(qry).setParameter("id", lo);
 			System.out.println("UserRoleHibernateDao: " + qry + " " + id);
 			
 			int count = query.executeUpdate();
@@ -88,7 +90,7 @@ public class UserRoleHibernateDAO extends GenericHibernateDAO<UserRole, Long>
 	    	role=(Role) iter1.next();	    	
 	    	UserRole userrole=new UserRole();	    	
 	    	
-	    	userrole.setUser(user);
+	    	//@userrole.setUserid(user.getId());
 	    	userrole.setRoleBean(role);
 	    	
 	    	makePersistent(userrole);	
@@ -99,15 +101,12 @@ public class UserRoleHibernateDAO extends GenericHibernateDAO<UserRole, Long>
 	}
 
 	@Override
-	public List<UserRole> selectedUserByUserRole(List<String> lstRole) {
+	public List<UserRole> selectedUserByUserRole(List<Integer> lstRole) {
 		
-		
-
-		 
-        List<UserRole> lstUser = new ArrayList<UserRole>();
+	    List<UserRole> lstUser = new ArrayList<UserRole>();
         
         try {
-			String userRoleQuery = "SELECT ur FROM Role r JOIN r.userRoles ur WHERE r.name in (:lstRole)"; 
+			String userRoleQuery = "SELECT ur FROM UserRole  ur WHERE ur.roleBean.roleid in (:lstRole)"; 
 			
 			Query query = getEntityManager().createQuery(userRoleQuery);
 			query.setParameter("lstRole", lstRole);
@@ -129,7 +128,7 @@ public class UserRoleHibernateDAO extends GenericHibernateDAO<UserRole, Long>
 		
 	}
 	
-	/*
+	
 	@SuppressWarnings("unchecked")
 	public List<UserRole> findAllUserRole(String name) {
 		
@@ -139,12 +138,12 @@ public class UserRoleHibernateDAO extends GenericHibernateDAO<UserRole, Long>
 			return userRole;		
 	}	
 
-	*/
 	
 	
-	/*
+	
+
 	@SuppressWarnings("unchecked")
-	private boolean deleteUserRoleByUserId(Integer userId) {
+	public boolean deleteUserRoleByUserId(Long userId) {
 		try{
 			String qry = "Delete from UserRole ur where ur.user.id =:userId";
 			Query query = getEntityManager().createQuery(qry).setParameter("userId", userId);
@@ -162,6 +161,22 @@ public class UserRoleHibernateDAO extends GenericHibernateDAO<UserRole, Long>
 			return false;
 	}
 	}
-	*/
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<UserRole> findAllUserByRole(String name) {
+		
+		try {
+			List<UserRole> userRole =
+				getEntityManager().createQuery("Select ur from UserRole ur where ur.roleBean.name = :name").setParameter("name", name).getResultList();
+			
+				return userRole;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}		
+	}	
+	
 	
 }

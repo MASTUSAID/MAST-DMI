@@ -8,11 +8,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.mobile.dao.SpatialUnitPersonWithInterestDao;
+
 import java.util.ArrayList;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
@@ -20,12 +25,13 @@ import javax.persistence.Query;
  *
  */
 @Repository
-public class SpatialUnitPersonWithInterestHibernateDao extends
-        GenericHibernateDAO<SpatialUnitPersonWithInterest, Long> implements
-        SpatialUnitPersonWithInterestDao {
+public class SpatialUnitPersonWithInterestHibernateDao extends   GenericHibernateDAO<SpatialUnitPersonWithInterest, Long> implements   SpatialUnitPersonWithInterestDao {
 
     private static final Logger logger = Logger
             .getLogger(PersonHiberanteDao.class);
+    
+    @PersistenceContext
+    private EntityManager em; 
 
     @Override
     public SpatialUnitPersonWithInterest addNextOfKin(
@@ -39,7 +45,7 @@ public class SpatialUnitPersonWithInterestHibernateDao extends
             while (nextOfKinIter.hasNext()) {
 
                 nextOfKin = nextOfKinIter.next();
-                nextOfKin.setUsin(usin);
+               // nextOfKin.setUsin(usin);
 
                 makePersistent(nextOfKin);
 
@@ -54,7 +60,7 @@ public class SpatialUnitPersonWithInterestHibernateDao extends
     @Override
     public List<SpatialUnitPersonWithInterest> findByUsin(Long usin) {
         try {
-            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.usin = :usin order by sp.id asc ");
+            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.landid = :usin order by sp.id asc ");
             List<SpatialUnitPersonWithInterest> personinterest = query.setParameter("usin", usin).getResultList();
 
             if (personinterest.size() > 0) {
@@ -67,4 +73,46 @@ public class SpatialUnitPersonWithInterestHibernateDao extends
             return new ArrayList<SpatialUnitPersonWithInterest>();
         }
     }
+
+	@Override
+	public SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestById(Long id) {
+		
+		 try {
+	            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.id = :usin order by sp.id asc ");
+	            SpatialUnitPersonWithInterest personinterest = (SpatialUnitPersonWithInterest)query.setParameter("usin", id).getSingleResult();
+
+	           return personinterest;
+	        } catch (Exception e) {
+	            logger.error(e);
+	            return null;
+	        }
+	}
+
+	@Override
+	@Transactional
+	public SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestByObj(
+			SpatialUnitPersonWithInterest obj) {
+		
+		 try {
+	            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.id = :usin order by sp.id asc ");
+	            SpatialUnitPersonWithInterest personinterest = (SpatialUnitPersonWithInterest)query.setParameter("usin", obj.getId()).getSingleResult();
+
+	            personinterest.setFirstName(obj.getFirstName());
+	            personinterest.setMiddleName(obj.getMiddleName());
+	            personinterest.setLastName(obj.getLastName());
+	            personinterest.setDob(obj.getDob());
+	            personinterest.setGender(obj.getGender());
+	            personinterest.setRelation(obj.getRelation());
+	    		
+	            em.merge(personinterest);
+	    		  
+	           return obj;
+	        } catch (Exception e) {
+	            logger.error(e);
+	            return null;
+	        }
+		 
+	}
+
+	
 }

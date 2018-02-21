@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,221 +13,189 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.rmsi.mast.studio.util.JsonDateSerializer;
-import javax.persistence.Column;
 
 /**
  * Entity implementation class for Entity: SocialTenureRelationship
  */
 @Entity
-@Table(name = "social_tenure_relationship")
+@Table(name="la_ext_personlandmapping")
 public class SocialTenureRelationship implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
+//    private static final long serialVersionUID = 1L;
+    
     @Id
-    @SequenceGenerator(name = "social_tenure_relationship_id", sequenceName = "social_tenure_relationship_gid_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "social_tenure_relationship_id")
-    private int gid;
-
-    @ManyToOne
-    @JoinColumn(name = "share", nullable = false)
-    private ShareType share_type;
-
-    private Long usin;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "person_gid")
-    private Person person_gid;
-
-    @ManyToOne
-    @JoinColumn(name = "occupancy_type_id")
-    private OccupancyType occupancyTypeId;
-
-    @ManyToOne
-    @JoinColumn(name = "tenureclass_id")
-    private TenureClass tenureclassId;
-
-    @ManyToOne
-    @JoinColumn(name = "acquisition_type")
-    private AcquisitionType acquisitionType;
+    @SequenceGenerator(name="pk_la_personlandmapping",sequenceName="la_ext_personlandmapping_personlandid_seq", allocationSize=1) 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_personlandmapping") 
+    @Column(name="personlandid")
+	private Long personlandid;
     
-    @ManyToOne
-    @JoinColumn(name = "relationship_type")
-    private RelationshipType relationshipType;
+    @Column(name="createdby")
+	private Integer createdby;
+
+    @Temporal(TemporalType.DATE)
+	private Date createddate;
+
+    @Column(name="isactive")
+	private Boolean isactive;
+
+    @Column(name="modifiedby")
+	private Integer modifiedby;
+
+    @Temporal(TemporalType.DATE)
+	private Date modifieddate;
     
-    @Column(name = "cert_number")
+    @Column(name = "certificateno")
     private String certNumber;
-    
-    @Column(name = "file_number")
-    private String fileNumber;
-    
-    @Column(name = "ccro_issue_date")
+  
+    @Temporal(TemporalType.DATE)
+    @Column(name = "certificateissuedate")
     private Date certIssueDate;
-    
-    @Column(name = "juridical_area")
-    private Double juridicalArea;
-    
-    private Date social_tenure_startdate;
-    private Date social_tenure_enddate;
-    
-    @Column(name = "tenure_duration")
-    private float tenureDuration;
-    private boolean isActive;
 
-    private String sharePercentage;
-    private boolean resident;
+	//bi-directional many-to-one association to LaExtTransactiondetail
+	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name="transactionid")
+	private LaExtTransactiondetail laExtTransactiondetail;
 
-    public SocialTenureRelationship() {
-        super();
-    }
+	
+	@Column(name="partyid")
+	private Long partyid;
 
-    public AcquisitionType getAcquisitionType() {
-        return acquisitionType;
-    }
+	@Transient
+	private LaParty laParty;
+	
+	
+	//bi-directional many-to-one association to LaPartygroupPersontype
+	@ManyToOne
+	@JoinColumn(name="persontypeid", nullable = false, updatable = false)
+	private PersonType laPartygroupPersontype;
 
-    public void setAcquisitionType(AcquisitionType acquisitionType) {
-        this.acquisitionType = acquisitionType;
-    }
+	
+	@Column(name="landid")
+	private Long landid;
+	
+	 public SocialTenureRelationship() {
+       super();
+	 }
+	 
+	public String getCertNumber() {
+		return certNumber;
+	}
 
-    public RelationshipType getRelationshipType() {
-        return relationshipType;
-    }
+	public void setCertNumber(String certNumber) {
+		this.certNumber = certNumber;
+	}
+	
+	public Date getCertIssueDate() {
+		return certIssueDate;
+	}
 
-    public void setRelationshipType(RelationshipType relationshipType) {
-        this.relationshipType = relationshipType;
-    }
+	public void setCertIssueDate(Date certIssueDate) {
+		this.certIssueDate = certIssueDate;
+	}
 
-    public String getCertNumber() {
-        return certNumber;
-    }
+	public Long getPersonlandid() {
+		return personlandid;
+	}
 
-    public void setCertNumber(String certNumber) {
-        this.certNumber = certNumber;
-    }
+	public void setPersonlandid(Long personlandid) {
+		this.personlandid = personlandid;
+	}
 
-    public String getFileNumber() {
-        return fileNumber;
-    }
+	public Integer getCreatedby() {
+		return createdby;
+	}
 
-    public void setFileNumber(String fileNumber) {
-        this.fileNumber = fileNumber;
-    }
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
 
-    public Date getCertIssueDate() {
-        return certIssueDate;
-    }
+	public Date getCreateddate() {
+		return createddate;
+	}
 
-    public void setCertIssueDate(Date certIssueDate) {
-        this.certIssueDate = certIssueDate;
-    }
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
 
-    public Double getJuridicalArea() {
-        return juridicalArea;
-    }
+	public Boolean getIsactive() {
+		return isactive;
+	}
 
-    public void setJuridicalArea(Double juridicalArea) {
-        this.juridicalArea = juridicalArea;
-    }
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
 
-    public ShareType getShare_type() {
-        return this.share_type;
-    }
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
 
-    public void setShare_type(ShareType share_type) {
-        this.share_type = share_type;
-    }
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
 
-    public int getGid() {
-        return this.gid;
-    }
+	
+	public LaExtTransactiondetail getLaExtTransactiondetail() {
+		return laExtTransactiondetail;
+	}
 
-    public void setGid(int gid) {
-        this.gid = gid;
-    }
+	public Date getModifieddate() {
+		return modifieddate;
+	}
 
-    public Long getUsin() {
-        return this.usin;
-    }
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
 
-    public void setUsin(Long usin) {
-        this.usin = usin;
-    }
+	public void setLaExtTransactiondetail(
+			LaExtTransactiondetail laExtTransactiondetail) {
+		this.laExtTransactiondetail = laExtTransactiondetail;
+	}
 
-    public Person getPerson_gid() {
-        return this.person_gid;
-    }
+	public PersonType getLaPartygroupPersontype() {
+		return laPartygroupPersontype;
+	}
 
-    public void setPerson_gid(Person person_gid) {
-        this.person_gid = person_gid;
-    }
+	public Long getPartyid() {
+		return partyid;
+	}
 
-    public OccupancyType getOccupancyTypeId() {
-        return this.occupancyTypeId;
-    }
+	public void setPartyid(Long partyid) {
+		this.partyid = partyid;
+	}
 
-    public void setOccupancyTypeId(OccupancyType occupancyTypeId) {
-        this.occupancyTypeId = occupancyTypeId;
-    }
+	public void setLaPartygroupPersontype(PersonType laPartygroupPersontype) {
+		this.laPartygroupPersontype = laPartygroupPersontype;
+	}
 
-    public TenureClass getTenureclassId() {
-        return this.tenureclassId;
-    }
+	public Long getLandid() {
+		return landid;
+	}
 
-    public void setTenureclassId(TenureClass tenureclassId) {
-        this.tenureclassId = tenureclassId;
-    }
+	public void setLandid(Long landid) {
+		this.landid = landid;
+	}
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    public Date getSocial_tenure_startdate() {
-        return this.social_tenure_startdate;
-    }
+	@Transient
+	public LaParty getLaParty() {
+		return laParty;
+	}
 
-    public void setSocial_tenure_startdate(Date social_tenure_startdate) {
-        this.social_tenure_startdate = social_tenure_startdate;
-    }
+	@Transient
+	public void setLaParty(LaParty laParty) {
+		this.laParty = laParty;
+	}
 
-    @JsonSerialize(using = JsonDateSerializer.class)
-    public Date getSocial_tenure_enddate() {
-        return this.social_tenure_enddate;
-    }
 
-    public void setSocial_tenure_enddate(Date social_tenure_enddate) {
-        this.social_tenure_enddate = social_tenure_enddate;
-    }
-
-    public float getTenureDuration() {
-        return this.tenureDuration;
-    }
-
-    public void setTenureDuration(float tenureDuration) {
-        this.tenureDuration = tenureDuration;
-    }
-
-    public boolean getIsActive() {
-        return this.isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public String getSharePercentage() {
-        return sharePercentage;
-    }
-
-    public void setSharePercentage(String sharePercentage) {
-        this.sharePercentage = sharePercentage;
-    }
-
-    public boolean isResident() {
-        return resident;
-    }
-
-    public void setResident(boolean resident) {
-        this.resident = resident;
-    }
-
+	
+	
+	
 }

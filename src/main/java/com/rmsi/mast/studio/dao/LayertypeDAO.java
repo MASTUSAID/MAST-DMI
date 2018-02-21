@@ -15,6 +15,8 @@ import com.rmsi.mast.studio.domain.Layertype;
 public interface LayertypeDAO extends GenericDAO<Layertype, Long> {
 	
 	Layertype findByName(String name);
+	
+	Layertype findLayertypeById(long id);
 
 }
 

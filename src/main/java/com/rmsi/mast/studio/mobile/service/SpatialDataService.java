@@ -26,6 +26,6 @@ public interface SpatialDataService {
 	 * @param projectId
 	 * @return
 	 */
-	List<ProjectSpatialData> getProjectSpatialDataByProjectId(String projectId);
+	List<ProjectSpatialData> getProjectSpatialDataByProjectId(Integer projectId);
 	
 }

@@ -11,6 +11,7 @@ public interface BookmarkDAO extends GenericDAO<Bookmark, Long> {
 	
 	Bookmark findByName(String name);
 	boolean deleteBookmarkByName(String name);
-	List<Bookmark> getBookmarksByProject(String projectname);
-	boolean deleteByProjectName(String name);
+	List<Bookmark> getBookmarksByProject(Integer id);
+	boolean deleteByProjectId(Integer id);
+	public Bookmark findBookmarkById(Integer id);
 }

@@ -4,6 +4,8 @@ package com.rmsi.mast.studio.dao.hibernate;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.LayerFieldDAO;
@@ -28,7 +30,7 @@ public class LayerFieldHibernateDAO extends GenericHibernateDAO<LayerField, Long
 			
 			if(lyrFields.size() > 0){
 				LayerField lyrField = lyrFields.get(0);
-				lyrField.setField(layerField.getField());
+			//	lyrField.setField(layerField.getField());
 				getEntityManager().merge(lyrField);
 				return "success";
 			}else{
@@ -62,5 +64,27 @@ public class LayerFieldHibernateDAO extends GenericHibernateDAO<LayerField, Long
 		}else{
 			return "fail";
 		}
+	}
+
+	@Override
+	public boolean deleteFeildByLayerId(Long id) {
+		
+		try{
+			Query query = getEntityManager().createQuery(
+					"Delete from LayerField lg where lg.layer.layerid =:id")
+					.setParameter("id", id);
+
+			int count = query.executeUpdate();
+			System.out.println("Delete Layergrp count: " + count);
+			if(count > 0){
+				return true;
+			}else{
+				return false;
+			}
+		}catch(Exception e){
+			
+			return false;
+		
+	}
 	}
 }

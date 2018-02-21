@@ -9,6 +9,9 @@ import java.util.List;
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
+import com.rmsi.mast.studio.domain.fetch.DisputeBasic;
+import com.rmsi.mast.studio.domain.fetch.MediaBasic;
+import com.rmsi.mast.studio.domain.fetch.RightBasic;
 
 /**
  * @author Shruti.Thakur
@@ -47,7 +50,7 @@ public interface SpatialUnitDao extends GenericDAO<SpatialUnit, Long> {
 	 * @param usin
 	 * @return
 	 */
-	SpatialUnit getSpatialUnitByUsin(long usin);
+	ClaimBasic getSpatialUnitByUsin(long usin);
 
 	/**
 	 * It will fetch List of spatial units based on project id and work flow
@@ -57,7 +60,9 @@ public interface SpatialUnitDao extends GenericDAO<SpatialUnit, Long> {
 	 */
 	List<SpatialUnit> findSpatialUnitByStatusId(String projectId, int statusId);
         
-        List<ClaimBasic> getClaimsBasicByStatus(String projectId, int statusId);
+        List<ClaimBasic> getClaimsBasicByStatus(Integer projectId, int statusId);
         
-        List<ClaimBasic> getClaimsBasicByProject(String projectId);
+        List<ClaimBasic> getClaimsBasicByProject(Integer projectId);
+        
+        List<ClaimBasic> getClaimsBasicByLandId(Long landid);
 }

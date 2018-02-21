@@ -2,6 +2,7 @@
 
 package com.rmsi.mast.studio.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class UserProjectHibernateDAO extends GenericHibernateDAO<UserProject, Lo
 	{	
 		try {
 			//Delete the existing record
-			deleteUserProjectByProject(projectname);
+	   	//	deleteUserProjectByProject(projectname);
 			
 			//Insert new record
 			Iterator iter1 = userProjectList.iterator();
@@ -63,9 +64,16 @@ public List<String> getUsersByProject(String name){
 
 public List<String> getUserNameByProject(String id){
 	
-	TypedQuery<String> query = 
-			getEntityManager().createQuery("Select up.user.username from UserProject up where up.projectBean.name = :name", String.class).setParameter("name", id);
-	return query.getResultList();
+	try {
+		TypedQuery<String> query = 
+				getEntityManager().createQuery("Select up.user.username from UserProject up where up.project.name = :name", String.class).setParameter("name", id);
+		return query.getResultList();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return null;
 }
 
 
@@ -77,15 +85,15 @@ public List<String> getUserProject(String id){
 }
 
 @SuppressWarnings("unchecked")
-public void deleteUserProjectByProject(String project) {
+public void deleteUserProjectByProjectId(Integer id) {
 	
 	try{
 		Query query = getEntityManager().createQuery(
-				"Delete from UserProject up where up.projectBean.name =:name")
-				.setParameter("name", project);
+				"Delete from UserProject up where up.project.projectnameid =:id")
+				.setParameter("id", id);
 		
 		int count = query.executeUpdate();
-		System.out.println("Delete UserProject count: " + count);
+		System.out.println("Delete UserProject count: " + count +"project id" + id);
 		
 	}catch(Exception e){
 		logger.error(e);
@@ -98,7 +106,7 @@ public void deleteUserProjectByProject(String project) {
 public void deleteUserProjectByUser(Integer id) {
 	
 	try{
-		String qry = "Delete from UserProject up where up.user.id =:id";
+		String qry = "Delete from UserProject up where up.project.projectnameid =:id";
 		Query query = getEntityManager().createQuery(qry).setParameter("id", id);
 		System.out.println("UserProjectHibernateDao: " + qry);
 		
@@ -131,9 +139,9 @@ public boolean checkUserProject(Integer val, String defProjName)
 			Project project=new Project();
 			User user  = new User();
 			user.setId(val);
-			project.setName(defProjName);
-			up.setProjectBean(project);
-			up.setUser(user);
+			//project.setName(defProjName);
+			//up.setProjectBean(project);
+			//@ up.setUser(user);
 			makePersistent(up);
 			return true;
 		}
@@ -150,7 +158,7 @@ public boolean checkUserProject(Integer val, String defProjName)
 
 
 @Override
-public List<UserProject> findUserProjectsById(Integer id) {		
+public List<UserProject> findUserProjectsById(Long id) {		
 	
 	try {
 		Query query = getEntityManager().createQuery("Select up from UserProject up where up.user.id =:id");
@@ -173,7 +181,7 @@ public List<UserProject> findUserProjectsById(Integer id) {
 	
 	
 	
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	public List<UserProject> findAllUserProject(String name) {
 		
 		List<UserProject> userProject =
@@ -190,13 +198,39 @@ public List<UserProject> findUserProjectsById(Integer id) {
 				for(int i=0;i<userProjectList.size();i++){			
 					UserProject up=new UserProject();
 					up=userProjectList.get(i);
-					System.out.println("DELETEING ID >>>>>>>"+ Long.parseLong(up.getId().toString()));				
+					//@System.out.println("DELETEING ID >>>>>>>"+ Long.parseLong(up.getId().toString()));				
 					//makeTransientByID(long (plg.getId());			
-					makeTransientByID(Long.parseLong(up.getId().toString()));
+					//@makeTransientByID(Long.parseLong(up.getId().toString()));
 				}
 		}
 	}
-	*/
+
+
+	@Override
+	public List<UserProject> findAllUserProjectByUserID(Long id) {
+
+		@SuppressWarnings("unchecked")
+		List<UserProject> userProject = new ArrayList<UserProject>();
+		
+		 try {
+			userProject =getEntityManager().createQuery("Select up from UserProject up where up.project.active=true and  up.user.id = :id").setParameter("id", id).getResultList();
+			
+			if(userProject.size()>0)
+			{
+				for(UserProject obj:userProject){
+					obj.setUserProject(obj.getProject().getName());
+					obj.setProjectDescription(obj.getProject().getDescription());
+				}
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+			return userProject;		
+	}
+	
 	
 
 	

@@ -2,7 +2,7 @@ package com.rmsi.mast.studio.domain;
 
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,10 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.BatchSize;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 
 
 /**
@@ -27,386 +31,394 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  */
 @Entity
+@Table(name = "la_spatialsource_projectname")
 public class Project implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
-	private String name;
-	private Boolean active;
-	private String activelayer;
-	private String copyright;
-	private Boolean cosmetic;
-	private String description;
-	private String disclaimer;
 	
-	private Integer height;
-	private Integer id;
-	private String maxextent;
-	private Double maxresolutions;
-	private String minextent;
-	private Double minresolutions;
-	private Integer numzoomlevels;
-	private String overlaymap;
-	private String restrictedextent;
-	private String tenantid;
-	private byte[] thumbnail;
-	private String watermask;
-	private Integer width;
-	private Set<Overviewmap> overviewmaps;
-	private Set<Printtemplate> printtemplates;
-	private Outputformat outputformat;
-	private Projection projection;
-	private Projection displayProjection;
-	private Unit unit;
-	private List<ProjectArea> projectAreas;
-	private Set<ProjectLayergroup> projectLayergroups;
-	private Set<Savedquery> savedqueries;
-	private Set<UserProject> userProjects;
-	private Set<ProjectBaselayer> projectBaselayers;
-	private Boolean admincreated;
-	private String owner;
-
-	public Project() 
-	{
-	}
-
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public Boolean getAdmincreated() {
-		return admincreated;
-	}
-
-	public void setAdmincreated(Boolean admincreated) {
-		this.admincreated = admincreated;
-	}
-
-	//bi-directional many-to-one association to ProjectLayergroup
-	//@JsonIgnore
-	@OneToMany(mappedBy="projectBean" , fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	public Set<ProjectBaselayer> getProjectBaselayers() {
-		return projectBaselayers;
-	}
-
-	public void setProjectBaselayers(Set<ProjectBaselayer> projectBaselayers) {
-		this.projectBaselayers = projectBaselayers;
-	}
-
-
+	
+	
 	@Id
-	public String getName() {
-		return this.name;
+	@SequenceGenerator(name="pk_la_spatialsource_projectname",sequenceName="la_spatialsource_projectname_projectnameid_seq", allocationSize=1) 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_spatialsource_projectname") 
+	@Column(name="projectnameid") 
+	private Integer projectnameid;
+	
+	@Column(name="projectname")
+	private String name;
+	@Column(name="minresolution")
+	private Double minresolutions;
+	@Column(name="maxresolution")
+	private Double maxresolutions;
+	private Integer zoomlevelextent;
+	private String maxextent;
+	private String minextent;
+	private String activelayer;
+	private String overlaymap;
+	private String disclaimer;
+	private String description;
+	@Column(name="isactive")
+	private Boolean active;
+	
+	private long createdby;
+	private long modifiedby;
+	
+	@Temporal( TemporalType.DATE )
+    private Date createddate;
+	
+	@Temporal( TemporalType.DATE )
+    private Date modifieddate;
+    
+   
+	//private List<ProjectArea> projectAreas;
+	
+	private Integer workflowdefid;
+	
+	
+	
+	@OneToMany(mappedBy="project",cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+	private Set<ProjectBaselayer> projectBaselayers;
+	
+	
+	@OneToMany(mappedBy="projectBean" , cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+	private Set<ProjectLayergroup> projectLayergroups;
+	
+	
+	@OneToMany(mappedBy="project", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	private Set<UserProject> userProjects;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="documentformatid")
+	@BatchSize(size=16)
+	private Outputformat outputformat;
+	
+
+	
+/*	@ManyToOne
+	@JoinColumn(name="projectionid",insertable=false, updatable=false)
+	private Projection displayProjection;*/
+	
+	
+	@OneToMany(mappedBy="project", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	private Set<ProjectArea> ProjectArea;
+	
+	@ManyToOne
+	@JoinColumn(name="unitid")
+	@BatchSize(size=16)
+	private Unit unit;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="projectionid")
+	@BatchSize(size=16)
+	private Projection projection;
+
+
+	public Project() {}
+	
+
+			
+		public Outputformat getOutputformat() {
+			return this.outputformat;
+		}
+
+		public void setOutputformat(Outputformat outputformat) {
+			this.outputformat = outputformat;
+		}
+		
+		
+		
+		
+	/*	public Projection getDisplayProjection() {
+			return this.displayProjection;
+		}
+
+		public void setDisplayProjection(Projection displayProjection) {
+			this.displayProjection = displayProjection;
+		}
+*/
+		
+		
+	
+
+	public Integer getProjectnameid() {
+		return projectnameid;
 	}
+
+
+
+	public void setProjectnameid(Integer projectnameid) {
+		this.projectnameid = projectnameid;
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public Boolean getActive() {
-		return this.active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
-
-	public String getActivelayer() {
-		return this.activelayer;
-	}
-
-	public void setActivelayer(String activelayer) {
-		this.activelayer = activelayer;
-	}
-
-
-	public String getCopyright() {
-		return this.copyright;
-	}
-
-	public void setCopyright(String copyright) {
-		this.copyright = copyright;
-	}
-
-
-	public Boolean getCosmetic() {
-		return this.cosmetic;
-	}
-
-	public void setCosmetic(Boolean cosmetic) {
-		this.cosmetic = cosmetic;
-	}
-
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	public String getDisclaimer() {
-		return this.disclaimer;
-	}
-
-	public void setDisclaimer(String disclaimer) {
-		this.disclaimer = disclaimer;
-	}
-
-
-	public Integer getHeight() {
-		return this.height;
-	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
-	}
-
-	@SequenceGenerator(name="PROJECT_ID_GENERATOR", sequenceName="project_id_seq", allocationSize=1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROJECT_ID_GENERATOR")	
-	@Column(name="id", insertable = false, updatable = false, unique=true, nullable=false)
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-
-	public String getMaxextent() {
-		return this.maxextent;
-	}
-
-	public void setMaxextent(String maxextent) {
-		this.maxextent = maxextent;
-	}
-
-
-	public Double getMaxresolutions() {
-		return this.maxresolutions;
-	}
-
-	public void setMaxresolutions(Double maxresolutions) {
-		this.maxresolutions = maxresolutions;
-	}
-
-
-	public String getMinextent() {
-		return this.minextent;
-	}
-
-	public void setMinextent(String minextent) {
-		this.minextent = minextent;
-	}
 
 
 	public Double getMinresolutions() {
-		return this.minresolutions;
+		return minresolutions;
 	}
+
+
 
 	public void setMinresolutions(Double minresolutions) {
 		this.minresolutions = minresolutions;
 	}
 
 
-	public Integer getNumzoomlevels() {
-		return this.numzoomlevels;
+
+	public Double getMaxresolutions() {
+		return maxresolutions;
 	}
 
-	public void setNumzoomlevels(Integer numzoomlevels) {
-		this.numzoomlevels = numzoomlevels;
+
+
+	public void setMaxresolutions(Double maxresolutions) {
+		this.maxresolutions = maxresolutions;
 	}
+
+
+
+	public Boolean getActive() {
+		return active;
+	}
+
+
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+
+
+	public String getMaxextent() {
+		return maxextent;
+	}
+
+
+
+	public void setMaxextent(String maxextent) {
+		this.maxextent = maxextent;
+	}
+
+
+
+	public String getMinextent() {
+		return minextent;
+	}
+
+
+
+	public void setMinextent(String minextent) {
+		this.minextent = minextent;
+	}
+
+
+
+	public Integer getZoomlevelextent() {
+		return zoomlevelextent;
+	}
+
+
+
+	public void setZoomlevelextent(Integer zoomlevelextent) {
+		this.zoomlevelextent = zoomlevelextent;
+	}
+
+
+
+	public String getActivelayer() {
+		return activelayer;
+	}
+
+
+
+	public void setActivelayer(String activelayer) {
+		this.activelayer = activelayer;
+	}
+
 
 
 	public String getOverlaymap() {
-		return this.overlaymap;
+		return overlaymap;
 	}
+
+
 
 	public void setOverlaymap(String overlaymap) {
 		this.overlaymap = overlaymap;
 	}
 
 
-	public String getRestrictedextent() {
-		return this.restrictedextent;
-	}
 
-	public void setRestrictedextent(String restrictedextent) {
-		this.restrictedextent = restrictedextent;
-	}
-
-
-	public String getTenantid() {
-		return this.tenantid;
-	}
-
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
-	}
-
-
-	public byte[] getThumbnail() {
-		return this.thumbnail;
-	}
-
-	public void setThumbnail(byte[] thumbnail) {
-		this.thumbnail = thumbnail;
-	}
-
-
-	public String getWatermask() {
-		return this.watermask;
-	}
-
-	public void setWatermask(String watermask) {
-		this.watermask = watermask;
-	}
-
-
-	public Integer getWidth() {
-		return this.width;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-
-	@OneToMany(mappedBy="projectBean", fetch = FetchType.EAGER, cascade=CascadeType.ALL )
-	@BatchSize(size=16)
-	public Set<Overviewmap> getOverviewmaps() {
-		return this.overviewmaps;
-	}
-
-	public void setOverviewmaps(Set<Overviewmap> overviewmaps) {
-		this.overviewmaps = overviewmaps;
-	}
-
-
-	//bi-directional many-to-one association to Printtemplate
-	@OneToMany(mappedBy="projectBean", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	@BatchSize(size=16)
-
-	public Set<Printtemplate> getPrinttemplates() {
-		return this.printtemplates;
-	}
-
-	public void setPrinttemplates(Set<Printtemplate> printtemplates) {
-		this.printtemplates = printtemplates;
-	}
-
-
-	//bi-directional many-to-one association to Outputformat
-	@ManyToOne
-	@JoinColumn(name="outputformat")
-	@BatchSize(size=16)
-	public Outputformat getOutputformat() {
-		return this.outputformat;
-	}
-
-	public void setOutputformat(Outputformat outputformat) {
-		this.outputformat = outputformat;
-	}
-
-
-	//bi-directional many-to-one association to Projection
-	@ManyToOne
-	@JoinColumn(name="projection")
-	@BatchSize(size=16)
-	public Projection getProjection() {
-		return this.projection;
-	}
-
-	public void setProjection(Projection projection) {
-		this.projection = projection;
-	}
-
-
-	//bi-directional many-to-one association to Projection
-	@ManyToOne
-	@JoinColumn(name="displayprojection")
-	@BatchSize(size=16)
-	public Projection getDisplayProjection() {
-		return this.displayProjection;
-	}
-
-	public void setDisplayProjection(Projection displayProjection) {
-		this.displayProjection = displayProjection;
+	public String getDisclaimer() {
+		return disclaimer;
 	}
 
 
 
-	//Uni-directional many-to-one association to Unit
-	@ManyToOne
-	@JoinColumn(name="unit")
-	@BatchSize(size=16)
-	public Unit getUnit() {
-		return this.unit;
-	}
-
-	public void setUnit(Unit unit) {
-		this.unit = unit;
+	public void setDisclaimer(String disclaimer) {
+		this.disclaimer = disclaimer;
 	}
 
 
-	//bi-directional many-to-one association to ProjectLayergroup
-	//@JsonIgnore
-	@OneToMany(mappedBy="projectBean" , fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	@BatchSize(size=16)
 
-	@javax.persistence.OrderBy("grouporder")
+	public String getDescription() {
+		return description;
+	}
+
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+
+	public long getCreatedby() {
+		return createdby;
+	}
+
+
+
+	public void setCreatedby(long createdby) {
+		this.createdby = createdby;
+	}
+
+
+
+	public long getModifiedby() {
+		return modifiedby;
+	}
+
+
+
+	public void setModifiedby(long modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+
+
+	public Set<ProjectBaselayer> getProjectBaselayers() {
+		return projectBaselayers;
+	}
+
+
+
+	public void setProjectBaselayers(Set<ProjectBaselayer> projectBaselayers) {
+		this.projectBaselayers = projectBaselayers;
+	}
+
+
+
 	public Set<ProjectLayergroup> getProjectLayergroups() {
-		return this.projectLayergroups;
+		return projectLayergroups;
 	}
+
+
 
 	public void setProjectLayergroups(Set<ProjectLayergroup> projectLayergroups) {
 		this.projectLayergroups = projectLayergroups;
 	}
 
 
-	//bi-directional many-to-one association to Savedquery	
-	@OneToMany(mappedBy = "projectBean", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	@BatchSize(size=16)
-	public Set<Savedquery> getSavedqueries() {
-		return this.savedqueries;
-	}
 
-	public void setSavedqueries(Set<Savedquery> savedqueries) {
-		this.savedqueries = savedqueries;
-	}
-
-
-	//bi-directional many-to-one association to UserProject
-	@JsonIgnore
-	@OneToMany(mappedBy="projectBean", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	@BatchSize(size=16)
 	public Set<UserProject> getUserProjects() {
-		return this.userProjects;
+		return userProjects;
 	}
+
+
 
 	public void setUserProjects(Set<UserProject> userProjects) {
 		this.userProjects = userProjects;
 	}
 
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
+
+
+	public Set<ProjectArea> getProjectArea() {
+		return ProjectArea;
 	}
 
-	//bi-directional many-to-one association to ProjectArea
-	@OneToMany(fetch = FetchType.EAGER , cascade=CascadeType.ALL)
-	@JoinColumn(name="name",referencedColumnName="name")
-	public List<ProjectArea> getProjectAreas() {
-		return projectAreas;
+
+
+	public void setProjectArea(Set<ProjectArea> projectArea) {
+		ProjectArea = projectArea;
 	}
 
-	public void setProjectAreas(List<ProjectArea> projectAreas) {
-		this.projectAreas = projectAreas;
+
+
+	public Unit getUnit() {
+		return unit;
 	}
 
+
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
+
+
+	public Projection getProjection() {
+		return projection;
+	}
+
+
+
+	public void setProjection(Projection projection) {
+		this.projection = projection;
+	}
+
+
+
+	public Integer getWorkflowdefid() {
+		return workflowdefid;
+	}
+
+
+
+	public void setWorkflowdefid(Integer workflowdefid) {
+		this.workflowdefid = workflowdefid;
+	}
+
+	
+	
+	
+	
+	
 
 }

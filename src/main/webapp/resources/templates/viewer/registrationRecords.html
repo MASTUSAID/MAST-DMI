@@ -1,0 +1,1917 @@
+<script>
+	$(function() {
+		$("#tabs_registry").tabs();
+	});
+
+	$(function() {
+		$("#tabs_registry1").tabs();
+	});
+
+	$(function() {
+		$("#tabs_registry2").tabs();
+	});
+
+	$(function() {
+		$(".datepicker").datepicker({
+			dateFormat : "yy-mm-dd"
+		});
+	});
+
+	$(function() {
+		$("#date_Of_birth_lease1").datepicker();
+	});
+</script>
+
+<div class="container-fluid">
+	<div id="ViewPopuupDiv" style="visibility: hidden"></div>
+	<div id="registryRecordsFormdiv" style="visibility: hidden">
+
+		<div class="cmxform">
+
+
+			<div class="tab-pane " id="registry-records">
+				<div class="project-details">
+					<div class="project-details-label">
+						<div class="row-fluid">
+							<!-- Commented on 27Dec  -->
+
+							<!-- <div class="span2 project-details-block">
+                                <span class="deatails-label">Project Name: </span><br /><span
+                                    class="deatails-label-value" id="projectName_R"></span>
+                            </div>
+                            <div class="span2 project-details-block">
+                                <span class="deatails-label">Country: </span><br /><span
+                                    class="deatails-label-value" id="country_R"></span>
+
+                            </div>
+                            <div class="span2 project-details-block">
+                                <span class="deatails-label">Region: </span><br /><span
+                                    class="deatails-label-value" id="region_R"></span>
+                            </div> -->
+
+
+							<!-- <div class="span2 project-details-block"> -->
+							<!-- <span class="deatails-label">District: </span><br /><span -->
+							<!-- class="deatails-label-value" id="district_R"></span> -->
+							<!-- </div> -->
+							<!-- <div class="span2 project-details-block"> -->
+							<!-- <span class="deatails-label">Village: </span><br /><span -->
+							<!-- class="deatails-label-value" id="village_R"></span> -->
+							<!-- </div> -->
+						</div>
+					</div>
+				</div>
+
+				<div class="gray-panel">
+					<form id="registryrecordsform" action="" onsubmit="return false;">
+						<table class="filter-details">
+							<tr>
+								<td>
+									 <label>Community </label>
+									 <select name="community_id_R" id="community_id_R" class="input-medium">
+									 </select>
+								</td>
+							
+								<td><label>Reference NO</label> <input type="text"
+									name="usinstr_id_R" id="usinstr_id_R" value=""
+									onkeypress="return isNumber(event)" class="input-medium">
+								</td>
+								<td>
+                                    <label>Parcel ID</label>
+                                    <input type="text" name="parce_id_R" id="parce_id_R" value="" onkeypress="return checkNumber(event)" class="input-medium">
+                                </td>
+								
+								
+								<td>
+									<button class="btn1 v-top-18" onclick="javascript:search_R();">Search</button>
+									<button class="btn v-top-24" onclick="clearSearch_R();">Clear</button>
+								</td>
+							</tr>
+						</table>
+
+					</form>
+				</div>
+
+				<div class="scrollbarxy">
+					<table class="tablesorter" id="registryRecordsTable"
+						cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th class="no-sort">Reference No</th>
+								<th class="no-sort">Registration No</th>
+								<th class="no-sort">Parcel No</th>
+								<!-- <th class="no-sort">Application Type</th> -->
+								<!-- <th>Status</th> -->
+								<th class="no-sort">Occupant</th>
+								<!-- <th class="no-sort">
+                                    View Comments
+                                </th> -->
+								<th class="no-sort">Actions</th>
+								<!-- <th class="no-sort">
+                                    View Parcel History
+                                </th> -->
+								<!-- <th class="no-sort" style="width: 120px;">
+                                    Actions
+                                </th> -->
+							</tr>
+						</thead>
+
+						<tbody id="registryRecordsRowData1">
+						</tbody>
+
+						<tfoot>
+							<tr class="tblFooter" id="registryRecords_pagerDiv">
+								<td colspan="8">
+									<div id="spatialunitDiv_R">
+										<a href="javascript:previousRecords_R();"><img
+											class="img-prev" src="resources/images/studio/previous.png"
+											title="Previous" /></a> <input type="text" readonly="readonly"
+											name="records_from_R" id="records_from_R" value=""
+											class="input-medium"> To <input type="text"
+											name="records_to_R" id="records_to_R" value=""
+											class="input-medium" readonly="readonly"> Of <input
+											type="text" name="records_all_R" id="records_all_R" value=""
+											class="input-medium" readonly="readonly"><a
+											href="javascript:nextRecords_R();"> <img class="img-next"
+											src="resources/images/studio/next.png" title="Next">
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+
+					<script id="registryRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+                        <td>
+						${transactionid}
+                        </td> 
+                        <td>
+                      ${registrationNo}
+                        </td>
+                        <td>
+                       ${landnostrwithzero}
+                        </td> 
+                           
+                         <td>
+                        ${firstname} ${lastname}
+                         </td>
+						
+                          
+                        <td>
+							    <div class="single-drop-down">   
+								<div class="topnav"> <a href="#" onclick="ActionfillRegistration('${landid}', 6, ${transactionid},${landid},'${registrationNo}');" class="signin">
+								<span key="Action" class="langchange">Action</span></a><div class="containerDiv" id="${landid}">
+								</div>
+								</div>
+								</div>       
+                        </td>
+						<!-- <td>
+						   <div >							
+								<a href="#" title="Parcel History" onclick="ViewHistory('${landid}');" style="background: none;" >Parcel History</a> 
+							</div>         
+                        </td> -->
+
+						<!-- <td>
+						   <div class="actions-btn">							
+								<a href="#" title="Generate-CCRO" onclick="generateCcro('${transactionid}');"  style="background: none; width: 120px;" >Generate CCRO</a> 
+							</div>         
+                        </td> -->
+                        </tr>
+                    </script>
+				</div>
+			</div>
+
+			<!--  Lease -->
+
+			<div id="lease-dialog-form" title="Lease/Sale/Mortgage"
+				style="display: none;">
+				<form class="cmxform" id="editprocessAttributeformID" action=""
+					onsubmit="return false;">
+
+					<input type="hidden" name="landidhide" id="landidhide" value="">
+
+					<div id="tabsl">
+						<ul>
+							<!-- <li><a href="#Tab_1">Lease</a></li> 
+                             <li id="liTenure"><a href="#Tab_2">Sale</a></li> 
+                             <li id="liNatural"><a href="#Tab_3"> Mortage</a></li>  -->
+							<select name="registration_process" id="registration_process"
+								onchange="getprocessvalues(this);">
+								<option>Please Select</option>
+
+							</select>
+
+						</ul>
+
+						<div id="Tab_1" style="display: none">
+							<div id="tabs_registry">
+								<ul>
+									<li><a href="#Owner_Details">Owner Details</a></li>
+									<li><a href="#Land_Details_lease">Land Details</a></li>
+									<li><a href="#Applicant_Details">Lessee</a></li>
+									<li><a href="#Lease_Details">Lease Details</a></li>
+									<!-- onclick="javascript:validateLease();" -->
+									<li><a href="#Upload_Documents_Lease">Upload
+											Documents</a></li>
+									<!-- onclick="javascript:validateLeasedata();" -->
+								</ul>
+								<div id="Owner_Details">
+									<div class="tab-pane landrecords22" id="registry-record">
+										<div
+											style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+
+
+
+											<table style="width: 100%" id="tableGeneralAttributes"
+												class="landrecords22 ">
+
+												<tr>
+													<td><label>Owner Details</label></td>
+												</tr>
+
+												<tr>
+													<td><label>First Name</label> <input type="text"
+														name="firstname_r_lease" id="firstname_r_lease" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimNumber --></td>
+													<td><label>Middle Name</label> <input type="text"
+														name="middlename_r_lease" id="middlename_r_lease" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimNumber --></td>
+													<td><label>Last Name</label> <input type="text"
+														name="lastname_r_lease" id="lastname_r_lease" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimNumber --></td>
+												</tr>
+
+												<tr>
+
+													<td><label>ID Type</label> <select
+														name="lease_id_type" id="lease_id_type" disabled
+														readonly="readonly">
+
+													</select></td>
+													<td><label>ID</label> <input type="text"
+														name="id_r_lease" id="id_r_lease" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimStatus --></td>
+													<td><label>Contact No</label> <input type="text"
+														name="contact_no_lease" id="contact_no_lease" value=""
+														onkeypress="return isNumber(event)"
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+
+												</tr>
+
+												<tr>
+
+													<td><label>Gender</label> <select name="lease_gender"
+														id="lease_gender" disabled readonly="readonly">
+
+
+													</select></td>
+
+													<td><label>Address</label> <input type="text"
+														name="address_lease" id="address_lease" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimStatus --></td>
+													<td><label>Date Of Birth</label> <input type="text"
+														name="date_Of_birth_lease" id="date_Of_birth_lease"
+														value="" class="text ui-widget-content ui-corner-all">
+														<!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+													</td>
+												</tr>
+
+												<tr>
+
+													<td><label>Martial Status </label> <select
+														name="lease_martial_sts" id="lease_martial_sts" disabled
+														readonly="readonly">
+
+													</select></td>
+
+												</tr>
+
+
+
+
+
+											</table>
+
+
+										</div>
+
+									</div>
+								</div>
+								<div id="Land_Details_lease">
+
+									<div class="tab-pane landrecords22" id="registry-recordLease3">
+										<div
+											style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+											<table style="width: 100%" id="tableLeaseLandDetails"
+												class="landrecords22 ">
+
+											
+
+												<tr>
+													<td><label>Country </label> <select
+														name="lease_Country" id="lease_Country" disabled
+														readonly="readonly">
+
+													</select></td>
+													<td><label>Region </label> <select
+														name="lease_Region" id="lease_Region" disabled
+														readonly="readonly">
+
+													</select></td>
+													<td><label>Provience </label> <select
+														name="lease_Provience" id="lease_Provience" disabled
+														readonly="readonly">
+
+													</select></td>
+												</tr>
+												<tr>
+													<td><label>Parcel No</label> <input type="text"
+														name="parcel_r_lease" id="parcel_r_lease" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+
+													<td><label>Land Type </label> <select
+														name="lease_Land_Type" id="lease_Land_Type" disabled
+														readonly="readonly">
+
+													</select></td>
+
+													<td><label>Ownership Share Type </label> <select
+														name="lease_Ownership_Type" id="lease_Ownership_Type"
+														disabled readonly="readonly">
+
+													</select></td>
+
+												</tr>
+												<tr>
+												
+													<td><label>Land Use</label> <input type="text"
+														name="lease_land_use" id="lease_land_use" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+
+													<td><label>Area</label> <input type="text"
+														name="lease_area" id="lease_area" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+
+													<td><label>Neighbour East</label> <input type="text"
+														name="neighbor_east_lease" id="neighbor_east_lease"
+														class="text ui-widget-content ui-corner-all justread"
+														disabled readonly="readonly"></td>
+
+												</tr>
+
+												<tr>
+
+													<td><label>Neighbour West</label> <input type="text"
+														name="neighbor_west_lease" id="neighbor_west_lease"
+														class="text ui-widget-content ui-corner-all justread"
+														disabled readonly="readonly"></td>
+													<td><label>Neighbour North</label> <input type="text"
+														name="neighbor_north_lease" id="neighbor_north_lease"
+														class="text ui-widget-content ui-corner-all justread"
+														disabled readonly="readonly"></td>
+
+													<td><label>Neighbour South</label> <input type="text"
+														name="neighbor_south_lease" id="neighbor_south_lease"
+														class="text ui-widget-content ui-corner-all justread"
+														disabled readonly="readonly"></td>
+
+												</tr>
+
+
+
+											</table>
+										</div>
+									</div>
+
+								</div>
+
+								<div id="Applicant_Details">
+									<div class="tab-pane landrecords22" id="registry-record1">
+										<div
+											style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+											<table style="width: 100%" id="tableLeaseApplicantDetails"
+												class="landrecords22 ">
+
+												<tr>
+													<td><label>Lessee</label></td>
+												</tr>
+
+												<tr>
+													<td><label>First Name</label> <input type="text"
+														name="firstname_r_applicant" id="firstname_r_applicant"
+														value="" class="text ui-widget-content ui-corner-all"
+														maxlength="50"> <!-- claimNumber --></td>
+													<td><label>Middle Name</label> <input type="text"
+														name="middlename_r_applicant" id="middlename_r_applicant"
+														value="" class="text ui-widget-content ui-corner-all"
+														maxlength="50"> <!-- claimNumber --></td>
+													<td><label>Last Name</label> <input type="text"
+														name="lastname_r_applicant" id="lastname_r_applicant"
+														value="" class="text ui-widget-content ui-corner-all"
+														maxlength="50"> <!-- claimNumber --></td>
+												</tr>
+
+												<tr>
+													<td><label>ID Type</label> <select
+														name="id_type_applicant" id="id_type_applicant">
+
+													</select></td>
+													<td><label>ID</label> <input type="text"
+														name="id_r_applicant" id="id_r_applicant" value=""
+														class="text ui-widget-content ui-corner-all"
+														maxlength="50"> <!-- claimStatus --></td>
+
+													<td><label>Contact No</label> <input type="text"
+														name="contact_no_applicant" id="contact_no_applicant"
+														onkeypress="return isNumber(event)" value=""
+														class="text ui-widget-content ui-corner-all"
+														maxlength="15"></td>
+
+												</tr>
+
+												<tr>
+
+													<td><label>Gender</label> <select
+														name="gender_type_applicant" id="gender_type_applicant">
+
+													</select></td>
+
+													<td><label>Address</label> <input type="text"
+														name="address_lease_applicant"
+														id="address_lease_applicant" value=""
+														class="text ui-widget-content ui-corner-all"
+														maxlength="250"> <!-- claimStatus --></td>
+													<td><label>Date Of Birth</label> <input type="text"
+														name="date_Of_birth_applicant"
+														id="date_Of_birth_applicant" value=""
+														class="input-medium datepicker" style="background: none;">
+
+														<!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+													</td>
+												</tr>
+
+												<tr>
+
+													<td><label>Martial Status </label> <select
+														name="martial_sts_applicant" id="martial_sts_applicant">
+
+													</select></td>
+
+
+												</tr>
+
+											</table>
+										</div>
+									</div>
+								</div>
+								<div id="Lease_Details">
+									<div class="tab-pane landrecords22" id="registry-recordLease3">
+										<div
+											style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+											<table style="width: 100%" id="tableLeaseDetails"
+												class="landrecords22 ">
+
+												<tr>
+													<td><label>Lease Details</label></td>
+												</tr>
+
+												<tr>
+													<!-- <td>
+                                                <label >Number Of Years for Lease</label> 
+												<input type="text" name="no_Of_years_Lease" id="no_Of_years_Lease" value="" onkeypress="return isNumber(event)" class="text ui-widget-content ui-corner-all" >
+                                            </td>  -->
+
+													<td><label>Number Of Month for Lease </label> <!-- <select name="no_Of_month_Lease" id="no_Of_month_Lease">
+												</select> --> <input type="text" name="no_Of_month_Lease"
+														id="no_Of_month_Lease" value=""
+														onkeypress="return isNumber(event)"
+														class="text ui-widget-content ui-corner-all"></td>
+													<td><label>Lease Amount</label> <input type="text"
+														name="lease_Amount" id="lease_Amount"
+														onkeypress="return isDecNumberKey(event)" value=""
+														class="text ui-widget-content ui-corner-all"> <!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+													</td>
+
+												</tr>
+											</table>
+										</div>
+									</div>
+
+									<!-- <div class="tab-pane landrecords22" id="registry-recordLease3">
+                                <div style="margin: 10px; border: 1px solid #ccc; padding: 10px" >
+                                    
+
+                                    <table style="width: 100%" id="tableLeaseLandDetails" class="landrecords22 " >
+                                       
+									   <tr>
+											<td>
+                                                <label >Land Details</label>
+                                               
+                                            </td>
+										</tr>
+										
+										<tr>
+											<td>
+                                                <label >Country </label> 
+                                                <select name="lease_Country" id="lease_Country" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											<td>
+                                                <label >Region </label> 
+                                                <select name="lease_Region" id="lease_Region" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											<td>
+                                                <label >Provience </label> 
+                                                <select name="lease_Provience" id="lease_Provience" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+										</tr>
+										<tr>
+										<td>
+                                                <label >Parcel No</label> 
+                                                <input type="text" name="parcel_r_lease" id="parcel_r_lease" value="" class="text ui-widget-content ui-corner-all" disabled readonly="readonly"> 
+                                            </td>
+										
+										<td>
+                                                <label >Land Type </label> 
+                                                <select name="lease_Land_Type" id="lease_Land_Type" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											
+											<td>
+                                                <label >Ownership Share Type </label> 
+                                                <select name="lease_Ownership_Type" id="lease_Ownership_Type" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											
+											
+																					
+										</tr>
+										<tr>
+										
+											<td>
+                                                <label >Land Use</label> 
+												<input type="text" name="lease_land_use" id="lease_land_use" value="" class="text ui-widget-content ui-corner-all" disabled readonly="readonly">
+                                            </td>
+											
+											<td>
+                                                <label >Area</label> 
+												<input type="text" name="lease_area" id="lease_area" value="" class="text ui-widget-content ui-corner-all" disabled readonly="readonly">
+                                            </td>
+										</tr>
+									</table>
+								</div>
+							</div> -->
+								</div>
+								<div id="Upload_Documents_Lease">
+									<table style="width: 100%" id="tableupload_Lease"
+										class="landrecords22 ">
+
+										<tr>
+											<td><label>Document Name</label> <input type="text"
+												name="doc_name_Lease" id="doc_name_Lease" value=""
+												class="text ui-widget-content ui-corner-all" maxlength="50">
+												<!-- claimNumber --></td>
+											<td><label>Document Date</label> <input type="text"
+												name="doc_date_Lease" id="doc_date_Lease" value=""
+												class="input-medium datepicker" style="background: none;"
+												readonly> <!-- claimNumber --></td>
+											<td><label>Document Description</label> <input
+												type="text" name="doc_desc_Lease" id="doc_desc_Lease"
+												value="" class="text ui-widget-content ui-corner-all"
+												maxlength="250"> <!-- claimNumber --></td>
+										</tr>
+
+										<tr>
+
+											<td><label>Document Type</label> <select
+												name="doc_Type_Lease" id="doc_Type_Lease">
+
+											</select></td>
+
+											<td><label>Upload Document</label></td>
+											<td colspan="1">Upload File <input name="NewfilesLease"
+												id="fileUploadNewDowcumentsLease" type="file"
+												onChange="makeFileListLease();" multiple>
+											</td>
+											<td colspan="2"></td>
+										</tr>
+
+									</table>
+
+									<div id="Upload Documents">
+
+										<div style="margin: 10px;">
+											<div class="tab-pane landrecords22"
+												id="registry-recordLease31">
+												<label>Remarks</label> <input type="text"
+													name="remrks_lease" id="remrks_lease" value=""
+													class="text ui-widget-content ui-corner-all"
+													maxlength="500">
+											</div>
+											<div>
+												<button class="btn hideNew"
+													onclick="javascript:saveattributesLease();">
+													<!-- onclick="javascript:updateattributesGen();"-->
+													Save
+												</button>
+											</div>
+										</div>
+
+										<table class="amendbeforeAfterTable">
+											<thead>
+												<tr>
+													<th>Doc</th>
+													<th>Doctype</th>
+													<th>Doc Description</th>
+													<th>Scanned Image</th>
+												</tr>
+											</thead>
+											<tbody id="landRegistration_docs">
+											</tbody>
+
+										</table>
+
+										<script id="landRegistration_docsTemplate"
+											type="text/x-jquery-tmpl">
+					      <tr>
+						
+							<td>
+							$(name)
+							</td>
+							<td>
+                             ${docType}
+							</td> 
+							<td>
+							${description}					  
+							</td>                     
+							
+						  
+                       </tr>
+                    </script>
+
+
+
+
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						<div id="Tab_2" style="display: none">
+
+
+
+
+							<div class="tab-pane landrecords22" id="registry-record_sale">
+
+
+
+
+								<div id="tabs_registry1">
+									<ul>
+										<li id = "selectedseller" ><a href="#Seller_Details" onclick="javascript:Hidedocumentgrid();" id = "selectedselleranchor" >Seller Details</a></li>
+										<li id = "selectedland"><a href="#Land_Details_Sale" onclick="javascript:Hidedocumentgrid();">Land Details</a></li>
+										<li id = "selectedbuyer"><a href="#Buyer_Details" onclick="javascript:Hidedocumentgrid();" id = "selectedbuyeranchor">Buyer Details</a></li>
+										<li id = "selecteddoc"><a href="#Upload_Document_Sale" onclick="javascript:ShowSavebutton();">Upload Document</a></li>
+										<!-- onclick="javascript:validateSale();" -->
+									</ul>
+									<div id="Seller_Details">
+										<div
+											style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+											<!-- table -->
+											<table style="width: 100%" id="tableGeneralAttributes_sale"
+												class="landrecords22 ">
+												<tr>
+													<td><label id = "selectedsellerlabel">Seller Details</label></td>
+												</tr>
+
+												<tr>
+													<td><label>First Name</label> <input type="text"
+														name="firstname_r_sale" id="firstname_r_sale" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+													<td><label>Middle Name</label> <input type="text"
+														name="middlename_r_sale" id="middlename_r_sale" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+													<td><label>Last Name</label> <input type="text"
+														name="lastname_r_sale" id="lastname_r_sale" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+												</tr>
+
+												<tr>
+													<td><label>ID Type</label> <select
+														name="sale_id_type" id="sale_id_type" disabled
+														readonly="readonly">
+															<option>Please Select</option>
+
+													</select></td>
+													<td><label>ID No</label> <input type="text"
+														name="id_r" id="id_r" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimStatus --></td>
+
+													<td><label>Contact No</label> <input type="text"
+														name="contact_no_sale" id="contact_no_sale" value=""
+														onkeypress="return isNumber(event)"
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+
+												</tr>
+
+												<tr>
+
+													<td><label>Gender</label> <select name="sale_gender"
+														id="sale_gender" disabled readonly="readonly">
+															<option>Please Select</option>
+
+
+													</select></td>
+
+													<td><label>Address</label> <input type="text"
+														name="address_sale" id="address_sale" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimStatus --></td>
+													<td><label>Date Of Birth</label> <input type="text"
+														name="date_Of_birth_sale" id="date_Of_birth_sale" value=""
+														class="text ui-widget-content ui-corner-all"> <!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+													</td>
+												</tr>
+
+												<tr>
+
+													<td><label>Martial Status </label> <select
+														name="sale_martial_status" id="sale_martial_status"
+														disabled readonly="readonly">
+															<option>Please Select</option>
+
+
+													</select></td>
+
+												</tr>
+												
+											</table>
+										</div>
+										
+										<div style="margin: 10px; border: 1px solid #ccc; padding: 10px; display: none;" id="SecondOwner"  name="SecondOwner" >
+											<!-- table -->
+											<table style="width: 100%" id="tableGeneralAttributes_sale_seller2" class="landrecords22">
+												<!-- Second Seller -->
+												<tr >
+
+													<td><label>Second Owner </label> </td>
+
+												</tr>
+											
+												<tr>
+													<td><label>First Name</label> <input type="text"
+														name="firstname_r_sale1second" id="firstname_r_sale1second" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+													<td><label>Middle Name</label> <input type="text"
+														name="middlename_r_sale1" id="middlename_r_sale1second" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+													<td><label>Last Name</label> <input type="text"
+														name="lastname_r_sale1second" id="lastname_r_sale1second" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+												</tr>
+
+												<tr>
+													<td><label>ID Type</label> <select
+														name="sale_id_type1second" id="sale_id_type1second" disabled
+														readonly="readonly">
+															<option>Please Select</option>
+
+													</select></td>
+													<td><label>ID No</label> <input type="text"
+														name="id_r1second" id="id_r1second" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimStatus --></td>
+
+													<td><label>Contact No</label> <input type="text"
+														name="contact_no_sale1second" id="contact_no_sale1second" value=""
+														onkeypress="return isNumber(event)"
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"></td>
+
+												</tr>
+
+												<tr>
+
+													<td><label>Gender</label> <select name="sale_gender1second"
+														id="sale_gender1second" disabled readonly="readonly">
+															<option>Please Select</option>
+
+
+													</select></td>
+
+													<td><label>Address</label> <input type="text"
+														name="address_sale1second" id="address_sale1second" value=""
+														class="text ui-widget-content ui-corner-all" disabled
+														readonly="readonly"> <!-- claimStatus --></td>
+													<td><label>Date Of Birth</label> <input type="text"
+														name="date_Of_birth_sale1second" id="date_Of_birth_sale1second" value=""
+														class="text ui-widget-content ui-corner-all"> <!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+													</td>
+												</tr>
+
+												<tr>
+
+													<td><label>Martial Status </label> <select
+														name="sale_martial_status1second" id="sale_martial_status1second"
+														disabled readonly="readonly">
+															<option>Please Select</option>
+
+
+													</select></td>
+
+												</tr>
+												
+											</table>
+										</div>
+										
+									</div>
+									<div id="Land_Details_Sale">
+										<div class="tab-pane landrecords22"
+											id="registry-record_sale_land">
+											<div
+												style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+												<!-- table -->
+												<table style="width: 100%" id="tableLand_sale"
+													class="landrecords22 ">
+
+													<tr>
+														<td><label>Land Details</label></td>
+													</tr>
+
+													<tr>
+														<td><label>Country </label> <select
+															name="sale_country" id="sale_country"
+															onchange="getcountryvalues(this);" disabled
+															readonly="readonly">
+																<option>Please Select</option>
+
+														</select></td>
+														<td><label>Region </label> <select
+															name="sale_region" id="sale_region" disabled
+															readonly="readonly">
+																<option>Please Select</option>
+
+														</select></td>
+														<td><label>Province </label> <select
+															name="sale_province" id="sale_province" disabled
+															readonly="readonly">
+																<option>Please Select</option>
+
+														</select></td>
+													</tr>
+													<tr>
+														<td><label>Parcel No</label> <input type="text"
+															name="parcel_r" id="parcel_r" value=""
+															class="text ui-widget-content ui-corner-all" disabled
+															readonly="readonly"></td>
+
+														<td><label>Land Type </label> <select
+															name="sale_land_type" id="sale_land_type" disabled
+															readonly="readonly">
+																<option>Please Select</option>
+
+														</select></td>
+														<td><label>Ownership Share Type </label> <select
+															name="sale_land_Share_type" id="sale_land_Share_type"
+															disabled readonly="readonly">
+																<option>Please Select</option>
+
+														</select></td>
+
+
+														<!--<td>
+                                                <label >Number Of Years for Lease</label> 
+												<input type="text" name="number_Of_years_Lease" id="number_Of_years_Lease" value="" class="text ui-widget-content ui-corner-all" >
+                                                <select name="existing_use_r" id="existing_use_r" class="gendisable"></select> 
+                                            </td> -->
+
+													</tr>
+													<tr>
+
+														<!-- <td>
+                                                <label >Direction </label> 
+                                                <select>
+													<option>West</option>
+												</select>
+                                            </td> -->
+														<td><label>Land Use</label> <input type="text"
+															name="sale_land_use" id="sale_land_use" value=""
+															class="text ui-widget-content ui-corner-all" disabled
+															readonly="readonly"></td>
+														<td><label>Area</label> <input type="text"
+															name="sale_area" id="sale_area" value=""
+															class="text ui-widget-content ui-corner-all" disabled
+															readonly="readonly"></td>
+														<td><label>Neighbour East</label> <input type="text"
+															name="neighbor_east_sale" id="neighbor_east_sale"
+															class="text ui-widget-content ui-corner-all justread"
+															disabled readonly="readonly"></td>
+
+													</tr>
+
+													<tr>
+														<td><label>Neighbour West</label> <input type="text"
+															name="neighbor_west_sale" id="neighbor_west_sale"
+															class="text ui-widget-content ui-corner-all justread"
+															disabled readonly="readonly"></td>
+
+
+														<td><label>Neighbour North</label> <input type="text"
+															name="neighbor_north_sale" id="neighbor_north_sale"
+															class="text ui-widget-content ui-corner-all justread"
+															disabled readonly="readonly"></td>
+
+														<td><label>Neighbour South</label> <input type="text"
+															name="neighbor_south_sale" id="neighbor_south_sale"
+															class="text ui-widget-content ui-corner-all justread"
+															disabled readonly="readonly"></td>
+
+
+													</tr>
+
+												</table>
+
+											</div>
+										</div>
+									</div>
+									<div id="Buyer_Details">
+										<div class="tab-pane landrecords22" id="registry-record_sale_buyer_EliminateOwner">
+										
+											<div style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+												<!-- table -->
+												<table style="width: 100%" id="tablebuyer_sale" class="landrecords22 "><tr>
+														<td id="EliminatedOwner" style="display: none;"><label>Owner Leaving his ownership</label> <select
+															name="Owner_Elimanated" id="Owner_Elimanated">
+																<option>Please Select</option>
+
+														</select></td>
+													</tr>
+												</table>
+											</div>
+											
+											<div style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+												<!-- table -->
+												<table style="width: 100%" id="tablebuyer_sale" class="landrecords22 ">
+													
+													<tr>
+														<td><label id = "selectedbuyerlabel">Buyer Details</label></td>
+													</tr>
+													
+													<tr>
+														<td><label>First Name</label> <input type="text"
+															name="firstname_r_sale1" id="firstname_r_sale1" value=""
+															class="text ui-widget-content ui-corner-all"
+															maxlength="50"> <!-- claimNumber --></td>
+														<td><label>Middle Name</label> <input type="text"
+															name="middlename_r_sale1" id="middlename_r_sale1"
+															value="" class="text ui-widget-content ui-corner-all"
+															maxlength="50"> <!-- claimNumber --></td>
+														<td><label>Last Name</label> <input type="text"
+															name="lastname_r_sale1" id="lastname_r_sale1" value=""
+															class="text ui-widget-content ui-corner-all"
+															maxlength="50"> <!-- claimNumber --></td>
+													</tr>
+
+													<tr>
+
+														<td><label>ID Type</label> <select
+															name="sale_idtype_buyer" id="sale_idtype_buyer">
+																<option>Please Select</option>
+
+
+														</select></td>
+														<td><label>ID</label> <input type="text"
+															name="id_r1" id="id_r1" value=""
+															class="text ui-widget-content ui-corner-all"
+															maxlength="50"> <!-- claimStatus --></td>
+
+														<td><label>Contact No</label> <input type="text"
+															name="contact_no1" id="contact_no1" value=""
+															onkeypress="return isNumber(event)"
+															class="text ui-widget-content ui-corner-all"
+															maxlength="15"></td>
+
+													</tr>
+
+													<tr>
+
+														<td><label>Gender</label> <select
+															name="sale_gender_buyer" id="sale_gender_buyer">
+																<option>Please Select</option>
+
+														</select></td>
+
+														<td><label>Address</label> <input type="text"
+															name="address_sale1" id="address_sale1" value=""
+															class="text ui-widget-content ui-corner-all"
+															maxlength="250"> <!-- claimStatus --></td>
+														<td><label>Date Of Birth</label> <input type="text"
+															name="date_Of_birth_sale1" id="date_Of_birth_sale1"
+															value="" class="input-medium datepicker"
+															style="background: none;"> <!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+														</td>
+													</tr>
+
+													<tr>
+
+														<td><label>Martial Status </label> <select
+															name="sale_marital_buyer" id="sale_marital_buyer">
+																<option>Please Select</option>
+
+														</select></td>
+														
+														<td id="RelationWithOwner" style="display: none;"><label>Relation with Owner </label> <select
+															name="sale_relation_buyer" id="sale_relation_buyer">
+																<option>Please Select</option>
+
+														</select></td>
+
+													</tr>
+
+												</table>
+											</div>
+										</div>
+									</div>
+									<div id="Upload_Document_Sale">
+										<table style="width: 100%" id="tableupload_sale"
+											class="landrecords22 ">
+
+											<tr>
+												<td><label>Document Name</label> <input type="text"
+													name="doc_name_sale" id="doc_name_sale" value=""
+													class="text ui-widget-content ui-corner-all" maxlength="50">
+													<!-- claimNumber --></td>
+												<td><label>Document Date</label> <input type="text"
+													name="doc_date_sale" id="doc_date_sale" value=""
+													class="input-medium datepicker" style="background: none;"
+													readonly> <!-- claimNumber --></td>
+												<td><label>Document Description</label> <input
+													type="text" name="doc_desc_sale" id="doc_desc_sale"
+													value="" class="text ui-widget-content ui-corner-all"
+													maxlength="250"> <!-- claimNumber --></td>
+											</tr>
+
+											<tr>
+												<!--<td>
+                                                <label >Upload Document</label>
+                                               
+                                            </td>
+											 <td>
+                                                <label >Uploaded Document(s)</label>
+                                               
+                                            </td> -->
+												<td><label>Document Type</label> <select
+													name="doc_Type_Sale" id="doc_Type_Sale">
+
+												</select></td>
+
+												<td colspan="1"><label>Upload Document</label> Upload
+													File <input name="Newfiles" id="fileUploadNewDowcumentss"
+													type="file" onChange="makeFileList();" multiple></td>
+
+											</tr>
+
+
+											<!-- <tr>
+                                            <td colspan="1">
+                                               Upload File <input name="Newfiles" id="fileUploadNewDowcumentss" type="file" onChange="makeFileList();" multiple>
+                                            </td>
+											<td colspan="2" id="fp">
+												
+											</td>
+											
+                                        </tr> -->
+
+											<!--
+                                        <tr>
+                                            <td colspan="3">
+                                                <div id="customgeneral-div_lease_r_sale"></div>
+                                            </td>
+                                        </tr>
+										-->
+										</table>
+										<div style="margin: 10px;">
+
+
+											<!-- <ul id="fileListSale"><li>No Files Selected</li></ul> -->
+											<!--SHOW RESULT HERE-->
+
+
+
+											<div class="tab-pane landrecords22"
+												id="registry-recordLease31">
+												<label>Remarks</label> <input type="text"
+													name="remrks_sale" id="remrks_sale" value=""
+													class="text ui-widget-content ui-corner-all"
+													maxlength="500">
+											</div>
+
+											<!-- <div>
+												<button class="btn hideNew"
+													onclick="javascript:saveattributessale();">Save</button>
+											</div> -->
+
+
+										</div>
+
+										<div>
+
+											<table class="amendbeforeAfterTable">
+												<thead>
+													<tr>
+														<th>Doc</th>
+														<th>Doctype</th>
+														<th>Doc Description</th>
+														<th>Scanned Image</th>
+													</tr>
+												</thead>
+												<tr>
+													<td></td>
+													<td id="fp"></td>
+													<td></td>
+													<td></td>
+
+
+												</tr>
+											</table>
+										</div>
+									</div>
+
+
+
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+					<div id="Tab_3" style="display: none">
+
+						<div id="tabs_registry2">
+							<ul>
+								<li><a href="#Owner_Details">Owner Details</a></li>
+								<li><a href="#Land_Details_Mortgage">Land Details</a></li>
+								<li><a href="#Mortgage_Details">Mortgage Details</a></li>
+								<li><a href="#Upload_Document_Mortgage">Upload
+										Document</a></li>
+								<!-- onclick="javascript:validateMortgage();" -->
+							</ul>
+							<div id="Owner_Details">
+								<div class="tab-pane landrecords22"
+									id="registry-record_mortgage">
+									<div
+										style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+										<!-- table -->
+
+										<table style="width: 100%"
+											id="tableGeneralAttributes_mortgage" class="landrecords22 ">
+
+
+											<tr>
+												<td><label>Owner Details</label></td>
+											</tr>
+											<tr>
+												<td><label>First Name</label> <input type="text"
+													name="firstname_r_mortgage" id="firstname_r_mortgage"
+													value="" class="text ui-widget-content ui-corner-all"
+													disabled readonly="readonly"> <!-- claimNumber -->
+												</td>
+												<td><label>Middle Name</label> <input type="text"
+													name="middlename_r_mortgage" id="middlename_r_mortgage"
+													value="" class="text ui-widget-content ui-corner-all"
+													disabled readonly="readonly"> <!-- claimNumber -->
+												</td>
+												<td><label>Last Name</label> <input type="text"
+													name="lastname_r_mortgage" id="lastname_r_mortgage"
+													value="" class="text ui-widget-content ui-corner-all"
+													disabled readonly="readonly"> <!-- claimNumber -->
+												</td>
+											</tr>
+
+											<tr>
+												<td><label>ID Type</label> <select
+													name="id_type_mortgage" id="id_type_mortgage" disabled
+													readonly="readonly">
+
+												</select></td>
+												<td><label>ID</label> <input type="text"
+													name="id_r_mortgage" id="id_r_mortgage" value=""
+													class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly"> <!-- claimStatus --></td>
+
+												<td><label>Contact No</label> <input type="text"
+													name="contact_no_mortgage" id="contact_no_mortgage"
+													onkeypress="return isNumber(event)" value=""
+													class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly"></td>
+
+											</tr>
+
+											<tr>
+
+												<td><label>Gender</label> <select
+													name="gender_mortgage" id="gender_mortgage" disabled
+													readonly="readonly">
+
+												</select></td>
+
+												<td><label>Address</label> <input type="text"
+													name="address_mortgage" id="address_mortgage" value=""
+													class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly"> <!-- claimStatus --></td>
+												<td><label>Date Of Birth</label> <input type="text"
+													name="date_Of_birth_mortgage" id="date_Of_birth_mortgage"
+													value="" class="text ui-widget-content ui-corner-all">
+													<!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
+												</td>
+											</tr>
+
+											<tr>
+
+												<td><label>Martial Status </label> <select
+													name="Martial_sts_mortgage" id="Martial_sts_mortgage"
+													disabled readonly="readonly">
+
+												</select></td>
+
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div id="Land_Details_Mortgage">
+								<div class="tab-pane landrecords22"
+									id="registry-record_mortgage_land">
+									<div
+										style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+										<!-- table -->
+										<table style="width: 100%" id="tableLand_mortgage"
+											class="landrecords22 ">
+
+											<tr>
+												<td><label>Land Details</label></td>
+											</tr>
+
+											<tr>
+												<td><label>Country </label> <select
+													name="Country_mortgage" id="Country_mortgage" disabled
+													readonly="readonly">
+
+												</select></td>
+												<td><label>Region </label> <select
+													name="Region_mortgage" id="Region_mortgage" disabled
+													readonly="readonly">
+
+												</select></td>
+												<td><label>Provience </label> <select
+													name="Provience_mortgage" id="Provience_mortgage" disabled
+													readonly="readonly">
+
+												</select></td>
+											</tr>
+											<tr>
+
+												<td><label>Parcel No</label> <input type="text"
+													name="parcel_r_mortgage" id="parcel_r_mortgage" value=""
+													class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly"></td>
+												<td><label>Land Type </label> <select
+													name="Land_type_mortgage" id="Land_type_mortgage" disabled
+													readonly="readonly">
+
+												</select></td>
+												<td><label>Ownership Share Type </label> <select
+													name="Ownership_type_mortgage" id="Ownership_type_mortgage"
+													disabled readonly="readonly">
+
+												</select></td>
+
+
+												<!--<td>
+                                                <label >Number Of Years for Lease</label> 
+												<input type="text" name="number_Of_years_Lease" id="number_Of_years_Lease" value="" class="text ui-widget-content ui-corner-all" >
+                                                <select name="existing_use_r" id="existing_use_r" class="gendisable"></select> 
+                                            </td> -->
+
+											</tr>
+											<tr>
+												<!-- <td>
+                                                <label >Direction </label> 
+                                                <select>
+													
+													<option>West</option>
+												</select>
+                                            </td> -->
+												<td><label>Land Use</label> <input type="text"
+													name="mortgage_land_use" id="mortgage_land_use" value=""
+													class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly"></td>
+												<td><label>Area</label> <input type="text"
+													name="mortgage_area" id="mortgage_area" value=""
+													class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly"></td>
+												<td><label>Neighbour East</label> <input type="text"
+													name="neighbor_east_mortgage" id="neighbor_east_mortgage"
+													class="text ui-widget-content ui-corner-all justread"
+													disabled readonly="readonly"></td>
+
+											</tr>
+
+											<tr>
+												<td><label>Neighbour West</label> <input type="text"
+													name="neighbor_west_mortgage" id="neighbor_west_mortgage"
+													class="text ui-widget-content ui-corner-all justread"
+													disabled readonly="readonly"></td>
+
+
+												<td><label>Neighbour North</label> <input type="text"
+													name="neighbor_north_mortgage" id="neighbor_north_mortgage"
+													class="text ui-widget-content ui-corner-all justread"
+													disabled readonly="readonly"></td>
+
+												<td><label>Neighbour South</label> <input type="text"
+													name="neighbor_south_mortgage" id="neighbor_south_mortgage"
+													class="text ui-widget-content ui-corner-all justread"
+													disabled readonly="readonly"></td>
+
+
+											</tr>
+
+										</table>
+
+									</div>
+								</div>
+							</div>
+							<div id="Mortgage_Details">
+								<div class="tab-pane landrecords22"
+									id="registry-record_mortgage">
+									<div
+										style="margin: 10px; border: 1px solid #ccc; padding: 10px">
+
+
+										<!-- table -->
+
+										<table style="width: 100%"
+											id="tableGeneralAttributes_mortgage" class="landrecords22 ">
+
+
+											<tr>
+												<td><label>Mortgage Details</label></td>
+											</tr>
+
+											<tr>
+												<td><label>Financial Agencies</label> <select
+													name="mortgage_Financial_Agencies"
+													id="mortgage_Financial_Agencies">
+
+												</select></td>
+											</tr>
+
+											<tr>
+												<td><label>Mortgage From</label> <input type="text"
+													name="mortgage_from" id="mortgage_from" value=""
+													class="input-medium datepicker" style="background: none;"
+													readonly></td>
+												<td><label>Mortgage To</label> <input type="text"
+													name="mortgage_to" id="mortgage_to" value=""
+													class="input-medium datepicker" style="background: none;"
+													readonly></td>
+												<td><label>Amount</label> <input type="text"
+													name="amount_mortgage" id="amount_mortgage"
+													onkeypress="return isDecNumberKey(event)" value=""
+													class="text ui-widget-content ui-corner-all"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+							</div>
+
+							<div id="Upload_Document_Mortgage">
+								<div class="tab-pane landrecords22"
+									id="registry-record_mortgageupload">
+									<div
+										style="margin: 10px; border: 1px solid #ccc; padding: 10px"
+										style="display: none;">
+
+
+										<!-- table -->
+
+										<table style="width: 100%" id="tableupload_mortgage"
+											class="landrecords22 ">
+
+											<tr>
+												<td><label>Document Name</label> <input type="text"
+													name="doc_name_mortgage" id="doc_name_mortgage" value=""
+													class="text ui-widget-content ui-corner-all" maxlength="50">
+													<!-- claimNumber --></td>
+												<td><label>Document Date</label> <input type="text"
+													name="doc_date_mortgage" id="doc_date_mortgage" value=""
+													class="input-medium datepicker" style="background: none;"
+													readonly> <!-- claimNumber --></td>
+												<td><label>Document Description</label> <input
+													type="text" name="doc_desc_mortgage" id="doc_desc_mortgage"
+													value="" class="text ui-widget-content ui-corner-all"
+													maxlength="250"> <!-- claimNumber --></td>
+											</tr>
+											<tr>
+
+												<td><label>Document Type</label> <select
+													name="doc_Type_Mortgage" id="doc_Type_Mortgage">
+
+												</select></td>
+												<td><label>Upload Document</label> Upload File <input
+													name="NewfilesMortgage"
+													id="fileUploadNewDowcumentsMortgage"
+													onChange="makeFileList_mortgage();" type="file" multiple>
+												</td>
+												<!-- <td>
+                                                <label >Uploaded Document(s)</label>
+                                               
+                                            </td> -->
+											</tr>
+
+
+											<!-- <tr>
+                                            <td colspan="1">
+                                               Upload File <input name="NewfilesMortgage" id="fileUploadNewDowcumentsMortgage" onChange="makeFileList_mortgage();" type="file" multiple>
+                                            </td>
+											
+											<td colspan="2" id="fp_mortgage">
+												
+											</td>
+											
+                                        </tr> -->
+
+											<!--
+                                        <tr>
+                                            <td colspan="3">
+                                                <div id="customgeneral-div_lease_r_sale"></div>
+                                            </td>
+                                        </tr>
+										-->
+										</table>
+
+
+									</div>
+								</div>
+								<div style="margin: 10px;">
+									<div class="tab-pane landrecords22" id="registry-recordLease31">
+										<label>Remarks</label> <input type="text"
+											name="remrks_mortgage" id="remrks_mortgage" value=""
+											class="text ui-widget-content ui-corner-all" maxlength="500">
+									</div>
+
+									<div>
+										<button class="btn hideNew"
+											onclick="javascript:saveattributesMortgage();">
+											<!--  onclick="javascript:updateattributesGen();-->
+											Save
+										</button>
+									</div>
+								</div>
+
+								<div id="docdivid_mortgage">
+
+									<table class="amendbeforeAfterTable">
+										<thead>
+											<tr>
+												<th>Doc</th>
+												<th>Doctype</th>
+												<th>Doc Description</th>
+												<th>Scanned Image</th>
+											</tr>
+										</thead>
+										<tr>
+											<td></td>
+											<td id="fp_mortgage"></td>
+											<td></td>
+											<td></td>
+
+
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</form>
+			</div>
+			<!--  Lease -->
+
+			<script type="text/javascript">
+				function getcountryvalues(sel) {
+					//alert(sel.value);
+					getRegionOnChangeCountry(sel.value);
+
+				}
+				function getprocessvalues(sel) {
+					//alert(sel.value);
+					getprocessvalue(sel.value);
+
+				}
+			</script>
+
+			<script type="text/javascript">
+				var specialKeys = new Array();
+				specialKeys.push(8); //Backspace
+				function IsNumeric(e) {
+					var keyCode = e.which ? e.which : e.keyCode
+					var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys
+							.indexOf(keyCode) != -1);
+					document.getElementById("error").style.display = ret ? "none"
+							: "inline";
+					return ret;
+				}
+			</script>
+		</div>
+	</div>
+	<div id="dialog-confirm" title="Validate and Update Attributes">
+		<p id="validationCheck" style="display: none">
+			<span class="ui-icon ui-icon-alert"
+				style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you
+			want to update the attributes?
+		</p>
+	</div>
+</div>
+
+<div id="commentsDialogpopup" title="Registration Transaction Record "
+	class="">
+	<fieldset>
+		<table class="amendbeforeAfterTable" style="display: none;"
+			id="commentsTablePop">
+			
+			<thead>
+			<tr>
+				<td colspan="2"><label>Parcel No</label> <span id="parcelnovalue"> </span></td>
+				<td colspan="2"><label>Registration No</label> <span id="regnovalue"> </span></td>
+			</tr>
+				<tr>
+					<td colspan="6"><h3>
+							<b> Ownership History</b>
+						</h3></td>
+				</tr>
+				<tr>
+					<th class="langchange">Name</th>
+					<!-- <th class="langchange">Middle Name</th>
+					<th class="langchange">Last Name</th> -->
+					<th class="langchange">Address</th>
+					<th class="langchange">Id No</th>
+					<th class="langchange">Ownership Date</th>
+				</tr>
+			</thead>
+			<tbody id="PropertyHistTrackingBody">
+			</tbody>
+		</table>
+		
+		<table class="amendbeforeAfterTable" style="display: none;"
+			id="commentsTablePopTransactionHist">
+			<thead>
+				<tr>
+					<td colspan="6"><h3>
+							<b> Transaction History</b>
+						</h3></td>
+				</tr>
+				<tr>
+					<th class="langchange">Transactions</th>					
+					<th class="langchange">Date</th>
+					<th class="langchange">Party(Leasor/Owner/Granter)</th>
+					<th class="langchange">Party(Leasee/Grantee/Applicant)</th>
+					<th class="langchange">View detail</th>
+					<th class="langchange">View Doc</th>
+				</tr>
+			</thead>
+			<tbody id="TransactionHistTrackingBody">
+			</tbody>
+		</table>
+
+		<table class="amendbeforeAfterTable" style="display: none;"
+			id="commentsTablePopLease">
+			<thead>
+				<tr>
+					<td colspan="9"><h3>
+							<b> Lease History</b>
+						</h3></td>
+				</tr>
+				<tr>
+					<th class="langchange">First Name</th>
+					<th class="langchange">Middle Name</th>
+					<th class="langchange">Last Name</th>
+					<th class="langchange">Address</th>
+					<th class="langchange">Id No</th>
+					<th class="langchange">Lease Date</th>
+					<!-- <th class="langchange">No of Lease year</th> -->
+					<th class="langchange">Lease Months</th>
+					<th class="langchange">Lease Amount</th>
+				</tr>
+			</thead>
+			<tbody id="PropertyLeaseHistTrackingBody">
+			</tbody>
+		</table>
+
+		<table class="amendbeforeAfterTable" style="display: none;"
+			id="commentsTablePopMortage">
+			<thead>
+				<tr>
+					<td colspan="9"><h3>
+							<b> Mortage History</b>
+						</h3></td>
+				</tr>
+				<tr>
+					<th class="langchange">Financial Agency</th>
+					<th class="langchange">Mortgage From</th>
+					<th class="langchange">Mortgage To</th>
+					<th class="langchange">Mortgage Amount</th>
+				</tr>
+			</thead>
+			<tbody id="PropertyMortageHistTrackingBody">
+			</tbody>
+		</table>
+
+	</fieldset>
+</div>
+
+<script id="TransactionHistTrackingTemplate" type="text/x-jquery-tmpl">
+
+<tr>       		                  
+		<td class="langchange">
+			${transactiontype} 
+ 		</td>    
+		
+		<td class="langchange">
+			${createddate}    
+ 		</td>
+		<td class="langchange">
+			${ownername}    
+ 		</td>
+		<td class="langchange">
+			${applicantname}    
+ 		</td>
+		<td class="langchange">
+		{{if (transactiontype == 'Lease')}}	  
+			<a href="javascript:viewleasedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+		{{/if}}
+
+		{{if (transactiontype == 'Surrender Lease')}}	  
+			<a href="javascript:viewsurrenderleasedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+		{{/if}}
+ 		
+		{{if (transactiontype == 'Mortage')}}	  
+			<a href="javascript:viewMortagagedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+		{{/if}}
+
+		
+		</td>
+		<td class="langchange">
+			   <a href="javascript:viewdocumentdetail('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a> 
+ 		</td>
+</tr>
+</script>
+
+<script id="PropertyHistTrackingTemplate" type="text/x-jquery-tmpl">
+
+<tr>       		                  
+		<td class="langchange">
+			${firstname}  ${middlename}  ${lastname} 
+ 		</td>    
+		
+		<td class="langchange">
+			${address}    
+ 		</td>
+		<td class="langchange">
+			${identityno}    
+ 		</td>
+		<td class="langchange">
+			${createddate}    
+ 		</td>
+</tr>
+</script>
+
+<script id="PropertyLeaseTrackingTemplate" type="text/x-jquery-tmpl">
+
+<tr>       		                  
+		<td class="langchange">
+			${firstname}    ${middlename}  ${lastname}
+ 		</td>
+		<td class="langchange">
+			${address}    
+ 		</td>
+		<td class="langchange">
+			${identityno}    
+ 		</td>
+		<td class="langchange">
+			${createddate}    
+ 		</td>		
+		<td class="langchange">
+			${monthid}    
+ 		</td>
+		<td class="langchange">
+			${leaseamount}    
+ 		</td>
+</tr>
+</script>
+
+<script id="PropertyMortageTrackingTemplate" type="text/x-jquery-tmpl">
+
+<tr>       		                  
+		<td class="langchange">
+			${financialagency}    
+ 		</td>    
+		<td class="langchange">
+			${mortgagefrom}    
+ 		</td>
+		<td class="langchange">
+			${mortgageto}    
+ 		</td>
+		<td class="langchange">
+			${mortgageamount}    
+ 		</td>
+		
+</tr>
+</script>
+
+<script id="DocumentTrackingTemplate" type="text/x-jquery-tmpl">
+
+<tr>       		                  
+		<td class="langchange">
+			${documentname}    
+ 		</td>    
+		<td class="langchange">
+			${docdate}    
+ 		</td>
+		<td class="langchange">
+			${description}    
+ 		</td>
+		<td class="langchange">
+			${documenttype}    
+ 		</td>
+		<td class="langchange">
+			<a href="javascript:viewdocumentdetailForTransaction('${partyid}','${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>    
+ 		</td>
+		
+</tr>
+</script>
+
+<div id="landrecordsview" title="View Land Record "
+	style="display: none;">
+
+	<fieldset>
+
+		<table style="width: 100%" id="tableGeneralAttributes"
+			class="landrecords22 ">
+
+
+			<tr>
+				
+				<td><label>Country </label> <select name="country_l_record"
+					id="country_l_record" disabled readonly="readonly">
+
+				</select></td>
+				<td><label>Region </label> <select name="region_l_record"
+					id="region_l_record" disabled readonly="readonly">
+
+				</select></td>
+				<td><label>Provience </label> <select
+					name="provience_l_record" id="provience_l_record" disabled
+					readonly="readonly">
+
+				</select></td>
+
+			</tr>
+			<tr>
+
+				<td><label>Parcel No</label> <input type="text"
+					name="parcel_l_record" id="parcel_l_record" value=""
+					class="text ui-widget-content ui-corner-all" disabled
+					readonly="readonly"></td>
+
+				<td><label>Land Type </label> <select
+					name="Land_Type_l_record" id="Land_Type_l_record" disabled
+					readonly="readonly">
+
+				</select></td>
+
+				<td><label>Ownership Share Type </label> <select
+					name="Ownership_Type_l_record" id="Ownership_Type_l_record" disabled
+					readonly="readonly">
+
+				</select></td>
+				
+				<!-- <td><label>Land Use</label> <input type="text"
+									name="land_use_LR" id="land_use_LR" value=""
+									class="text ui-widget-content ui-corner-all" disabled
+									readonly="readonly"></td>
+									 -->
+									
+
+			</tr>
+			<tr>
+
+				<td><label>Neighbour North</label> <input type="text"
+					name="neighbor_north_LR" id="neighbor_north_LR"
+					class="text ui-widget-content ui-corner-all justread" disabled
+					readonly="readonly"></td>
+					
+						<td><label>Neighbour East</label> <input type="text"
+					name="neighbor_east_LR" id="neighbor_east_LR"
+					class="text ui-widget-content ui-corner-all justread" disabled
+					readonly="readonly"></td>
+					
+					<td><label>Neighbour West</label> <input type="text"
+					name="neighbor_west_LR" id="neighbor_west_LR"
+					class="text ui-widget-content ui-corner-all justread" disabled
+					readonly="readonly"></td>
+
+				<td><label>Neighbour South</label> <input type="text"
+					name="neighbor_south_LR" id="neighbor_south_LR"
+					class="text ui-widget-content ui-corner-all justread" disabled
+					readonly="readonly"></td>
+			
+
+			
+				
+			</tr>
+			<tr>
+                <td><label >Existing Use</label> 
+                   <select name="existing_use_LR" id="existing_use_LR" class="gendisable" disabled></select>
+                </td>
+                <td>
+                <label >Proposed Use</label> 
+                <select name="proposed_use_LR" id="proposed_use_LR" class="gendisable" disabled></select>
+				</td> 
+				
+
+			</tr>
+
+		</table>
+
+
+	</fieldset>
+</div>

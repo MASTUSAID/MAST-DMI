@@ -3,6 +3,7 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,76 +26,134 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  */
 @Entity
-@Table(name="project_layergroup")
+@Table(name="la_ext_projectlayergroupmapping")
 public class ProjectLayergroup implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Integer grouporder;
-	private Integer id;
-	private String tenantid;
-	private Layergroup layergroupBean;
-	private Project projectBean;
-
-    public ProjectLayergroup() {
-    }
-
-
-	public Integer getGrouporder() {
-		return this.grouporder;
-	}
-
-	public void setGrouporder(Integer grouporder) {
-		this.grouporder = grouporder;
-	}
-
-	//@Id
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
 	
-	@Id
-	@SequenceGenerator(name="pk_project_layergroup_id_seq",sequenceName="project_layergroup_id_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_project_layergroup_id_seq") 
-	@Column(name="id", unique=true, nullable=false) 
+	    @Id
+		@SequenceGenerator(name="pk_la_ext_projectlayergroupmapping",sequenceName="la_ext_projectlayergroupmapping_projectlayergroupid_seq", allocationSize=1) 
+		@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_ext_projectlayergroupmapping") 
+		@Column(name="projectlayergroupid")
+	    private Integer projectlayergroupid;
 	
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-
-	public String getTenantid() {
-		return this.tenantid;
-	}
-
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
-	}
-
-
-	//bi-directional many-to-one association to Layergroup
-	//@JsonIgnore
-    @ManyToOne
-	@JoinColumn(name="layergroup")
-	@JsonProperty("layergroups") 
-	public Layergroup getLayergroupBean() {
-		return this.layergroupBean;
-	}	
-	public void setLayergroupBean(Layergroup layergroupBean) {
-		this.layergroupBean = layergroupBean;
-	}
+	    private boolean isactive;
+	 
+	    private Integer createdby;
+		private Integer modifiedby;
+		
+		@Temporal( TemporalType.DATE)
+		private Date createddate;
+		
+		@Temporal( TemporalType.DATE)
+	    private Date modifieddate;
+	    
+		@ManyToOne
+		@JoinColumn(name="layergroupid")
+	    private Layergroup layergroupBean;
+		
+		
+		
+		//@JsonIgnore
+	    @ManyToOne
+		@JoinColumn(name="projectnameid")
+		private Project projectBean;
+	 
+    
+		public ProjectLayergroup() {
+    
+        }
+		
+				
+			@JsonIgnore
+			public Project getProjectBean() {
+				return this.projectBean;
+			}
+			
+			public void setProjectBean(Project projectBean) {
+				this.projectBean = projectBean;
+			}
 	
+		
+		
 
-	//bi-directional many-to-one association to Project
-	@JsonIgnore
-    @ManyToOne
-	@JoinColumn(name="project")
-	public Project getProjectBean() {
-		return this.projectBean;
-	}
-	
-	public void setProjectBean(Project projectBean) {
-		this.projectBean = projectBean;
-	}
-	
+
+		public Integer getCreatedby() {
+				return createdby;
+			}
+
+
+			public void setCreatedby(Integer createdby) {
+				this.createdby = createdby;
+			}
+
+
+			public Integer getModifiedby() {
+				return modifiedby;
+			}
+
+
+			public void setModifiedby(Integer modifiedby) {
+				this.modifiedby = modifiedby;
+			}
+
+
+		public Date getCreateddate() {
+			return createddate;
+		}
+
+
+		public void setCreateddate(Date createddate) {
+			this.createddate = createddate;
+		}
+
+
+		public Date getModifieddate() {
+			return modifieddate;
+		}
+
+
+		public void setModifieddate(Date modifieddate) {
+			this.modifieddate = modifieddate;
+		}
+
+
+		public Boolean getIsactive() {
+			return isactive;
+		}
+
+
+		public void setIsactive(Boolean isactive) {
+			this.isactive = isactive;
+		}
+
+
+		public void setIsactive(boolean isactive) {
+			this.isactive = isactive;
+		}
+
+
+		public Layergroup getLayergroupBean() {
+			return layergroupBean;
+		}
+
+
+		public void setLayergroupBean(Layergroup layergroupBean) {
+			this.layergroupBean = layergroupBean;
+		}
+
+
+		public Integer getProjectlayergroupid() {
+			return projectlayergroupid;
+		}
+
+
+		public void setProjectlayergroupid(Integer projectlayergroupid) {
+			this.projectlayergroupid = projectlayergroupid;
+		}
+
+		
+		
+    		
+		
+		
 }

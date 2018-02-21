@@ -22,63 +22,63 @@ public class PersonForEditing implements Serializable {
     private long id;
 
     @Column(name = "person_id")
-    private long personId;
+    private Integer personId;
 
     @Column(name = "right_id")
-    private long rightId;
+    private Integer rightId;
 
     @Column
-    private long usin;
+    private Long landid;
 
     @Column
     private String uka;
     
-    @Column(name = "hamlet_id")
-    private Long hamletId;
+    @Column(name = "projectnameid")
+    private Integer hamletId;
     
-    @Column(name = "claim_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date claimDate;
+//    @Column(name = "claim_date")
+//    @Temporal(javax.persistence.TemporalType.DATE)
+//    private Date claimDate;
 
     @Column(name = "claim_number")
-    private String claimNumber;
+    private Integer claimNumber;
 
-    @Column(name = "project_name")
+    @Column(name = "projectname")
     private String projectName;
 
-    @Column(name = "first_name")
+    @Column(name = "firstname")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "lastname")
     private String lastName;
 
-    @Column(name = "middle_name")
+    @Column(name = "middlename")
     private String middleName;
 
-    @Column
+    @Column(name="genderid")
     private Integer gender;
 
-    @Column(name = "marital_status")
+    @Column(name = "maritalstatusid")
     private Integer maritalStatus;
 
-    @Column(name = "share_type")
+    @Column(name = "landsharetype_en")
     private String shareType;
     
-    @Column(name = "id_number")
+    @Column(name = "identityno")
     private String idNumber;
     
-    @Column(name = "id_type")
+    @Column(name = "identitytypeid")
     private Integer idType;
     
-    @Column
+    @Column(name="contactno")
     private String mobile;
     
-    @Column
+    @Column(name="dateofbirth")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date dob;
     
-    @Column
-    private Integer age;
+//    @Column
+//    private Integer age;
 
     @Column(name = "neighbor_north")
     private String neighborNorth;
@@ -92,14 +92,31 @@ public class PersonForEditing implements Serializable {
     @Column(name = "neighbor_west")
     private String neighborWest;
     
-    @Column(name ="claim_status")
-    private int claimStatus;
+//    @Column(name ="claim_status")
+//    private int claimStatus;
     
     public PersonForEditing() {
 
     }
+    
+    
+    
 
-    public long getId() {
+    public Long getLandid() {
+		return landid;
+	}
+
+
+
+
+	public void setLandid(Long landid) {
+		this.landid = landid;
+	}
+
+
+
+
+	public long getId() {
         return id;
     }
 
@@ -111,39 +128,39 @@ public class PersonForEditing implements Serializable {
         return personId;
     }
 
-    public void setPersonId(long personId) {
+    public void setPersonId(Integer personId) {
         this.personId = personId;
     }
 
-    public long getRightId() {
+    public Integer getRightId() {
         return rightId;
     }
 
-    public void setRightId(long rightId) {
+    public void setRightId(Integer rightId) {
         this.rightId = rightId;
     }
 
-    public long getUsin() {
-        return usin;
-    }
+//    public long getUsin() {
+//        return usin;
+//    }
+//
+//    public void setUsin(long usin) {
+//        this.usin = usin;
+//    }
+//
+//    public Date getClaimDate() {
+//        return claimDate;
+//    }
+//
+//    public void setClaimDate(Date claimDate) {
+//        this.claimDate = claimDate;
+//    }
 
-    public void setUsin(long usin) {
-        this.usin = usin;
-    }
-
-    public Date getClaimDate() {
-        return claimDate;
-    }
-
-    public void setClaimDate(Date claimDate) {
-        this.claimDate = claimDate;
-    }
-
-    public String getClaimNumber() {
+    public Integer getClaimNumber() {
         return claimNumber;
     }
 
-    public void setClaimNumber(String claimNumber) {
+    public void setClaimNumber(Integer claimNumber) {
         this.claimNumber = claimNumber;
     }
 
@@ -267,13 +284,13 @@ public class PersonForEditing implements Serializable {
         this.dob = dob;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+//    public Integer getAge() {
+//        return age;
+//    }
+//
+//    public void setAge(Integer age) {
+//        this.age = age;
+//    }
 
     public String getUka() {
         return uka;
@@ -283,22 +300,22 @@ public class PersonForEditing implements Serializable {
         this.uka = uka;
     }
 
-    public Long getHamletId() {
+    public Integer getHamletId() {
         return hamletId;
     }
 
-    public void setHamletId(Long hamletId) {
+    public void setHamletId(Integer hamletId) {
         this.hamletId = hamletId;
     }
 
 
-    public int getClaimStatus() {
-        return claimStatus;
-    }
-
-    public void setClaimStatus(int claimStatus) {
-        this.claimStatus = claimStatus;
-    }
+//    public int getClaimStatus() {
+//        return claimStatus;
+//    }
+//
+//    public void setClaimStatus(int claimStatus) {
+//        this.claimStatus = claimStatus;
+//    }
 
     public String getFullName() {
         String name = "";

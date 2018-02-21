@@ -22,10 +22,10 @@ implements LayertypeDAO {
 	
 
 @SuppressWarnings("unchecked")
-public Layertype findByName(String name) {
+public Layertype findByName(String description) {
 	
 	List<Layertype> layertype =
-		getEntityManager().createQuery("Select lt from Layertype lt where lt.name = :name").setParameter("name", name).getResultList();
+		getEntityManager().createQuery("Select lt from Layertype lt where lt.name = :name").setParameter("name", description).getResultList();
 	
 	if(layertype.size() > 0)
 		return layertype.get(0);
@@ -33,5 +33,19 @@ public Layertype findByName(String name) {
 		return null;
 }
 
-
+@Override
+public Layertype findLayertypeById(long id) {
+	
+	List<Layertype> layertype =
+			getEntityManager().createQuery("Select lt from Layertype lt where  lt.layertypeid = :id").setParameter("id", id).getResultList();
+		
+		if(layertype.size() > 0)
+			return layertype.get(0);
+		else
+			return null;
+	}
+	
 }
+
+
+

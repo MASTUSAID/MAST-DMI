@@ -3,7 +3,11 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.*;
+
 
 
 /**
@@ -11,82 +15,110 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name="module_role")
+@Table(name="la_ext_rolemodulemapping")
 public class RoleModule implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Integer id;
-	private String tenantid;
-	private Action actionBean;
-	private Module moduleBean;
-	private Role roleBean;
-
-    public RoleModule() {
-    }
-
-
+	
+	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(unique=true, nullable=false)
-	
-	
-	/*@Id
-	@SequenceGenerator(name="pk_sequence",sequenceName="role_module_id_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_sequence") 
-	@Column(name="id", unique=true, nullable=false) */
-	
-	public Integer getId() {
-		return this.id;
-	}
+	private Integer rolemoduleid;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	private Integer createdby;
 
+	private Date createddate;
 
-	@Column(length=25)
-	public String getTenantid() {
-		return this.tenantid;
-	}
+	private Boolean isactive;
 
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
-	}
+	private Integer modifiedby;
 
+	private Date modifieddate;
 
-	//bi-directional many-to-one association to Action
-    
+	//bi-directional many-to-one association to LaExtModule
 	@ManyToOne
-	@JoinColumn(name="action", nullable=false)
-	public Action getActionBean() {
-		return this.actionBean;
+	@JoinColumn(name="moduleid")
+	private Module module;
+
+	//bi-directional many-to-one association to LaExtRole
+	@ManyToOne
+	@JoinColumn(name="roleid")
+	private Role role;
+
+	public RoleModule() {
 	}
 
-	public void setActionBean(Action actionBean) {
-		this.actionBean = actionBean;
+	public Integer getRolemoduleid() {
+		return rolemoduleid;
 	}
+
+	public void setRolemoduleid(Integer rolemoduleid) {
+		this.rolemoduleid = rolemoduleid;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+	public Module getModule() {
+		return module;
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
+
+	
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	
 	
 
-	//bi-directional many-to-one association to Module
-    @ManyToOne
-	@JoinColumn(name="module", nullable=false)
-	public Module getModuleBean() {
-		return this.moduleBean;
-	}
-
-	public void setModuleBean(Module moduleBean) {
-		this.moduleBean = moduleBean;
-	}
 	
-
-	//bi-directional many-to-one association to Role
-    @ManyToOne
-	@JoinColumn(name="role", nullable=false)
-	public Role getRoleBean() {
-		return this.roleBean;
-	}
-
-	public void setRoleBean(Role roleBean) {
-		this.roleBean = roleBean;
-	}
+	
+	
+	
+	
 	
 }

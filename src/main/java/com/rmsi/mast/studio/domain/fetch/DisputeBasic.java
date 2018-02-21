@@ -3,131 +3,175 @@ package com.rmsi.mast.studio.domain.fetch;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rmsi.mast.studio.domain.DisputeType;
+import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
+import com.rmsi.mast.studio.domain.LaParty;
 
 @Entity
-@Table(name = "dispute")
+@Table(name = "la_ext_disputelandmapping")
 public class DisputeBasic implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
-    private Long id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="disputelandid")
+	private Integer disputelandid;
 
-    @Column(name = "dispute_type")
-    private Integer disputeTypeId;
+	@Column(name="createdby")
+	private Integer createdby;
 
-    @Column
-    private Long usin;
+	@Temporal(TemporalType.DATE)
+	private Date createddate;
 
-    @Column
-    private String description;
+	@Column(name="isactive")
+	private Boolean isactive;
 
-    @Column
-    private Integer status;
+	@Column(name="modifiedby")
+	private Integer modifiedby;
+
+	@Temporal(TemporalType.DATE)
+	private Date modifieddate;
+
+	//bi-directional many-to-one association to LaExtDisputetype
+	@ManyToOne
+	@JoinColumn(name="disputetypeid",insertable=false, updatable=false)
+	private DisputeType laExtDisputetype;
+
+	//bi-directional many-to-one association to LaExtTransactiondetail
+	@ManyToOne
+	@JoinColumn(name="transactionid")
+	private LaExtTransactiondetailBasic laExtTransactiondetail;
+
+	//bi-directional many-to-one association to LaParty
+	@ManyToOne
+	@JoinColumn(name="partyid",insertable=false, updatable=false)
+	private LaParty laParty;
+
+	private String comment;
+
+	@ManyToOne
+	@JoinColumn(name="landid")
+	@JsonIgnore
+	private ClaimBasic laSpatialunitLand;
     
-    @Column
-    private Boolean deleted;
+	public DisputeBasic() {
+
+	}
+
+	public LaParty getLaParty() {
+		return laParty;
+	}
+
+	public void setLaParty(LaParty laParty) {
+		this.laParty = laParty;
+	}
+
+	public Integer getDisputelandid() {
+		return disputelandid;
+	}
+
+	public void setDisputelandid(Integer disputelandid) {
+		this.disputelandid = disputelandid;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+	public DisputeType getLaExtDisputetype() {
+		return laExtDisputetype;
+	}
+
+	public void setLaExtDisputetype(DisputeType laExtDisputetype) {
+		this.laExtDisputetype = laExtDisputetype;
+	}
+
+	public LaExtTransactiondetailBasic getLaExtTransactiondetail() {
+		return laExtTransactiondetail;
+	}
+
+	public void setLaExtTransactiondetail(
+			LaExtTransactiondetailBasic laExtTransactiondetail) {
+		this.laExtTransactiondetail = laExtTransactiondetail;
+	}
+
+
+	
+	@JsonIgnore
+	public ClaimBasic getLaSpatialunitLand() {
+		return laSpatialunitLand;
+	}
+
+	public void setLaSpatialunitLand(ClaimBasic laSpatialunitLand) {
+		this.laSpatialunitLand = laSpatialunitLand;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
     
-    @Column(name = "reg_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date regDate;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "dispute_person", catalog = "public", joinColumns = {
-        @JoinColumn(name = "dispute_id", nullable = false, updatable = false)
-    }, inverseJoinColumns = {
-        @JoinColumn(name = "person_id", nullable = false, updatable = false)
-    })
-    List<NaturalPersonBasic> disputingPersons;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "dispute_id")
-    List<MediaBasic> media;
+	
+	
+	
     
-    public DisputeBasic() {
-        super();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getDisputeTypeId() {
-        return disputeTypeId;
-    }
-
-    public void setDisputeTypeId(Integer disputeTypeId) {
-        this.disputeTypeId = disputeTypeId;
-    }
-
-    public Long getUsin() {
-        return usin;
-    }
-
-    public void setUsin(Long usin) {
-        this.usin = usin;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getRegDate() {
-        return regDate;
-    }
-
-    public void setRegDate(Date regDate) {
-        this.regDate = regDate;
-    }
-
-    public List<NaturalPersonBasic> getDisputingPersons() {
-        return disputingPersons;
-    }
-
-    public void setDisputingPersons(List<NaturalPersonBasic> disputingPersons) {
-        this.disputingPersons = disputingPersons;
-    }
-
-    public List<MediaBasic> getMedia() {
-        return media;
-    }
-
-    public void setMedia(List<MediaBasic> media) {
-        this.media = media;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
+    
+  
 }

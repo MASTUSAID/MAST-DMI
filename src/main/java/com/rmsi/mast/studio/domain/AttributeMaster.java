@@ -1,199 +1,175 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * The persistent class for the attribute_master database table.
  * 
  */
 @Entity
-@Table(name = "attribute_master")
+@Table(name = "la_ext_attributemaster")
 public class AttributeMaster implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	
+	
 	@Id
-	@SequenceGenerator(name = "ATTRIBUTE_MASTER_ID_GENERATOR", sequenceName = "ATTRIBUTE_MASTER_ID_SEQ", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ATTRIBUTE_MASTER_ID_GENERATOR")
-	private long id;
+	@SequenceGenerator(name="Attribute_master_sequence",sequenceName="la_ext_attributemaster_attributemasterid_seq", allocationSize=1) 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="Attribute_master_sequence") 
+	private Long attributemasterid;
 
-	private String alias;
+	private String fieldaliasname;
 
 	private String fieldname;
 
-	private Integer listing;
+	@Column(name="isactive")
+	private Boolean isactive;
+
+	private String listing;
 
 	private Boolean mandatory;
 
-	private String reftable;
+	private String referencetable;
 
 	private String size;
 
-	private boolean active;
+	private boolean masterattribute;
 	
-	private String alias_second_language;
-	
-	private boolean master_attrib;
-	
-	public boolean isMaster_attrib() {
-		return master_attrib;
-	}
-
-	public void setMaster_attrib(boolean master_attrib) {
-		this.master_attrib = master_attrib;
-	}
-
-	// bi-directional many-to-one association to AttributeCategory
 	@ManyToOne
-	@JoinColumn(name = "attributecategoryid")
-	private AttributeCategory attributeCategory;
+	@JoinColumn(name="attributecategoryid")
+	private AttributeCategory laExtAttributecategory;
 
-	// bi-directional many-to-one association to DatatypeId
+	//bi-directional many-to-one association to LaExtAttributedatatype
 	@ManyToOne
-	@JoinColumn(name = "datatype_id")
-	private DatatypeId datatypeIdBean;
-
-	/*
-	 * //bi-directional many-to-one association to Surveyprojectattribute
-	 * 
-	 * @OneToMany(mappedBy="attributeMaster", fetch=FetchType.EAGER) private
-	 * List<Surveyprojectattribute> surveyprojectattributes;
-	 */
-
-	@Transient
-	private List<AttributeOptions> attributeOptions;
-
-	public List<AttributeOptions> getAttributeOptions() {
-		return attributeOptions;
-	}
-
-	public void setAttributeOptions(List<AttributeOptions> attributeOptions) {
-		this.attributeOptions = attributeOptions;
-	}
-
+	@JoinColumn(name="datatypemasterid")
+	private DatatypeId laExtAttributedatatype;
+	
+	
+    @OneToMany(mappedBy="attributeMaster", cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	private List<AttributeOptions> options;
+	
+	
 	public AttributeMaster() {
+		}
+
+	public Long getAttributemasterid() {
+		return attributemasterid;
 	}
 
-	public long getId() {
-		return id;
+	public void setAttributemasterid(Long attributemasterid) {
+		this.attributemasterid = attributemasterid;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public String getFieldaliasname() {
+		return fieldaliasname;
 	}
 
-	public String getAlias() {
-		return this.alias;
-	}
-
-	public void setAlias(String alias) {
-		this.alias = alias;
+	public void setFieldaliasname(String fieldaliasname) {
+		this.fieldaliasname = fieldaliasname;
 	}
 
 	public String getFieldname() {
-		return this.fieldname;
-	}
-
-	public String getAlias_second_language() {
-		return alias_second_language;
-	}
-
-	public void setAlias_second_language(String alias_second_language) {
-		this.alias_second_language = alias_second_language;
+		return fieldname;
 	}
 
 	public void setFieldname(String fieldname) {
 		this.fieldname = fieldname;
 	}
 
-	public Integer getListing() {
-		return this.listing;
+	public Boolean getIsactive() {
+		return isactive;
 	}
 
-	public void setListing(Integer listing) {
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public String getListing() {
+		return listing;
+	}
+
+	public void setListing(String listing) {
 		this.listing = listing;
 	}
 
 	public Boolean getMandatory() {
-		return this.mandatory;
+		return mandatory;
 	}
 
 	public void setMandatory(Boolean mandatory) {
 		this.mandatory = mandatory;
 	}
 
-	public String getReftable() {
-		return this.reftable;
+	public String getReferencetable() {
+		return referencetable;
 	}
 
-	public void setReftable(String reftable) {
-		this.reftable = reftable;
+	public void setReferencetable(String referencetable) {
+		this.referencetable = referencetable;
 	}
 
 	public String getSize() {
-		return this.size;
+		return size;
 	}
 
 	public void setSize(String size) {
 		this.size = size;
 	}
 
-	public AttributeCategory getAttributeCategory() {
-		return this.attributeCategory;
+	public AttributeCategory getLaExtAttributecategory() {
+		return laExtAttributecategory;
 	}
 
-	public void setAttributeCategory(AttributeCategory attributeCategory) {
-		this.attributeCategory = attributeCategory;
+	public void setLaExtAttributecategory(AttributeCategory laExtAttributecategory) {
+		this.laExtAttributecategory = laExtAttributecategory;
 	}
 
-	public DatatypeId getDatatypeIdBean() {
-		return this.datatypeIdBean;
+	public DatatypeId getLaExtAttributedatatype() {
+		return laExtAttributedatatype;
 	}
 
-	public void setDatatypeIdBean(DatatypeId datatypeIdBean) {
-		this.datatypeIdBean = datatypeIdBean;
+	public void setLaExtAttributedatatype(DatatypeId laExtAttributedatatype) {
+		this.laExtAttributedatatype = laExtAttributedatatype;
 	}
 
-	public boolean isActive() {
-		return active;
+	
+	public boolean isMasterattribute() {
+		return masterattribute;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setMasterattribute(boolean masterattribute) {
+		this.masterattribute = masterattribute;
 	}
 
-	/*
-	 * public List<Surveyprojectattribute> getSurveyprojectattributes() { return
-	 * this.surveyprojectattributes; }
-	 * 
-	 * public void setSurveyprojectattributes(List<Surveyprojectattribute>
-	 * surveyprojectattributes) { this.surveyprojectattributes =
-	 * surveyprojectattributes; }
-	 * 
-	 * public Surveyprojectattribute
-	 * addSurveyprojectattribute(Surveyprojectattribute surveyprojectattribute)
-	 * { getSurveyprojectattributes().add(surveyprojectattribute);
-	 * surveyprojectattribute.setAttributeMaster(this);
-	 * 
-	 * return surveyprojectattribute; }
-	 * 
-	 * public Surveyprojectattribute
-	 * removeSurveyprojectattribute(Surveyprojectattribute
-	 * surveyprojectattribute) {
-	 * getSurveyprojectattributes().remove(surveyprojectattribute);
-	 * surveyprojectattribute.setAttributeMaster(null);
-	 * 
-	 * return surveyprojectattribute; }
-	 */
+	public List<AttributeOptions> getOptions() {
+		return options;
+	}
 
+	public void setOptions(List<AttributeOptions> options) {
+		this.options = options;
+	}
+
+	
+	
+	
+	
+	
 }

@@ -3,9 +3,12 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,46 +19,52 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 /**
  * The persistent class for the layer_layergroup database table.
  * 
  */
 @Entity
-@Table(name="layer_layergroup")
+@Table(name="la_ext_layer_layergroup")
 public class LayerLayergroup implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Integer id;
-	private String layer;
+	
 	private Integer layerorder;
-	private String tenantid;
-	private Layergroup layergroupBean;
+	
+	@Column(name="isactive")
 	private Boolean layervisibility;
+	//private String tenantid;
 	
-    public LayerLayergroup() {
+	//private String grouptype_en;
+	
+	private Integer createdby;
+	private Integer modifiedby;
+	private Date createddate;
+    private Date modifieddate;
+	
+    
+    @ManyToOne
+  	@JoinColumn(name="layergroupid")
+  	private Layergroup layergroupBean;
+  	
+  	@ManyToOne
+	@JoinColumn(name="layerid")
+	private Layer layers;
+  	
+    
+
+	public LayerLayergroup() {
     }
-
     
-   // @Id
-   // @GeneratedValue(strategy=GenerationType.IDENTITY)
+  
+  	@Id
+	@SequenceGenerator(name="pk_la_ext_layer_layergroup",sequenceName="la_ext_layer_layergroup_layer_layergroupid_seq", allocationSize=1) 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_ext_layer_layergroup") 
+	@Column(name="layer_layergroupid") 
+	private Integer id;
 	
-    public Boolean getLayervisibility() {
-		return layervisibility;
-	}
+ 
 
-
-	public void setLayervisibility(Boolean layervisibility) {
-		this.layervisibility = layervisibility;
-	}
-
-
-	@Id
-	@SequenceGenerator(name="pk_layer_layergroup_id_seq",sequenceName="layer_layergroup_id_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_layer_layergroup_id_seq") 
-	@Column(name="id", unique=true, nullable=false) 
-    
-    
-    public Integer getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
@@ -63,44 +72,79 @@ public class LayerLayergroup implements Serializable {
 		this.id = id;
 	}
 
-
-	public String getLayer() {
-		return this.layer;
-	}
-
-	public void setLayer(String layer) {
-		this.layer = layer;
-	}
-
-
 	public Integer getLayerorder() {
-		return this.layerorder;
+		return layerorder;
 	}
 
 	public void setLayerorder(Integer layerorder) {
 		this.layerorder = layerorder;
 	}
 
-
-	public String getTenantid() {
-		return this.tenantid;
+	
+	public Boolean getLayervisibility() {
+		return layervisibility;
 	}
 
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
+	public void setLayervisibility(Boolean layervisibility) {
+		this.layervisibility = layervisibility;
 	}
 
+	/**
+	 * @return the grouptype_en
+	 */
+	
+	
 
-	//bi-directional many-to-one association to Layergroup
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
 	@JsonIgnore
-    @ManyToOne
-	@JoinColumn(name="layergroup")
 	public Layergroup getLayergroupBean() {
-		return this.layergroupBean;
+		return layergroupBean;
 	}
-	@JsonIgnore
+
 	public void setLayergroupBean(Layergroup layergroupBean) {
 		this.layergroupBean = layergroupBean;
 	}
+
+	public Layer getLayers() {
+		return layers;
+	}
+
+	public void setLayers(Layer layers) {
+		this.layers = layers;
+	}
+	
+	
+	
 	
 }

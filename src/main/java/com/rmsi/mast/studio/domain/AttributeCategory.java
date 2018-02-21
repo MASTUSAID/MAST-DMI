@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -13,32 +16,63 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="attribute_category")
+@Table(name="la_ext_attributecategory")
 public class AttributeCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private Long attributecategoryid;
 
-	@Column(name="category_name")
+	@Column(name="categoryname")
 	private String categoryName;
+	
+	private Integer categorydisplayorder;
+	
+	@ManyToOne
+	@JoinColumn(name="categorytypeid")
+	private AttributeCategoryType categorytype;
 
 	public AttributeCategory() {
 	}
+	
+	
 
-	public long getAttributecategoryid() {
-		return this.attributecategoryid;
+	public Integer getCategorydisplayorder() {
+		return categorydisplayorder;
 	}
 
-	public void setAttributecategoryid(long attributecategoryid) {
+
+
+	public void setCategorydisplayorder(Integer categorydisplayorder) {
+		this.categorydisplayorder = categorydisplayorder;
+	}
+
+
+
+	public Long getAttributecategoryid() {
+		return attributecategoryid;
+	}
+
+	public void setAttributecategoryid(Long attributecategoryid) {
 		this.attributecategoryid = attributecategoryid;
 	}
 
 	public String getCategoryName() {
-		return this.categoryName;
+		return categoryName;
 	}
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+
+	public AttributeCategoryType getCategorytype() {
+		return categorytype;
+	}
+
+	public void setCategorytype(AttributeCategoryType categorytype) {
+		this.categorytype = categorytype;
+	}
+
+	
+	
 }

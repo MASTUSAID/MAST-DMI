@@ -85,7 +85,7 @@ public class AttributeMasterServiceImpl implements AttributeMasterService {
     }
 
     @Override
-    public List<AttributeMaster> findbyAttributeId(Long id) {
+    public AttributeMaster findbyAttributeId(Long id) {
         return attributemasterDAO.findByAttributeId(id);
     }
 
@@ -94,5 +94,17 @@ public class AttributeMasterServiceImpl implements AttributeMasterService {
             String fieldName) {
         return attributemasterDAO.duplicateEditvalidate(id, categoryId, alias, fieldName);
     }
+
+	@Override
+	public List<AttributeMaster> getAttributeMasterByTypeId(Integer id) {
+		// TODO Auto-generated method stub
+		return attributemasterDAO.getAttributeMasterByTypeId(id);
+	}
+
+	@Override
+	public List<AttributeMaster> getAttributeMasterByAttributeMasterId(long id) {
+		// TODO Auto-generated method stub
+		return attributemasterDAO.getAttributeMasterByAttributeMasterId(id);
+	}
 
 }

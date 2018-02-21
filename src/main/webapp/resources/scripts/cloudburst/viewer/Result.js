@@ -1178,8 +1178,9 @@ function exportFeatures() {
 
 function getFieldAlias(name) {
 	for ( var i = 0; i < displayableCols.length; i++) {
-		if (name == displayableCols[i].field) {
+		if (name == displayableCols[i].layerfield) {
 			return displayableCols[i].alias
+
 		}
 	}
 }

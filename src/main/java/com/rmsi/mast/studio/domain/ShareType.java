@@ -1,62 +1,77 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
-import java.lang.String;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Entity implementation class for Entity: SocialTenureRelationType
  *
  * @author Shruti.Thakur
  */
+
 @Entity
-@Table(name = "share_type")
+@Table(name = "la_right_landsharetype")
 public class ShareType implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    public static final int SHARE_MULTIPLE_COMMON = 1;
-    public static final int SHARE_SINGLE = 2;
-    public static final int SHARE_MULTIPLE_JOINT = 3;
-    public static final int SHARE_ADMINISTRATOR = 4;
-    public static final int SHARE_GUARDIAN = 5;
-    public static final int SHARE_INSTITUTION = 6;
+	private static final long serialVersionUID = 1L;
 
+    public static final String  SHARE_MULTIPLE_COMMON = "";
+
+    
     @Id
-    private int gid;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="landsharetypeid")
+	private Integer landsharetypeid;
+    
+    @Column(name="isactive")
+	private Boolean isactive;
 
-    @Column(name = "share_type", nullable = false)
-    private String shareType;
+    @Column(name="landsharetype")
+	private String landsharetype;
 
-    @Column(name = "share_type_sw")
-    private String shareType_sw;
+	@Column(name="landsharetype_en")
+	private String landsharetypeEn;
 
     public ShareType() {
         super();
     }
 
-    public int getGid() {
-        return gid;
-    }
+	public Integer getLandsharetypeid() {
+		return landsharetypeid;
+	}
 
-    public void setGid(int gid) {
-        this.gid = gid;
-    }
+	public void setLandsharetypeid(Integer landsharetypeid) {
+		this.landsharetypeid = landsharetypeid;
+	}
 
-    public String getShareType() {
-        return shareType;
-    }
+	public Boolean getIsactive() {
+		return isactive;
+	}
 
-    public void setShareType(String shareType) {
-        this.shareType = shareType;
-    }
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
 
-    public String getShareType_sw() {
-        return shareType_sw;
-    }
+	public String getLandsharetype() {
+		return landsharetype;
+	}
 
-    public void setShareType_sw(String shareType_sw) {
-        this.shareType_sw = shareType_sw;
-    }
+	public void setLandsharetype(String landsharetype) {
+		this.landsharetype = landsharetype;
+	}
+
+	public String getLandsharetypeEn() {
+		return landsharetypeEn;
+	}
+
+	public void setLandsharetypeEn(String landsharetypeEn) {
+		this.landsharetypeEn = landsharetypeEn;
+	}
 
 }

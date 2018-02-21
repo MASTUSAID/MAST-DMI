@@ -47,8 +47,8 @@ public class RoleController {
     {
 		String username = principal.getName();
 		User user = userService.findByUniqueName(username);
-		return 	roleService.findAllRole(user.getRoles().iterator().next().getId());	
-	}
+		return 	roleService.findAllRole();	
+	} 
 	
 	@RequestMapping(value = "/studio/role/{id}", method = RequestMethod.GET)
 	@ResponseBody
@@ -107,13 +107,13 @@ public class RoleController {
 	            		}
 	            		
 		            Module rolemodule=new Module();
-		            rolemodule.setName(modules[i]);
-		            rolemodule.setActions(actionList);
+		            //@rolemodule.setName(modules[i]);
+		           //@ rolemodule.setActions(actionList);
 		            moduleList.add(rolemodule);	           
 	        }		
 			//role.setName(request.getParameter("name"));
 			//role.setDescription(request.getParameter("description"));
-			role.setModules(moduleList);	
+		//	role.setModules(moduleList);	
 			roleService.addRole(role);	
 			
 		}catch(Exception e){

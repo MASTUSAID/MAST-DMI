@@ -2,6 +2,7 @@
 
 package com.rmsi.mast.studio.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.ProjectDAO;
+import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 
@@ -39,12 +41,12 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean deleteProject(String name) {		
+	public boolean deleteProject(Integer id) {		
 		
 		try {
-			Query query = getEntityManager().createQuery("UPDATE Project p SET p.active = false where p.name = :name and p.active = true");
+			Query query = getEntityManager().createQuery("UPDATE Project p SET p.active = false where p.projectnameid = :id and p.active = true");
 			
-			query.setParameter("name",name);
+			query.setParameter("id",id);
 
 			int rows = query.executeUpdate();
 			
@@ -61,17 +63,24 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 		}
 		
 	}
-
+//(p.admincreated=true and p.active = true)
 	@SuppressWarnings("unchecked")
 	public List<Project> findAllProjects() {
 		
 		//String hqlstr= "Select p from Project p inner join ProjectLayergroup plg on p.name = plg.projectBean.name"; 
-		String hqlstr="Select p from Project p where (p.admincreated=true and p.active=true) order by p.name";
+		String hqlstr="Select p from Project p where  p.active=true order by p.name";
+		try{
 		List<Project> project =
 			getEntityManager().createQuery(hqlstr).getResultList();
+		return project;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	
 		
-		return project;
+		
 	}
 
         @Override
@@ -82,7 +91,7 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 	@SuppressWarnings("unchecked")
 	public List<Project> getAllUserProjects() {
 		//String hqlstr= "Select p from Project p inner join ProjectLayergroup plg on p.name = plg.projectBean.name"; 
-		String hqlstr="Select p from Project p where p.admincreated=false order by p.name";
+		String hqlstr="Select p from Project p where p.active=true order by p.name";
 		List<Project> project =
 			getEntityManager().createQuery(hqlstr).getResultList();
 	
@@ -126,5 +135,41 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 		
 	}
 	
+	
+	@Override
+	public List<Project> getAllProjectsNames(){
+		
+		List<Project> projectlst = new ArrayList<Project>();
+		
+		try {
+			String hqlstr="Select p from Project p where p.active=true";
+			List<Project> project =
+					getEntityManager().createQuery(hqlstr).getResultList();
+			
+			if(project.size()>0)
+			{
+				return project;
+				
+			}
+			else
+			{
+				return null;
+				
+			}
+		} catch (Exception e) {
+			
+			logger.error(e);
+			return null;
+		}
+		
+		
+	}
+
+	@Override
+	public Project findByProjectId(Integer Id) {
+		Project project =(Project)
+				getEntityManager().createQuery("Select p from Project p where p.projectnameid = :name").setParameter("name", Id).getSingleResult();
+		return project;
+	}
 	
 }

@@ -4,7 +4,9 @@ import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.ShareTypeDAO;
 import com.rmsi.mast.studio.domain.ShareType;
+
 import java.util.List;
+
 import org.apache.log4j.Logger;
 
 @Repository
@@ -34,4 +36,25 @@ public class ShareTypeHibernateDAO extends GenericHibernateDAO<ShareType, Intege
         }
         return null;
     }
+
+	@Override
+	public ShareType getShareTypeById(int attrId) {
+		
+		try{
+			
+			@SuppressWarnings("unchecked")
+			List<ShareType> share =
+					getEntityManager().createQuery("Select u from ShareType u where u.landsharetypeid = :Id").setParameter("Id", attrId).getResultList();
+
+			if(share.size() > 0)
+				return share.get(0);
+			else
+				return null;
+			
+			
+		}catch(Exception e){
+		 e.printStackTrace();
+		 return null;
+		}
+	}
 }

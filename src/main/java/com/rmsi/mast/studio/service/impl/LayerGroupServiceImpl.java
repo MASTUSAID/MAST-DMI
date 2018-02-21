@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 //import com.googlecode.ehcache.annotations.Cacheable;
 //import com.googlecode.ehcache.annotations.TriggersRemove;
 
+
+
+
+
 import com.rmsi.mast.studio.dao.LayerGroupDAO;
 import com.rmsi.mast.studio.dao.LayerLayergroupDAO;
 import com.rmsi.mast.studio.dao.ProjectLayergroupDAO;
@@ -31,47 +35,88 @@ public class LayerGroupServiceImpl implements LayerGroupService {
 	@Autowired
 	private LayerLayergroupDAO layerLayergroupDao;
 	
-	//@Cacheable(cacheName="layerGroupFBNCache")
 	public List<Layergroup> findAllLayerGroups(){
-		List<Layergroup> layergroupList=layerGroupDao.findAll();
-		for(int i=0;i<layergroupList.size();i++){
+		try {
+			List<Layergroup> layergroupList=layerGroupDao.findAll();
 			
-			List<String> lgProjects = projectLayergroupDAO.getProjectsByLayergroup(layergroupList.get(i).getName());
-			
-			//Set<ProjectLayergroup> layergroupProjects=(Set<ProjectLayergroup>) projectLayergroupDAO.getProjectsByLayergroup(layergroupList.get(i).getName());
-			
-			String[] sl = (String[]) lgProjects.toArray(new String[0]);
-			
-			layergroupList.get(i).setLayergroupProjects(sl);
-			
-			
+			return layergroupList;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		return layergroupList;
+		return null;
 		
 	}
 	
-	//@Cacheable(cacheName="layerGroupFBNCache")
-	public List<Layergroup> findLayerGroupByName(String name){
-		return layerGroupDao.findByName(name);
-	}
+
 	
-	//@TriggersRemove(cacheName="layerGroupFBNCache", removeAll=true)
+
 	public boolean deleteLayerGroupByName(String id){
 		
-		projectLayergroupDAO.deleteProjectLayergroupByLG(id);		
+	//	projectLayergroupDAO.deleteProjectLayergroupByLG(id);		
 		layerLayergroupDao.deleteLayerLayergroupByName(id);		
 		return layerGroupDao.deleteLayerGroupByName(id);
 		
 	}
 
 	@Override
-	//@TriggersRemove(cacheName={"layerGroupFBNCache","projectFBNCache"}, removeAll=true)	
+	
 	public void addLayergroup(Layergroup layergroup) {
 		//delete layerlayergroup
 		
-		layerLayergroupDao.deleteLayerLayergroupByName(layergroup.getName());
-		
-		layerGroupDao.makePersistent(layergroup);
+		try {
+			
+			try {
+				if(null!=layergroup.getLayergroupid()){
+				layerLayergroupDao.deleteLayerLayergroupByLayerGroupId(layergroup.getLayergroupid());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			layerGroupDao.makePersistent(layergroup);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	public List<Layergroup> findLayerGroupByName(String name){
+		return layerGroupDao.findByName(name);
+	}
+
+	@Override
+	public boolean deleteLayerGroupByLayerGroupId(Integer id) {
+		//rmsi
+		layerLayergroupDao.deleteLayerLayergroupByLayerGroupId(id);	
+		return layerGroupDao.deleteLayerGroupByLayerGroupID(id);
+		
+	}
+
+	@Override
+	public Layergroup findLayerGroupsById(Integer id) {
+		// TODO Auto-generated method stub
+		return layerGroupDao.findLayerGroupsById(id);
+	}
+
+
+
+
+	@Override
+	public List<Layergroup> getLayergroupByid(Integer id) {
+		// TODO Auto-generated method stub
+		return layerGroupDao.getLayergroupByid(id);
+	}
+
+
+
+
+	@Override
+	public Layergroup findLayerGroupsByName(String name) {
+		// TODO Auto-generated method stub
+		return layerGroupDao.findLayerGroupsByName(name);
+	}
+	
+	
+	
 }

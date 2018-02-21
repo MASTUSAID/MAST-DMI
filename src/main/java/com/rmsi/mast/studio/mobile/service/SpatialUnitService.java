@@ -1,6 +1,7 @@
 package com.rmsi.mast.studio.mobile.service;
 
 import com.rmsi.mast.studio.domain.AcquisitionType;
+
 import java.util.List;
 
 import com.rmsi.mast.studio.domain.Citizenship;
@@ -18,6 +19,7 @@ import com.rmsi.mast.studio.domain.SlopeValues;
 import com.rmsi.mast.studio.domain.SoilQualityValues;
 import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.TenureClass;
+import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
 
 public interface SpatialUnitService {
 
@@ -199,4 +201,6 @@ public interface SpatialUnitService {
      * @return
      */
     DocumentType getDocumentTypeByAttributeOptionId(int optId);
+    
+    List<ClaimBasic> getClaimsBasicByLandId(Long landid) ;
 }

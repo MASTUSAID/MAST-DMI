@@ -29,6 +29,16 @@ public interface SourceDocumentDao extends GenericDAO<SourceDocument, Integer> {
 	 * @return
 	 */
 	public SourceDocument findByUsinandFile(String fileName, Long usin);
+	
+	
+	/**
+	 * It can be used to find record by combination of transid and partyid
+	 * 
+	 * @param fileName
+	 * @param usin
+	 * @return
+	 */
+	public SourceDocument findBypartyandtransid(Long partyid, Long transid);
 
 	/**
 	 * It can be used to find record by combination of usin

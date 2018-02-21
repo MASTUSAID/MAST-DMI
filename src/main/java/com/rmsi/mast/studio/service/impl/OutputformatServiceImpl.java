@@ -50,8 +50,8 @@ public class OutputformatServiceImpl implements OutputformatService{
 	}
 
 	@Override
-	public Outputformat findOutputformatById(Long id) {
-		return outputformatDAO.findById(id, false);
+	public Outputformat findOutputformatById(Integer id) {
+		return outputformatDAO.findOutputformatById(id);
 
 	}
 

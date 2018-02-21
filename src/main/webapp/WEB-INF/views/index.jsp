@@ -88,9 +88,8 @@
 <body>
     <div id="wrapper">
       <div class="header">
-            <div class="subHead">
-               <img src="./resources/images/Logo_text.png" style="width:100%"/>	
-            </div>
+            <div id="usaid_logo" onClick="window.location = 'http://usaid.gov/land-tenure';"></div>
+                    <div class="header_title">Mobile Application to Secure Tenure (MAST)<br />Data Management Infrastructure</div>
             <!--/subHead-->
 			
 <!-- <div class="loginInfo">
@@ -106,9 +105,10 @@
             </div> -->
 			<div class="userinfo" >
       <ul>
-        <li  style="cursor:pointer"><span>	<i class="fa fa-user"></i>
-             				  Welcome <span class="username"><%=principal%></span></span></li>
-        <li><a href="/mast/j_spring_security_logout">Logout</a></li>
+        <li   class="username">
+             				   <span ><%=principal%></span></li>
+        <li style="float: right; margin-top: 0px;"><a href="index" class="home"><span class="home-separator">&nbsp;</span></a><a href="/mast/j_spring_security_logout" class="logout">Logout</a></li>
+        
         
         
       </ul>
@@ -118,7 +118,42 @@
          </div>
            <div class="pageContent">
            
-            <div class="toolBoxes">
+           
+               <div class="items-container clearfix">
+          
+                 <div class="dashboard-item">
+                   <a href="studio/"  class="dashboard-content clearfix">
+                       <span class="icon-img"><img src="./resources/images/administration.png" height="40"></span><!--./icon-img-->
+                       <span class="dashboard-title"><h2 class="margin-top-35">Administration Tool</h2></span>
+                    </a>
+                 </div><!--/dashboard-item-->
+                 
+                   
+                 <div class="dashboard-item">
+                  <a href = "mobileconfig/" class="dashboard-content clearfix">
+                   <span class="icon-img-2"><img src="./resources/images/mobile.png" height="40"></span><!--./icon-img-->
+                   <span class="dashboard-title"><h2 class="margin-top-35">Mobile Configuration Tool</h2></span>
+                 </a>
+                 </div><!--/dashboard-item-->
+                 
+                 
+                   
+                 <div class="dashboard-item">
+                  <a href="#" onclick="invokeViewer();"  class="dashboard-content clearfix">
+                   <span class="icon-img-3"><img src="./resources/images/data.png" height="40"></span><!--./icon-img-->
+                   <span class="dashboard-title"><h2 class="margin-top-35">Data Management</h2></span>
+                 </a>
+                     
+                 </div><!--/dashboard-item-->
+    
+    
+             
+    
+      
+    
+      </div><!--./dashboardItems-->
+           
+            <div class="toolBoxes" style="display:none;">
                <div class="Bx-container">
                   <div class="row">
                      <div class="span4">
@@ -211,10 +246,8 @@
             </div>
             <!--/toolBoxes-->
          </div>
-           <footer>
-         <div class="footerText">© 2015. All rights Reserved</div>
-         <div class="subtxt"><span class="logoTX">Our Partners:</span> <img src="./resources/images/foot_img.png"/></div>
-      </footer>
+           <div class="footer"> <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');"></div>
+                    <div id="android_logo"></div><span class="copyright-text">&copy; 2017. All Rights Reserved.</span></div>
       </div>
 <script type="text/javascript">
 	var qryString = "<%=request.getSession().getAttribute("lang")%>";

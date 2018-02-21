@@ -3,7 +3,12 @@ package com.rmsi.mast.studio.dao.hibernate;
 import com.rmsi.mast.studio.dao.DocumentTypeDao;
 import com.rmsi.mast.studio.domain.DocumentType;
 import com.rmsi.mast.studio.domain.IdType;
+import com.rmsi.mast.studio.domain.La_Month;
+
 import java.util.List;
+
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +33,21 @@ public class DocumentTypeHibernateDao extends GenericHibernateDAO<DocumentType, 
         }
         return null;
     }
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DocumentType> getAllDocumentTypes() {
+		
+		try {
+			Query query = getEntityManager().createQuery("select dtm from DocumentType dtm where dtm.active = true");
+			List<DocumentType> lstDocumentType = query.getResultList();
+
+				return lstDocumentType;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e);
+			return null;
+		}
+	}
 }

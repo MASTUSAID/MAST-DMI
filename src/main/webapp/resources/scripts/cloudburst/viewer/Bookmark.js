@@ -64,14 +64,12 @@ function translateBookmarks(){
 
 var zoomBookmark = function(bookmarkName) {
 
-    var currentExtent = map.getExtent().toBBOX();
 
     if (bookmarkName) {
         $.ajax({
             url: STUDIO_URL + "bookmark/" + bookmarkName + "?" + token,
             success: function (data) {                
-                var bounds = new OpenLayers.Bounds(data.minx, data.miny, data.maxx, data.maxy);
-                map.zoomToExtent(bounds);
+                  map.getView().fit([data.minx, data.miny, data.maxx, data.maxy]);
             }
         });
     }
@@ -81,10 +79,8 @@ var zoomBookmark = function(bookmarkName) {
 
 var createBookmark = function() {
 
-    var currentExtent = map.getExtent().toBBOX();   
-    var arrCurrentExtent = new Array();
-    arrCurrentExtent = currentExtent.split(",");
-    
+    var currentExtent = map.getView().calculateExtent(map.getSize())
+
     if ($("#name").val() == '') {        
         jAlert('Enter Bookmark Name', 'Bookmark');
 		return;
@@ -92,10 +88,10 @@ var createBookmark = function() {
     
     
     $("#description").val($("#name").val());
-    $("#minx").val(arrCurrentExtent[0]);
-    $("#miny").val(arrCurrentExtent[1]);
-    $("#maxx").val(arrCurrentExtent[2]);
-    $("#maxy").val(arrCurrentExtent[3]);
+    $("#minx").val(currentExtent[0]);
+    $("#miny").val(currentExtent[1]);
+    $("#maxx").val(currentExtent[2]);
+    $("#maxy").val(currentExtent[3]);
 	$("#bkProjectName").val(_project);
   
 
@@ -119,7 +115,7 @@ var createBookmark = function() {
 };
 
 
-var removeBookmark = function(bookmarkName) {
+var removeBookmark = function(bookmarkid,bookmarkName) {
    
     //var bookmarkName = $("#Bookmark").val();         
     if (bookmarkName) {
@@ -128,7 +124,7 @@ var removeBookmark = function(bookmarkName) {
 
             if (r) {
                 $.ajax({
-                    url: STUDIO_URL + "bookmark/delete/" + bookmarkName + "?" + token,
+                    url: STUDIO_URL + "bookmark/delete/" + bookmarkid + "?" + token,
                     success: function () {
                        // $("#"+bookmarkName).remove();
                     	

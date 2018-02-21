@@ -95,12 +95,12 @@ public class SavedqueryController {
 				String project = ServletRequestUtils.getStringParameter(request, "Project");
 				//System.out.println("----Project Bean Name: " + project);
 				Project projectBean = projectService.findProjectByName(project);
-				savedquery.setProjectBean(projectBean);
+				/*savedquery.setProjectBean(projectBean);*/
 				
 				String layerAlias = ServletRequestUtils.getStringParameter(request, "Layer");
 				//System.out.println("------Layer Bean name: " + layerAlias);
 				Layer layerBean = layerService.findLayerByName(layerAlias);
-				savedquery.setLayerBean(layerBean);
+				/*savedquery.setLayerBean(layerBean);*/
 				
 				return savedqueryService.addSavedquery(savedquery);
 			}else{
@@ -132,12 +132,12 @@ public class SavedqueryController {
 			String project = ServletRequestUtils.getStringParameter(request, "Project");
 			//System.out.println("----Project Bean Name: " + project);
 			Project projectBean = projectService.findProjectByName(project);
-			savedQuery.setProjectBean(projectBean);
+			/*savedQuery.setProjectBean(projectBean);*/
 			
 			String layerAlias = ServletRequestUtils.getStringParameter(request, "Layer");
 			//System.out.println("------Layer Bean Name: " + layerAlias);
 			Layer layerBean = layerService.findLayerByName(layerAlias);
-			savedQuery.setLayerBean(layerBean);
+			/*savedQuery.setLayerBean(layerBean);*/
 			return savedqueryService.updateSavedquery(savedQuery);
 			
 		}catch(ServletRequestBindingException sre){

@@ -18,6 +18,10 @@ import org.springframework.stereotype.Service;
 //import com.googlecode.ehcache.annotations.TriggersRemove;
 
 
+
+
+
+
 import com.rmsi.mast.studio.dao.LayerDAO;
 import com.rmsi.mast.studio.dao.LayerFieldDAO;
 import com.rmsi.mast.studio.dao.LayerGroupDAO;
@@ -48,8 +52,8 @@ public class LayerServiceImpl implements LayerService{
 	}
 	
 	//@Cacheable(cacheName="layerFBNCache")
-	public Layer findLayerByName(String alias){		
-		Layer layer = layerDao.findByAliasName(alias);		
+	public Layer findLayerByName(String layerid){		
+		Layer layer = layerDao.findByAliasName(layerid);		
 		return layer;
 	}
 	
@@ -60,38 +64,21 @@ public class LayerServiceImpl implements LayerService{
 	
 	//@TriggersRemove(cacheName="layerFBNCache", removeAll=true)	    
 	public Layer updateLayer(Layer layer, Set<LayerField> layerFieldSet){
-		layer.getLayerFields().clear();
-		layerFieldDao.delete(layer.getAlias());
-		
-		//Iterate and set the layer bean
-		for(Iterator<LayerField> itrLayerField = layerFieldSet.iterator();
-						itrLayerField.hasNext();){
 			
-			LayerField layerField = itrLayerField.next();
-			layerField.setLayerBean(layer);
-			
-		}
-		layer.setLayerFields(layerFieldSet);
-		
 		return layerDao.makePersistent(layer);
 	}
 	
 	//@TriggersRemove(cacheName="layerFBNCache", removeAll=true)	    
 	public Layer createLayer(Layer layer){
-		return layerDao.makePersistent(layer);
+		try {
+			return layerDao.makePersistent(layer);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
-	//@TriggersRemove(cacheName={"projectFBNCache", "layerFBNCache", "layerGroupFBNCache", "maptipFBNCache"}, removeAll=true)	    
-	public boolean deleteLayerById(String id){
-		
-		List<Layergroup> lyrGroup = layerGroupDao.findLayerGroupByLayerName(id);
-		return layerDao.deleteLayerByAliasName(id, lyrGroup);
-	}
-	
-	//@Cacheable(cacheName="layerFBNCache")
-	public String getGeometryType(String id){
-		return layerDao.getGeometryType(id);
-	}
 	
 	public String saveSLD(String layerName, String sld){
 		 try {
@@ -103,15 +90,42 @@ public class LayerServiceImpl implements LayerService{
 		return "fail";
 	}
 	
-	//@Cacheable(cacheName="layerFBNCache")
-	public Set<LayerField> getLayerFieldsByLayerName(String alias){
-		Layer layer = layerDao.findByAliasName(alias);
-		return layer.getLayerFields();
-	}
 	
-	//@Cacheable(cacheName="layerFBNCache")
+	
 	public List<Object[]> getLayersVisibility(String[] layers){
 		List<Object[]> lstVisibility = layerDao.getVisibilityStatus(layers);
 		return lstVisibility;
 	}
+
+	@Override
+	public boolean deleteLayerById(Long id) {
+		// TODO Auto-generated method stub
+		layerFieldDao.deleteFeildByLayerId(id);
+		return layerDao.deleteLayerById(id);
+	}
+
+	@Override
+	public Layer findLayerById(long layerid) {
+		// TODO Auto-generated method stub
+		return layerDao.findLayerById(layerid);
+	}
+
+	@Override
+	public String checklayerByid(Long id) {
+		// TODO Auto-generated method stub
+		return layerDao.checklayerByid(id);
+	}
+
+	@Override
+	public Set<LayerField> getLayerFieldsByLayerName(String alias) {
+		
+		Layer layer = layerDao.findByAliasName(alias);
+		return layer.getLayerField();
+	}
+
+
+	
+	
+	
+	
 }

@@ -25,11 +25,12 @@ public class PersonTypeHibernateDao extends
 	public PersonType getPersonTypeById(long personTypeGid) {
 
 		try {
-			String query = "select p from PersonType p where p.person_type_gid = :personTypeGid";
+			Long id = new Long(personTypeGid);
+			String query = "select p from PersonType p where p.persontypeid = :personTypeGid";
 
 			@SuppressWarnings("unchecked")
 			List<PersonType> personType = getEntityManager().createQuery(query)
-					.setParameter("personTypeGid", personTypeGid)
+					.setParameter("personTypeGid", id.intValue())
 					.getResultList();
 
 			if (personType.size() > 0) {

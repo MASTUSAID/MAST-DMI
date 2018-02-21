@@ -25,8 +25,8 @@ public class MaritalStatusHibernateDao extends
 	public MaritalStatus getMaritalStatusById(int maritalStatusId) {
 
 		try {
-			String query = "select ms.* from marital_status ms inner join attribute_options ao	"
-					+ "on ao.parent_id = ms.maritalstatus_id where ao.id = "
+			String query = "select ms.* from la_partygroup_maritalstatus ms inner join la_ext_attributeoptions ao	"
+					+ "on ao.parentid = ms.maritalstatusid where ao.attributeoptionsid = "
 					+ maritalStatusId;
 			@SuppressWarnings("unchecked")
 			List<MaritalStatus> maritalStatus = getEntityManager()

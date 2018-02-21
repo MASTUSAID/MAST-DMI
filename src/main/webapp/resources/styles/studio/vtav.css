@@ -5,9 +5,9 @@ img {
 #vtab {
 	margin: 10px 0 0 7px;
 	width: 99%;
-	height: 100%;
-	font-family: "OpenSansLight";
-	font-size: 12px;
+	max-height: 100%;
+	
+	
 }
 
 #vtab>ul>li {
@@ -23,9 +23,9 @@ img {
 	position: relative;
 	text-align: left;
 	width: 262px;
-	background:#e1e8f0;
+	background: #f7f7f7; /* For browsers that do not support gradients */
 	cursor:pointer;
-	border-bottom:1px solid #b6bac3;
+	border-bottom:2px solid #352d59;
 }
 
 #vtab>ul>li>img {
@@ -35,8 +35,8 @@ img {
 }
 
 #vtab > ul > li.selected {
-	background:#0460e7 url('../../images/studio/bg-Selected-blue.png') left top repeat-x; 
-    border: 1px solid #02294c;
+	background:#872209; 
+    border: 1px solid #fff;
     color: #fff;
     height: 35px;
     opacity: 1;
@@ -55,7 +55,11 @@ display: block;
 margin: auto 0;
 padding: 0;
 position: relative;
-background: #e1e8f0;
+background: #f7f7f7; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#f7f7f7, #f3f3f3); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#f7f7f7, #f3f3f3); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#f7f7f7, #f3f3f3); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#f7f7f7, #f3f3f3); /* Standard syntax (must be last) */
 height: 526px;
 /* top: 10px; */
 }

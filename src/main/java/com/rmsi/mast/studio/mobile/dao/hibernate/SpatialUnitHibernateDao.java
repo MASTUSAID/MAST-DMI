@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
+import com.rmsi.mast.studio.domain.fetch.DisputeBasic;
+import com.rmsi.mast.studio.domain.fetch.MediaBasic;
+import com.rmsi.mast.studio.domain.fetch.RightBasic;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.mobile.dao.SpatialUnitDao;
 
@@ -45,7 +48,7 @@ public class SpatialUnitHibernateDao extends
 
     @Override
     public List<SpatialUnit> getSpatialUnitByProject(String projectId) {
-        String query = "select s from SpatialUnit s where s.project = :projectId";
+        String query = "select s from SpatialUnit s where s.project.name = :projectId";
 
         try {
             @SuppressWarnings("unchecked")
@@ -68,15 +71,13 @@ public class SpatialUnitHibernateDao extends
     @Override
     public SpatialUnit findByImeiandTimeStamp(String imeiNumber, Date date) {
 
-        String query = "select s from SpatialUnit s where s.imeiNumber =:imeiNumber"
-                + " and s.statusUpdateTime =:date";
+        String query = "select s from SpatialUnit s where s.Imei =:imeiNumber";
 
         try {
-
+        	Integer id=Integer.parseInt(imeiNumber);
             @SuppressWarnings("unchecked")
             List<SpatialUnit> spatialUnit = getEntityManager()
-                    .createQuery(query).setParameter("imeiNumber", imeiNumber)
-                    .setParameter("date", date).getResultList();
+                    .createQuery(query).setParameter("imeiNumber", imeiNumber).getResultList();
 
             if (spatialUnit.size() > 0) {
                 return spatialUnit.get(0);
@@ -90,14 +91,14 @@ public class SpatialUnitHibernateDao extends
     }
 
     @Override
-    public SpatialUnit getSpatialUnitByUsin(long usin) {
+    public ClaimBasic getSpatialUnitByUsin(long usin) {
 
-        String query = "select s from SpatialUnit s where s.usin =:usin";
+        String query = "select s from ClaimBasic s where s.landid =:usin";
 
         try {
 
             @SuppressWarnings("unchecked")
-            List<SpatialUnit> spatialUnits = getEntityManager()
+            List<ClaimBasic> spatialUnits = getEntityManager()
                     .createQuery(query).setParameter("usin", usin)
                     .getResultList();
 
@@ -148,7 +149,7 @@ public class SpatialUnitHibernateDao extends
     }
 
     @Override
-    public List<ClaimBasic> getClaimsBasicByStatus(String projectId, int statusId) {
+    public List<ClaimBasic> getClaimsBasicByStatus(Integer projectId, int statusId) {
         ArrayList<Integer> staList = new ArrayList<>();
         staList.add(6);
         staList.add(7);
@@ -179,8 +180,8 @@ public class SpatialUnitHibernateDao extends
     }
 
     @Override
-    public List<ClaimBasic> getClaimsBasicByProject(String projectId) {
-        String query = "select s from ClaimBasic s where s.projectName = :projectId and s.active = true";
+    public List<ClaimBasic> getClaimsBasicByProject(Integer projectId) {
+        String query = "select s from ClaimBasic s where s.projectnameid = :projectId and s.isactive = true";
 
         try {
             @SuppressWarnings("unchecked")
@@ -197,4 +198,28 @@ public class SpatialUnitHibernateDao extends
         }
         return null;
     }
+
+	@Override
+	public List<ClaimBasic> getClaimsBasicByLandId(Long landid) {
+		
+		  String query = "select s from ClaimBasic s where s.landid = :landid and s.isactive = true";
+
+	        try {
+	            @SuppressWarnings("unchecked")
+	            List<ClaimBasic> claims = getEntityManager()
+	                    .createQuery(query).setParameter("landid", landid)
+	                    .getResultList();
+
+	            if (!claims.isEmpty()) {
+	                return claims;
+	            }
+	        } catch (Exception ex) {
+	            System.out.println("Exception while fetching the data from data base " + ex);
+	            logger.error(ex);
+	        }
+	        return null;
+	        
+	}
+
+
 }

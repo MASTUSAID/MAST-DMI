@@ -14,9 +14,21 @@ import org.springframework.stereotype.Repository;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 import com.rmsi.mast.studio.dao.LayerDAO;
 import com.rmsi.mast.studio.domain.Layer;
 import com.rmsi.mast.studio.domain.LayerField;
+import com.rmsi.mast.studio.domain.LayerLayergroup;
 import com.rmsi.mast.studio.domain.Layergroup;
 import com.rmsi.mast.studio.domain.ProjectLayergroup;
 
@@ -26,27 +38,26 @@ public class LayerHibernateDAO extends GenericHibernateDAO<Layer, Long> implemen
 	
 	
 	@SuppressWarnings("unchecked")	
-	public Layer findByAliasName(String alias){
-		List<Layer> layers =
-			getEntityManager().createQuery("Select l from Layer l where l.alias = :aliasName").setParameter("aliasName", alias).getResultList();
-		
-		if(layers != null && layers.size() > 0){
-			Iterator iter = layers.get(0).getLayerFields().iterator();
-			String keyfield="";
-			while (iter.hasNext()) {
-		      
-		    	LayerField lf=new LayerField();
-		    	lf=(LayerField) iter.next();
-		    	keyfield=lf.getKeyfield();
-		    	break;
-		    }
-			layers.get(0).setKeyField(keyfield);
-	
-			return layers.get(0);
-		}else{
-			return new Layer();
+	public Layer findByAliasName(String layerid){
+		try {
+			List<Layer> layers =
+					getEntityManager().createQuery("Select l from Layer l where l.alias = :aliasName").setParameter("aliasName", layerid+"").getResultList();
+			//getEntityManager().createQuery("Select l from Layer l where l.layerid = :layerid").setParameter("layerid", layerid).getResultList();
+
+			if(layers != null && layers.size() > 0){
+
+				return layers.get(0);
+			}
+			else
+			{
+				return new Layer();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
-		
+
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -57,111 +68,22 @@ public class LayerHibernateDAO extends GenericHibernateDAO<Layer, Long> implemen
 		return getEntityManager().createQuery(queryString).getResultList();
 	}
 	
-	public boolean deleteLayerByAliasName(String id, List<Layergroup> layerGroup){
-		Layer layer = findByAliasName(id);
-		if(layer != null){
-			//Check if layer is part of more than one layergroup
-			System.out.println(" ---- Size is :" + layerGroup.size());
-			if(layerGroup.size() <= 1){
-				if(layerGroup.size() != 0){
-					Layergroup lg = layerGroup.get(0);
-					System.out.println("params: id -- " + id + " layergroupname: " + lg.getName());
-					
-					//Remove the layer from layer_layergroup
-					Query query = getEntityManager().createQuery(
-							"delete from LayerLayergroup llg where llg.layer = :lyrName " +
-							"and llg.layergroupBean.name = :lgName")
-							.setParameter("lyrName", id).setParameter("lgName", lg.getName());
-					
-					int deleted = query.executeUpdate();
-					System.out.println("---Delete Count: " + deleted);
-				
-					//Get the project
-					//Note: the layer need to be associated with Layergroup for getting Project
-					Iterator<ProjectLayergroup> itrProjectLayerGroup =
-							lg.getProjectLayergroups().iterator(); 
-					if(itrProjectLayerGroup.hasNext()){
-						ProjectLayergroup projectLayerGroup = itrProjectLayerGroup.next();
-						System.out.println("---Project Name: " + projectLayerGroup.getProjectBean().getName());
-						
-						//Remove the layer from Maptip
-						query = getEntityManager().createQuery("delete from Maptip m where m.layerBean.alias = :alias " +
-							"and m.projectBean.name = :name")
-							.setParameter("alias", id)
-							.setParameter("name", projectLayerGroup.getProjectBean().getName());
-						
-						deleted = query.executeUpdate();
-						System.out.println("---Delete Maptip Count: " + deleted);
-					}
-				}
-				//Remove the layer from attachment
-				Query query1 = getEntityManager().createQuery("delete from Attachment a where a.layer.alias = :alias ")
-					.setParameter("alias", id);
-				
-				int deleted1 = query1.executeUpdate();
-				System.out.println("---Delete attachment Count: " + deleted1);
-				
-				//Remove the layer
-				getEntityManager().remove(layer);
-				return true;
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}
 	
-	public String getGeometryType(String id){
-		Layer layer = findByAliasName(id);
-		if(layer != null){
-			return layer.getGeomtype();
-		}else{
-			return null;
-		}
-	}
 	
 	public String saveSLD(String layerName, String sld){
 		String status = "success";
 		if(sld != null){
-			Layer layer = findByAliasName(layerName);
-			if(layer != null){
-				layer.setStyle(sld);
-				layer = getEntityManager().merge(layer);
-				if(layer.getStyle() != null){
-					status = "success";
-				}else{
-					status = "fail";
-				}
-			}else{
-				status = "fail";
-			}
+
 		}
 		return status;
 	}
 	
-	/*@SuppressWarnings("unchecked")
-	public List<Boolean> getVisibilityStatus(String[] layers){
-		String s = "";
-		
-		for(int i=0; i<layers.length; i++){
-			if(i != layers.length - 1){
-				s = s + "\'" + layers[i] + "\'" +", ";
-			}else{
-				s = s + "\'" + layers[i] + "\'";
-			}
-		}
-		//System.out.println("---- layers visibility --- " + s);
-		String queryString = "select l.visibility from Layer l " +
-		"where l.alias in (" + s + ")";
-		//System.out.println("--QueryString: " + queryString);
-		return getEntityManager().createQuery(queryString).getResultList();
-	}*/
+	
 	
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getVisibilityStatus(String[] layers){
 		String s = "";
-		
+
 		for(int i=0; i<layers.length; i++){
 			if(i != layers.length - 1){
 				s = s + "\'" + layers[i] + "\'" +", ";
@@ -171,7 +93,7 @@ public class LayerHibernateDAO extends GenericHibernateDAO<Layer, Long> implemen
 		}
 		//System.out.println("---- layers visibility --- " + s);
 		String queryString = "select l.alias, l.visibility from Layer l " +
-		"where l.alias in (" + s + ")";
+				"where l.alias in (" + s + ")";
 		//System.out.println("--QueryString: " + queryString);
 		return getEntityManager().createQuery(queryString).getResultList();
 	}
@@ -181,10 +103,94 @@ public class LayerHibernateDAO extends GenericHibernateDAO<Layer, Long> implemen
 		
 		List<Layer> layer =
 			getEntityManager().createQuery("select l from Layer l where l.name in ("+layerList+")")
-			//.setParameter("inList", layerList)
 			.getResultList();
 	
 		return layer;
 	}
 
+	@Override
+	public Layer findLayerById(long layerid) 
+	{
+		try {
+			@SuppressWarnings("unchecked")
+			List<Layer> layer =
+					getEntityManager().createQuery("Select l from Layer l where l.layerid = :id").setParameter("id", layerid).getResultList();
+
+			if(layer.size()>0){
+				return layer.get(0);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+			return null;
+		}
+		
+	return null;
+
+		
+	}
+
+	@Override
+	public String checklayerByid(Long id) {
+		
+		String status="";
+		
+		try {
+			@SuppressWarnings("unchecked")
+			List<LayerLayergroup> Layergroup =
+					getEntityManager().createQuery("from LayerLayergroup llg where llg.layers.layerid =:id").setParameter("id", id).getResultList();
+				
+			if(Layergroup.size()>0)
+			{
+				status ="Layer is Linked with LayerGroup :  <b>" +Layergroup.get(0).getLayergroupBean().getName() +"</b>" ;
+				
+				@SuppressWarnings("unchecked")
+				List<ProjectLayergroup> projectLayergroup =
+						getEntityManager().createQuery("Select plg from ProjectLayergroup plg where plg.layergroupBean.layergroupid = :id").setParameter("id", Layergroup.get(0).getLayergroupBean().getLayergroupid()).getResultList();
+					
+						if (projectLayergroup.size()>0)
+						{
+							status =status +"<br/> Layer is Linked with Project :   <b>"+  projectLayergroup.get(0).getProjectBean().getName()+"</b>" ;
+						}
+				
+			}else
+			{
+				status="No";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+			
+		return status;	
+	}
+
+	@Override
+	public boolean deleteLayerById(Long id) {
+
+
+		try{
+			Query query = getEntityManager().createQuery(
+					"Delete from Layer lg where lg.layerid =:id")
+					.setParameter("id", id);
+
+			int count = query.executeUpdate();
+			System.out.println("Delete Layer count: " + count);
+			if(count > 0){
+				return true;
+			}else{
+				return false;
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return false;
+
+}
+
+	
 }

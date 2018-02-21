@@ -5,12 +5,11 @@ var cara = null;
 var defaultButtons = ['zoomin', 'zoomout', 'pan', 'zoomtolayer', 'fixedzoomin',
     'fixedzoomout', 'zoomprevious', 'zoomnext', 'fullview', 'info'];
 
-Cloudburst.Toolbar = OpenLayers
-        .Class({
-            map: null,
-            initialize: function (_map) {
-                this.map = _map;
-                loggedin_user_role = roles;
+	
+		
+		Cloudburst.Toolbar = function(_map,_roles) {
+			     map = _map;
+                loggedin_user_role = _roles;
 
                 $("#baselayer button").click(
                         function (e) {
@@ -105,12 +104,11 @@ Cloudburst.Toolbar = OpenLayers
                 var at = ['bottom center'];
                 my = ['top center'];
 
-                var navi = new Cloudburst.Navi(this.map);
+               var navi = new Cloudburst.Navi(map);  // kamal
 
                 var toolbutton = showToolButtons(loggedin_user_role);
 
-                var layermanager = new Cloudburst.LayerManager(map,
-                        "tabs-LayerManager");
+               var layermanager = new Cloudburst.LayerManager(map,"tabs-LayerManager");
                 $("#sidebar").tabs();
 
                 $("#toolbar button")
@@ -119,7 +117,7 @@ Cloudburst.Toolbar = OpenLayers
                                 function (e) {
                                     // remove unsaved markup and deactive
                                     // current tool
-                                    removeDeactiveMarkupTool();
+                                    //removeDeactiveMarkupTool();    // kamal
 
                                     switch (e.currentTarget.id) {
                                         case 'navigate':
@@ -127,38 +125,33 @@ Cloudburst.Toolbar = OpenLayers
                                             break;
 
                                         case 'dynalayer':
-                                            var dynalayer = new Cloudburst.DynaLayer(
-                                                    map, "sidebar");
+                                            //var dynalayer = new Cloudburst.DynaLayer( map, "sidebar");
                                             break;
 
                                         case 'print':
-                                            var print = new Cloudburst.Print(map,
-                                                    "sidebar");
+                                            var print = new Cloudburst.Print(map,"sidebar");
                                             break;
 
                                         case 'layermanager':
-                                            layermanager.toggle();
+                                        //    layermanager.toggle();
                                             break;
 
                                         case 'bookmark':
                                             // bookmark.toggle();
-                                            var bookmark = new Cloudburst.Bookmark(
-                                                    map, "sidebar");
+                                           var bookmark = new Cloudburst.Bookmark( map, "sidebar");
                                             break;
                                         case 'export':
-                                            // exportdata.toggle();
-                                            var exportdata = new Cloudburst.ExportData(
-                                                    map, "sidebar");
+                                            //exportdata.toggle();
+                                            var exportdata = new Cloudburst.ExportData(map, "sidebar");
                                             break;
                                         case 'query':
-                                            var query = new Cloudburst.Query(true);
+                                          //  var query = new Cloudburst.Query(true);
                                             break;
                                         case 'thematic':
-                                            var thematic = new Thematic(map);
+                                         //   var thematic = new Thematic(map);
                                             break;
                                         case 'markup':
-                                            var markup = new Cloudburst.Markup(map,
-                                                    "sidebar");
+                                            //var markup = new Cloudburst.Markup(map,"sidebar");
                                             break;
                                         case 'fileupload':
                                             //var fileupload = new Cloudburst.FileUpload(map, "sidebar");
@@ -166,121 +159,167 @@ Cloudburst.Toolbar = OpenLayers
                                             window.open(downloadFilePath);
                                             break;
                                         case 'textstyle':
-                                            var textstyle = new Cloudburst.TextStyle(
-                                                    map, "sidebar");
+                                            //var textstyle = new Cloudburst.TextStyle(map, "sidebar");
                                             break;
                                         case 'editing':
-                                            var activeLayer = OpenLayers.Map.activelayer;
-                                            if (activeLayer == null || activeLayer == undefined) {
-                                                jAlert("Please select active layer", "Layer Editing");
-                                                return;
-                                            } else {
-                                                if (activeLayer.editable) {
-                                                    var wfsurl = activeLayer.url.replace(new RegExp("wms", "i"), "wfs");
-                                                    $.ajax({
-                                                        url: PROXY_PATH + wfsurl + "&request=DescribeFeatureType&service=WFS&version=1.0.0&typeName=" + layerMap[activeLayer.name],
-                                                        dataType: "text",
-                                                        async: false,
-                                                        success: function (text) {
-                                                            var editing = new Cloudburst.Editing(
-                                                                    map, "sidebar", undefined, undefined, undefined,
-                                                                    activeLayer.name, undefined);
-                                                        },
-                                                        error: function (xhr, status) {
-                                                            if (layerMap[activeLayer.name].indexOf("OSMM_") > -1) {
-                                                                jAlert("WFS operation on " + activeLayer.name + " layer is restricted");
-                                                                return;
-                                                            } else {
-                                                                jAlert('Sorry, there is a problem!');
-                                                            }
-                                                        }
-                                                    });
-                                                } else {
-                                                    jAlert("Selected layer is not directly editable", "Layer Editing");
-                                                }
+                                        	
+                                        	  map.getLayers().forEach(function (layer) {
+                                      			if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
+                                      				map.removeLayer(layer);
+                                      			}
+                                      		});
 
-                                                //}
+                                        	if (active_layerMap != null){
 
-                                            }
+                                        		if(true){
+                                        			var wfsurl = active_layerMap.get("url");
+                                        			$.ajax({
+                                        				url: PROXY_PATH + wfsurl + "&request=DescribeFeatureType&service=WFS&version=1.0.0&typeName=" + active_layerMap.values_.name,
+                                        				dataType: "text",
+                                        				async: false,
+                                        				success: function (text) {
+                                        					var editing = new Cloudburst.Editing(
+                                        							map, "sidebar", undefined, undefined, undefined,
+                                        							active_layerMap.values_.name, undefined);
+                                        				},
+                                        				error: function (xhr, status) {
+                                        					if (layerMap[activeLayer.name].indexOf("OSMM_") > -1) {
+                                        						jAlert("WFS operation on " + activeLayer.name + " layer is restricted");
+                                        						return;
+                                        					} else {
+                                        						jAlert('Sorry, there is a problem!');
+                                        					}
+                                        				}
+                                        			});
+
+                                        		}else{
+
+
+                                        		}
+
+                                        	}else{
+                                        		jAlert("Please select active layer", "Layer Editing");
+                                        		return;
+                                        	}											  
+
+                                            
+                                          
                                             break;
+										case 'resourceManage':
+										
+											map.getLayers().forEach(function (layer) {
+                                      			if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
+                                      				map.removeLayer(layer);
+                                      			}
+                                      		});
+											
+											if (active_layerMap != null){
+
+                                        		if(active_layerMap.values_.aname == 'AOI' && active_layerMap.values_.name == 'Mast:la_spatialunit_aoi'){
+                                        			var wfsurl = active_layerMap.get("url");
+                                        			$.ajax({
+                                        				url: PROXY_PATH + wfsurl + "&request=DescribeFeatureType&service=WFS&version=1.0.0&typeName=" + active_layerMap.values_.name,
+                                        				dataType: "text",
+                                        				async: false,
+                                        				success: function (text) {
+                                        					var taskmangr = new Cloudburst.TaskManager(
+                                        							map, "sidebar", undefined, undefined, undefined,
+                                        							active_layerMap.values_.name, undefined);
+                                        				},
+                                        				error: function (xhr, status) {
+                                        					if (layerMap[activeLayer.name].indexOf("OSMM_") > -1) {
+                                        						jAlert("WFS operation on " + activeLayer.name + " layer is restricted");
+                                        						return;
+                                        					} else {
+                                        						jAlert('Sorry, there is a problem!');
+                                        					}
+                                        				}
+                                        			});
+
+                                        		}else{
+													jAlert("Please select AOI layer", "Task Manager");
+
+                                        		}
+
+                                        	}else{
+                                        		jAlert("Please select active layer", "Task Manager");
+                                        		return;
+                                        	}
+										break;
                                         case 'saveproject':
-                                            var saveproject = new Cloudburst.SaveProject(
-                                                    map, layermanager);
+                                            //var saveproject = new Cloudburst.SaveProject(map, layermanager);
                                             break;
                                         case 'openproject':
                                             jQuery("#defaultbutton").css("visibility", "visible");
-                                            //var openproject = new Cloudburst.OpenProject(map, "sidebar");
-                                            var openproject = new Cloudburst.UserProjects(map, "sidebar");
+                                             var openproject = new Cloudburst.UserProjects(map, "sidebar");
                                             break;
                                         case 'exportmap':
-                                            var exportmap = new Cloudburst.ExportMap(
-                                                    map, "sidebar");
+                                            //var exportmap = new Cloudburst.ExportMap( map, "sidebar");
                                             break;
                                         case 'searchComplaint':
-                                            var complaint = new Cloudburst.Complaints(map, "sidebar");
+                                           // var complaint = new Cloudburst.Complaints(map, "sidebar");
 
                                             break;
                                         case 'complaint':
-                                            var complaint = new Cloudburst.Complaints(map, "sidebar");
+                                           // var complaint = new Cloudburst.Complaints(map, "sidebar");
                                             break;
 
                                         case 'report':
-                                            var report = new Cloudburst.Report(map, "sidebar");
+                                          //  var report = new Cloudburst.Report(map, "sidebar");
                                             break;
 
                                         case 'importdata':
-                                            var importdata = new ImportData('importdata');
+                                        //    var importdata = new ImportData('importdata');
                                             break;
 
                                         default:
                                     }
                                 });
-            },
-            CLASS_NAME: "Cloudburst.Toolbar"
-        });
-
+			
+		}
+	
 var showToolButtons = function (_roles) {
 
     var toolbuttons = $("#toolbar button");
     var visiblebuttons = null;
     var visiblebuttonsArr = new Array();
+    var role_id = _roles.id;
+   // var role_array = _roles.split(",");
+   // var role_array=[];
+   // role_array.push(_roles.roles[0].name);
+   // role_array=[]
+     var size = 0;
 
-    var role_array = _roles.split(",");
-    var size = 0;
-    for (var r = 0; r < role_array.length; r++) {
-
-        jQuery
-                .ajax({
+        jQuery.ajax({
                     // url: "/spatialvue-studio/role/" + _roles + "?" + token,
-                    url: STUDIO_URL + "role/" + role_array[r] + "?" + token,
-                    async: false,
-                    success: function (data) {
-                        if (data.modules) {
-                            visiblebuttons = data.modules;
-                            for (var mod = 0; mod < visiblebuttons.length; mod++) {
-                                visiblebuttonsArr[size + mod] = visiblebuttons[mod].name;
-                            }
-                            size = size + mod;
-                        }
+                     url: STUDIO_URL + "role/Allmodule/" +role_id  + "?" + token,
+                     async: false,
+                     success: function (data) {
+                         if (data.length>0) {
+                             for (var mod = 0; mod < data.length; mod++) {
+                                 visiblebuttonsArr[size + mod] = data[mod].module.modulename;
+                             }
+                             size = size + mod;
+                         }
                     }
-                });
-    }
-    if (visiblebuttonsArr.length <= 0) {
-        for (var db = 0; db < defaultButtons.length; db++) {
-            visiblebuttonsArr[db] = defaultButtons[db];
-        }
-    }
+                 });
+     
+     if (visiblebuttonsArr.length <= 0) {
+         for (var db = 0; db < defaultButtons.length; db++) {
+             visiblebuttonsArr[db] = defaultButtons[db];
+         }
+     }
 
-    for (var m = 0; m < toolbuttons.length; m++) {
-        if (jQuery.inArray(toolbuttons[m].id, visiblebuttonsArr) <= -1) {
+     for (var m = 0; m < toolbuttons.length; m++) {
+         if (jQuery.inArray(toolbuttons[m].id, visiblebuttonsArr) <= -1) {
             $("#li-" + toolbuttons[m].id).css("display", "none");
         }
     }
 
-    if (visiblebuttonsArr.length <= 13) {
-        $(".jcarousel-prev").css("display", "none");
-        $(".jcarousel-next").css("display", "none");
-    }
+     if (visiblebuttonsArr.length <= 13) {
+         $(".jcarousel-prev").css("display", "none");
+         $(".jcarousel-next").css("display", "none");
+     }
 };
 
 function toggleGrid() {
@@ -290,3 +329,51 @@ function toggleGrid() {
     $("#bottomcollapse").removeClass("bottom_collapse");
     $("#bottomcollapse").addClass("bottom_collapse_down");
 }
+
+
+function initTaskManager(){
+	$("#sidebar").show();
+	 var layer = getLayerByAliesName("AOI");
+            $('.layerTR').removeClass("rowclick");
+            $("#AOI").addClass("rowclick");
+			$("#chk-AOI").addClass("rowclick");
+			if($('#ExportLayers').length>0){			
+				$('#ExportLayers').text(layer_id);
+			}
+			active_layerMap=layer;
+			
+	if (active_layerMap != null){
+
+                                        		if(active_layerMap.values_.aname == 'AOI' && active_layerMap.values_.name == 'Mast:la_spatialunit_aoi'){
+                                        			var wfsurl = active_layerMap.get("url");
+                                        			$.ajax({
+                                        				url: PROXY_PATH + wfsurl + "&request=DescribeFeatureType&service=WFS&version=1.0.0&typeName=" + active_layerMap.values_.name,
+                                        				dataType: "text",
+                                        				async: false,
+                                        				success: function (text) {
+                                        					var taskmangr = new Cloudburst.TaskManager(
+                                        							map, "sidebar", undefined, undefined, undefined,
+                                        							active_layerMap.values_.name, undefined);
+                                        				},
+                                        				error: function (xhr, status) {
+                                        					if (layerMap[activeLayer.name].indexOf("OSMM_") > -1) {
+                                        						jAlert("WFS operation on " + activeLayer.name + " layer is restricted");
+                                        						return;
+                                        					} else {
+                                        						jAlert('Sorry, there is a problem!');
+                                        					}
+                                        				}
+                                        			});
+
+                                        		}else{
+													jAlert("Please select AOI layer", "Task Manager");
+
+                                        		}
+
+                                        	}else{
+                                        		jAlert("Please select AOI layer", "Task Manager");
+                                        		return;
+                                        	}
+											
+}
+

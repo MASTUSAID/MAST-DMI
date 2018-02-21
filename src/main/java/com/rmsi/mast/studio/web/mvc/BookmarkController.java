@@ -2,6 +2,8 @@
 
 package com.rmsi.mast.studio.web.mvc;
 
+import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rmsi.mast.studio.domain.Bookmark;
+import com.rmsi.mast.studio.domain.Project;
+import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.service.BookmarkService;
+import com.rmsi.mast.studio.service.ProjectService;
+import com.rmsi.mast.studio.service.UserService;
 
 
 /**
@@ -27,6 +33,13 @@ public class BookmarkController {
 	@Autowired
 	BookmarkService bookmarkService;
 	
+	@Autowired
+	ProjectService  projectService;
+	
+	
+	@Autowired
+	UserService userService;
+	
 	@RequestMapping(value = "/studio/bookmark/", method = RequestMethod.GET)
 	@ResponseBody
     public List<Bookmark> list(){
@@ -36,13 +49,15 @@ public class BookmarkController {
 	@RequestMapping(value = "/studio/bookmark/{id}", method = RequestMethod.GET)
 	@ResponseBody
     public Bookmark getBookmarkById(@PathVariable String id){
-		return 	bookmarkService.findBookmarkByName(id);	
+		return 	bookmarkService.findBookmarkById(Integer.parseInt(id));	
 	}
     
 	@RequestMapping(value = "/studio/bookmark/project/{id}", method = RequestMethod.GET)
 	@ResponseBody
     public List<Bookmark> getBookmarksByProject(@PathVariable String id){
-		return 	bookmarkService.getBookmarksByProject(id);	
+		
+		Project projectObj=  projectService.findProjectByName(id);
+		return 	bookmarkService.getBookmarksByProject(projectObj.getProjectnameid());	
 	}
 	
 	
@@ -50,7 +65,7 @@ public class BookmarkController {
 	@RequestMapping(value = "/studio/bookmark/delete/project/{id}", method = RequestMethod.GET)
 	@ResponseBody
     public void deleteBookmark(@PathVariable String id){
-		bookmarkService.deleteBookmarkByProject(id);
+		bookmarkService.deleteBookmarkById(id);
 	}
 	
 	
@@ -62,13 +77,31 @@ public class BookmarkController {
 	
 	@RequestMapping(value = "/studio/bookmark/create", method = RequestMethod.POST)
 	@ResponseBody
-    public void createBookmark(Bookmark bookmark){
+    public void createBookmark(Bookmark bookmark,Principal principal){
+		
+		String username = principal.getName();
+		User user = userService.findByUniqueName(username);
+		
+		Long id = user.getId();
+		bookmark.setCreatedby(id.intValue());
+		bookmark.setCreateddate(new Date());
+		bookmark.setIsactive(true);
+		Project projectObj=  projectService.findProjectByName(bookmark.getProjectName());
+		bookmark.setProjectnameid(projectObj.getProjectnameid());
+		bookmark.setBookmarkname(bookmark.getDescription());
 		bookmarkService.addBookmark(bookmark);	
 	}
 	
 	@RequestMapping(value = "/studio/bookmark/edit", method = RequestMethod.POST)
 	@ResponseBody
-    public void editBookmark(Bookmark bookmark){
+    public void editBookmark(Bookmark bookmark,Principal principal){
+		String username = principal.getName();
+		User user = userService.findByUniqueName(username);
+		
+		Long id = user.getId();
+		bookmark.setModifiedby(id.intValue());
+		bookmark.setModifieddate(new Date());
+		
 		bookmarkService.updateABookmark(bookmark);	
 	}
 	

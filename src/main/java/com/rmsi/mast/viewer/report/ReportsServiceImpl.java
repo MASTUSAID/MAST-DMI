@@ -9,18 +9,23 @@ import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.RegistryBook;
+import com.rmsi.mast.studio.domain.fetch.ReportCertificateFetch;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.service.LandRecordsService;
+
 import java.net.URL;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +56,7 @@ public class ReportsServiceImpl implements ReportsSerivce {
             List<SocialTenureRelationship> rights = landRecordsService.findAllSocialTenureByUsin(usin);
             SpatialUnitTable claim = landRecordsService.getSpatialUnit(usin);
 
-            if (claim == null || rights == null || rights.size() < 1 || rights.get(0).getPerson_gid() == null) {
+            if (claim == null || rights == null || rights.size() < 1 || rights.get(0).getPersonlandid() == null) {
                 return null;
             }
 
@@ -60,21 +65,21 @@ public class ReportsServiceImpl implements ReportsSerivce {
             String hamlet = claim.getHamlet_Id().getHamletName();
             String claimantName;
 
-            if (rights.get(0).getPerson_gid().getPerson_type_gid().getPerson_type_gid() == PersonType.TYPE_NATURAL) {
-                claimantName = getPersonName((NaturalPerson) rights.get(0).getPerson_gid());
-            } else {
-                NonNaturalPerson nonPerson = (NonNaturalPerson) rights.get(0).getPerson_gid();
-                if (nonPerson.getPoc_gid() != null && nonPerson.getPoc_gid() > 0) {
-                    claimantName = getPersonName((NaturalPerson) landRecordsService.findPersonGidById(nonPerson.getPoc_gid()));
-                } else {
-                    claimantName = StringUtils.empty(nonPerson.getInstitutionName());
-                }
-            }
+//            if (rights.get(0).getLaPartygroupPersontype().getPersontypeid() == PersonType.TYPE_NATURAL) {
+//                claimantName = getPersonName((NaturalPerson) rights.get(0).getPersonlandid());
+//            } else {
+//                NonNaturalPerson nonPerson = (NonNaturalPerson) rights.get(0).getPersonlandid();
+//                if (nonPerson.getPoc_gid() != null && nonPerson.getPoc_gid() > 0) {
+//                    claimantName = getPersonName((NaturalPerson) landRecordsService.findPersonGidById(nonPerson.getPoc_gid()));
+//                } else {
+//                    claimantName = StringUtils.empty(nonPerson.getInstitutionName());
+//                }
+//            }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
             HashMap params = new HashMap();
-            params.put("CLAIMANT_NAME", claimantName);
+//          params.put("CLAIMANT_NAME", claimantName);
             params.put("VILLAGE", village);
             params.put("HAMLET", hamlet);
             params.put("CLAIM_NUMBER", StringUtils.empty(claim.getClaimNumber()));
@@ -172,6 +177,291 @@ public class ReportsServiceImpl implements ReportsSerivce {
             return null;
         }
     }
+    
+    @Override
+    public JasperPrint getCcroFormsinbatch(String projectName, Long usin, Long startRecord, Long endRecord, String appUrl) {
+        try 
+        {
+           // ProjectDetails project = landRecordsService.getProjectDetails(projectName);
+        	List<ReportCertificateFetch> report = landRecordsService.getCertificatedetailsinbatch(startRecord,endRecord);
+        	// List<ClaimSummary> claims = landRecordsService.getClaimsForCcro(usin, startRecord, endRecord, projectName);
+
+            if (report == null || report.size() < 1) {
+                return null;
+            }
+            HashMap params = new HashMap();
+         
+               
+                               
+//                params.put("usin", objReportCertificateFetch.getUsin());
+//                params.put("OWNER_NAME", objReportCertificateFetch.getFirstname());
+//                params.put("CERTI_NUMBER", objReportCertificateFetch.getCertificateno());
+//                params.put("PARCEL_NUMBER", objReportCertificateFetch.getLandno());
+//                params.put("ADDRESS", objReportCertificateFetch.getAddress());
+//                params.put("AREA", objReportCertificateFetch.getArea());
+//                params.put("LANDUSE", objReportCertificateFetch.getLandusetype());
+//                params.put("EAST", objReportCertificateFetch.getNeighbor_east());
+//                params.put("WEST", objReportCertificateFetch.getNeighbor_west());
+//                params.put("NORTH", objReportCertificateFetch.getNeighbor_north());
+//                params.put("SOUTH", objReportCertificateFetch.getNeighbor_south());
+//                params.put("sharepercentage", objReportCertificateFetch.getSharepercentage());
+//                params.put("partyid", objReportCertificateFetch.getPartyid());
+                params.put("LAND_OFFICER_SIGNATURE", (StringUtils.isEmpty(report.get(0).getLandofficersignature()) ? "0" : report.get(0).getLandofficersignature()));
+               
+               
+                params.put("APP_URL", appUrl);
+
+                
+            
+            ReportCertificateFetch[] beans = report.toArray(new ReportCertificateFetch[report.size()]);
+            
+            JRDataSource jds = new JRBeanArrayDataSource(beans);
+
+            return JasperFillManager.fillReport(
+                    ReportsServiceImpl.class.getResourceAsStream("/reports/Certificates.jasper"),
+                    params, jds);
+            
+                    } 
+        catch (Exception ex)
+        {
+            logger.error(ex);
+            return null;
+        }
+    }
+    
+    @Override
+    public JasperPrint getLandFormsinbatch(String projectName, Long usin, Long startRecord, Long endRecord, String appUrl) {
+    	try 
+    	{	
+    		List<ReportCertificateFetch> report = landRecordsService.getCertificatedetailsinbatch(startRecord,endRecord);
+    	
+    		if (report == null || report.size() < 1) {
+    			return null;
+    		}
+    		HashMap params = new HashMap();
+    		params.put("LAND_OFFICER_SIGNATURE", (StringUtils.isEmpty(report.get(0).getLandofficersignature()) ? "0" : report.get(0).getLandofficersignature()));
+    		params.put("APP_URL", appUrl);
+    		ReportCertificateFetch[] beans = report.toArray(new ReportCertificateFetch[report.size()]);
+
+    		JRDataSource jds = new JRBeanArrayDataSource(beans);
+    		return JasperFillManager.fillReport(
+    				ReportsServiceImpl.class.getResourceAsStream("/reports/LandForm.jasper"),
+    				params, jds);
+
+    	} 
+    	catch (Exception ex)
+    	{
+    		logger.error(ex);
+    		return null;
+    	}
+    }
+    
+    /*@Override
+    public JasperPrint getCcroFormsinbatch(String projectName, Long usin, Long startRecord, Long endRecord, String appUrl) {
+        try 
+        {
+           // ProjectDetails project = landRecordsService.getProjectDetails(projectName);
+        	List<ReportCertificateFetch> report = landRecordsService.getCertificatedetailsinbatch(startRecord,endRecord);
+        	// List<ClaimSummary> claims = landRecordsService.getClaimsForCcro(usin, startRecord, endRecord, projectName);
+
+            if (report == null || report.size() < 1) {
+                return null;
+            }
+            HashMap params = new HashMap();
+            List<ReportCertificateFetch> reporttemp = new ArrayList<ReportCertificateFetch>();
+            for (ReportCertificateFetch objdata :report )
+            {
+            	
+            	ReportCertificateFetch objReportCertificateFetch= new ReportCertificateFetch();
+            	
+            	objReportCertificateFetch.setUsin(objdata.getUsin());
+            	objReportCertificateFetch.setCertificateno(objdata.getCertificateno());
+            	objReportCertificateFetch.setLandno(objdata.getLandno());
+            	objReportCertificateFetch.setDate(objdata.getDate());
+            	objReportCertificateFetch.setArea(objdata.getArea());
+            	objReportCertificateFetch.setLandusetype(objdata.getLandusetype());
+            	objReportCertificateFetch.setNeighbor_east(objdata.getNeighbor_east());
+            	objReportCertificateFetch.setNeighbor_west(objdata.getNeighbor_west());
+            	objReportCertificateFetch.setNeighbor_north(objdata.getNeighbor_north());
+            	objReportCertificateFetch.setNeighbor_south(objdata.getNeighbor_south());
+            	objReportCertificateFetch.setSharepercentage(objdata.getSharepercentage());
+            	objReportCertificateFetch.setFirstname(objdata.getFirstname());
+            	objReportCertificateFetch.setMiddlename(objdata.getMiddlename());
+            	objReportCertificateFetch.setLastname(objdata.getLastname());
+            	objReportCertificateFetch.setAddress(objdata.getAddress());
+            	objReportCertificateFetch.setLandofficersignature(objdata.getLandofficersignature());
+            	objReportCertificateFetch.setPartyid(objdata.getPartyid());
+            	
+            	reporttemp.add(objReportCertificateFetch);
+               
+                               
+                params.put("usin", objReportCertificateFetch.getUsin());
+                params.put("OWNER_NAME", objReportCertificateFetch.getFirstname());
+                params.put("CERTI_NUMBER", objReportCertificateFetch.getCertificateno());
+                params.put("PARCEL_NUMBER", objReportCertificateFetch.getLandno());
+                params.put("ADDRESS", objReportCertificateFetch.getAddress());
+                params.put("AREA", objReportCertificateFetch.getArea());
+                params.put("LANDUSE", objReportCertificateFetch.getLandusetype());
+                params.put("EAST", objReportCertificateFetch.getNeighbor_east());
+                params.put("WEST", objReportCertificateFetch.getNeighbor_west());
+                params.put("NORTH", objReportCertificateFetch.getNeighbor_north());
+                params.put("SOUTH", objReportCertificateFetch.getNeighbor_south());
+                params.put("sharepercentage", objReportCertificateFetch.getSharepercentage());
+                params.put("partyid", objReportCertificateFetch.getPartyid());
+                params.put("LAND_OFFICER_SIGNATURE", (StringUtils.isEmpty(objReportCertificateFetch.getLandofficersignature()) ? "0" : objReportCertificateFetch.getLandofficersignature()));
+                
+                params.put("APP_URL", appUrl);
+
+                
+            }
+            ReportCertificateFetch[] beans = reporttemp.toArray(new ReportCertificateFetch[reporttemp.size()]);
+            
+            JRDataSource jds = new JRBeanArrayDataSource(beans);
+
+            return JasperFillManager.fillReport(
+                    ReportsServiceImpl.class.getResourceAsStream("/reports/Ccro.jasper"),
+                    params, jds);
+            
+                    } 
+        catch (Exception ex)
+        {
+            logger.error(ex);
+            return null;
+        }
+    }*/
+    
+    @Override
+    public JasperPrint getCcroFormsLadm(String projectName, Long usin, int startRecord, int endRecord, String appUrl) {
+        try {
+        	/*ProjectDetails project = landRecordsService.getProjectDetails(projectName);
+        	List<ClaimSummary> claims = landRecordsService.getClaimsForCcro(usin, startRecord, endRecord, projectName);
+
+            if (project == null || claims == null || claims.size() < 1) {
+                return null;
+            }*/
+        	
+        	List<ReportCertificateFetch> report = landRecordsService.getCertificatedetailsbytransactionid(usin);
+        	ReportCertificateFetch objReportCertificateFetch= new ReportCertificateFetch();
+        	
+        	objReportCertificateFetch.setUsin(report.get(0).getUsin());
+        	objReportCertificateFetch.setCertificateno(report.get(0).getCertificateno());
+        	objReportCertificateFetch.setLandno(report.get(0).getLandno());
+        	objReportCertificateFetch.setDate(report.get(0).getDate());
+        	objReportCertificateFetch.setArea(report.get(0).getArea());
+        	objReportCertificateFetch.setLandusetype(report.get(0).getLandusetype());
+        	objReportCertificateFetch.setNeighbor_east(report.get(0).getNeighbor_east());
+        	objReportCertificateFetch.setNeighbor_west(report.get(0).getNeighbor_west());
+        	objReportCertificateFetch.setNeighbor_north(report.get(0).getNeighbor_north());
+        	objReportCertificateFetch.setNeighbor_south(report.get(0).getNeighbor_south());
+        	objReportCertificateFetch.setSharepercentage(report.get(0).getSharepercentage());
+        	objReportCertificateFetch.setFirstname(report.get(0).getFirstname());
+        	objReportCertificateFetch.setMiddlename(report.get(0).getMiddlename());
+        	objReportCertificateFetch.setLastname(report.get(0).getLastname());
+        	objReportCertificateFetch.setAddress(report.get(0).getAddress());
+        	objReportCertificateFetch.setLandofficersignature(report.get(0).getLandofficersignature());
+        	objReportCertificateFetch.setPartyid(report.get(0).getPartyid());
+        	
+        	//report.add(objReportCertificateFetch);
+            HashMap params = new HashMap();
+           
+            if(report !=null && report.size()>1)
+            {
+            	params.put("OWNER_NAME1", report.get(1).getFirstname());
+                params.put("ADDRESS1", report.get(1).getAddress());
+            }               
+            params.put("usin", objReportCertificateFetch.getUsin());
+            params.put("OWNER_NAME", objReportCertificateFetch.getFirstname());          
+            params.put("CERTI_NUMBER", objReportCertificateFetch.getCertificateno());
+            params.put("PARCEL_NUMBER", objReportCertificateFetch.getLandno());
+            params.put("ADDRESS", objReportCertificateFetch.getAddress());
+            params.put("AREA", objReportCertificateFetch.getArea());
+            params.put("LANDUSE", objReportCertificateFetch.getLandusetype());
+            params.put("EAST", objReportCertificateFetch.getNeighbor_east());
+            params.put("WEST", objReportCertificateFetch.getNeighbor_west());
+            params.put("NORTH", objReportCertificateFetch.getNeighbor_north());
+            params.put("SOUTH", objReportCertificateFetch.getNeighbor_south());
+            params.put("sharepercentage", objReportCertificateFetch.getSharepercentage());
+            params.put("partyid", objReportCertificateFetch.getPartyid());
+            params.put("LAND_OFFICER_SIGNATURE", (StringUtils.isEmpty(objReportCertificateFetch.getLandofficersignature()) ? "0" : objReportCertificateFetch.getLandofficersignature()));
+            
+          
+            
+
+            params.put("APP_URL", appUrl);
+            
+            /*URL resource = ReportsServiceImpl.class.getResource("/reports/CrroNonPersonSignature.jasper");
+            params.put("SUBREPORT_PATH", Paths.get(resource.toURI()).toAbsolutePath().toString());*/
+
+            ReportCertificateFetch[] beans = report.toArray(new ReportCertificateFetch[report.size()]);
+            JRDataSource jds = new JRBeanArrayDataSource(beans);
+
+            return JasperFillManager.fillReport(
+                    ReportsServiceImpl.class.getResourceAsStream("/reports/Ccro.jasper"),
+                    params, jds);
+        } catch (Exception ex) {
+            logger.error(ex);
+            return null;
+        }
+    }
+    
+    @Override
+    public JasperPrint getlandverificationForm(String projectName, Long usin, int startRecord, int endRecord, String appUrl) {
+        try 
+        {
+        	
+        	List<ReportCertificateFetch> report = landRecordsService.getCertificatedetailsbytransactionid(usin);
+        	ReportCertificateFetch objReportCertificateFetch= new ReportCertificateFetch();
+        	
+        	objReportCertificateFetch.setUsin(report.get(0).getUsin());
+        	objReportCertificateFetch.setCertificateno(report.get(0).getCertificateno());
+        	objReportCertificateFetch.setLandno(report.get(0).getLandno());
+        	objReportCertificateFetch.setDate(report.get(0).getDate());
+        	objReportCertificateFetch.setArea(report.get(0).getArea());
+        	objReportCertificateFetch.setLandusetype(report.get(0).getLandusetype());
+        	objReportCertificateFetch.setNeighbor_east(report.get(0).getNeighbor_east());
+        	objReportCertificateFetch.setNeighbor_west(report.get(0).getNeighbor_west());
+        	objReportCertificateFetch.setNeighbor_north(report.get(0).getNeighbor_north());
+        	objReportCertificateFetch.setNeighbor_south(report.get(0).getNeighbor_south());
+        	objReportCertificateFetch.setSharepercentage(report.get(0).getSharepercentage());
+        	objReportCertificateFetch.setFirstname(report.get(0).getFirstname());
+        	objReportCertificateFetch.setMiddlename(report.get(0).getMiddlename());
+        	objReportCertificateFetch.setLastname(report.get(0).getLastname());
+        	objReportCertificateFetch.setAddress(report.get(0).getAddress());
+        	objReportCertificateFetch.setLandofficersignature(report.get(0).getLandofficersignature());
+        	objReportCertificateFetch.setPartyid(report.get(0).getPartyid());
+        	
+        	// report.add(objReportCertificateFetch);
+            HashMap params = new HashMap();
+                           
+            params.put("usin", objReportCertificateFetch.getUsin());
+            params.put("OWNER_NAME", objReportCertificateFetch.getFirstname());
+            params.put("CERTI_NUMBER", objReportCertificateFetch.getCertificateno());
+            params.put("PARCEL_NUMBER", objReportCertificateFetch.getLandno());
+            params.put("ADDRESS", objReportCertificateFetch.getAddress());
+            params.put("AREA", objReportCertificateFetch.getArea());
+            params.put("LANDUSE", objReportCertificateFetch.getLandusetype());
+            params.put("EAST", objReportCertificateFetch.getNeighbor_east());
+            params.put("WEST", objReportCertificateFetch.getNeighbor_west());
+            params.put("NORTH", objReportCertificateFetch.getNeighbor_north());
+            params.put("SOUTH", objReportCertificateFetch.getNeighbor_south());
+            params.put("sharepercentage", objReportCertificateFetch.getSharepercentage());
+            params.put("partyid", objReportCertificateFetch.getPartyid());
+            params.put("LAND_OFFICER_SIGNATURE", (StringUtils.isEmpty(objReportCertificateFetch.getLandofficersignature()) ? "0" : objReportCertificateFetch.getLandofficersignature()));
+            
+            params.put("APP_URL", appUrl);
+           
+            ReportCertificateFetch[] beans = report.toArray(new ReportCertificateFetch[report.size()]);
+            JRDataSource jds = new JRBeanArrayDataSource(beans);
+
+            return JasperFillManager.fillReport(
+                    ReportsServiceImpl.class.getResourceAsStream("/reports/LandVerificationForm.jasper"),
+                    params, jds);
+        } catch (Exception ex) {
+            logger.error(ex);
+            return null;
+        }
+    }
+    
 
     @Override
     public JasperPrint getDistrictRegistryBook(String projectName, String appUrl) {
@@ -305,24 +595,24 @@ public class ReportsServiceImpl implements ReportsSerivce {
     }
 
     private String getPersonName(NaturalPerson person) {
-        String name = "";
-        if (!StringUtils.isEmpty(person.getFirstName())) {
-            name = person.getFirstName();
-        }
-        if (!StringUtils.isEmpty(person.getMiddleName())) {
-            if (name.length() > 0) {
-                name = name + " " + person.getMiddleName();
-            } else {
-                name = person.getMiddleName();
-            }
-        }
-        if (!StringUtils.isEmpty(person.getLastName())) {
-            if (name.length() > 0) {
-                name = name + " " + person.getLastName();
-            } else {
-                name = person.getLastName();
-            }
-        }
-        return name;
-    }
-}
+    	  String name = "";
+          if (!StringUtils.isEmpty(person.getFirstname())) {
+              name = person.getFirstname();
+          }
+          if (!StringUtils.isEmpty(person.getMiddlename())) {
+              if (name.length() > 0) {
+                  name = name + " " + person.getMiddlename();
+              } else {
+                  name = person.getMiddlename();
+              }
+          }
+          if (!StringUtils.isEmpty(person.getLastname())) {
+              if (name.length() > 0) {
+                  name = name + " " + person.getLastname();
+              } else {
+                  name = person.getLastname();
+              }
+          }
+          return name;
+      }
+  }

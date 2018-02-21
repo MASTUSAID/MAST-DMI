@@ -2,6 +2,7 @@
 package com.rmsi.mast.studio.dao.hibernate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -39,17 +40,18 @@ public class ProjectLayergroupHibernateDAO extends GenericHibernateDAO<ProjectLa
 	}	
 	
 	
-	public void deleteProjectLayergroupByProjectName(String name) {
-		System.out.println("HDAO DELETE >>>>>>>"+ name);
-		List<ProjectLayergroup> projectLayergroupList=findAllProjectLayergroup(name);
-		if(projectLayergroupList.size() > 0){
-				for(int i=0;i<projectLayergroupList.size();i++){			
-					ProjectLayergroup plg=new ProjectLayergroup();
-					plg=projectLayergroupList.get(i);
-					System.out.println("DELETEING ID >>>>>>>"+ Long.parseLong(plg.getId().toString()));				
-					//makeTransientByID(long (plg.getId());			
-					makeTransientByID(Long.parseLong(plg.getId().toString()));
-				}
+	public void deleteProjectLayergroupByProjectId(Integer id) {
+		
+		try{
+			Query query = getEntityManager().createQuery(
+					"Delete from ProjectLayergroup plg where plg.projectBean.projectnameid =:id").setParameter("id", id);
+			
+			int count = query.executeUpdate();
+			System.out.println("Delete Projectlayergrp count: " + count);
+			
+		}catch(Exception e){
+			logger.error(e);
+			
 		}
 	}
 	
@@ -66,7 +68,7 @@ public class ProjectLayergroupHibernateDAO extends GenericHibernateDAO<ProjectLa
 
 		List<String> list = new ArrayList<String>();
 		for(LayerLayergroup g: llg){
-			list.add(g.getLayer());
+			list.addAll((Collection<? extends String>) g.getLayers());
 		}
 		return list;
 	}
@@ -86,5 +88,30 @@ public class ProjectLayergroupHibernateDAO extends GenericHibernateDAO<ProjectLa
 			logger.error(e);
 			
 		}
+	}
+
+	@Override
+	public String checkProjectLayergroupByLayergroupId(Integer id) {
+		
+		try {
+			@SuppressWarnings("unchecked")
+			List<ProjectLayergroup> projectLayergroup =
+					getEntityManager().createQuery("Select plg from ProjectLayergroup plg where plg.layergroupBean.layergroupid = :id").setParameter("id", id).getResultList();
+				
+			if(projectLayergroup.size()>0){
+				
+				return "LayerGroup linked with project :" + "<b>" +projectLayergroup.get(0).getProjectBean().getName() +"</b> ";
+			}else{
+				
+				return "No";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+				
 	}
 }

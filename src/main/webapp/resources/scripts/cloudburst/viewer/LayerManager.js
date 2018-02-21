@@ -38,13 +38,13 @@ Cloudburst.LayerManager = function (_map, _searchdiv) {
             jQuery.get('resources/templates/viewer/layermanager.html', function (template) {
             	 $("#" + searchdiv).empty();
                 $("#" + searchdiv).append(template);
-				for (m in projects.projectLayergroups) {
+				// for (m in projects.projectLayergroups) {
                 	
                 	
-                    for (n in projects.projectLayergroups[m].layergroups.layers) {									
-					projects.projectLayergroups[m].layergroups.layers[n].displayInLyrMgr=displayInLayerMgr[projects.projectLayergroups[m].layergroups.layers[n].layer]					
-					}	
-				}
+                    // for (n in projects.projectLayergroups[m].layergroups.layers) {									
+					// projects.projectLayergroups[m].layergroups.layers[n].displayInLyrMgr=displayInLayerMgr[projects.projectLayergroups[m].layergroups.layers[n].layer]					
+					// }	
+				// }
                 
 	               /* Layer grp heading traslation for en and cy
 	                for(lyrGrp in projects.projectLayergroups){
@@ -87,80 +87,84 @@ Cloudburst.LayerManager = function (_map, _searchdiv) {
 				//	$('#grpVisibility__overlays').attr('checked', true);
 				//}
 				
+				
+				
                 for (x in projects.projectLayergroups) {
                 	
                 	var bGrpVisibilityState = false;
-                    for (y in projects.projectLayergroups[x].layergroups.layers) {
+                    for (y in projects.projectLayergroups[x].layergroupBean.layerLayergroups) {
 						
 						//Aparesh, Implement layer visibility checkbox
 						
-						$('#Visibility__'+projects.projectLayergroups[x].layergroups.layers[y].layer).attr('checked', projects.projectLayergroups[x].layergroups.layers[y].layervisibility);					
-						if(projects.projectLayergroups[x].layergroups.layers[y].layervisibility){
+						$('#Visibility__'+projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias).attr('checked', projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.visibility);					
+						if(projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.visibility){
 							//$('#grpVisibility__'+projects.projectLayergroups[x].layergroups.name).attr('checked', false);
 							bGrpVisibilityState = true;
 						}
 					
-                        $("#SliderSingle__" + projects.projectLayergroups[x].layergroups.layers[y].layer).slider({
+                        $("#SliderSingle__" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias).slider({
 
                             min: 1,
                             max: 9,
                             value: 9,
                             step: 1,
                             slide: function (event, ui) {
-								
-                                //OpenLayers.Map.activelayer.setOpacity(ui.value / 10);								
-								map.getLayersByName(event.target.title)[0].setOpacity(ui.value / 10);
-								
+							var _layer=getLayerByAliesName(event.target.title);
+								_layer.setOpacity(ui.value / 10);
                             }
                         });
 						
                       //checkbox enabled/disabled accoding to scale
-						if(!map.getLayersByName(projects.projectLayergroups[x].layergroups.layers[y].layer)[0].visibility){
+				       //		if(!map.getLayersByName(projects.projectLayergroups[x].layergroups.layers[y].layer)[0].visibility){
 							//$('#Visibility__'+projects.projectLayergroups[x].layergroups.layers[y].layer).attr("disabled", "disabled");;
-						}
+					  //	}
                         
 						//set image   
-						if(map.getLayersByName(projects.projectLayergroups[x].layergroups.layers[y].layer)[0].editable){
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_editable").attr('src', lyrmgroptions.editable.yes);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_editable").attr('title', $._('layermanager_editable_layer'));
-						}
+						
+						if(projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.editable){
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_editable").attr('src', lyrmgroptions.editable.yes);
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_editable").attr('title', $._('layermanager_editable_layer'));
+						}else{
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_editable").attr('src', lyrmgroptions.editable.no);
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_editable").attr('title', $._('layermanager_editable_layer'));
+						 }
+						
+						if(projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.selectable){
+						    $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_selectable").attr('src', lyrmgroptions.selectable.yes);
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_selectable").attr('title', $._('layermanager_selectable_layer'));
+						 }
 						else{
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_editable").attr('src', lyrmgroptions.editable.no);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_editable").attr('title', $._('layermanager_non-editable_layer'));
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_selectable").attr('src', lyrmgroptions.selectable.no);
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_selectable").attr('title', $._('layermanager_non-selectable_layer'));
 						}
-						if(map.getLayersByName(projects.projectLayergroups[x].layergroups.layers[y].layer)[0].selectable){
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_selectable").attr('src', lyrmgroptions.selectable.yes);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_selectable").attr('title', $._('layermanager_selectable_layer'));
-						}
+						
+					  if(projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.queryable){
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_queryable").attr('src', lyrmgroptions.queryable.yes);
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_queryable").attr('title', $._('layermanager_queryable_layer'));
+						 }
 						else{
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_selectable").attr('src', lyrmgroptions.selectable.no);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_selectable").attr('title', $._('layermanager_non-selectable_layer'));
-						}
-						if(map.getLayersByName(projects.projectLayergroups[x].layergroups.layers[y].layer)[0].queryable){
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_queryable").attr('src', lyrmgroptions.queryable.yes);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_queryable").attr('title', $._('layermanager_queryable_layer'));
-						}
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_queryable").attr('src', lyrmgroptions.queryable.no);
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_queryable").attr('title', $._('layermanager_non-queryable_layer'));
+						 }
+						
+						if(projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.exportable){
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_exportable").attr('src', lyrmgroptions.exportable.yes);
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_exportable").attr('title', $._('layermanager_exportable_layer'));
+						 }
 						else{
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_queryable").attr('src', lyrmgroptions.queryable.no);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_queryable").attr('title', $._('layermanager_non-queryable_layer'));
-						}
-						if(map.getLayersByName(projects.projectLayergroups[x].layergroups.layers[y].layer)[0].exportable){
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_exportable").attr('src', lyrmgroptions.exportable.yes);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_exportable").attr('title', $._('layermanager_exportable_layer'));
-						}
-						else{
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_exportable").attr('src', lyrmgroptions.exportable.no);
-							$("#" + projects.projectLayergroups[x].layergroups.layers[y].layer + "_exportable").attr('title', $._('layermanager_non-exportable_layer'));
-						}
+							 $("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_exportable").attr('src', lyrmgroptions.exportable.no);
+							$("#" + projects.projectLayergroups[x].layergroupBean.layerLayergroups[y].layers.alias + "_exportable").attr('title', $._('layermanager_non-exportable_layer'));
+						 }
 						
 						
 					
                     };
                     if(!bGrpVisibilityState){
-                        $('#grpVisibility__' + projects.projectLayergroups[x].layergroups.name).attr('checked', false);
+                        $('#grpVisibility__' + projects.projectLayergroups[x].layergroupBean.name).attr('checked', false);
                     }
                 };
 
+				
 			$("#SliderSingle__" + "Cosmetic").slider({
 
 				min: 1,
@@ -190,31 +194,8 @@ Cloudburst.LayerManager = function (_map, _searchdiv) {
 
                 activateLayerClick();
 
-                refreshLegends();
+                //refreshLegends();
 
-                //set project's Active layer
-
-
-                var activelyr = map.getLayersByName(projects.activelayer)[0];
-                OpenLayers.Map.activelayer = activelyr;
-                activeLayerURL = activelyr.url;
-                $('.layerTR').removeClass("rowclick");
-                $("#" + projects.activelayer).addClass("rowclick");
-				$("#chk-" + projects.activelayer).addClass("rowclick");
-				
-
-                //Get layer's maptip
-                getMaptipField(project, OpenLayers.Map.activelayer.name);
-
-
-                //mapTipOptions.featureType="lpis_output";
-                //mapTipOptions.featureType=layerMap[OpenLayers.Map.activelayer.name];
-                mapControls["maptip"].protocol = OpenLayers.Protocol.WFS.fromWMSLayer(OpenLayers.Map.activelayer, mapTipOptions);
-
-
-                mapControls["selectbox"].layers = [OpenLayers.Map.activelayer];
-                mapControls["selectpolygon"].layers = [OpenLayers.Map.activelayer];
-                
                 
                 $(".layer_info").tipTip({
 		        	fadeIn:0,
@@ -238,38 +219,36 @@ Cloudburst.LayerManager = function (_map, _searchdiv) {
 
 function refreshLegends() {
 
-    for (i = 0; i < map.layers.length; i++) {
+    for (i = 0; i < map.getLayers().getLength(); i++) {
 
-        var layer = map.layers[i];
-        if (layer instanceof OpenLayers.Layer.WMS) {
+        var layer = map.getLayers().array_[i];
+        if (layer instanceof ol.layer.Vector) {
             var legendurl;
-            var wmsurl = layer.getFullRequestString({});
-            legendurl = wmsurl.replace("GetMap", "GetLegendGraphic") + "&Layer=" + layerMap[layer.name];
-
-            if(lang == "cy" && layer.name == "Furniture"){
-            	$("#" + layer.name + "_legend").attr('src', "resources/images/viewer/furniture_legend_cy.png");
-            }else{
-            	$("#" + layer.name + "_legend").attr('src', legendurl);
-            }
-
+           var _url=replaceString(layer.values_.url, /wfs/, 'wms')
+			legendurl =_url+ "&request=GetLegendGraphic&service=WMS&version=1.0.0&Layer=" + layer.values_.name + "&Format=image/png&WIDTH=20&HEIGHT=20";
+			//$("#" + layer.values_.aname + "_legend").attr('src', legendurl);
+			
+           
         }
     }
 }
 
 function manageLayer(_layer) {
     
-	var clsname=_layer.className;
-	//Commented by Alok
-	//var tolLen=$('.'+clsname).length;
-	//if($('.'+clsname+':checked').length==tolLen){
-	
-	//$('#grpVisibility__'+clsname).attr('checked', true);
-	//}
-	//else{
-	//$('#grpVisibility__'+clsname).attr('checked', false);
-	//}
-	//enabling disabling group layer check box based on whether all the layers are off or not.
+	var _id=_layer.id;
 	var layername = _layer.id.split("__")[1];
+    var _layer=getLayerByAliesName(layername);
+  
+    if($('#'+_id).prop('checked'))
+		{
+		_layer.setVisible(true);
+		}else{
+		_layer.setVisible(false);
+		}
+		
+		
+
+	/*
 	var tolLen=$('.'+clsname).length;
 	var anyLayerOn = false;
 	for(var i=0;i<tolLen;i++){
@@ -288,85 +267,86 @@ function manageLayer(_layer) {
 		}
 		
 	if($('#grpVisibility__'+clsname)[0].checked==true){
-	//if($("input[id='grpVisibility__"+clsname+"']")[0].checked==true){   
-	
-		//var layername = _layer.id.split("__")[1];
-	    //map.getLayersByName(layername)[0].setVisibility(_layer.checked);
-		if(clsname.toUpperCase() == "OVERLAYS"){
-			/*
-			 $.ajax({
-				   url: "theme/checkSldExists/",
-				   async: false,
-				   success: function (flag) {
-        	
-					   map.getLayersByName(layername)[0].setVisibility(flag);
-        	
-				   }});*/
-			 map.getLayersByName(layername)[0].setVisibility(_layer.checked);
-        }
-		ScaleRangeView();
+			if(clsname.toUpperCase() == "OVERLAYS"){
+				 map.getLayersByName(layername)[0].setVisibility(_layer.checked);
+			}
+			ScaleRangeView();
 	}
+	
+	*/
 
 }
 
+function getLayerByAliesName(layer) {
+    var _layer = false;
+    for (var i=0;i<map.getLayers().getLength();i++) {
+        if (map.getLayers().getArray()[i].get('aname') === layer) { //check if layer exists
+            _layer = map.getLayers().getArray()[i];
+        }
+    }
+    return _layer;
+}
+
+
+function LayerExist(layer) {
+    var res = false;
+    for (var i=0;i<map.getLayers().getLength();i++) {
+        if (map.getLayers().getArray()[i] === layer) { //check if layer exists
+            res = true; //if exists, return true
+        }
+    }
+    return res;
+}
 
 
 function activateLayerClick() {
     $('.layerTR').click(function (e) {
-        //alert(e.currentTarget.id);
         var layer_id = e.currentTarget.id;
-        var layer = map.getLayersByName(layer_id)[0];
-        if (layer instanceof OpenLayers.Layer.WMS) {
-            OpenLayers.Map.activelayer = layer;
-            activeLayerURL = layer.url;
+		if (layer_id.indexOf('-') > -1)
+		{
+			layer_id=layer_id.substring(layer_id.indexOf("-") + 1); 
+		}
+       var layer = getLayerByAliesName(layer_id);
+        if (layer.getSource() instanceof ol.source.Vector) {
             $('.layerTR').removeClass("rowclick");
             $("#" + layer_id).addClass("rowclick");
 			$("#chk-" + layer_id).addClass("rowclick");
-			//reflect layer name in export data when layer changed
 			if($('#ExportLayers').length>0){			
-				$('#ExportLayers').text(OpenLayers.Map.activelayer.name);
+				$('#ExportLayers').text(layer_id);
 			}
-			
-            //Get layer's maptip
-            getMaptipField(project, OpenLayers.Map.activelayer.name);
-
-            var actualLayerName = layerMap[OpenLayers.Map.activelayer.name];
-
-            if (actualLayerName.indexOf("rega:") > -1) {
-                var a1 = [];
-                a1 = actualLayerName.split(":");
-                actualLayerName = a1[1];
-            }
-
-            mapTipOptions.featureType = actualLayerName;
-
-            mapControls["maptip"].protocol = new OpenLayers.Protocol.WFS.fromWMSLayer(OpenLayers.Map.activelayer, mapTipOptions);
-            mapControls["selectbox"].layers = [OpenLayers.Map.activelayer];
-            mapControls["selectpolygon"].layers = [OpenLayers.Map.activelayer];
+			active_layerMap=layer;
+        }  else if (layer.getSource() instanceof ol.source.Tile) {
+            $('.layerTR').removeClass("rowclick");
+            $("#" + layer_id).addClass("rowclick");
+			$("#chk-" + layer_id).addClass("rowclick");
+			if($('#ExportLayers').length>0){			
+				$('#ExportLayers').text(layer_id);
+			}
+			active_layerMap=layer;
         }
     });
 
+	
 }
 
 function manageLyrGrp(_this){
 	
-	var chkbox=$('.'+_this.value);
+	var chkbox=$('.'+'grpVisibility__'+_this.value);
 
 	if(_this.checked){
 	    for (var i = 0; i < chkbox.length; i++) {
 	        var layername = chkbox[i].value;
 	        $('#Visibility__' + layername).attr("checked", true);
-	        if(_this.value.toUpperCase() == "OVERLAYS"){
-	        	map.getLayersByName(layername)[0].setVisibility(true);
-	        }
+			var _layer=getLayerByAliesName(layername);
+	        _layer.setVisible(true);
 	    }
-		ScaleRangeView();
 	}
 	else{
 		for(var i=0;i<chkbox.length;i++){
 			var layername = chkbox[i].value;
 			$('#Visibility__' + layername).attr("checked", false);
-			map.getLayersByName(layername)[0].setVisibility(false);
+			var _layer=getLayerByAliesName(layername);
+	        _layer.setVisible(false);
 		}
 	}
 }

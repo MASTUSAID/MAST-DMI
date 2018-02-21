@@ -5,12 +5,21 @@ import java.io.Serializable;
 public class Attribute implements Serializable {
     private Long id;
     private String value;
+    private Integer groupId;
     
     public Attribute(){
         
     }
 
-    public Long getId() {
+    public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -7,16 +7,16 @@ function LayerGroup(_selectedItem)
 	//jQuery("#tableGrid").empty();	
 	selectedItem=_selectedItem;
 	
-	/*if( jQuery("#LayergroupFormDiv").length<=0){*/
+	if( jQuery("#LayergroupFormDiv").length<=0){
 		
 		displayRefreshedLayergroup();
 	
-	/*}
+	}
 	else{
 		
 		displayLayergroup();
 		
-	}*/
+	}
 }
 
 
@@ -46,6 +46,8 @@ function displayRefreshedLayergroup(){
 		    	jQuery("#layergroup_btnNew").show();
 		    	
 		      	//$("#project_txtSearch").trigger("keyup");
+				
+			if(data.length>0)	{
                 $("#layergroupTable").tablesorter({ 
                 		headers: {2: {sorter: false  },  3: {  sorter: false } },	
                 		debug: false, sortList: [[0, 0]], widgets: ['zebra'] })
@@ -54,6 +56,8 @@ function displayRefreshedLayergroup(){
                            filterColumns: [0],
                            filterCaseSensitive: false
                        });
+					   
+					   }
 		    	
 			
 			});
@@ -136,24 +140,48 @@ var createEditLayergroup = function (_name) {
                 });
                 
                 //set layer list value
-                var layerorder={};
+                // var layerorder={};
                 
-                jQuery.each(layerdata[0].layers, function (i, layerList) {      
-                	layerorder[layerList.layerorder]=layerList.layer;                	                	
-                });
+                // jQuery.each(layerdata[0].layers, function (i, layerList) {      
+                	// layerorder[layerList.layerorder]=layerList.layer;                	                	
+                // });
                 
-                for(var i=1; i<=layerdata[0].layers.length;i++){
-                	if(layerorder[i] != undefined){
-                		jQuery("#addedLayerList").append(jQuery("<option></option>").attr("value", layerorder[i]).text(layerorder[i]));                        
-                		jQuery("#layerList option[value=" + layerorder[i] + "]").remove();
-                	}
-                }
-                jQuery('#name').attr('readonly', true);
+                // for(var i=1; i<=layerdata[0].layers.length;i++){
+                	// if(layerorder[i] != undefined){
+                		// jQuery("#addedLayerList").append(jQuery("<option></option>").attr("value", layerorder[i]).text(layerorder[i]));                        
+                		// jQuery("#layerList option[value=" + layerorder[i] + "]").remove();
+                	// }
+                // }
+                // jQuery('#name').attr('readonly', true);
 				
                 /*jQuery.each(layerdata[0].layers, function (i, layerList) {                    
                         jQuery("#addedLayerList").append(jQuery("<option></option>").attr("value", layerList.layer).text(layerList.layer));                        
                         jQuery("#layerList option[value=" + layerList.layer + "]").remove();
                 });*/
+				
+				
+				jQuery('#name').attr('readonly', true);
+				
+				$.each(layerdata, function (i, ob) {
+					$.each(ob, function (ind, obj) {
+
+						if(ind=="layerLayergroups"){
+							$.each(obj, function (ind1, obj1) {
+								$.each(obj1, function (ind2, obj2) {
+									if( ind2=="layers"){
+										$.each(obj2, function (ind3, obj3) {
+											if(ind3 =="alias"){
+												jQuery("#addedLayerList").append(jQuery("<option></option>").attr("value", obj3).text(obj3));                        
+												jQuery("#layerList option[value=" + obj3 + "]").remove();
+											}	
+										}); 
+									}
+								});
+							});
+						}
+
+					});
+				});
                 
             },
             cache: false
@@ -268,11 +296,16 @@ var deleteLayergroup= function (_lgName) {
 	        if (response) {
 	        	jQuery.ajax({          
 	                url: "layergroup/delete/"+_lgName + "?" + token,
-	                success: function () { 	                	
+	                success: function (obj) { 
+	                	if(obj=="success"){
 	                	jAlert('Data Successfully Deleted', 'Layer Group');
-	                   
-	                	displayRefreshedLayergroup();
-	                    
+	                   displayRefreshedLayergroup();
+	                	}else
+	                		{
+	                		
+	                		jAlert(obj , 'Layer Group');
+	                	   }
+	                	
 	                },
 	                error: function (XMLHttpRequest, textStatus, errorThrown) {
 	                    

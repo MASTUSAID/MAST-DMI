@@ -28,6 +28,6 @@ public interface SpatialDataDao extends GenericDAO<ProjectSpatialData, Integer> 
 	 * @param projectId
 	 * @return
 	 */
-	List<ProjectSpatialData> getProjectSpatialDataByProjectId(String projectId);
+	List<ProjectSpatialData> getProjectSpatialDataByProjectId(Integer projectId);
 
 }

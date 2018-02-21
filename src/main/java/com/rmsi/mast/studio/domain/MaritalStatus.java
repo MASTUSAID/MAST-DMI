@@ -1,9 +1,13 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
-import java.lang.String;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Entity implementation class for Entity: MaritalStatus
@@ -11,49 +15,63 @@ import javax.persistence.*;
  * @author Shruti.Thakur
  */
 @Entity
-@Table(name = "marital_status")
+@Table(name = "la_partygroup_maritalstatus")
 public class MaritalStatus implements Serializable {
 
+/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = "MARITAL_STATUS_ID_GENERATOR", sequenceName = "MARITAL_STATUS_ID_SEQ", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MARITAL_STATUS_ID_GENERATOR")
-	@Column(name="maritalstatus_id")
-	private int maritalStatusId;
-
-	@Column(nullable = false)
-	private String maritalStatus;
+//	private static final long serialVersionUID = 1L;
 	
-	@Column(name="maritalstatus_sw")
-	private String maritalStatus_sw;
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer maritalstatusid;
+
+	private Boolean isactive;
+
+	private String maritalstatus;
+
+	@Column(name="maritalstatus_en")
+	private String maritalstatusEn;
+
 
 	public MaritalStatus() {
 		super();
 	}
 
-	public int getMaritalStatusId() {
-		return this.maritalStatusId;
+	public Integer getMaritalstatusid() {
+		return maritalstatusid;
 	}
 
-	public void setMaritalStatusId(int maritalStatusId) {
-		this.maritalStatusId = maritalStatusId;
+	public void setMaritalstatusid(Integer maritalstatusid) {
+		this.maritalstatusid = maritalstatusid;
 	}
 
-	public String getMaritalStatus() {
-		return this.maritalStatus;
+	public Boolean getIsactive() {
+		return isactive;
 	}
 
-	public void setMaritalStatus(String maritalStatus) {
-		this.maritalStatus = maritalStatus;
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
 	}
 
-	public String getMaritalStatus_sw() {
-		return maritalStatus_sw;
+	public String getMaritalstatus() {
+		return maritalstatus;
 	}
 
-	public void setMaritalStatus_sw(String maritalStatus_sw) {
-		this.maritalStatus_sw = maritalStatus_sw;
+	public void setMaritalstatus(String maritalstatus) {
+		this.maritalstatus = maritalstatus;
 	}
+
+	public String getMaritalstatusEn() {
+		return maritalstatusEn;
+	}
+
+	public void setMaritalstatusEn(String maritalstatusEn) {
+		this.maritalstatusEn = maritalstatusEn;
+	}
+
 
 }

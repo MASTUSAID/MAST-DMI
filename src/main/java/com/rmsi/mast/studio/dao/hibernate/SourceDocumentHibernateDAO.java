@@ -54,8 +54,8 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
     public List<SourceDocument> findByGId(Long id) {
 
         try {
-            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.gid = :gid");
-            List<SourceDocument> sourcedoc = query.setParameter("gid", id.intValue()).getResultList();
+            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.laSpatialunitLand = :gid");
+            List<SourceDocument> sourcedoc = query.setParameter("gid", id).getResultList();
 
             if (sourcedoc.size() > 0) {
                 return sourcedoc;
@@ -113,11 +113,35 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
     }
 
     @Override
-    public SourceDocument getDocumentByPerson(Long person_gid) {
+    public SourceDocument getDocumentByPerson(Long documentid) {
 
         try {
-            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.person_gid = :person_gid");
-            List<SourceDocument> documentlist = query.setParameter("person_gid", person_gid).getResultList();
+        	
+        	//documentid = 7L;
+            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.laExtTransactiondetail.transactionid = :documentid");
+            List<SourceDocument> documentlist = query.setParameter("documentid", documentid.intValue()).getResultList();
+
+            if (documentlist.size() > 0) {
+                return documentlist.get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+
+            logger.error(e);
+            return null;
+        }
+
+    }
+    
+    @Override
+    public SourceDocument getdocumentByPersonfortransaction(Long transactionid, Long partyid)
+    {
+
+        try {
+        	
+            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.laExtTransactiondetail.transactionid = :transactionid and sd.laParty.partyid= :partyid ");
+            List<SourceDocument> documentlist = query.setParameter("transactionid", transactionid).setParameter("partyid", partyid).getResultList();
 
             if (documentlist.size() > 0) {
                 return documentlist.get(0);
@@ -162,7 +186,7 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
             List<SourceDocument> documentlist = query.setParameter("person_gid", id).getResultList();
 
             if (documentlist.size() > 0) {
-                return documentlist.get(0).isActive();
+                return documentlist.get(0).getIsactive();
             } else {
                 return false;
             }

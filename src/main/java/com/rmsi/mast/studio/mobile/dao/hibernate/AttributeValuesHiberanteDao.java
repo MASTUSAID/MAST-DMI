@@ -25,7 +25,21 @@ public class AttributeValuesHiberanteDao extends
             attributeValues = attributeValuesIter.next();
 
             // Setting parent id
-            attributeValues.setParentuid(parentuid);
+//            attributeValues.setParentuid(parentuid);
+            
+            //Nitin
+//            attributeValues.setAttributeid(parentuid);
+            if(parentuid!= null){
+//            	 attributeValues.setAttributeid(parentuid);
+            	
+            }
+            else
+            {
+            	attributeValues.setAttributeid(1L);
+            	attributeValues.setLaExtAttributemaster(1);
+            }
+            
+            
             makePersistent(attributeValues);
         }
     }
@@ -41,9 +55,9 @@ public class AttributeValuesHiberanteDao extends
                     .hasNext();) {
                 AttributeValues attributeValues = (AttributeValues) iterator.next();
 
-                query.setParameter("uid", attributeValues.getUid());
+                query.setParameter("uid", attributeValues.getAttributeid());
                 query.setParameter("parentuid", attributeValues.getParentuid());
-                query.setParameter("value", attributeValues.getValue());
+                query.setParameter("value", attributeValues.getAttributevalue());
 
                 int rows = query.executeUpdate();
 
@@ -82,7 +96,7 @@ public class AttributeValuesHiberanteDao extends
     @Override
     public boolean checkEntieswithUid(List<Long> uids) {
         try {
-            String query = "SELECT COUNT(a) from AttributeValues a where a.uid in (:uids)";
+            String query = "SELECT COUNT(a) from AttributeValues a where a.parentuid in (:uids)";
 
             long count = (long) getEntityManager().createQuery(query)
                     .setParameter("uids", uids)
@@ -101,7 +115,7 @@ public class AttributeValuesHiberanteDao extends
     @Override
     public Long getAttributeKeyById(long person_gid, long uid) {
         try {
-            Query query = getEntityManager().createQuery("Select av.attributevalueid from AttributeValues av where av.parentuid = :person_gid and av.uid =:uid");
+            Query query = getEntityManager().createQuery("Select av.attributeid from AttributeValues av where av.parentuid = :person_gid and av.uid =:uid");
             List<Long> keyValue = query.setParameter("person_gid", person_gid).setParameter("uid", uid).getResultList();
 
             if (keyValue.size() > 0) {

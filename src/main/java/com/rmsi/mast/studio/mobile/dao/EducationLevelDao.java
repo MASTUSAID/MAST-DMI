@@ -13,4 +13,5 @@ import com.rmsi.mast.studio.domain.EducationLevel;
 public interface EducationLevelDao extends GenericDAO<EducationLevel, Integer> {
 
 	EducationLevel getEducationLevelById(int educationLevelId);
+	EducationLevel getEducationLevelBypk(int educationLevelId);
 }

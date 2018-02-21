@@ -1,0 +1,233 @@
+<div id="taskMngrdiv" class="dialog-v">
+    <div id="searchTmpl_t" class="lab-int fg-buttonset fg-buttonset-single">
+        <div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('taskMngrdiv');deactivateControls_t();"></div>
+        <!-- <div id="editing-help" class="span-h" title="Help for Editing"  onclick="javascript:openHelpWindow('editing_help');" ></div> -->
+        <div class="lineBreak05p"></div>
+        <div class="formPattern">
+            <!--start:suboptions-->
+            <div class="celladjust_one">
+                <span id="lbl_edit_layer_t">Layer :</span>
+
+                <!--span id="edit_layer_visible"> </span><span id="edit_layer" style="display:none;"> </span-->
+            </div>
+            <div class="subcelladjust styleForm">
+                <select id="edit_layer_t" class="newse" readonly disabled='true'></select>
+            </div>
+            <!--end:suboptions-->
+             <div id="suballocation_t" class="subcelladjust blueSwitch" >			
+				<div class="editing-options-m">
+                    <a id="options1-s-a" href="#">Allocation</a>
+                </div>	
+				
+				<div id="options1-s-b" class="search-options-b">					
+                    <table cellpadding="1" cellspacing="1">
+                        <tr>
+                            <td>
+                                <button class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                    id="polygon" oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
+                                            <img src="resources/images/viewer/navi/c.png">
+                                    </button>
+                            </td>
+                            <td>
+                            <button id="AllocationBox_t" title="Select for Allocation" 
+                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                <img src="resources/images/viewer/navi/a.png" />
+                            </button>
+                        </td>
+                            
+                        </tr>
+                    </table>
+                </div>
+				
+				</div>
+           
+
+            <!--start:suboptions-->
+            <div id="subcelladjustcreate_t" class="subcelladjust blueSwitch" style="display:none;">
+                <div class="editing-options-m">
+                    <a id="options-s-t_t" href="#">Create</a>
+                </div>	
+                <div id="options-s-d_t" class="search-options-b">					
+                    <table cellpadding="1" cellspacing="1">
+                        <tr>
+                            <td>
+                                <button id="point_t" title="Point"
+                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                        oldtitle="Point" aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/pointselectsmall.png">
+                                </button>
+                            </td>
+                            <td>
+                                <button id="line_t" title="Line"
+                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                        oldtitle="Line" aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/lineselectsmall.png">
+                                </button>
+                            </td>
+                            <td>
+                                <button id="polygon_t" title="Polygon"
+                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/polygonselectsmall.png">
+                                </button>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--end:suboptions-->
+
+            <div id="subcelladjustedit_t" class="subcelladjust blueSwitch">
+                <div class="editing-options-m">
+                    <a id="options1-s-t_t" href="#">Edit</a>
+                </div>	
+                <div id="options1-s-d_t" class="search-options-b">					
+                    <table cellpadding="1" cellspacing="1">
+                        <tr>
+							<td>
+								<button id="selectionBox_t" title="Select By Rectangle" 
+										class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+									<img src="resources/images/viewer/navi/select-rectangle_aoi.png" />
+								</button>
+							</td>
+                            <td>
+                                <button  id="move_t" title="Move"
+                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                         oldtitle="Point" aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/move.png">
+                                </button>
+                            </td>
+                            
+                            <td>
+							
+                                <button id="reshape_t" title="Reshape"
+                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/reshape.png">
+                                </button>
+                            </td>
+							
+                            <td>
+                                <button id="removeFeature_t" title="Remove Feature"
+                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/delete-feature.png">
+                                </button>
+                            </td>
+							
+							
+                        <td>
+                            <button id="clearselection_t" title="Clear Selection" 
+                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                <img src="resources/images/viewer/toolbar/clear_selection_aoi.png" />
+                            </button>
+                        </td>
+                        
+                        <td>
+                            <button id="selectSave_t" title="Save" 
+                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                <img src="resources/images/viewer/toolbar/save_aoi.png" />
+                            </button>
+                        </td>
+						
+						
+						 <td>
+                            <button id="selectinfo_aoi" title="info-aoi" 
+                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                <img src="resources/images/viewer/navi/info_aoi.png" />
+                            </button>
+                        </td>
+						
+						
+                        </tr>
+                    </table>
+                </div>
+            </div> 
+			
+		
+			
+
+			</div>
+    </div>   
+    
+    <!-- ------------------------------------------------------------------------------ -->
+
+
+
+	<div id="allocation-dialog-form" title="Allocate "
+		style="display: none;">
+		<form class="cmxform" id="allocationformID" action=""
+			onsubmit="return false;">
+			 <input type="hidden" name="hid_allocid" id="hid_allocid" /> 
+			 <input type="hidden" name="hid_projectID" id="hid_projectID" /> 
+
+			<fieldset>
+
+				<div id="radioLang">
+					<label for="pre-english">User Name</label>
+
+					<table id="userTable" class="tablesorter" cellpadding="0"	cellspacing="0">
+						<thead>
+							<tr>
+								<th>Name</th>
+							</tr>
+						</thead>
+						<tbody id="AllocationRowData">
+
+						</tbody>
+
+					</table>
+
+				</div>
+			</fieldset>
+		</form>
+		
+		
+	</div>
+	
+	 <!--start:info-->
+		<div id="info-dialog-form" title="Allocate Info" style="display: none;">
+		<table class="tablesorter" id="" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+							   <th class="no-sort">Project Name</th>
+                                <th class="no-sort">User Name</th>
+								<!--  <th class="no-sort">Allocation Unit Name</th> -->
+                            </tr>
+                        </thead>
+
+                        <tbody id="InfoRowData">
+                        </tbody>
+							
+        </table>
+		</div>
+	<!--end:info-->
+	
+	<script id="InfoTemplate" type="text/x-jquery-tmpl">
+            <tr>
+			
+			
+            <td>
+               ${projectName}
+            </td> 
+			
+            <td>
+               ${username}
+            </td> 
+			
+			
+            </tr>
+    </script>  
+	
+	
+	<script id="AllocationTemplate" type="text/x-jquery-tmpl">
+            <tr>
+            <td>
+             <input class="selectlang" name="userId" type="radio" value="${userid}"/ >${name}
+            </td>                       
+            </tr>
+    </script>   
+    <!--end:suboptions-->
+	
+</div>		

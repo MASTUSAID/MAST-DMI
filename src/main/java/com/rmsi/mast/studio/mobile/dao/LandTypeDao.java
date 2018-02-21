@@ -19,4 +19,6 @@ public interface LandTypeDao extends GenericDAO<LandType, Integer>{
 	 * @return
 	 */
 	LandType getLandTypeById(int landTypeId);
+	
+	LandType getLandTypeBylandtypeId(int landTypeId);
 }

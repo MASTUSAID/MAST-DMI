@@ -2,6 +2,8 @@ package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
 import java.lang.String;
+import java.util.List;
+
 import javax.persistence.*;
 
 /**
@@ -9,43 +11,61 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name = "group_type")
+@Table(name = "la_ext_grouptype")
 public class GroupType implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	   
-	@Id
-	@Column(name = "group_id")
-	private int groupId;
-
-	@Column(name = "group_value")
-	private String groupValue;
 	
-	@Column(name = "group_value_sw")
-	private String groupValue_sw;
+	@Id
+	private Integer grouptypeid;
 
-	public GroupType() {
-		super();
-	}   
-	public int getGroupId() {
-		return this.groupId;
-	}
+	private String grouptype;
 
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
-	}   
-	public String getGroupValue() {
-		return this.groupValue;
+	@Column(name="grouptype_en")
+	private String grouptypeEn;
+
+	private Boolean isactive;
+	
+
+	public GroupType(){
+		
 	}
 
-	public void setGroupValue(String groupValue) {
-		this.groupValue = groupValue;
+
+	public Integer getGrouptypeid() {
+		return grouptypeid;
 	}
-	public String getGroupValue_sw() {
-		return groupValue_sw;
+
+	public void setGrouptypeid(Integer grouptypeid) {
+		this.grouptypeid = grouptypeid;
 	}
-	public void setGroupValue_sw(String groupValue_sw) {
-		this.groupValue_sw = groupValue_sw;
+
+	public String getGrouptype() {
+		return grouptype;
 	}
-   
+
+	public void setGrouptype(String grouptype) {
+		this.grouptype = grouptype;
+	}
+
+	public String getGrouptypeEn() {
+		return grouptypeEn;
+	}
+
+	public void setGrouptypeEn(String grouptypeEn) {
+		this.grouptypeEn = grouptypeEn;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+	
+	
+	
+	
+	
 }

@@ -25,8 +25,8 @@ public class Savedquery implements Serializable {
 	private String description;
 	private String tenantid;
 	private String whereexpression;
-	private Layer layerBean;
-	private Project projectBean;
+	//private Layer layerBean;
+	//private Project projectBean;
 
     public Savedquery() {
     }
@@ -70,9 +70,9 @@ public class Savedquery implements Serializable {
 
 
 	//bi-directional many-to-one association to Layer
-	@JsonIgnore
-/*	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})*/
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	//@JsonIgnore
+ /*	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})*/
+	/*@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name="layer")
 	public Layer getLayerBean() {
 		return this.layerBean;
@@ -80,11 +80,11 @@ public class Savedquery implements Serializable {
 	@JsonIgnore
 	public void setLayerBean(Layer layerBean) {
 		this.layerBean = layerBean;
-	}
+	}*/
 	
 
 	//bi-directional many-to-one association to Project
-	@JsonIgnore
+	/*@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="project")
 	public Project getProjectBean() {
@@ -93,6 +93,6 @@ public class Savedquery implements Serializable {
 	@JsonIgnore
 	public void setProjectBean(Project projectBean) {
 		this.projectBean = projectBean;
-	}
+	}*/
 	
 }

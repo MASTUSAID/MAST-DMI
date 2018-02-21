@@ -104,6 +104,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private ProjectHamletDAO projectHamletDAO;
 	
+	
+	
 
 	@Override
 	//@TriggersRemove(cacheName = { "projectFBNCache", "userFBNCache" }, removeAll = true)
@@ -116,11 +118,9 @@ public class ProjectServiceImpl implements ProjectService {
 		for (; lgitr.hasNext();) {
 
 			Layergroup layergroup = lgitr.next();
-			layergroup.setProjectLayergroups(new HashSet<ProjectLayergroup>());
+			//layergroup.setProjectLayergroups(new HashSet<ProjectLayergroup>());
 			layerGroupDAO.makePersistent(layergroup);
-			System.out.println("---------------------" + layergroup.getName()
-					+ "-" + layergroup.getLayerLayergroups().size());
-
+			
 		}
 
 		projectDAO.makePersistent(project);
@@ -132,10 +132,10 @@ public class ProjectServiceImpl implements ProjectService {
 
 				Bookmark bookmark = bkitr.next();
 
-				bookmark.setName(project.getName() + "_" + bookmark.getName());
-				bookmark.setName(project.getName() + "_"
-						+ bookmark.getDescription());
-				bookmark.setProjectBean(project);
+			//	bookmark.setName(project.getName() + "_" + bookmark.getName());
+				//bookmark.setName(project.getName() + "_"
+			//			+ bookmark.getDescription());
+				//bookmark.setProjectBean(project);
 				bookmarkDAO.makePersistent(bookmark);
 
 			}
@@ -143,8 +143,8 @@ public class ProjectServiceImpl implements ProjectService {
 		/********* Save Maptip ******************/
 		List<Maptip> maptips = maptipDAO.getMaptipsByProject(projectName);
 		Project proj = project;
-		proj.setProjectLayergroups(new HashSet<ProjectLayergroup>());
-		proj.setUserProjects(new HashSet<UserProject>());
+	//	proj.setProjectLayergroups(new HashSet<ProjectLayergroup>());
+		//proj.setUserProjects(new HashSet<UserProject>());
 		if (maptips != null) {
 			Iterator<Maptip> mitr = maptips.iterator();
 			for (; mitr.hasNext();) {
@@ -193,37 +193,69 @@ public class ProjectServiceImpl implements ProjectService {
 	public void addProject(Project project) 
 	{
 		// delete existing projectlayergroup
-		projectLayergroupDAO.deleteProjectLayergroupByProjectName(project.getName());
+		if(null!=project.getProjectnameid()){
+		    try {
+				projectLayergroupDAO.deleteProjectLayergroupByProjectId(project.getProjectnameid());
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
+		
 
 		// delete existing project's baselayer
-		projectbaselayerDAO.deleteProjectBaselayer(project.getName());
+		if(null!=project.getProjectnameid()){
+		   try {
+			projectbaselayerDAO.deleteProjectBaselayerByProjectId(project.getProjectnameid());
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		}
 		
+		// delete existing project's ProjectArea
+		if(null!=project.getProjectnameid()){
+			try {
+				projectAreaDAO.deleteProjectAreaByProjectId(project.getProjectnameid());
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
+			
+		// delete existing user project
+				if(null!=project.getProjectnameid()){
+					try {
+						projectAreaDAO.deleteProjectAreaByProjectId(project.getProjectnameid());
+					} catch (Exception e) {
+						logger.error(e);
+					}
+				}
+				
+				
+		// delete existing user project
+			if(null!=project.getProjectnameid()){
+					try {
+						userProjectDAO.deleteUserProjectByUser(project.getProjectnameid());
+					} catch (Exception e) {
+						logger.error(e);
+					}
+			}
+				
+			
 		
-		
-		Set<UserProject> usrProject = project.getUserProjects();	
-		project.setUserProjects(null);
+		if(null!=project.getProjectnameid()){
+			try {
+				projectAreaDAO.deleteProjectAreaByProjectId(project.getProjectnameid());
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
 		
 		try {
 			projectDAO.makePersistent(project);
 		} catch (Exception e1) {
-
 			logger.error(e1);
 		}
 		
-		// add userproject
-		userProjectDAO.addUserProject(usrProject,project.getName());
 	
-		// add project's baselayer
-
-		projectbaselayerDAO.addProjectBaselayer(project.getProjectBaselayers(),project.getName());
-		 
-		 try {
-			//projectAreaDAO.makePersistent(project.getProjectAreas().get(0));
-		} catch (Exception e) {
-			
-			logger.error(e);
-		}
-
 	}
 
 	@Override
@@ -234,31 +266,34 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Override
 	//@TriggersRemove(cacheName = "projectFBNCache", removeAll = true)
-	public void deleteProjectById(String name) {
+	public void deleteProjectById(Integer id) {
 		// delete uder project name
-		/*userProjectDAO.deleteUserProjectByProject(name);
+		try {
+			userProjectDAO.deleteUserProjectByUser(id);
 
-		// delete user layergroup by project name
-		projectLayergroupDAO.deleteProjectLayergroupByProjectName(name);
+			// delete user layergroup by project name
+			projectLayergroupDAO.deleteProjectLayergroupByProjectId(id);
 
-		// delete maptip by project name
-
-		maptipDAO.deleteMaptipByProject(name);
-		
-
-		// delete project's baselayer
-		projectbaselayerDAO.deleteProjectBaselayer(name);
-		
-		// delete project's bookmark
-		
-		bookmarkDAO.deleteByProjectName(name);
-		
-		projectAreaDAO.deleteByProjectAreaName(name);
-		projectDataDAO.deleteByProjectName(name);
-		projectAttributeDAO.deleteByProjectName(name);*/
-		
-		// delete project by project name
-		projectDAO.deleteProject(name);
+			// delete project's baselayer
+			projectbaselayerDAO.deleteProjectBaselayerByProjectId(id);
+			
+			// delete project's bookmark
+			bookmarkDAO.deleteByProjectId(id);
+			
+			// delete project area
+			projectAreaDAO.deleteProjectAreaByProjectId(id);
+			
+			//projectDataDAO.deleteByProjectName(name);
+			
+			//project attribute delete
+			 //projectAttributeDAO.deleteByProjectName(name);
+			
+			// delete project by project name
+			projectDAO.deleteProject(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -293,28 +328,17 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDAO.findByName(name);
 	}
 
-	//@Cacheable(cacheName = "projectFBNCache")
-	public List<Bookmark> getBookmarksByProject(String projectname) {
-
-		/*
-		 * Project project = projectDAO.findByName(projectname); List<Bookmark>
-		 * bookmarklist = new ArrayList<Bookmark>(project.getBookmarks());
-		 * return bookmarklist;
-		 */
-
-		return bookmarkDAO.getBookmarksByProject(projectname);
-
-	}
+	
 
 	//@Cacheable(cacheName = "projectFBNCache")
-	public List<Savedquery> getSavedqueryByProject(String projectname) {
+	/*public List<Savedquery> getSavedqueryByProject(String projectname) {
 
 		Project project = projectDAO.findByName(projectname);
 		List<Savedquery> savedquerylist = new ArrayList<Savedquery>(
 				project.getSavedqueries());
 
 		return savedquerylist;
-	}
+	} @*/
 
 	//@Cacheable(cacheName = "projectFBNCache")
 	public List<String> getAllProjectNames() {
@@ -346,25 +370,25 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	/* ************@RMSI/NK add for country start****************************** 1-5   */
 	     public List<ProjectRegion> findAllCountry() {
-		// return projectDAO.findAll();
+		// return projectDAO.findAll();  getcountryval(this);
 		return projectrRegionDAO.findAllCountry();
 	}
 	
-	public List<ProjectRegion> findRegionByCountry(String countryname) {
-		return projectrRegionDAO.findRegionByCountry(countryname);
+	public List<ProjectRegion> findRegionByCountry(Integer Id) {
+		return projectrRegionDAO.findRegionByCountry(Id);
 	}
 	
-	public List<ProjectRegion> findDistrictByRegion(String countryname) {
-		return projectrRegionDAO.findDistrictByRegion(countryname);
+	public List<ProjectRegion> findDistrictByRegion(Integer Id) {
+		return projectrRegionDAO.findDistrictByRegion(Id);
 	}
 	
-	public List<ProjectRegion> findVillageByDistrict(String countryname) {
-		return projectrRegionDAO.findVillageByDistrict(countryname);
+	public List<ProjectRegion> findVillageByDistrict(Integer Id) {
+		return projectrRegionDAO.findVillageByDistrict(Id);
 	}
 	
 	
-	public List<ProjectRegion> findHamletByVillage(String countryname) {
-		return projectrRegionDAO.findHamletByVillage(countryname);
+	public List<ProjectRegion> findPlaceByVillage(Integer Id) {
+		return projectrRegionDAO.findPlaceByVillage(Id);
 	}
 
 	@Override
@@ -384,7 +408,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<UserRole> findAlluserrole(List<String> lstRole) {
+	public List<UserRole> findAlluserrole(List<Integer> lstRole) {
 		
 		return userRoleDAO.selectedUserByUserRole(lstRole);
 	}
@@ -464,6 +488,37 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public List<String> getHamletCodesbyProject(String projectName) {
 		return projectHamletDAO.getHamletCodesbyProject(projectName);
+	}
+
+	@Override
+	public List<Savedquery> getSavedqueryByProject(String project) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Project> getdAllProjectsNames() {
+		// TODO Auto-generated method stub
+		return projectDAO.getAllProjectsNames();
+	}
+
+	@Override
+	public List<Bookmark> getBookmarksByProject(String project) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Project> getdAllProjectsdetails() 
+	{
+		return projectDAO.getAllProjectsNames();
+	}
+
+	@Override
+	public List<ProjectArea> getProjectArea(String projectName) {	
+		
+		return projectAreaDAO.findByProjectName(projectName);
+	
 	}
 
 

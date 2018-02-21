@@ -54,6 +54,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     @Override
     public T makePersistent(T entity) {
+//    	flush();
         T entityPersist = entityManager.merge(entity);
         flush();
         return entityPersist;

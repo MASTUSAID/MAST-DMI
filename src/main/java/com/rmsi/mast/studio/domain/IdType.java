@@ -1,59 +1,73 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "id_type")
+@Table(name = "la_partygroup_identitytype")
 public class IdType implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 
     @Id
-    private int code;
-    @Column
-    private String name;
-    @Column(name = "name_other_lang")
-    private String nameOtherLang;
-    @Column
-    boolean active;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="identitytypeid")
+    Integer identitytypeid;
+    
+    @Column(name="identitytype")
+    private String identitytype;
+    
+    @Column(name="identitytype_en")
+	private String identitytypeEn;
+    
+    @Column(name="isactive")
+    private Boolean isactive;
 
     public IdType() {
 
     }
 
-    public int getCode() {
-        return code;
-    }
+	public Integer getIdentitytypeid() {
+		return identitytypeid;
+	}
 
-    public void setCode(int code) {
-        this.code = code;
-    }
+	public void setIdentitytypeid(Integer identitytypeid) {
+		this.identitytypeid = identitytypeid;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getIdentitytype() {
+		return identitytype;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setIdentitytype(String identitytype) {
+		this.identitytype = identitytype;
+	}
 
-    public String getNameOtherLang() {
-        return nameOtherLang;
-    }
+	public String getIdentitytypeEn() {
+		return identitytypeEn;
+	}
 
-    public void setNameOtherLang(String nameOtherLang) {
-        this.nameOtherLang = nameOtherLang;
-    }
+	public void setIdentitytypeEn(String identitytypeEn) {
+		this.identitytypeEn = identitytypeEn;
+	}
 
-    public boolean isActive() {
-        return active;
-    }
+	public Boolean getIsactive() {
+		return isactive;
+	}
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+    
+
 }

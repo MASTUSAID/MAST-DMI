@@ -12,18 +12,25 @@
 ----------------------------------------------------------------------- */
 
 /* reset.css */
-html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;border:0;font-weight:normal;font-style:normal;font-size:100%;    font-family: arial,helvetica,clean,sans-serif;;vertical-align:baseline;}
-body {    font-family: arial,helvetica,clean,sans-serif;line-height:1.5;}
-table {    font-family: arial,helvetica,clean,sans-serif;border-collapse:separate;border-spacing:0;}
-caption, th, td {    font-family: arial,helvetica,clean,sans-serif;text-align:left;font-weight:normal;}
-table, td, th {    font-family: arial,helvetica,clean,sans-serif;vertical-align:middle;}
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin:0;padding:0;border:0;font-weight:normal;font-style:normal;font-size:100%;    ;vertical-align:baseline;}
+body {    line-height:1.5;}
+table {    border-collapse:separate;border-spacing:0;}
+caption, th, td {    text-align:left;font-weight:normal;}
+table, td, th {    vertical-align:middle;}
 blockquote:before, blockquote:after, q:before, q:after {content:"";}
 blockquote, q {quotes:"" "";}
 a img {border:none;}
 
 /* typography.css */
-html {font-size:100.01%;}
-body {font-size:75%;color:#222;background:#fff;    font-family: arial,helvetica,clean,sans-serif;}
+
+@font-face {
+    font-family: 'titilliumregular';
+    src: url('fonts/titillium-regular-webfont.woff2') format('woff2'), url('fonts/titillium-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+html {font-size:100.01%;  font: normal 14px 'titilliumregular', sans-serif;}
+body {font-size:75%;color:#222;background:#fff;    }
 h1, h2, h3, h4, h5, h6 {font-weight:normal;color:#111;}
 h1 {font-size:3em;line-height:1;margin-bottom:0.5em;}
 h2 {font-size:2em;margin-bottom:0.75em;}
@@ -58,7 +65,7 @@ table {margin-bottom:1.4em;width:100%;}
 th {font-weight:bold;}
 thead th {background:#c3d9ff;}
 th, td, caption {padding:4px 10px 4px 5px;}
-tr.even td {background:#e5ecf9;}
+tr.even td {background:#fff;}
 tfoot {font-style:italic;}
 caption {background:#eee;}
 .small {font-size:.8em;margin-bottom:1.875em;line-height:1.875em;}

@@ -8,7 +8,9 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
+import com.rmsi.mast.studio.domain.NaturalPerson;
 import com.rmsi.mast.studio.domain.NonNaturalPerson;
+import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.mobile.dao.NonNaturalPersonDao;
 
 @Repository
@@ -62,4 +64,5 @@ public class NonNaturalPersonHibernateDao extends
 
 	}
 
+	
 }

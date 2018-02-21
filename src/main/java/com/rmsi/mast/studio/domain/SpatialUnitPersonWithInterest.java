@@ -1,88 +1,245 @@
 package com.rmsi.mast.studio.domain;
 
+
+
 import java.io.Serializable;
-import java.lang.String;
-import java.util.Date;
+
 import javax.persistence.*;
 
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+
 /**
- * Entity implementation class for Entity: SpatialUnitPersonWithInterest
- *
+ * The persistent class for the la_ext_spatialunit_personwithinterest database table.
+ * 
  */
 @Entity
-@Table(name = "spatialunit_personwithinterest")
+@Transactional
+@Table(name="la_ext_spatialunit_personwithinterest")
+@NamedQuery(name="SpatialUnitPersonWithInterest.findAll", query="SELECT l FROM SpatialunitPersonwithinterest l")
 public class SpatialUnitPersonWithInterest implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @SequenceGenerator(name = "SPATIAL_UNIT_PERSON_WITH_INTEREST_GENERATOR", sequenceName = "SPATIAL_UNIT_PERSON_WITH_INTEREST_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SPATIAL_UNIT_PERSON_WITH_INTEREST_GENERATOR")
-    private long id;
-    private long usin;
-    private String person_name;
-    private static final long serialVersionUID = 1L;
+	@Id
+	@SequenceGenerator(name="LA_EXT_SPATIALUNIT_PERSONWITHINTEREST_ID_GENERATOR" ,sequenceName="la_ext_spatialunit_personwithinterest_id_seq", allocationSize=1 )
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="LA_EXT_SPATIALUNIT_PERSONWITHINTEREST_ID_GENERATOR")
+	private Long id;
 
-    @Column(name = "dob")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date dob;
-    
-    @ManyToOne
-    @JoinColumn(name = "relationship_type")
-    private RelationshipType relationshipType;
+	private String address;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "gender_id", nullable = false)
-    private Gender gender;
+	private Integer createdby;
 
-    public Gender getGender() {
-        return gender;
-    }
+	@Temporal(TemporalType.DATE)
+	private Date createddate;
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-    
-    public RelationshipType getRelationshipType() {
-        return relationshipType;
-    }
+	@Temporal(TemporalType.DATE)
+	private Date dob;
 
-    public void setRelationshipType(RelationshipType relationshipType) {
-        this.relationshipType = relationshipType;
-    }
+	@Column(name="first_name")
+	private String firstName;
 
-    public Date getDob() {
-        return dob;
-    }
+	private Integer gender;
 
-    public void setDob(Date dob) {
-        this.dob = dob;
-    }
-    
-    public SpatialUnitPersonWithInterest() {
-        super();
-    }
+	private Boolean isactive;
 
-    public long getId() {
-        return this.id;
-    }
+	private Long landid;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	@Column(name="last_name")
+	private String lastName;
 
-    public long getUsin() {
-        return this.usin;
-    }
+	@Column(name="middle_name")
+	private String middleName;
 
-    public void setUsin(long usin) {
-        this.usin = usin;
-    }
+	private Integer modifiedby;
 
-    public String getPerson_name() {
-        return this.person_name;
-    }
+	@Temporal(TemporalType.DATE)
+	private Date modifieddate;
 
-    public void setPerson_name(String person_name) {
-        this.person_name = person_name;
-    }
+	private Long projectnameid;
+
+	private Integer relation;
+	
+	
+	private Integer typeid;
+	
+
+	public SpatialUnitPersonWithInterest() {
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+
+	public Date getDob() {
+		return dob;
+	}
+
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+	public Integer getGender() {
+		return gender;
+	}
+
+
+	public void setGender(Integer gender) {
+		this.gender = gender;
+	}
+
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+
+	public Long getLandid() {
+		return landid;
+	}
+
+
+	public void setLandid(Long landid) {
+		this.landid = landid;
+	}
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+
+	public Long getProjectnameid() {
+		return projectnameid;
+	}
+
+
+	public void setProjectnameid(Long projectnameid) {
+		this.projectnameid = projectnameid;
+	}
+
+
+	public Integer getRelation() {
+		return relation;
+	}
+
+
+	public void setRelation(Integer relation) {
+		this.relation = relation;
+	}
+
+
+	public Integer getTypeid() {
+		return typeid;
+	}
+
+
+	public void setTypeid(Integer typeid) {
+		this.typeid = typeid;
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

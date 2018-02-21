@@ -35,4 +35,7 @@ public interface LayertypeService {
 	@Transactional(readOnly=true)
 	Layertype findLayertypeByName(String name);
 	
+	@Transactional(readOnly=true)
+	Layertype findLayertypeById(long id);
+	
 }

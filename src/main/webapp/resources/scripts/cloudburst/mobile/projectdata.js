@@ -49,7 +49,7 @@ function displayRefreshedProjectData(_project)
 				jQuery("#projectData-accordion").accordion({fillSpace: true});  
 				
 				$("#projectDataTable").tablesorter({ 
-            		headers: {5: {sorter: false  },  7: {  sorter: false } },	
+            		headers: {4: {sorter: false  },  6: {  sorter: false } },	
             		debug: false, sortList: [[0, 0]], widgets: ['zebra'] })
                    .tablesorterPager({ container: $("#projectData_pagerDiv"), positionFixed: false })
                    .tablesorterFilter({ filterContainer: $("#masterAttr_txtSearch"),                           

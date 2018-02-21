@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.Project;
+import com.rmsi.mast.studio.domain.fetch.ProjectData;
 
 public interface ProjectDAO extends GenericDAO<Project, Long> {
 	
@@ -20,4 +21,9 @@ public interface ProjectDAO extends GenericDAO<Project, Long> {
 	List<Project> getAllUserProjects();
 	
 	List<Project> getProjectsByOwner(String email);
+	
+	List<Project> getdAllProjectsNames();
+	
+	
+	
 }

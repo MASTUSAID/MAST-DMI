@@ -27,13 +27,10 @@ public class GroupTypeHibernateDao extends
 	public GroupType getGroupTypeById(int groupTypeId) {
 		try {
 
-			String query = "select gt.* from group_type gt inner join "
-					+ "attribute_options ao on ao.parent_id = gt.group_id where"
-					+ " ao.id = " + groupTypeId;
+			String query = "select gt from GroupType gt  where gt.grouptypeid =:GrouptypeId" ;
 
 			@SuppressWarnings("unchecked")
-			List<GroupType> groupType = getEntityManager().createNativeQuery(
-					query, GroupType.class).getResultList();
+			List<GroupType> groupType = getEntityManager().createQuery(query).setParameter("GrouptypeId", groupTypeId). getResultList();
 
 			if (groupType != null && groupType.size() > 0) {
 				return groupType.get(0);

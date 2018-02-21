@@ -14,15 +14,15 @@ public interface ProjectRegionDAO extends GenericDAO<Project, Long> {
 	
 	List<ProjectRegion> findAllCountry();
 	
-	List<ProjectRegion> findRegionByCountry(String countryname);
+	List<ProjectRegion> findRegionByCountry(Integer countryname);
 	
-	List<ProjectRegion> findDistrictByRegion(String countryname);
+	List<ProjectRegion> findDistrictByRegion(Integer countryname);
 	
-	List<ProjectRegion> findVillageByDistrict(String countryname);
+	List<ProjectRegion> findVillageByDistrict(Integer countryname);
 	
-	List<ProjectRegion> findHamletByVillage(String countryname);
+	List<ProjectRegion> findPlaceByVillage(Integer countryname);
 	
-	
+	ProjectRegion findProjectRegionById(Integer id);   
 	
 	
 	

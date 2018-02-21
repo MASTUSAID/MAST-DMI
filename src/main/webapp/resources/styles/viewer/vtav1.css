@@ -1,0 +1,129 @@
+img {
+	border: none;
+}
+
+.vtab {
+
+    font-size: 12px;
+    height: 620px;
+    margin-bottom: 80px;
+    margin-left: 0;
+    margin-right: 0;
+	overflow-y: auto;
+   /*  margin-top: 10px; */
+ 
+    width: 100%;
+}
+
+.vtab>ul li {
+	border-right: medium none;
+	color: #666666;
+	display: block;
+	font-size: 13px;
+	font-weight: normal;
+   
+	list-style-type: none;
+	margin: auto;
+	padding: 1px 10px 1px 5px;
+	position: relative;
+	text-align: left;
+	width: 262px;
+	background:rgb(245, 245, 245);
+	cursor:pointer;
+	border-bottom:1px solid #b6bac3;
+}
+.vtab>ul li input[type="checkbox"]{
+  margin-right: 5px;
+}
+.vtab>ul>li>img {
+	float: left;
+	padding-right: 10px;
+	margin-top: -5px;
+}
+
+.vtab > ul  li.selected {
+	background:#362d59;
+ 
+    border: 1px solid #02294c;
+    color: #fff;
+    padding: 10px 10px 10px 10px;
+    opacity: 1;
+    position: relative;
+    width: 262px;
+    *width: 231px;
+    z-index: 10;
+}
+
+.vtab>ul {
+float: left;
+width: 230px;
+height: 35px;
+text-align: left;
+display: block;
+margin: auto 0;
+padding: 0;
+position: relative;
+background: rgb(245, 245, 245);
+height: 360px;
+border-bottom: 1px solid rgb(182, 186, 195);
+border-left: 1px solid rgb(182, 186, 195);
+/* top: 10px; */
+
+
+
+
+}
+
+.vtab>div {
+background-color: #ffffff;
+border: 1px solid #b5bcc2;
+margin-left: 231px;
+height: 600px;
+padding: 2px 1px;
+position: relative;
+z-index: 11;
+overflow-y: auto;
+}
+
+.vtab>div>h4 {
+	color: #800;
+	font-size: 1.2em;
+	border-bottom: 1px dotted #800;
+	padding-top: 5px;
+	margin-top: 0;
+}
+
+#loginForm label {
+	float: left;
+	width: 100px;
+	text-align: right;
+	clear: left;
+	margin-right: 15px;
+}
+
+#loginForm fieldset {
+	border: none;
+}
+
+#loginForm fieldset>div {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+#loginForm #login {
+	margin-left: 115px;
+}
+.workflow-head {
+    background: #e7f1fd none repeat scroll 0 0;
+    border-bottom: 1px solid #a6c9e2;
+    color: #001444;
+    display: block;
+    font-weight: bold;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+}
+
+#newBody.ui-accordion-content {
+ padding: 0!important;	
+}

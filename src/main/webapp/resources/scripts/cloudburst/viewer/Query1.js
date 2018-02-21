@@ -1027,7 +1027,7 @@ function getCriteriaFilter() {
 
 function isColumnDisplayable(colName) {
     for (var i = 0; i < displayableCols.length; i++) {
-        if (displayableCols[i].field == colName) {
+        if (displayableCols[i].layerfield == colName) {
             return true;
         }
     }

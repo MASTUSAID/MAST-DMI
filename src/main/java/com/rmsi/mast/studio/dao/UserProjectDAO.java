@@ -20,18 +20,16 @@ import com.rmsi.mast.studio.domain.UserRole;
 
 public interface UserProjectDAO extends GenericDAO<UserProject, Long> {
 	
-	//List<UserProject> findAllUserProject(String name);
-	
-	//void deleteUserProject(String name);
 	
 	void addUserProject(Set<UserProject> userProject,String projectname);
 	
 	List<String> getUsersByProject(String name);
 	List<String> getUserNameByProject(String id);
-	void deleteUserProjectByProject(String project);
+	void deleteUserProjectByProjectId(Integer id);
 	void deleteUserProjectByUser(Integer id);
 
 	boolean checkUserProject(Integer val, String defProjName);
 
-	List<UserProject> findUserProjectsById(Integer id);
+	List<UserProject> findUserProjectsById(Long id);
+	List<UserProject> findAllUserProjectByUserID(Long id);
 }

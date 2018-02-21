@@ -34,5 +34,6 @@ public interface ProjectionService {
 	
 	
 	Projection findProjectionByName(String name);
+	Projection findProjectionById(Integer id);
 	
 }

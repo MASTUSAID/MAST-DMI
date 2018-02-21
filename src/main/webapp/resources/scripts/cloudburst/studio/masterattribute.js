@@ -2,7 +2,8 @@
 var DataList=null;
 var selectedItem=null;
 var AttributeCategoryList=null;
-
+var AttributeCategorytypeList=null;
+var _Optext_Id=1;
 function MasterAttribute(_selectedItem)
 {
 	selectedItem=_selectedItem;
@@ -23,6 +24,16 @@ function MasterAttribute(_selectedItem)
 
 		}
 	});
+	
+	jQuery.ajax({
+		url: "attribcategoryType/",
+		async:false,
+		success: function (data) {
+			AttributeCategorytypeList = data;    
+
+		}
+	});
+	
 	displayRefreshedMasterAttr('All');
 }
 
@@ -58,15 +69,27 @@ function displayRefreshedMasterAttr(_attrcategory)
 						jQuery("#type").append(jQuery("<option></option>").attr("value", _dataobj.datatypeId).text(_dataobj.datatype)); 
 					}
 				}); 
-				jQuery("#category_sel").append(jQuery("<option></option>").attr("value", 0).text("All"));
+				
 
+				 jQuery("#category_sel").append(jQuery("<option></option>").attr("value", "").text("Select value"));
+				 
 				jQuery.each(AttributeCategoryList, function (i, _categoryobj) { 
-					jQuery("#category").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName)); 
+					//jQuery("#category").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName)); 
 					jQuery("#category_sel").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName));
 				}); 
+				
+				
+				jQuery("#category_type").append(jQuery("<option></option>").attr("value", 0).text("All"));
+
+				jQuery.each(AttributeCategorytypeList, function (i, _categoryTypeobj) { 
+					jQuery("#category_type").append(jQuery("<option></option>").attr("value", _categoryTypeobj.categorytypeid).text(_categoryTypeobj.typename));
+					jQuery("#category_type_sel").append(jQuery("<option></option>").attr("value", _categoryTypeobj.categorytypeid).text(_categoryTypeobj.typename));
+					
+				}); 
+
 
 				$("#masterAttrTable").tablesorter({ 
-					headers: {7: {sorter: false  },  5: {  sorter: false } },	
+					headers: {8: {sorter: false  },  6: {  sorter: false } },	
 					debug: false, sortList: [[0, 0]], widgets: ['zebra'] })
 					.tablesorterPager({ container: $("#masterAttr_pagerDiv"), positionFixed: false })
 					.tablesorterFilter({ filterContainer: $("#masterAttr_txtSearch"),                           
@@ -79,7 +102,7 @@ function displayRefreshedMasterAttr(_attrcategory)
 }
 
 function changeMandatoryValue(_this) {
-	if (_this.checked) {
+	if ($('#mandatory').attr('checked')) {
 
 		jQuery('#mandatory').val("true");
 	}
@@ -88,6 +111,61 @@ function changeMandatoryValue(_this) {
 		jQuery('#mandatory').val("false");
 	}
 
+}
+
+function addoptionDiv()
+{
+	
+	
+	$("#option_typeId").append("<label for=''> Option </label>  <input type='text'  id="+_Optext_Id+"   name='selected_options' /><br>");
+	_Optext_Id=_Optext_Id+1;
+	
+	
+}
+
+function changeDataType(_this)
+{
+	var _id=_this.value;
+	
+	if(_id==6)
+	{
+		$("#my_option_divId").show();
+		
+	}else{
+		$("#my_option_divId").hide();
+	     $("#option_typeId").empty();
+	}
+}
+
+function changeCatType(_this)
+{
+	var _id=_this.value;
+		
+     if (_id !="") {
+        URL = "attribcategoryById/" + _id;
+	    jQuery.ajax({
+		url: URL,
+		async:false,
+		success: function (data) {
+			
+			 $("#category").empty();
+			 jQuery("#category").append(jQuery("<option></option>").attr("value", "").text("Select value"));
+				jQuery.each(data, function (i, _categoryobj) { 
+					jQuery("#category").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName));
+				}); 
+				
+			
+
+		}
+	    });
+		
+     }
+      
+	 
+	
+	
+
+	
 }
 
 function displaymasterAttr(){
@@ -153,7 +231,10 @@ function savemasterAttr()
 				number: true,
 				min : 1
 			},
+			category_type_sel:"required",
 			category: "required",
+			
+			
 
 		},
 		messages: {
@@ -161,8 +242,9 @@ function savemasterAttr()
 			fieldName: "Please enter  Field Name",
 			type: "Please enter Attribute Type",
 			size: "Please enter Numeric Attribute Size",
+			category_type_sel:"Please enter  Category Type",
 			category: "Please enter  Category",
-
+			
 		}
 
 	});
@@ -265,6 +347,36 @@ function  displaySelectedCategory (id)
 
 }
 
+
+function displaySelectedCategoryBytype(id)
+{
+	var URL = "attribcategory/";
+     if (id !=0) {
+        URL = "attribcategoryById/" + id;
+     }
+      
+	 
+		jQuery.ajax({
+		url: URL,
+		async:false,
+		success: function (data) {
+			
+			 $("#category_sel").empty();
+			 jQuery("#category_sel").append(jQuery("<option></option>").attr("value", "").text("Select value"));
+				jQuery.each(data, function (i, _categoryobj) { 
+					jQuery("#category_sel").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName));
+					
+				}); 
+				
+			
+
+		}
+	});
+		
+	
+	
+}
+
 function cancelMasterAttr()
 {
 	displayRefreshedMasterAttr();
@@ -279,25 +391,94 @@ function editmasterAttr(id)
 {
 
 	jQuery.ajax({
-		url: "masterattrib/"+id,
+		url: "masterattributes/"+id,
 		async:false,
 		success: function (data) {
 
-			jQuery("#primeryky").val(data[0].id);
-			jQuery("#alias").val(data[0].alias);
-			jQuery("#alias_other").val(data[0].alias_second_language);
+			jQuery("#primeryky").val(data[0].attributemasterid);
+			jQuery("#alias").val(data[0].fieldaliasname);
+			jQuery("#alias_other").val(data[0].fieldaliasname);
 			jQuery("#fieldName").val(data[0].fieldname);
 			jQuery("#size").val(data[0].size);
-			jQuery("#category").val(data[0].attributeCategory.attributecategoryid);  
+
+
+           if(data[0].laExtAttributecategory.attributecategoryid >=1 && data[0].laExtAttributecategory.attributecategoryid<=8 ){
+
+			jQuery.ajax({
+			url: "attribcategoryById/1",
+			async:false,
+			success: function (objattribute) {
+			
+			
+			 $("#category").empty();
+			 jQuery("#category").append(jQuery("<option></option>").attr("value", "").text("Select value"));
+				jQuery.each(objattribute, function (i, _categoryobj) { 
+					jQuery("#category").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName));
+					
+						}); 
+					jQuery("#category").val(data[0].laExtAttributecategory.attributecategoryid); 
+               $("#category_type_sel").val(1);	
+					
+
+				}
+			});
+	
+			   
+
+			 }
+			 if(data[0].laExtAttributecategory.attributecategoryid >=9 && data[0].laExtAttributecategory.attributecategoryid<=13 ){
+                 
+		 jQuery.ajax({
+			url: "attribcategoryById/2",
+			async:false,
+			success: function (objattribute) {
+			
+			
+			 $("#category").empty();
+			 jQuery("#category").append(jQuery("<option></option>").attr("value", "").text("Select value"));
+				jQuery.each(objattribute, function (i, _categoryobj) { 
+					jQuery("#category").append(jQuery("<option></option>").attr("value", _categoryobj.attributecategoryid).text(_categoryobj.categoryName));
+					
+						}); 
+						
+						
+				jQuery("#category").val(data[0].laExtAttributecategory.attributecategoryid);  
+				 $("#category_type_sel").val(1);
+
+						
+					
+
+				}
+			});
+			
+				 
+			 }
+			$('#category_type_sel').attr("disabled", true); 
 
 			/*jQuery("#mandatory").val("false");*/
-			console.log(data[0].mandatory);
+			//console.log(data[0].mandatory);
 			jQuery("#mandatory").prop("unchecked", "false");
 			if(data[0].mandatory==true){
 				jQuery("#mandatory").val("true");
 				jQuery("#mandatory").prop("checked", "true");
 			}
-			jQuery("#type").val(data[0].datatypeIdBean.datatypeId);
+			jQuery("#type").val(data[0].laExtAttributedatatype.datatypeId);
+			
+			if(data[0].laExtAttributedatatype.datatypeId==6){
+				$("#my_option_divId").show();
+				_Optext_Id =1;
+			   jQuery.each(data[0].options, function (i, obj) { 
+				   $("#option_typeId").append("<label for=''> Option </label>  <input type='text'  id="+_Optext_Id+"   name='selected_options' value="+obj.optiontext+" /><br>");
+				  _Optext_Id=_Optext_Id+1;
+					
+				}); 
+
+
+				
+				
+			  
+	
+			}
 		}
 	});
 
@@ -352,7 +533,10 @@ function updateEditAttribute()
 				number: true,
 				min : 1
 			},
+			category_type_sel:"required",
 			category: "required",
+			
+			
 
 		},
 		messages: {
@@ -360,8 +544,9 @@ function updateEditAttribute()
 			fieldName: "Please enter  Field Name",
 			type: "Please enter Attribute Type",
 			size: "Please enter Numeric Attribute Size",
+			category_type_sel:"Please enter  Category Type",
 			category: "Please enter  Category",
-
+			
 		}
 
 	});

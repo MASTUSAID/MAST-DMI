@@ -25,15 +25,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rmsi.mast.custom.dto.AttributeDto;
+import com.rmsi.mast.studio.dao.UserDAO;
 import com.rmsi.mast.studio.domain.AttributeCategory;
+import com.rmsi.mast.studio.domain.AttributeCategoryType;
 import com.rmsi.mast.studio.domain.AttributeMaster;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.Role;
 import com.rmsi.mast.studio.domain.Surveyprojectattribute;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserProject;
+import com.rmsi.mast.studio.domain.UserRole;
 import com.rmsi.mast.studio.service.AttributeCategoryService;
+import com.rmsi.mast.studio.service.AttributeCategoryTypeService;
 import com.rmsi.mast.studio.service.AttributeMasterService;
+import com.rmsi.mast.studio.service.AttributeOptionsService;
 import com.rmsi.mast.studio.service.ProjectAttributeService;
 import com.rmsi.mast.studio.service.RoleService;
 import com.rmsi.mast.studio.service.UserService;
@@ -53,10 +58,22 @@ public class ProjectAttributeController
 	@Autowired
 	private AttributeCategoryService attributecategoryService;
 	
-	@Autowired UserService userService;
+	@Autowired
+	UserService userService;
 	
-	@Autowired RoleService roleService;
-
+	@Autowired
+	RoleService roleService;
+	
+	
+	@Autowired
+	UserDAO userDao;
+	
+	
+	@Autowired
+	AttributeCategoryTypeService attributeCategoryTypeService;
+	
+	
+	
 	private List<Surveyprojectattribute> s;	
 	
 	
@@ -76,17 +93,18 @@ public class ProjectAttributeController
 	
 
 	@RequestMapping(value = "/mobileconfig/projecttype/", method = RequestMethod.GET)
-	@ResponseBody
+	@ResponseBody 
 	public List<Project> listproject(Principal principal)
 	{
 		String username = principal.getName();
 		User user = userService.findByUniqueName(username);
-		Integer id = user.getId();
+		Long id = user.getId();
 	
-		Set<Role> role = user.getRoles();
-		String rolename = role.iterator().next().getName();
+		List<UserRole> role = null;
+		user.getUserRole();
+		String rolename = user.getUserRole().iterator().next().getRoleBean().getName(); //role.iterator().next().getRoleBean().getName();
 		
-		//role.setName("ROLE_ADMIN");
+//		role.setName("ROLE_ADMIN");
 		List<Project> Projectlst= new ArrayList<Project>();
 		List<UserProject> UserProjectlst= new ArrayList<UserProject>();
 		
@@ -100,7 +118,7 @@ public class ProjectAttributeController
 				
 				UserProjectlst=projectAttributeService.findUserProjects(id);
 				for (int i = 0; i < UserProjectlst.size(); i++) {
-					Projectlst.add(UserProjectlst.get(i).getProjectBean());
+					Projectlst.add(UserProjectlst.get(i).getProject());
 				}
 				
 				return Projectlst;
@@ -137,6 +155,13 @@ public class ProjectAttributeController
 		
 	}
 	
+	 @RequestMapping(value = "/mobileconfig/attribcategoryType/", method = RequestMethod.GET)
+	    @ResponseBody
+	    public List<AttributeCategoryType> getAttributeCategoryTypelist() {
+	        return attributeCategoryTypeService.getAllAttributeCategoryType();
+	    }
+	 
+	 
 	
 	@RequestMapping(value = "/mobileconfig/projectattrib/display/{uid}/{name}/", method = RequestMethod.GET)
 	@ResponseBody
@@ -145,6 +170,15 @@ public class ProjectAttributeController
 		return projectAttributeService.displaySelectedCategory(uid,name);
 		
 	}
+	
+	@RequestMapping(value = "/mobileconfig/projectattrib/display/{uid}/{name}/{id}", method = RequestMethod.GET)
+	@ResponseBody
+    public List<Surveyprojectattribute> displaySelectedCategory(@PathVariable Long uid,@PathVariable String name,@PathVariable Integer id){
+		
+		return projectAttributeService.displaySelectedCategoryById(uid,name,id);
+		
+	}
+	
 	
 
 	@RequestMapping(value = "/mobileconfig/projectattrib/displaypop/{uid}/{project}", method = RequestMethod.GET)
@@ -166,7 +200,7 @@ public class ProjectAttributeController
 				for(Surveyprojectattribute obj:categorylst)
 				{
 					//lstId.add(obj.getAttributeMaster().getId()+"");
-					mapId_uid.put(obj.getAttributeMaster().getId(), obj.getUid());
+					mapId_uid.put(obj.getAttributeMaster().getAttributemasterid(), obj.getUid());
 				}				
 				if(lstAttributeMaster!=null && lstAttributeMaster.size()>0)
 				{
@@ -176,16 +210,16 @@ public class ProjectAttributeController
 						AttributeDto objAttribute = new AttributeDto();
 
 						//if(lstId.contains(obj.getId()+""))
-						if(mapId_uid.containsKey(obj.getId()))
+						if(mapId_uid.containsKey(obj.getAttributemasterid()))
 						{
-							objAttribute.setAlias(obj.getAlias());
-							objAttribute.setId(obj.getId());
+							objAttribute.setAlias(obj.getFieldaliasname());
+							objAttribute.setId(obj.getAttributemasterid());
 							objAttribute.setFlag(true);
-							objAttribute.setUid(mapId_uid.get(obj.getId()));							
+							objAttribute.setUid(mapId_uid.get(obj.getAttributemasterid()));							
 						}else
 						{
-							objAttribute.setAlias(obj.getAlias());
-							objAttribute.setId(obj.getId());
+							objAttribute.setAlias(obj.getFieldaliasname());
+							objAttribute.setId(obj.getAttributemasterid());
 							objAttribute.setFlag(false);					
 						}						
 						lstattribute.add(objAttribute);					
@@ -199,8 +233,8 @@ public class ProjectAttributeController
 					for(AttributeMaster obj:lstAttributeMaster)
 					{
 						AttributeDto objAttribute = new AttributeDto();
-						objAttribute.setAlias(obj.getAlias());
-						objAttribute.setId(obj.getId());
+						objAttribute.setAlias(obj.getFieldaliasname());
+						objAttribute.setId(obj.getAttributemasterid());
 						objAttribute.setFlag(false);
 
 						lstattribute.add(objAttribute);
@@ -218,7 +252,7 @@ public class ProjectAttributeController
 
 	@RequestMapping(value = "/mobileconfig/projectattrib/create", method = RequestMethod.POST)
 	@ResponseBody
-	public String createMasterAttribute(HttpServletRequest request, HttpServletResponse response)
+	public String createMasterAttribute(HttpServletRequest request, HttpServletResponse response,Principal principal)
 	{	
 		String projName="";	
 		String[] id = null ;
@@ -228,6 +262,12 @@ public class ProjectAttributeController
 		Long attributecategory = null;
 		boolean mappedResult = false;
 		List<Long> tmpPrevious_uids = new LinkedList<Long>();
+		
+		
+		
+		User user = userDao.findByName(principal.getName());
+		Integer userid =(int) (user.getId());
+
 
 		try{
 			try{
@@ -263,7 +303,7 @@ public class ProjectAttributeController
 			{
 				projName=ServletRequestUtils.getRequiredStringParameter(request, "project");
 				attributecategory =ServletRequestUtils.getRequiredLongParameter(request, "attributecategory");
-				projectAttributeService.addsurveyProject(id,projName,attributecategory);
+				projectAttributeService.addsurveyProject(id,projName,attributecategory,userid);
 				if(tmpPrevious_uids.size()>0)projectAttributeService.deleteMappedAttribute(tmpPrevious_uids);
 			}
 			else

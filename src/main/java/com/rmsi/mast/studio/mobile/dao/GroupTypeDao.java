@@ -20,4 +20,6 @@ public interface GroupTypeDao extends GenericDAO<GroupType, Integer>{
 	 */
 	GroupType getGroupTypeById(int groupTypeId);
 	
+	
+	
 }

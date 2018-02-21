@@ -22,6 +22,7 @@ public interface AttributeOptionsDao extends GenericDAO<AttributeOptions, Intege
 	 */
 	List<AttributeOptions> getAttributeOptions(Long attributeId);
 
-	String getAttributeOptionsId(Integer attributeId, int parentid);
+	AttributeOptions getAttributeOptionsId(Integer attributeId);
+	boolean deleteAttributeOptionsbyId(Long id);
 
 }

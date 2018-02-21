@@ -13,12 +13,12 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name="datatype_id")
+@Table(name="la_ext_attributedatatype")
 public class DatatypeId implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="datatype_id")
+	@Column(name="datatypemasterid")
 	private long datatypeId;
 
 	private String datatype;

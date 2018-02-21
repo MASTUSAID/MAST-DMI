@@ -20,5 +20,6 @@ public interface RoleDAO extends GenericDAO<Role, Long> {
 	boolean deleteRole(String name);
 
 	List<Role> findAll(int roleId);
+	Role findRoleById(Integer id);
 }
 

@@ -4,374 +4,443 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.BatchSize;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 /**
  * The persistent class for the project_area database table.
  */
 @Entity
-@Table(name = "project_area")
+@Table(name = "la_ext_projectarea")
 public class ProjectArea implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
-    @SequenceGenerator(name = "PROJECT_AREA_AREAID_GENERATOR", sequenceName = "PROJECT_AREA_GID_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJECT_AREA_AREAID_GENERATOR")
-    @Column(name = "area_id")
-    private Long areaId;
+   	@SequenceGenerator(name="ProjectArea_Sequence",sequenceName="la_ext_projectarea_projectareaid_seq", allocationSize=1) 
+   	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="ProjectArea_Sequence") 
+    @Column(name="projectareaid")
+	private Long projectareaid;
 
-    @Column(name = "village_chairman")
-    private String villageChairman;
+    @Column(name="createdby")
+	private Integer createdby;
 
-    @Column(name = "approving_executive")
-    private String approvingExecutive;
+    @Column(name="createddate")
+	private Date createddate;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "village_chairman_approval_date")
-    private Date villageChairmanApprovalDate;
+    @Column(name="description")
+	private String description;
 
-    @Column(name = "district_officer")
-    private String districtOfficer;
+//    @Column(name="hierarchyid6")
+//	private Integer hierarchyid6;
 
-    @Column(name = "authority_approve")
-    private Boolean authorityApprove;
+	@Temporal(TemporalType.DATE)
+	private Date initiationdate;
 
-    @Column(name = "bounding_box")
-    private String boundingBox;
+	@Column(name="isactive")
+	private Boolean isactive;
 
-    private String category;
+	@Column(name="modifiedby")
+	private Integer modifiedby;
 
-    private String province;
+	@Column(name="modifieddate")
+	private Date modifieddate;
 
-    private String city;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "executive_approval_date")
-    private Date executiveApprovalDate;
-
-    private String municipality;
-
-    @Column(name = "country_name")
-    private String countryName;
-
-    @Column(name = "district_name")
-    private String districtName;
-
-    @Column(name = "executive_approve")
-    private Boolean executiveApprove;
-
-    private Integer gid;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "initiation_date")
-    private Date initiationDate;
-
-    private String location;
-
-    private String perimeter;
-
-    private Integer projectid;
-
-    private String region;
-
-    @Column(name = "state_name")
-    private String stateName;
-
-    private String village;
-
-    private String wards;
-
-    private String village_code;
-    private String address;
-
-    @Temporal(TemporalType.DATE)
-    @Column(name = "recommendation_date")
-    private Date recommendationDate;
-
-    @Column(name = "name")
-    private String projectName;
-
-    @Column(name = "region_code")
-    private String regionCode;
-
-    @Column(name = "vc_meeting_date")
+//	@Column(name="spatialunitgroupid6")
+//	private Integer spatialunitgroupid6;
+	
+	@Column(name = "vc_meetingdate")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date vcMeetingDate;
+
+	
+
+	//bi-directional many-to-one association to LaSpatialunitgroup
+	@ManyToOne
+	@JoinColumn(name="spatialunitgroupid1")
+	private LaSpatialunitgroup laSpatialunitgroup1;
+
+	//bi-directional many-to-one association to LaSpatialunitgroup
+	@ManyToOne
+	@JoinColumn(name="spatialunitgroupid2")
+	private LaSpatialunitgroup laSpatialunitgroup2;
+
+	//bi-directional many-to-one association to LaSpatialunitgroup
+	@ManyToOne
+	@JoinColumn(name="spatialunitgroupid3")
+	private LaSpatialunitgroup laSpatialunitgroup3;
+
+	//bi-directional many-to-one association to LaSpatialunitgroup
+	@ManyToOne
+	@JoinColumn(name="spatialunitgroupid4")
+	private LaSpatialunitgroup laSpatialunitgroup4;
+
+	//bi-directional many-to-one association to LaSpatialunitgroup
+	@ManyToOne
+	@JoinColumn(name="spatialunitgroupid5")
+	private LaSpatialunitgroup laSpatialunitgroup5;
+
+	//bi-directional many-to-one association to LaSpatialunitgroup
+	@ManyToOne
+	@JoinColumn(name="spatialunitgroupid6")
+	private LaSpatialunitgroup laSpatialunitgroup6;
+
+	//bi-directional many-to-one association to LaSpatialunitgroupHierarchy
+	@ManyToOne
+	@JoinColumn(name="hierarchyid1")
+	private ProjectRegion laSpatialunitgroupHierarchy1;
+
+	//bi-directional many-to-one association to LaSpatialunitgroupHierarchy
+	@ManyToOne
+	@JoinColumn(name="hierarchyid2")
+	private ProjectRegion laSpatialunitgroupHierarchy2;
+
+	//bi-directional many-to-one association to LaSpatialunitgroupHierarchy
+	@ManyToOne
+	@JoinColumn(name="hierarchyid3")
+	private ProjectRegion laSpatialunitgroupHierarchy3;
+
+	//bi-directional many-to-one association to LaSpatialunitgroupHierarchy
+	@ManyToOne
+	@JoinColumn(name="hierarchyid4")
+	private ProjectRegion laSpatialunitgroupHierarchy4;
+
+	//bi-directional many-to-one association to LaSpatialunitgroupHierarchy
+	@ManyToOne
+	@JoinColumn(name="hierarchyid5")
+	private ProjectRegion laSpatialunitgroupHierarchy5;
+
+	//bi-directional many-to-one association to LaSpatialunitgroupHierarchy
+	@ManyToOne
+	@JoinColumn(name="hierarchyid6")
+	private ProjectRegion laSpatialunitgroupHierarchy6;
+	
+	
+	@ManyToOne
+    @JoinColumn(name="projectnameid")
+	private Project project;
+	
+	private String authorizedmember;
+
+	private String authorizedmembersignature;
+
+	private String certificatenumber;
+	
+
+	private String executiveofficer;
+
+	private String executiveofficersignature;
+	
+
+	private String landofficer;
+
+	private String landofficersignature;
+	
+	private String postalcode;
+
+	
+	public ProjectArea(){
+		
+	}
+	
+
+	public Date getVcMeetingDate() {
+		return vcMeetingDate;
+	}
+
+
+	public void setVcMeetingDate(Date vcMeetingDate) {
+		this.vcMeetingDate = vcMeetingDate;
+	}
+
+
+	public Long getProjectareaid() {
+		return projectareaid;
+	}
+
+	public void setProjectareaid(Long projectareaid) {
+		this.projectareaid = projectareaid;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+//	public Integer getHierarchyid6() {
+//		return hierarchyid6;
+//	}
+//
+//	public void setHierarchyid6(Integer hierarchyid6) {
+//		this.hierarchyid6 = hierarchyid6;
+//	}
+
+	public Date getInitiationdate() {
+		return initiationdate;
+	}
+
+	public void setInitiationdate(Date initiationdate) {
+		this.initiationdate = initiationdate;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+//	public Integer getSpatialunitgroupid6() {
+//		return spatialunitgroupid6;
+//	}
+//
+//	public void setSpatialunitgroupid6(Integer spatialunitgroupid6) {
+//		this.spatialunitgroupid6 = spatialunitgroupid6;
+//	}
+
+	
+
+	public LaSpatialunitgroup getLaSpatialunitgroup1() {
+		return laSpatialunitgroup1;
+	}
+
+	public void setLaSpatialunitgroup1(LaSpatialunitgroup laSpatialunitgroup1) {
+		this.laSpatialunitgroup1 = laSpatialunitgroup1;
+	}
+
+	public LaSpatialunitgroup getLaSpatialunitgroup2() {
+		return laSpatialunitgroup2;
+	}
+
+	public void setLaSpatialunitgroup2(LaSpatialunitgroup laSpatialunitgroup2) {
+		this.laSpatialunitgroup2 = laSpatialunitgroup2;
+	}
+
+	public LaSpatialunitgroup getLaSpatialunitgroup3() {
+		return laSpatialunitgroup3;
+	}
+
+	public void setLaSpatialunitgroup3(LaSpatialunitgroup laSpatialunitgroup3) {
+		this.laSpatialunitgroup3 = laSpatialunitgroup3;
+	}
+
+	public LaSpatialunitgroup getLaSpatialunitgroup4() {
+		return laSpatialunitgroup4;
+	}
+
+	public void setLaSpatialunitgroup4(LaSpatialunitgroup laSpatialunitgroup4) {
+		this.laSpatialunitgroup4 = laSpatialunitgroup4;
+	}
+
+	public LaSpatialunitgroup getLaSpatialunitgroup5() {
+		return laSpatialunitgroup5;
+	}
+
+	public void setLaSpatialunitgroup5(LaSpatialunitgroup laSpatialunitgroup5) {
+		this.laSpatialunitgroup5 = laSpatialunitgroup5;
+	}
+
+	public LaSpatialunitgroup getLaSpatialunitgroup6() {
+		return laSpatialunitgroup6;
+	}
+
+	public void setLaSpatialunitgroup6(LaSpatialunitgroup laSpatialunitgroup6) {
+		this.laSpatialunitgroup6 = laSpatialunitgroup6;
+	}
+
+	public ProjectRegion getLaSpatialunitgroupHierarchy1() {
+		return laSpatialunitgroupHierarchy1;
+	}
+
+	public void setLaSpatialunitgroupHierarchy1(
+			ProjectRegion laSpatialunitgroupHierarchy1) {
+		this.laSpatialunitgroupHierarchy1 = laSpatialunitgroupHierarchy1;
+	}
+
+	public ProjectRegion getLaSpatialunitgroupHierarchy2() {
+		return laSpatialunitgroupHierarchy2;
+	}
+
+	public void setLaSpatialunitgroupHierarchy2(
+			ProjectRegion laSpatialunitgroupHierarchy2) {
+		this.laSpatialunitgroupHierarchy2 = laSpatialunitgroupHierarchy2;
+	}
+
+	public ProjectRegion getLaSpatialunitgroupHierarchy3() {
+		return laSpatialunitgroupHierarchy3;
+	}
+
+	public void setLaSpatialunitgroupHierarchy3(
+			ProjectRegion laSpatialunitgroupHierarchy3) {
+		this.laSpatialunitgroupHierarchy3 = laSpatialunitgroupHierarchy3;
+	}
+
+	public ProjectRegion getLaSpatialunitgroupHierarchy4() {
+		return laSpatialunitgroupHierarchy4;
+	}
+
+	public void setLaSpatialunitgroupHierarchy4(
+			ProjectRegion laSpatialunitgroupHierarchy4) {
+		this.laSpatialunitgroupHierarchy4 = laSpatialunitgroupHierarchy4;
+	}
+
+	public ProjectRegion getLaSpatialunitgroupHierarchy5() {
+		return laSpatialunitgroupHierarchy5;
+	}
+
+	public void setLaSpatialunitgroupHierarchy5(
+			ProjectRegion laSpatialunitgroupHierarchy5) {
+		this.laSpatialunitgroupHierarchy5 = laSpatialunitgroupHierarchy5;
+	}
+
+	public ProjectRegion getLaSpatialunitgroupHierarchy6() {
+		return laSpatialunitgroupHierarchy6;
+	}
+
+	public void setLaSpatialunitgroupHierarchy6(
+			ProjectRegion laSpatialunitgroupHierarchy6) {
+		this.laSpatialunitgroupHierarchy6 = laSpatialunitgroupHierarchy6;
+	}
+
+
+	@JsonIgnore
+	public Project getProject() {
+		return project;
+	}
+
+
+	public void setProject(Project project) {
+		this.project = project;
+	}
+
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+
+	public String getAuthorizedmember() {
+		return authorizedmember;
+	}
+
+
+	public void setAuthorizedmember(String authorizedmember) {
+		this.authorizedmember = authorizedmember;
+	}
+
+
+	public String getAuthorizedmembersignature() {
+		return authorizedmembersignature;
+	}
+
+
+	public void setAuthorizedmembersignature(String authorizedmembersignature) {
+		this.authorizedmembersignature = authorizedmembersignature;
+	}
+
+
+	public String getCertificatenumber() {
+		return certificatenumber;
+	}
+
+
+	public void setCertificatenumber(String certificatenumber) {
+		this.certificatenumber = certificatenumber;
+	}
+
+
+	public String getExecutiveofficer() {
+		return executiveofficer;
+	}
+
+
+	public void setExecutiveofficer(String executiveofficer) {
+		this.executiveofficer = executiveofficer;
+	}
+
+
+	public String getExecutiveofficersignature() {
+		return executiveofficersignature;
+	}
+
+
+	public void setExecutiveofficersignature(String executiveofficersignature) {
+		this.executiveofficersignature = executiveofficersignature;
+	}
+
+
+	public String getLandofficer() {
+		return landofficer;
+	}
+
+
+	public void setLandofficer(String landofficer) {
+		this.landofficer = landofficer;
+	}
+
+
+	public String getLandofficersignature() {
+		return landofficersignature;
+	}
+
+
+	public void setLandofficersignature(String landofficersignature) {
+		this.landofficersignature = landofficersignature;
+	}
+
+
+	public String getPostalcode() {
+		return postalcode;
+	}
+
+
+	public void setPostalcode(String postalcode) {
+		this.postalcode = postalcode;
+	}
+	
+	
     
-    @Column(name = "village_chairman_signature")
-    String villageChairmanSignaturePath;
     
-    @Column(name = "village_executive_signature")
-    String villageExecutiveSignaturePath;
     
-    @Column(name = "district_officer_signature")
-    String districtOfficerSignaturePath;
     
-    public ProjectArea() {
-    }
-
-    public Long getAreaId() {
-        return this.areaId;
-    }
-
-    public void setAreaId(Long areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getApprovingExecutive() {
-        return this.approvingExecutive;
-    }
-
-    public void setApprovingExecutive(String approvingExecutive) {
-        this.approvingExecutive = approvingExecutive;
-    }
-
-    public Boolean getAuthorityApprove() {
-        return this.authorityApprove;
-    }
-
-    public void setAuthorityApprove(Boolean authorityApprove) {
-        this.authorityApprove = authorityApprove;
-    }
-
-    public String getBoundingBox() {
-        return this.boundingBox;
-    }
-
-    public void setBoundingBox(String boundingBox) {
-        this.boundingBox = boundingBox;
-    }
-
-    public String getCategory() {
-        return this.category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getCity() {
-        return this.city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Date getExecutiveApprovalDate() {
-        return this.executiveApprovalDate;
-    }
-
-    public void setExecutiveApprovalDate(Date executiveApprovalDate) {
-        this.executiveApprovalDate = executiveApprovalDate;
-    }
-
-    public Boolean getExecutiveApprove() {
-        return this.executiveApprove;
-    }
-
-    public void setExecutiveApprove(Boolean executiveApprove) {
-        this.executiveApprove = executiveApprove;
-    }
-
-    public Integer getGid() {
-        return this.gid;
-    }
-
-    public void setGid(Integer gid) {
-        this.gid = gid;
-    }
-
-    public Date getInitiationDate() {
-        return this.initiationDate;
-    }
-
-    public void setInitiationDate(Date initiationDate) {
-        this.initiationDate = initiationDate;
-    }
-
-    public String getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getPerimeter() {
-        return this.perimeter;
-    }
-
-    public void setPerimeter(String perimeter) {
-        this.perimeter = perimeter;
-    }
-
-    public Integer getProjectid() {
-        return this.projectid;
-    }
-
-    public void setProjectid(Integer projectid) {
-        this.projectid = projectid;
-    }
-
-    public Date getRecommendationDate() {
-        return this.recommendationDate;
-    }
-
-    public void setRecommendationDate(Date recommendationDate) {
-        this.recommendationDate = recommendationDate;
-    }
-
-    public String getRegion() {
-        return this.region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getRegionCode() {
-        return regionCode;
-    }
-
-    public void setRegionCode(String regionCode) {
-        this.regionCode = regionCode;
-    }
-
-    public String getStateName() {
-        return this.stateName;
-    }
-
-    public void setStateName(String stateName) {
-        this.stateName = stateName;
-    }
-
-    public String getVillage() {
-        return this.village;
-    }
-
-    public void setVillage(String village) {
-        this.village = village;
-    }
-
-    public String getWards() {
-        return this.wards;
-    }
-
-    public void setWards(String wards) {
-        this.wards = wards;
-    }
-
-    public String getProvince() {
-        return this.province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getMunicipality() {
-        return this.municipality;
-    }
-
-    public void setMunicipality(String municipality) {
-        this.municipality = municipality;
-    }
-
-    public String getCountryName() {
-        return this.countryName;
-    }
-
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
-    }
-
-    public String getDistrictName() {
-        return this.districtName;
-    }
-
-    public void setDistrictName(String districtName) {
-        this.districtName = districtName;
-    }
-
-    public String getVillageChairman() {
-        return villageChairman;
-    }
-
-    public void setVillageChairman(String villageChairman) {
-        this.villageChairman = villageChairman;
-    }
-
-    public Date getVillageChairmanApprovalDate() {
-        return villageChairmanApprovalDate;
-    }
-
-    public void setVillageChairmanApprovalDate(Date villageChairmanApprovalDate) {
-        this.villageChairmanApprovalDate = villageChairmanApprovalDate;
-    }
-
-    public String getDistrictOfficer() {
-        return districtOfficer;
-    }
-
-    public void setDistrictOfficer(String districtOfficer) {
-        this.districtOfficer = districtOfficer;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getVillage_code() {
-        return village_code;
-    }
-
-    public void setVillage_code(String village_code) {
-        this.village_code = village_code;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Date getVcMeetingDate() {
-        return vcMeetingDate;
-    }
-
-    public void setVcMeetingDate(Date vcMeetingDate) {
-        this.vcMeetingDate = vcMeetingDate;
-    }
-
-    public String getVillageChairmanSignaturePath() {
-        return villageChairmanSignaturePath;
-    }
-
-    public void setVillageChairmanSignaturePath(String villageChairmanSignaturePath) {
-        this.villageChairmanSignaturePath = villageChairmanSignaturePath;
-    }
-
-    public String getVillageExecutiveSignaturePath() {
-        return villageExecutiveSignaturePath;
-    }
-
-    public void setVillageExecutiveSignaturePath(String villageExecutiveSignaturePath) {
-        this.villageExecutiveSignaturePath = villageExecutiveSignaturePath;
-    }
-
-    public String getDistrictOfficerSignaturePath() {
-        return districtOfficerSignaturePath;
-    }
-
-    public void setDistrictOfficerSignaturePath(String districtOfficerSignaturePath) {
-        this.districtOfficerSignaturePath = districtOfficerSignaturePath;
-    }
+    
+   
 }

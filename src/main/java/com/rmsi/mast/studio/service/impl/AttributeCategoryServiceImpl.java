@@ -31,6 +31,22 @@ public class AttributeCategoryServiceImpl implements AttributeCategoryService {
 
 
 
+	@Override
+	public List<AttributeCategory> findAttributeCategoryByTypeId(Integer id) {
+		// TODO Auto-generated method stub
+		return attributecategoryDAO.findAttributeCategoryByTypeId(id);
+	}
+
+
+
+	@Override
+	public List<AttributeCategory> findAllAttributeCategory() {
+		// TODO Auto-generated method stub
+		return attributecategoryDAO.findAllAttributeCategory();
+	}
+
+
+
 	
 
 

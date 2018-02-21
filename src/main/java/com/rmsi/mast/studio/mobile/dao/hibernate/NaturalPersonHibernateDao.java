@@ -95,7 +95,7 @@ public class NaturalPersonHibernateDao extends
                 ArrayList<Long> naturalPerson1 = new ArrayList<Long>();
 
                 for (int i = 0; i < naturalpersonlst.size(); i++) {
-                    naturalPerson1.add(naturalpersonlst.get(i).getPerson_gid());
+//                    naturalPerson1.add(naturalpersonlst.get(i).getPersonid());
                 }
                 return naturalPerson1;
 

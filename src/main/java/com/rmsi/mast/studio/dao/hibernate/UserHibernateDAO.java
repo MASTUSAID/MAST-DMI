@@ -37,7 +37,7 @@ UserDAO {
 		try{
 
 			String qry = "UPDATE User u SET u.active = false  where u.id = :id and u.active = true";
-			Query query = getEntityManager().createQuery(qry).setParameter("id", id);
+			Query query = getEntityManager().createQuery(qry).setParameter("id", id.longValue());
 			System.out.println("UserHibernateDao: " + qry);
 			int count = query.executeUpdate();
 			System.out.println("Delete User count: " + count);
@@ -56,13 +56,23 @@ UserDAO {
 	@SuppressWarnings("unchecked")
 	public User findByUniqueName(String username)
 	{
-		List<User> user =
-				getEntityManager().createQuery("Select u from User u where u.active = true and u.username = :name").setParameter("name", username).getResultList();
+		try
+		{
+			List<User> user =
+					getEntityManager().createQuery("Select u from User u where u.active = true and u.username = :name").setParameter("name", username).getResultList();
 
-		if(user.size() > 0)
-			return user.get(0);
-		else
+			if(user.size() > 0)
+				return user.get(0);
+			else
+				return null;
+		} 
+		catch (Exception e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return null;
+		}
+		
 	}
 
 	/*@SuppressWarnings("unchecked")
@@ -117,7 +127,7 @@ UserDAO {
 	//Added by PBJ
 	public User findUserByUserId(Integer id){
 		try {
-			List<User> user = getEntityManager().createQuery("Select u from User u where u.id = :id").setParameter("id", id).getResultList();
+			List<User> user = getEntityManager().createQuery("Select u from User u where u.id = :id").setParameter("id", id.longValue()).getResultList();
 			System.out.println(user);
 			if(user.size() > 0)
 				return user.get(0);
@@ -223,8 +233,14 @@ UserDAO {
 
 	@Override
 	public List<User> findUserByUser(ArrayList<Integer> userid) {
+		
+		List<Long> lstlong= new ArrayList<Long>();
+		
+		for(Integer in:userid){
+			lstlong.add((long)in);
+		}
 		try {
-			List<User> user = getEntityManager().createQuery("Select u from User u where u.id in (:userid)").setParameter("userid", userid).getResultList();
+			List<User> user = getEntityManager().createQuery("Select u from User u where u.id in (:userid)").setParameter("userid", lstlong).getResultList();
 			System.out.println(user);
 			if(user.size() > 0)
 			{

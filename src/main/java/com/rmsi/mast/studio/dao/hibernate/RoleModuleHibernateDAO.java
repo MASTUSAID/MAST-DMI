@@ -41,5 +41,20 @@ public class RoleModuleHibernateDAO extends GenericHibernateDAO<RoleModule, Long
 	}
 	}
 
+	@Override
+	public List<RoleModule> getRoleModuleByroleId(Integer roleid) {
+		
+		try {
+			Query query = getEntityManager().createQuery(
+			        "select rm from RoleModule rm where rm.isactive = true and rm.role.roleid =:Id ");
+			List<RoleModule> lstroleModule = query.setParameter("Id", roleid).getResultList();
+
+			return lstroleModule;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	
 }

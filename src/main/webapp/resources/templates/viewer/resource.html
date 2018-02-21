@@ -1,0 +1,160 @@
+<div class="container-fluid">
+
+    <div id="resourceRecordsFormdiv" style="visibility: hidden">
+
+        <div class="cmxform">
+
+
+            <div class="tab-pane " id="registry-records">
+                <div class="project-details">
+                    <div class="project-details-label">
+                        <div class="row-fluid">
+                          
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="gray-panel"> -->
+                    <!-- <form id="registryrecordsform" action="" onsubmit="return false;"> -->
+                        <!-- <table class="filter-details"> -->
+                            <!-- <tr> -->
+                                <!-- <td> -->
+                                    <!-- <label>Reference NO</label>  -->
+                                    <!-- <input type="text" name="usinstr_id_R" id="usinstr_id_R" value="" class="input-medium"> -->
+                                <!-- </td> -->
+                                <!-- <td> -->
+                                    <!-- <label>Application Type</label> -->
+                                    <!-- <select name="claim_type_R" id="claim_type_R" class="input-medium"></select> -->
+                                <!-- </td> -->
+                              
+                                <!-- <td> -->
+                                    <!-- <button class="btn1 v-top-18" onclick="javascript:search_R();">Search</button> -->
+                                    <!-- <button class="btn v-top-24" onclick="clearSearch_R();">Clear</button> -->
+                                <!-- </td> -->
+                            <!-- </tr> -->
+                        <!-- </table> -->
+
+                    <!-- </form> -->
+                <!-- </div> -->
+
+                <div class="scrollbarxy">
+                    <table class="tablesorter" id="registryRecordsTable" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                                 <th class="no-sort">Land Id</th>
+                                <th class="no-sort">Primary Holder/Point of Contact</th>
+                                <th class="no-sort">Occupancy/Tenure Type</th>
+                                <th class="no-sort">Classification Name</th>
+                                <th class="no-sort">Subclassification Name</th>
+								<th class="no-sort">Geometry Type</th>
+                                
+                                <th class="no-sort">
+                                    Action
+                                </th> 
+								
+                            </tr>
+                        </thead>
+
+                        <tbody id="resourceRecordsRowData1">
+                        </tbody>
+
+                        <tfoot>
+                            <tr class="tblFooter" id="resourceRecords_pagerDiv">
+                                <td colspan="8">
+                                    <div id="spatialunitDiv_R">
+                                        <a href="javascript:previousRecords_Res();"><img
+                                                class="img-prev" src="resources/images/studio/previous.png"
+                                                title="Previous" /></a> 
+                                        <input type="text" readonly="readonly"
+                                               name="records_from_Res" id="records_from_Res" value=""
+                                               class="input-medium"> To <input type="text"
+                                               name="records_to_Res" id="records_to_Res" value=""
+                                               class="input-medium" readonly="readonly"> Of <input
+                                               type="text" name="records_all_Res" id="records_all_Res" value=""
+                                               class="input-medium" readonly="readonly"><a
+                                               href="javascript:nextRecords_Res();">
+                                            <img class="img-next"
+                                                 src="resources/images/studio/next.png" title="Next">
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <script id="resourceRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+						 <td>
+						${landid}
+                        </td> 
+						
+                        <td>
+						${personName}
+                        </td> 
+                        <td>
+                       ${categoryName}
+                        </td>
+                        <td>
+                       ${classificationName}
+                        </td> 
+                        <td>
+                       ${subclassificationName}
+                        </td>                     
+                           
+                         <td>
+                        ${geometryName}
+                         </td>
+						
+                      
+						<td>
+						
+						<div class="single-drop-down">   
+						<div class="topnav"> <a href="#" onclick="ActionfillResource(${landid},'${geometryName}');" class="signin">
+						<span key="Action" class="langchange">Action</span></a><div class="containerDiv" id="${landid}">
+						</div>
+						</div>
+						</div>
+						
+
+						</td>		
+					
+                        </tr>
+                    </script>
+                </div>
+            </div>
+
+
+
+
+			<div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;">
+				 <div>Person(Owner)</div>
+				 <div id="personsEditingGrid0"></div>
+			</div>
+	
+	
+	<script id="attributetemplate" type="text/x-jquery-tmpl">
+ <tr> 
+<td>
+	${attributemaster.fieldname}
+  </td>                                                                       
+  <td>
+${attributevalue}
+	
+  </td>
+
+ </tr>
+</script>
+
+
+
+        </div>
+    </div>
+    <div id="dialog-confirm" title="Validate and Update Attributes">
+        <p id="validationCheck" style="display: none">
+            <span class="ui-icon ui-icon-alert"
+                  style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you
+            want to update the attributes?
+        </p>
+    </div>
+</div>
+

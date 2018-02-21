@@ -1,5 +1,3 @@
-
-
 var map;
 var size;
 var offset;
@@ -8,37 +6,16 @@ var objMarker=null;
 var markers;
 Cloudburst.ZoomToXY =  function(_map, _searchdiv) {
     map = _map;
-   
-    markers = new OpenLayers.Layer.Markers("Markers");
-    map.addLayer(markers);
-    
-    size = new OpenLayers.Size(32, 32);
-    offset = new OpenLayers.Pixel(-(size.w / 2), -size.h);
-    icon = new OpenLayers.Icon('resources/images/pushpin.png', size, offset);
-    
-    
-    	
     searchdiv = _searchdiv;
-    
-	$("#tabs-Tool").empty();
-	
-	//removeChildElement("sidebar","layerSwitcherContent");		
-	
-	//$("#layerSwitcherContent").hide();
-	
-    jQuery.get('resources/templates/viewer/zoomtoxy.html', function(template) {
-		
-        //$("#" + searchdiv).append(template);    	
-		addTab($._("zoom_to_xy"),template);
-    	
-		$("#zoomtoxy-help").tipTip({defaultPosition:"right"});
-		
-		// Event binding for options div
+    $("#tabs-Tool").empty();
+	jQuery.get('resources/templates/viewer/zoomtoxy.html', function(template) {
+		addTab($._("zoom"),template);
+    	$("#zoomtoxy-help").tipTip({defaultPosition:"right"});
 		$("#options-s-d").hide();
 		$("#options-s-t").click(function() {
 			$("#options-s-d").slideToggle('fast');
 		});
-		translateZoomToXYStrings();
+		//translateZoomToXYStrings();
     });
 };
 
@@ -54,24 +31,47 @@ function translateZoomToXYStrings(){
 var Pan = function(x,y) 
 {   
    if (x != "" && y != "") {
-        
+	   
+	   if(!$.isNumeric(x) || !$.isNumeric(y))
+	   {
+		   jAlert('X and Y should be Numeric', 'Zoom To XY');
+            return;
+	   }
+				  var vectorSource = new ol.source.Vector({
+					  name:"iconpan"
+					  
+				  });
+				   var coordinate= [x, y];
+				  var iconFeature = new ol.Feature({
+						  geometry: new  ol.geom.Point(ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'))
+						});
+                   vectorSource.addFeature(iconFeature);
+				   
+				    var iconStyle = new ol.style.Style({
+						  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+							anchor: [0.5, 46],
+							anchorXUnits: 'fraction',
+							anchorYUnits: 'pixels',
+							opacity: 0.75,
+							src: 'http://openlayers.org/en/v3.9.0/examples/data/icon.png'
+						  }))
+						});
 
-	   map.panTo(new OpenLayers.LonLat(x, y));
-       if (objMarker) {
-           markers.removeMarker(objMarker);
-       }
-       
-       size = new OpenLayers.Size(32, 32);
-       offset = new OpenLayers.Pixel(-(size.w / 2), -size.h);
-       icon = new OpenLayers.Icon('resources/images/pushpin.png', size, offset);
-       
-       objMarker=new OpenLayers.Marker(new OpenLayers.LonLat(x, y), icon)
-       markers.addMarker(objMarker);
-       $("#loading").hide();
+                          //add the feature vector to the layer vector, and apply a style to whole layer
+						var vectorLayer = new ol.layer.Vector({
+						  source: vectorSource,
+						  style: iconStyle
+						});
+						vectorLayer.set('aname', "pan_icon");	
+						map.addLayer(vectorLayer);
+						map.getView().setCenter(ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'));
+						map.getView().setZoom(5);
+						
+	
+        $("#loading").hide();
        
     }
     else {
-        //alert('Please enter X and Y values both.');
         jAlert('Please enter X and Y values both', 'Zoom To XY');
         return;
     }
@@ -80,43 +80,21 @@ var Pan = function(x,y)
 
 var Zoom = function(x, y) {
     if (x != "" && y != "") {
-        var geomPoint = new OpenLayers.Geometry.Point(x, y);
-        var bounds = geomPoint.getBounds();
-        
-        if(bounds.left == bounds.right && bounds.top == bounds.bottom){
-   		 	var lonlat = new OpenLayers.LonLat(bounds.left, bounds.top);
-   		 	map.setCenter(lonlat, map.baseLayer.resolutions.length - 2, false, false);
-	   	}else{
-	   		map.zoomToExtent(bounds);
-	   	}
-
-        //map.zoomTo(8);
-        if (objMarker) {
-            markers.removeMarker(objMarker);
-        }
-        objMarker = new OpenLayers.Marker(new OpenLayers.LonLat(x, y), icon)
-        markers.addMarker(objMarker);
-        $("#loading").hide();
-
+		
+	 if(!$.isNumeric(x) ||  !$.isNumeric(y))
+	   {
+		   jAlert('X and Y should be Numeric', 'Zoom To XY');
+            return;
+	   }
+	   
+                    var coordinate= [x, y];
+                    map.getView().setCenter(ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'));
+                    map.getView().setZoom(5);
+	                $("#loading").hide();
     }
     else {
-        //alert('Please enter X and Y values both.');
+    
         jAlert('Please enter X and Y values both', 'Zoom To XY');
         return;
     }
 };
-
-
-function calculateLatLong(){
-	var osgref=$('#osgridref').val();	
-	if(osgref!=""){
-		var gridref = OsGridRef.parse(osgref);	
-		lon = gridref.easting - 50;;
-		lat = gridref.northing - 50;
-		$('#LonX').val(lon);	
-		$('#LatY').val(lat);	
-	}
-	else{
-		jAlert('Please enter OS Grid Referance', 'Zoom To XY');
-	}
-}

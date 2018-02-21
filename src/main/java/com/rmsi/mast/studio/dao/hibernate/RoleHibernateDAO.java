@@ -86,4 +86,19 @@ public class RoleHibernateDAO extends GenericHibernateDAO<Role, Long> implements
 			return null;
 		}
 	}
+
+	@Override
+	public Role findRoleById(Integer id) {
+		
+
+		@SuppressWarnings("unchecked")
+		List<Role> role = getEntityManager()
+				.createQuery("Select r from Role r where r.roleid = :id")
+				.setParameter("id", id).getResultList();
+
+		if (role.size() > 0)
+			return role.get(0);
+		else
+			return null;
+	}
 }

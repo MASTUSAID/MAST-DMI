@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.NonNaturalPerson;
+import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 
 /**
  * @author Shruti.Thakur
@@ -24,5 +25,7 @@ public interface NonNaturalPersonDao extends GenericDAO<NonNaturalPerson, Long> 
 			NonNaturalPerson nonNaturalPerson);
 
 	List<NonNaturalPerson> findById(Long id);
+	
+	
 
 }

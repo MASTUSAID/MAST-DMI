@@ -8,10 +8,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//import com.googlecode.ehcache.annotations.Cacheable;
-//import com.googlecode.ehcache.annotations.TriggersRemove;
-//import com.rmsi.spatialvue.studio.dao.PublicUserDAO;
 import com.rmsi.mast.studio.dao.ProjectDAO;
+//@import com.rmsi.mast.studio.ProjectDAO;
 import com.rmsi.mast.studio.dao.UserDAO;
 import com.rmsi.mast.studio.dao.UserProjectDAO;
 import com.rmsi.mast.studio.dao.UserRoleDAO;
@@ -20,7 +18,13 @@ import com.rmsi.mast.studio.domain.Role;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserOrder;
 import com.rmsi.mast.studio.domain.UserProject;
+import com.rmsi.mast.studio.domain.UserRole;
 import com.rmsi.mast.studio.service.UserService;
+
+//import com.googlecode.ehcache.annotations.Cacheable;
+//import com.googlecode.ehcache.annotations.TriggersRemove;
+//import com.rmsi.spatialvue.studio.dao.PublicUserDAO;
+
 
 /**
  * @author Aparesh.Chakraborty
@@ -32,7 +36,7 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserDAO userDAO;
 
-	@Autowired
+	//@/@Autowired
 	private ProjectDAO projectDAO;
 
 
@@ -41,21 +45,37 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private UserProjectDAO userProjectDAO;
+	
+	@Autowired
+	private UserRoleDAO userRoleDao;
 
 
 
 	@Override
 	//@TriggersRemove(cacheName="userFBNCache", removeAll=true)	 
 	public User addUser(User user) {
-		//final String ENCRYPT_KEY = "HG58YZ3CR9";
-		Set<Role> roleList = new HashSet<Role> ();
-		roleList=user.getRoles();
-
-		//user.setRoles(new HashSet<Role> ());
-
-		return userDAO.makePersistent(user);
-
-		//userRoleDAO.addUserRoles(roleList, user);
+		
+		
+		
+		try{
+			
+			if(user.getId()>0){
+			userRoleDao.deleteUserRoleByUserId(user.getId());
+			}
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		try {
+			userDAO.makePersistent(user);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// Added by @rmsi
+		//userRoleDAO.addUserRoles(roleLst, user);
+		return user ;
 
 
 
@@ -160,9 +180,11 @@ public class UserServiceImpl implements UserService{
 
 		User user = userDAO.findByName(userName);			
 
-		List<Project> projectlist = new ArrayList<Project>(user.getProjects());
+		////@rmsi List<Project> projectlist = new ArrayList<Project>(user.getProjects());
 
-		return  projectlist;
+		//@return  projectlist;
+		
+		return null;
 	}
 
 	@Override
@@ -179,7 +201,18 @@ public class UserServiceImpl implements UserService{
 
 	//added By PBJ
 	public User findUserByUserId(Integer id){
-		return userDAO.findUserByUserId(id);
+		
+		User user =  userDAO.findUserByUserId(id);
+		
+		// Added by @rmsi
+				/*List<UserRole> userRole = userRoleDAO.findAllUserRole(user.getName());
+				Set<Role> setRole = new HashSet<Role>();
+		  		for (UserRole userRole2 : userRole) {
+					setRole.add(userRole2.getRoleBean());
+				}
+		  		
+		user.setRole(setRole);*/
+		return user;
 	}
 
 	@Override

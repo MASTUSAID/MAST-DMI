@@ -27,7 +27,7 @@ public interface UnitService {
 	void updateUnit(Unit unit);
 
 	//@Transactional(readOnly=true)
-	Unit findUnitById(Long id);
+	Unit findUnitById(Integer id);
 
 	//@Transactional(readOnly=true)
 	List<Unit> findAllUnit();

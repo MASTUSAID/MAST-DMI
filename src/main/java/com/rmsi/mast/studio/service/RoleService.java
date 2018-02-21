@@ -39,4 +39,5 @@ public interface RoleService {
 
 	List<Role> findAllRole(int roleId);
 	
+	 Role findRoleById(Integer id);
 }

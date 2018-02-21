@@ -1,9 +1,14 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
-import java.lang.String;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * Entity implementation class for Entity: Gender
@@ -11,49 +16,70 @@ import javax.persistence.*;
  * @author Shruti.Thakur
  */
 @Entity
-@Table(name = "gender")
+@Table(name = "la_partygroup_gender")
 public class Gender implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "gender_id")
-	@SequenceGenerator(name = "GENDER_ID_GENERATOR", sequenceName = "GENDER_ID_SEQ", allocationSize=1)
+	@Column(name = "genderid")
+	@SequenceGenerator(name = "GENDER_ID_GENERATOR", sequenceName = "la_partygroup_gender_genderid_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GENDER_ID_GENERATOR")
 	private long genderId;
+	
+	@Column(name="isactive")
+    private Boolean active;
 
 	@Column(nullable = false)
 	private String gender;
 
-	@Column(name="gender_sw")
-	private String gender_sw;
+	@Column(name="gender_en")
+	private String gender_en;
 	
-	public Gender() {
-		super();
-	}
+
+
+/*	 @JsonIgnore
+	 @OneToOne(mappedBy="gender")
+	 private User users;
+*/	
+	
 
 	public long getGenderId() {
-		return this.genderId;
+		return genderId;
 	}
 
 	public void setGenderId(long genderId) {
 		this.genderId = genderId;
 	}
 
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
 	public String getGender() {
-		return this.gender;
-	}
-
-	public String getGender_sw() {
-		return gender_sw;
-	}
-
-	public void setGender_sw(String gender_sw) {
-		this.gender_sw = gender_sw;
+		return gender;
 	}
 
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+
+	public String getGender_en() {
+		return gender_en;
+	}
+
+	public void setGender_en(String gender_en) {
+		this.gender_en = gender_en;
+	}
+	
+	
+	
+	
+	
+	
 
 }

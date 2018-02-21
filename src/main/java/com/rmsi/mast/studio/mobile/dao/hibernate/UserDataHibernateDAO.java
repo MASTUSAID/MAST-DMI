@@ -35,12 +35,13 @@ public class UserDataHibernateDAO extends GenericHibernateDAO<User, Long>
 
 	@Override
 	public User getUserByUserId(int userId){
-
+         Integer id = new Integer(userId);
+         Long userid = new Long(id);
 		String query = "select p from User p where p.id = :userId";
 
 		@SuppressWarnings("unchecked")
 		List<User> user = getEntityManager().createQuery(query)
-				.setParameter("userId", userId).getResultList();
+				.setParameter("userId", userid).getResultList();
 
 		if (user != null && user.size() > 0) {
 			return user.get(0);

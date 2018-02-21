@@ -25,4 +25,10 @@ public class ProjectLayerGroupServiceImpl implements ProjectLayerGroupService {
 	public List<String> getProjectLayers(String project){
 		return projLyrDAO.getLayersByProjectName(project);
 	}
+
+	@Override
+	public String checkProjectLayergroupByLayergroupId(Integer id) {
+		// TODO Auto-generated method stub
+		return projLyrDAO.checkProjectLayergroupByLayergroupId(id);
+	}
 }

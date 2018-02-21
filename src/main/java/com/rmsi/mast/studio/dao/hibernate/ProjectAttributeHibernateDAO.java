@@ -22,27 +22,32 @@ public class ProjectAttributeHibernateDAO extends GenericHibernateDAO<Surveyproj
 
 
 
-			@Override
-			public List<Surveyprojectattribute> selectedCategory(Long uid,String name) {
-		
-		
-				Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributeMaster.attributeCategory.attributecategoryid = :uid and s.name=:name and s.attributeMaster.active = true order by s.attributeorder ") ;
-				query.setParameter("uid",uid);
-				query.setParameter("name", name);
-				List<Surveyprojectattribute> selectedcategory = query.getResultList();		
-		
-				if(selectedcategory.size() > 0){
-					return selectedcategory;
-				}		
-				else
-				{
-					return new ArrayList<Surveyprojectattribute>();
-				}
+	@Override
+	public List<Surveyprojectattribute> selectedCategory(Long uid,String name) {
+
+		try{
+			//			Integer uids = uid.intValue();
+			Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributeMaster.laExtAttributecategory.attributecategoryid = :uid and s.name.name=:name and s.attributeMaster.isactive = true order by s.attributeorder") ;
+			query.setParameter("uid",uid);
+			query.setParameter("name", name);
+			List<Surveyprojectattribute> selectedcategory = query.getResultList();		
+
+			if(selectedcategory.size() > 0){
+				return selectedcategory;
+			}		
+			else
+			{
+				return new ArrayList<Surveyprojectattribute>();
 			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 		
 			@Override
 			public List<Surveyprojectattribute> selectedAttributes(Long uid) {
-				Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributeMaster.attributeCategory.attributecategoryid = :uid") ;
+				Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributeMaster.laExtAttributecategory.attributecategoryid = :uid") ;
 				query.setParameter("uid",uid);
 				List<Surveyprojectattribute> selectedcategory = query.getResultList();		
 		
@@ -59,9 +64,9 @@ public class ProjectAttributeHibernateDAO extends GenericHibernateDAO<Surveyproj
 			@Override
 			public List<Surveyprojectattribute> displayselectedlist(Long uid,String project) 
 			{		
-		
-				Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributecategoryid = :uid and s.name=:project") ;
-				query.setParameter("uid",uid.intValue());
+		try{
+				Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributeMaster.laExtAttributecategory.attributecategoryid = :uid and s.name.name=:project") ;
+				query.setParameter("uid",uid);
 				query.setParameter("project", project);
 				List<Surveyprojectattribute> selectedcategory = query.getResultList();		
 		
@@ -72,6 +77,11 @@ public class ProjectAttributeHibernateDAO extends GenericHibernateDAO<Surveyproj
 				{
 					return null;
 				}
+				
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 			}
 			
 			@Override
@@ -131,6 +141,33 @@ public class ProjectAttributeHibernateDAO extends GenericHibernateDAO<Surveyproj
 					
 				}
 				}
+
+			
+			
+			@Override
+			public List<Surveyprojectattribute> displaySelectedCategoryById(Long uid, String name, Integer id) {
+				
+				try{
+					Query query = getEntityManager().createQuery("Select s from Surveyprojectattribute s where s.attributeMaster.laExtAttributecategory.attributecategoryid = :uid and s.name.name=:name and s.attributeMaster.laExtAttributecategory.categorytype.categorytypeid=:id   and s.attributeMaster.isactive = true order by s.attributeorder") ;
+					query.setParameter("uid",uid);
+					query.setParameter("name", name);
+					query.setParameter("id", id);
+					List<Surveyprojectattribute> selectedcategory = query.getResultList();		
+
+					if(selectedcategory.size() > 0){
+						return selectedcategory;
+					}		
+					else
+					{
+						return new ArrayList<Surveyprojectattribute>();
+					}
+				}catch(Exception e){
+					e.printStackTrace();
+					return null;
+				}
+				
+				
+			}
 			
 			
 			

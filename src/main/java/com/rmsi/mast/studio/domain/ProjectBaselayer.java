@@ -1,86 +1,129 @@
-
-
 package com.rmsi.mast.studio.domain;
+
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
- * The persistent class for the project_baselayer database table.
+ * The persistent class for the la_ext_projectbaselayermapping database table.
  * 
  */
 @Entity
-@Table(name="project_baselayer")
+@Table(name="la_ext_projectbaselayermapping")
 public class ProjectBaselayer implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Integer id;
-	private Integer baselayerorder;
-	private Baselayer baselayerBean;
-	private Project projectBean;
 
-    public ProjectBaselayer() {
-    }
-    
-    @Id
-	@SequenceGenerator(name="pk_project_baselayer_id_seq",sequenceName="project_baselayer_id_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_project_baselayer_id_seq") 
-	@Column(name="id", unique=true, nullable=false) 
+	@Id
+	@SequenceGenerator(name="ProjectBaselayer_sequence",sequenceName="la_ext_projectbaselayermapping_projectbaselayerid_seq", allocationSize=1) 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="ProjectBaselayer_sequence") 
+	private Integer projectbaselayerid;
 
-	public Integer getId() {
-		return this.id;
+	private Integer createdby;
+
+	@Temporal( TemporalType.DATE)
+	private Date createddate;
+
+	private Boolean isactive;
+
+	private Integer modifiedby;
+
+	@Temporal( TemporalType.DATE)
+	private Date modifieddate;
+	
+	
+	public ProjectBaselayer()
+	{
+		
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	
+	@ManyToOne
+	@JoinColumn(name="baselayerid")
+	private Baselayer Baselayers;
+
+	
+	@ManyToOne
+	@JoinColumn(name="projectnameid")
+	private Project project;
+
+
+	public Integer getProjectbaselayerid() {
+		return projectbaselayerid;
+	}
+
+	public void setProjectbaselayerid(Integer projectbaselayerid) {
+		this.projectbaselayerid = projectbaselayerid;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
 	}
 
 
-	@Column(nullable=false)
-	public Integer getBaselayerorder() {
-		return this.baselayerorder;
+	@JsonIgnore
+	public Project getProject() {
+		return project;
 	}
 
-	public void setBaselayerorder(Integer baselayerorder) {
-		this.baselayerorder = baselayerorder;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
-
-	//bi-directional many-to-one association to Baselayer
-    @ManyToOne
-	@JoinColumn(name="baselayer")
-	@JsonProperty("baselayers")
-	public Baselayer getBaselayerBean() {
-		return this.baselayerBean;
+	
+	public Baselayer getBaselayers() {
+		return Baselayers;
 	}
 
-	public void setBaselayerBean(Baselayer baselayerBean) {
-		this.baselayerBean = baselayerBean;
+	public void setBaselayers(Baselayer baselayers) {
+		Baselayers = baselayers;
 	}
+
 	
 
-	//bi-directional many-to-one association to Project
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name="project")
-	public Project getProjectBean() {
-		return this.projectBean;
-	}
 
-	public void setProjectBean(Project projectBean) {
-		this.projectBean = projectBean;
-	}
+
 	
 }

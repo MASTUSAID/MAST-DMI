@@ -26,13 +26,33 @@ public class EducationLevelHibernateDao extends
 	public EducationLevel getEducationLevelById(int educationLevelId) {
 
 		try {
-			String query = "select e.* from education_level e inner join attribute_options ao on ao.parent_id = e.level_id where ao.id ="
+			String query = "select e.* from la_partygroup_educationlevel e inner join la_ext_attributeoptions ao on ao.parentid = e.educationlevelid where ao.attributeoptionsid ="
 					+ educationLevelId;
 
 			@SuppressWarnings("unchecked")
 			List<EducationLevel> educationLevel = getEntityManager()
 					.createNativeQuery(query, EducationLevel.class)
 					.getResultList();
+
+			if (educationLevel != null && educationLevel.size() > 0) {
+				return educationLevel.get(0);
+			}
+		} catch (Exception ex) {
+			logger.error(ex);
+			throw ex;
+		}
+		return null;
+	}
+
+	@Override
+	public EducationLevel getEducationLevelBypk(int educationLevelId) {
+		
+		try {
+			String query = "select e from EducationLevel e  where e.educationlevelid =:id";
+
+			@SuppressWarnings("unchecked")
+			List<EducationLevel> educationLevel = getEntityManager().createQuery(query).setParameter("id", educationLevelId).getResultList();
+					
 
 			if (educationLevel != null && educationLevel.size() > 0) {
 				return educationLevel.get(0);

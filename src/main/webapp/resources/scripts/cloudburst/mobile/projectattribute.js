@@ -7,6 +7,7 @@ var proj_name = null;
 var projname=null;
 var Mobilelist=null;
 var idorder=[];
+var AttributeCategorytypeList=null;
 
 function ProjectAttribute(_selectedItem)
 {
@@ -24,12 +25,21 @@ function ProjectAttribute(_selectedItem)
 	});
 
 
+	jQuery.ajax({
+		url: "attribcategoryType/",
+		async:false,
+		success: function (data) {
+			AttributeCategorytypeList = data;    
 
-	displayRefreshedProjectAttr();
+		}
+	});
+	
+
+	displayRefreshedProjectAttr("","","");
 	$('body').find("#attr-dialog-form").remove();
 }
 
-function displayRefreshedProjectAttr()
+function displayRefreshedProjectAttr(_saveType,_catType,_project)
 {
 	
 	jQuery("#projectattribute-div").empty();
@@ -49,8 +59,50 @@ function displayRefreshedProjectAttr()
 		jQuery.each(DataList, function (i, _project) {    	
 			jQuery("#projectAttr_project").append(jQuery("<option></option>").attr("value", _project.name).text(_project.name));        
 		});
+		
+		
+		jQuery.each(AttributeCategorytypeList, function (i, _categoryTypeobj) { 
+					jQuery("#category_type").append(jQuery("<option></option>").attr("value", _categoryTypeobj.categorytypeid).text(_categoryTypeobj.typename));
+					
+				}); 
+
+		
+		
 		$('#projectAttr_project').val(proj_name);
-		jQuery("#projectAttr-accordion").accordion({fillSpace: true});
+		
+		jQuery("#projectAttr-accordion").accordion({collapsible: true});
+		jQuery("#projectAttr-accordion-resource").accordion({collapsible: true});
+		jQuery("#projectAttr-accordion").hide();
+		jQuery("#projectAttr-accordion-resource").hide();
+		
+		if(_saveType=="save")
+		{
+			if(_catType==1){
+				$("#category_type").val(1);
+					jQuery("#projectAttr-accordion").show();
+		             jQuery("#projectAttr-accordion-resource").hide();
+				}
+
+
+				
+			if(_catType==2){
+				$("#category_type").val(2);
+				jQuery("#projectAttr-accordion").hide();
+		        jQuery("#projectAttr-accordion-resource").show();
+				}
+
+			if(_project!="")
+			{
+				$('#projectAttr_project').val(_project);
+			}
+           
+		   
+			
+			
+		}
+		
+		
+		
 
 		if(proj_name!=null)
 			fillAccordians(proj_name);
@@ -82,7 +134,15 @@ function fillAccordians(_proj_name)
 	else{
 		jQuery(".btnprojectattr").show();
 		
-		jQuery.ajax({          
+      var _catType=	$("#category_type").val()
+	  if(_catType=="")
+	  {
+		  jAlert('Select Category Type', 'ProjectAttribute');
+	  }else
+	  {
+		  if(_catType==1){
+			  
+			jQuery.ajax({          
 			type: 'GET',
 			url: "projectattrib/display/1/"+proj_name+"/",
 			success: function (categorydata) 
@@ -90,7 +150,9 @@ function fillAccordians(_proj_name)
 				jQuery("#generaltbl").empty();				
 
 				if(categorydata!= null && categorydata!="" && typeof categorydata != "undefined")
-					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#generaltbl");			
+					var ab=jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#generaltbl");	
+
+				
 			}        
 		});
 		jQuery.ajax({          
@@ -185,11 +247,112 @@ function fillAccordians(_proj_name)
 					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#general_property_tbl");
 			}         
 		});
+		
+			jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/16/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#addPersontbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#addPersontbl");
+			}         
+		}); 
+		
+		  }else if(_catType==2){
+			  
+			 
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/9/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#opentbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#opentbl");
+			}         
+		});
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/10/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#privatetbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#privatetbl");
+			}         
+		});
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/11/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#commontbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#commontbl");
+			}         
+		});
+		
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/12/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#communitytbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#communitytbl");
+			}         
+		});
+		
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/13/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#public_statetbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#public_statetbl");
+			}         
+		});
+		
+	
+			 
+		  }
+		  
+		  
+		  
+	  }
+
+	
 
 	}
 
 
 
+}
+
+
+function displayCategoryType(_this)
+{
+	
+ $("#projectAttr_project")[0].selectedIndex = 0;
+ 
+   var _id=_this.value;
+ 
+	if(_id==1){
+			  
+		jQuery("#projectAttr-accordion").show();
+		jQuery("#projectAttr-accordion-resource").hide();
+		
+	}else if(_id==2){
+		
+		jQuery("#projectAttr-accordion").hide();
+		jQuery("#projectAttr-accordion-resource").show();
+	}
 }
 
 function openAttrDialog(_category)
@@ -610,6 +773,364 @@ function openAttrDialog(_category)
 			});
 		}
 		break;
+		
+		
+		case "add_Person":
+
+		genAttrDialog = $( "#attr-dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			resizable: false,
+			modal: true,
+
+			buttons: {
+				"Add": function() 
+				{
+					saveprojectAttr();
+					//genAttrDialog.dialog( "close" );
+				},
+				"Cancel": function() 
+				{
+					genAttrDialog.dialog( "close" );
+				}
+			},
+			close: function() {
+				genAttrDialog.dialog( "destroy" );
+				genAttrDialog.dialog( "destroy" );
+
+			}
+		});
+
+
+		var project=$("#projectAttr_project").val();
+		if(project==0){
+			jQuery("#dialogBody").empty();
+			jAlert("Please Select Project First","Alert");
+		}
+		else{
+			genAttrDialog.dialog( "open" );
+			jQuery.ajax({          
+				type: 'GET',
+				url: "projectattrib/displaypop/16/"+project+"/",
+				success: function (popdata) 
+				{
+					jQuery("#dialogBody").empty();
+					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+					attributeCategory = 7;
+					$('.roleCheckbox').change(function() 
+							{
+						console.log(this);
+						if(this.checked) {
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',true);
+						}else{
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',false);
+						}
+							});
+				}         
+			});
+		}
+		break;
+		case "open":
+
+		genAttrDialog = $( "#attr-dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			resizable: false,
+			modal: true,
+
+			buttons: {
+				"Add": function() 
+				{
+					saveprojectAttr();
+					//genAttrDialog.dialog( "close" );
+				},
+				"Cancel": function() 
+				{
+					genAttrDialog.dialog( "close" );
+				}
+			},
+			close: function() {
+				genAttrDialog.dialog( "destroy" );
+				genAttrDialog.dialog( "destroy" );
+
+			}
+		});
+
+
+		var project=$("#projectAttr_project").val();
+		if(project==0){
+			jQuery("#dialogBody").empty();
+			jAlert("Please Select Project First","Alert");
+		}
+		else{
+			genAttrDialog.dialog( "open" );
+			jQuery.ajax({          
+				type: 'GET',
+				url: "projectattrib/displaypop/9/"+project+"/",
+				success: function (popdata) 
+				{
+					jQuery("#dialogBody").empty();
+					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+					attributeCategory = 7;
+					$('.roleCheckbox').change(function() 
+							{
+						console.log(this);
+						if(this.checked) {
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',true);
+						}else{
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',false);
+						}
+							});
+				}         
+			});
+		}
+		
+		break;
+		
+		case "private":
+
+		genAttrDialog = $( "#attr-dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			resizable: false,
+			modal: true,
+
+			buttons: {
+				"Add": function() 
+				{
+					saveprojectAttr();
+					//genAttrDialog.dialog( "close" );
+				},
+				"Cancel": function() 
+				{
+					genAttrDialog.dialog( "close" );
+				}
+			},
+			close: function() {
+				genAttrDialog.dialog( "destroy" );
+				genAttrDialog.dialog( "destroy" );
+
+			}
+		});
+
+
+		var project=$("#projectAttr_project").val();
+		if(project==0){
+			jQuery("#dialogBody").empty();
+			jAlert("Please Select Project First","Alert");
+		}
+		else{
+			genAttrDialog.dialog( "open" );
+			jQuery.ajax({          
+				type: 'GET',
+				url: "projectattrib/displaypop/10/"+project+"/",
+				success: function (popdata) 
+				{
+					jQuery("#dialogBody").empty();
+					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+					attributeCategory = 7;
+					$('.roleCheckbox').change(function() 
+							{
+						console.log(this);
+						if(this.checked) {
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',true);
+						}else{
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',false);
+						}
+							});
+				}         
+			});
+		}
+		
+		break;
+		
+		case "common":
+
+		genAttrDialog = $( "#attr-dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			resizable: false,
+			modal: true,
+
+			buttons: {
+				"Add": function() 
+				{
+					saveprojectAttr();
+					//genAttrDialog.dialog( "close" );
+				},
+				"Cancel": function() 
+				{
+					genAttrDialog.dialog( "close" );
+				}
+			},
+			close: function() {
+				genAttrDialog.dialog( "destroy" );
+				genAttrDialog.dialog( "destroy" );
+
+			}
+		});
+
+
+		var project=$("#projectAttr_project").val();
+		if(project==0){
+			jQuery("#dialogBody").empty();
+			jAlert("Please Select Project First","Alert");
+		}
+		else{
+			genAttrDialog.dialog( "open" );
+			jQuery.ajax({          
+				type: 'GET',
+				url: "projectattrib/displaypop/11/"+project+"/",
+				success: function (popdata) 
+				{
+					jQuery("#dialogBody").empty();
+					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+					attributeCategory = 7;
+					$('.roleCheckbox').change(function() 
+							{
+						console.log(this);
+						if(this.checked) {
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',true);
+						}else{
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',false);
+						}
+							});
+				}         
+			});
+		}
+		
+		break;
+		case "community":
+
+		genAttrDialog = $( "#attr-dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			resizable: false,
+			modal: true,
+
+			buttons: {
+				"Add": function() 
+				{
+					saveprojectAttr();
+					//genAttrDialog.dialog( "close" );
+				},
+				"Cancel": function() 
+				{
+					genAttrDialog.dialog( "close" );
+				}
+			},
+			close: function() {
+				genAttrDialog.dialog( "destroy" );
+				genAttrDialog.dialog( "destroy" );
+
+			}
+		});
+
+
+		var project=$("#projectAttr_project").val();
+		if(project==0){
+			jQuery("#dialogBody").empty();
+			jAlert("Please Select Project First","Alert");
+		}
+		else{
+			genAttrDialog.dialog( "open" );
+			jQuery.ajax({          
+				type: 'GET',
+				url: "projectattrib/displaypop/12/"+project+"/",
+				success: function (popdata) 
+				{
+					jQuery("#dialogBody").empty();
+					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+					attributeCategory = 7;
+					$('.roleCheckbox').change(function() 
+							{
+						console.log(this);
+						if(this.checked) {
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',true);
+						}else{
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',false);
+						}
+							});
+				}         
+			});
+		}
+		
+		break;
+		case "public_state":
+
+		genAttrDialog = $( "#attr-dialog-form" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			resizable: false,
+			modal: true,
+
+			buttons: {
+				"Add": function() 
+				{
+					saveprojectAttr();
+					//genAttrDialog.dialog( "close" );
+				},
+				"Cancel": function() 
+				{
+					genAttrDialog.dialog( "close" );
+				}
+			},
+			close: function() {
+				genAttrDialog.dialog( "destroy" );
+				genAttrDialog.dialog( "destroy" );
+
+			}
+		});
+
+
+		var project=$("#projectAttr_project").val();
+		if(project==0){
+			jQuery("#dialogBody").empty();
+			jAlert("Please Select Project First","Alert");
+		}
+		else{
+			genAttrDialog.dialog( "open" );
+			jQuery.ajax({          
+				type: 'GET',
+				url: "projectattrib/displaypop/13/"+project+"/",
+				success: function (popdata) 
+				{
+					jQuery("#dialogBody").empty();
+					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+					attributeCategory = 7;
+					$('.roleCheckbox').change(function() 
+							{
+						console.log(this);
+						if(this.checked) {
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',true);
+						}else{
+							var chkid = this.id;
+							$('#uid'+chkid).prop('checked',false);
+						}
+							});
+				}         
+			});
+		}
+		
+		break;
+		
 	default:
 	}
 }
@@ -634,7 +1155,8 @@ var saveprojectAttrData= function ()
 				$('body').find("#attr-dialog-form").remove();
 				$("#attr-dialog-form").remove();
 				proj_name = project;
-				displayRefreshedProjectAttr();
+				var _catType=$("#category_type").val();
+				displayRefreshedProjectAttr("save",_catType,proj_name);
 				jAlert('Data Successfully Saved', 'MasterAttribute');
 			}
 			else if(result=='false'){
@@ -837,14 +1359,30 @@ function saveLayergroup(_option)
 		$("#attributecategory").val(_attributecategory);
 
 	}
-
-	// case no 6 for custom end
-//case no 7 for general(property) start
+	
 	else if 
 
 
 
-	(_option=='general_property') {
+	(_option=='add_Person') {
+
+		$('#addPersontbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=16;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}
+
+	// case no 6 for custom end
+//case no 7 for general(property) start
+	else if (_option=='general_property') {
 
 		$('#general_property_tbl tr').each(function() {
 			var test=$(this).find("td:first").attr("id");
@@ -863,7 +1401,85 @@ function saveLayergroup(_option)
 
 	//case no 7 for general(property) end
 
+else if (_option=='open') {
 
+		$('#opentbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=9;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}
+
+else if (_option=='private') {
+
+		$('#privatetbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=10;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}
+
+	else if (_option=='common') {
+
+		$('#commontbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=11;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}
+	else if (_option=='community') {
+
+		$('#communitytbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=12;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}
+	else if (_option=='public_state') {
+
+		$('#public_statetbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=13;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}
+	
+	
 	var project=$("#projectAttr_project").val();
 
 	$("#project").val(project);

@@ -9,4 +9,5 @@ public interface LayerFieldDAO extends GenericDAO<LayerField, Long> {
 	public String create(LayerField layerField);
 	public String edit(String id, LayerField layerField);
 	public String delete(String id);
+	public boolean deleteFeildByLayerId(Long id);
 }

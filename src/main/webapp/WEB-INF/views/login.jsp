@@ -67,12 +67,13 @@
                         }
                     }
                 %>
-                <div class="header_bluebar_top"></div>
+               <div class="demo">
+               
                 <div class="header_wrapper">
                     <div id="usaid_logo" onClick="window.location = 'http://usaid.gov/land-tenure';"></div>
                     <div class="header_title">Mobile Application to Secure Tenure (MAST)<br />Data Management Infrastructure</div>
                 </div>
-                <div class="header_bluebar_bottom"></div>
+                
                 <div class="home_background">
                     <div class="homebox" id="homebox_whatismast">
                         <div class="homebox_title">What is MAST?</div>
@@ -84,9 +85,13 @@
                             geospatial and demographic information, the project is designed to lower costs and time involved in registering land rights and,
                             importantly, to make the process more transparent and accessible to local people.</p>
                         <p>Learn more about this project at <a target="_new" href="http://www.google.com/url?q=http%3A%2F%2Fwww.usaidlandtenure.net%2Fproject%2Fmobile-applications-secure-tenure-tanzania&sa=D&sntz=1&usg=AFQjCNFWVKqfDObjPCu_W4K--WQ3nPnNVw">USAID's Land Tenure Portal</a>.</p>
+                        
+                        
+                        
+                        
                     </div>
-                    <div class="homebox" id="homebox_projects">
-                        <div class="homebox_title">Login to MAST System</div>
+                    <div class="homebox1" id="homebox_projects">
+                        <div class="homebox1_title">Login to MAST System</div>
                         <form id="loginForm" name="loginForm" action="j_spring_security_check" method="post">
 
                             <div id="main">
@@ -113,16 +118,19 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
+                   
                     </form>
+                     </div>
 
-                    <div style="clear: both;"></div>
-
-                    <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');"></div>
-                    <div id="android_logo"></div>
+                   
                 </div>
-                <div class="header_bluebar_bottom"></div>
-                <div id="copyright">&copy; 2015. All Rights Reserved.</div>
+                
+                </div>
+				
+				
+				<div class="footer"> <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');"></div>
+                    <div id="android_logo"></div><span class="copyright-text">&copy; 2017. All Rights Reserved.</span></div>
+           
                 <script language="javascript">
                     var auth_status = "<%=auth_fail_status%>";
                     var language = "<%=lang%>";

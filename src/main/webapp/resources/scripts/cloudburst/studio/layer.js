@@ -1,7 +1,5 @@
-
 var layers = {};
 var layerData=null;
-
 function Layer(id)
 {	
 	if( jQuery("#layerFormDiv").length<=0){
@@ -44,12 +42,13 @@ var deleteLayerRecord = function (url, itemToDelete, id) {
 		    $.ajax({
 		        url: url + "?" + token,
 		        success: function (data) {
-		        	if(data){
+		        	if(data=="success"){
 			            jAlert('Data Successfully Deleted', 'Delete');
 			            layerArray = [];
 			            populateList(id);
 		        	}else{
-		        		jAlert('Failed to remove layer, layer is associated with more than one project', 'Delete');
+		        		 jAlert(data, 'Delete');
+						 
 		        	}
 		
 		        },
@@ -76,11 +75,7 @@ var populateList = function (id) {
         url: id+"/" + "?" + token, 
         success: function (data) {
             _data = data;
-            
-            
-            //hideAllLayerTR();
-            //$('.urlTR').hide();
-            //$('.typeTR').hide();
+       
             $("#layerPropertyGrid").empty();
             $("#fieldGrid").hide();
             $("#layerFieldGrid").empty();
@@ -89,21 +84,16 @@ var populateList = function (id) {
             jQuery.get("resources/templates/studio/" + id + ".html", function (template){
 	            jQuery("#layers").append(template);
 	            jQuery('#layerFormDiv').css("visibility", "visible");
-		    	
-				jQuery("#lyrTypeDiv").hide();
+		    	jQuery("#lyrTypeDiv").hide();
 				jQuery("#layer_accordion").hide();
 		    	jQuery("#layerTable").show();
 		    	
 		    	jQuery("#LayerTemplate").tmpl(data).appendTo("#LayerRowData");
-		
-            		
-                
 		    	jQuery("#layer_btnSave").hide();
 		    	jQuery("#layer_btnNew").show();
 		    	jQuery("#layer_btnBack").hide();
                
-	            
-                
+			   	if(data.length>0){
                 $("#layerTable").tablesorter({ 
                 headers: {6: {sorter: false  },  7: {  sorter: false } },		
                 debug: false, sortList: [[0, 0]], widgets: ['zebra'] })
@@ -112,6 +102,9 @@ var populateList = function (id) {
                     filterColumns: [0],
                     filterCaseSensitive: false
                 });
+				
+			}
+				
                           
             });
         },
@@ -123,17 +116,6 @@ var populateList = function (id) {
 function saveLayerData1() {
 	
 	var url = $("#layerfrm").attr("action");
-	
-	/* By Aparesh
-	  var data = $("#layerfrm").serialize();
-	 
-	 $.post(url+ "?" + token,
-			 data,                
-	 function(_data){                    
-		 jAlert('Data Successfully Saved', 'Layer');
-		populateList('layer');
-	 });*/
-	 
 	 
 	 jQuery.ajax({
 	        type: "POST",              
@@ -142,9 +124,9 @@ function saveLayerData1() {
 	        async:false,
 			success: function () {        
 	                                   
-	            jAlert('Data Successfully Saved', 'Layer');
-	           
-	            populateList('layer');
+	           jAlert('Data Successfully Saved', 'Layer');
+	           //return false;
+	           populateList('layer');
 	            
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -165,82 +147,8 @@ function saveLayer() {
         return value.indexOf(" ") < 0 && value != "";
     }, "No space please and don't leave it empty");
 	
-	if (currentLayerType == 'WFS') {
-	        $("#layerfrm").validate({
-	            
-				rules: {
-                url: "required",
-                layertype: "required",
-                name: "required",
-                displayname: "required",
-                alias: {
-                    required: true,
-                    noSpace: true
-                },
-                projectionBean: "required",
-                //outputformat: "required",
-                maxextent: "required",
-                geomtype:"required"
-				},
-				messages: {
-	                layertype: "Please Enter  Type",
-	                name: "Please Select Layer Name",
-	                alias: {
-	                    required: "Please enter Alias",
-	                    noSpace: "No white space please"
-	                }
-				}
-				
-	        });
-	        
-    }
-	
-	if (currentLayerType == 'Tilecache') {
-	        $("#layerfrm").validate({
-	            rules: {
-	                url: "required",
-					layertype: "required",
-	                //name: "required",
-	                alias: {
-	                    required: true,
-	                    noSpace: true
-	                },
-					maxextent: "required"
-	            },
-	            messages: {
-	                layertype: "Please Enter  Type",
-	                //name: "Please Select Layer Name",
-	                alias: {
-	                    required: "Please enter Alias",
-	                    noSpace: "No white space please"
-	                }
-	            }
-	        });
-	        
-    }
-	
-	else if (currentLayerType == 'BING' || currentLayerType == 'GOOGLE') {
-	        $("#layerfrm").validate({
-	            rules: {
-	                layertype: "required",
-	                name: "required",
-	                alias: {
-	                    required: true,
-	                    noSpace: true
-	                }
-	            },
-	            messages: {
-	                layertype: "Please Enter  Type",
-	                name: "Please Select Layer Name",
-	                alias: {
-	                    required: "Please enter Alias",
-	                    noSpace: "No white space please"
-	                }
-	            }
-	        });
-	        
-    }
-	else {
+		
+	if(currentLayerType == 'WFS' ||currentLayerType == 'WMS' ) {
         $("#layerfrm").validate({
             rules: {
                 url: "required",
@@ -251,8 +159,9 @@ function saveLayer() {
                     required: true,
                     noSpace: true
                 },
-                projectionBean: "required",
-                outputformat: "required",
+                projection_code: "required",
+                project_outputFormat: "required",
+				layer_unit:"required",
                 maxextent: "required",
                 Gutter: {
                     // required: true,
@@ -286,8 +195,9 @@ function saveLayer() {
 
                     noSpace: "No white space please"
                 },
-                projectionBean: "Please enter  Projection",
-                outputformat: "Please Select  Format",
+                projection_code: "Please enter  Projection",
+                project_outputFormat: "Please Select  Format",
+				layer_unit:"Please Select  projection",
                 MaxExtent: "Please enter  maxextent",
                 Gutter: {
                     // required: "Please Enter Gutter",
@@ -327,35 +237,6 @@ function saveLayer() {
 var wfsNameArr = {};
 var currentLayerType = "";
 var id;
-/*
-function showLayerTR(_layertype) {
-    _type = _layertype.toLowerCase();
-    hideAllLayerTR();
-    $('.commonTR').show();
-    $('.' + _type + 'TR').show();
-    $('.wmsTD').show();
-}
-
-function hideAllLayerTR() {
-    $('.commonTR').hide();
-    $('.wmsTR').hide();
-    $('.wfsTR').hide();
-}
-
-function showLayerTRForGoogleBing() {
-    hideAllLayerTR();
-    $('.commonTR').show();
-    $('.wmsTD').hide();
-    $('.urlTR').hide();
-}
-function showTilecacheTR() {
-    hideAllLayerTR();
-    $("#aliasextend").show();
-	$("#numzoom").show();   
-    $('.urlTR').show();
-}
-*/
-
 var units = null;
     var prj = null;
     var formats = null;
@@ -364,6 +245,7 @@ var units = null;
     var layerGroup = null;
     var users = null;
 	var layer_format=null;
+	var proj_projectionsproj_projections=null;
 
 function CreateEditLayerRecord(_id, _type, _url, type) {
     
@@ -412,15 +294,26 @@ function CreateEditLayerRecord(_id, _type, _url, type) {
 		async: false
 	});
     
+	
+	 jQuery.ajax({
+        url: "projection/",
+        success: function (data) {
+            proj_projections = data;
+        },
+        async: false
+    });
+	
+	
 	$("#layertypeBody").empty();
 	
 		
 	if (_id) {
 	$("#layerfrm").attr("action", id + "/edit");
 		$.ajax({
-            url: id + "/" + _id + "?" + token,
+            url: id + "/" + _id,
             success: function (data) {
-				
+				$("#layer_id").val("");
+				$("#layer_id").val(data.layerid);
 				
 				$("#LayerTemplateLayertype").tmpl(data,
 					{
@@ -430,13 +323,11 @@ function CreateEditLayerRecord(_id, _type, _url, type) {
 					}
 				).appendTo("#layertypeBody");
 				
-				
 				jQuery("#layer_btnBack").show();
 				jQuery("#lyrTypeDiv").show();
 				
 				layerData=data;	
-				loadTemplate(data.layertype.name,"Edit");
-				//by Aparesh on 24nov2011
+				loadTemplate(data.layertype.layertypeEn.trim(),"Edit");
 				
 				$('#maxextent').val(data.maxextent);
                 $('#minextent').val(data.minextent);
@@ -465,7 +356,6 @@ function CreateEditLayerRecord(_id, _type, _url, type) {
 								}
 		).appendTo("#layertypeBody");
 		
-		
 		jQuery("#layer_btnBack").show();
 		jQuery("#lyrTypeDiv").show();
 		
@@ -486,7 +376,8 @@ function connect(){
 }
 
 function getLayersInfo(type, _remoteurl,_act) {
-    var remoteurl = _remoteurl + 'service=' + type + '&request=GetCapabilities&version=1.1.1'
+    
+	var remoteurl = _remoteurl + 'service=' + type + '&request=GetCapabilities&version=1.1.1'
     var wfs_remoteurl = replaceString(_remoteurl, /wms/gi, 'wfs') + 'service=WFS&version=1.0.0&request=GetCapabilities'
 
     if (type == 'WMS') {
@@ -501,32 +392,60 @@ function getLayersInfo(type, _remoteurl,_act) {
             dataType: "xml",
             success: function (xml) {
 
-                var capabilityXML = new OpenLayers.Format.WMSCapabilities();
+                var capabilityXML = new ol.format.WMSCapabilities();
                 var obj = capabilityXML.read(xml);
-                var capability = obj.capability;
+                var capability = obj.Capability.Layer;
 				$('#name').empty();
 				if(_act!='Edit'){
 					$('#name').append($("<option></option>").attr("value", '').text('Please Select'));
 				}
 				
-                for (var i = 0, len = capability.layers.length; i < len; i++) {
-                    if ("name" in capability.layers[i]) {
+                for (var i = 0, len = capability.Layer.length; i < len; i++) {
+                    if ("Name" in capability.Layer[i]) {
                     	
                     	if(_act!='Edit'){
-                    		$('#name').append($("<option></option>").attr("value", capability.layers[i].name).text(capability.layers[i].name));
+                    		$('#name').append($("<option></option>").attr("value", capability.Layer[i].Name).text(capability.Layer[i].Name));
                     	}
-							layers[capability.layers[i].name] = capability.layers[i];
+							layers[capability.Layer[i].Name] = capability.Layer[i];
 						
                     }
                 }
-                //showLayerTR(type);
-                //$('#name').empty();
-                //$('#name').append($("<option></option>").attr("value", '').text('Please Select'));
+				
+					$("#queryable").val("false")
+					$('#queryable').attr("disabled", true); 
 
-               // $.each(layers, function (val, text) {
-                //    $('#name').append($("<option></option>").attr("value", text.name).text(text.name));
-               // });
-               // $('#name').droplistFilter();
+
+
+					$("#editable").val("false")
+					$("#editable").attr("disabled", true); 
+
+					$("#selectable").val("false")
+					$('#selectable').attr("disabled", true); 
+
+					$("#exportable").val("false")
+					$('#exportable').attr("disabled", true); 
+
+
+               
+			    $('#project_outputFormat').empty();
+				 $('#project_outputFormat').append($("<option></option>").attr("value", '').text('Please Select'));
+			      jQuery.each(layer_format, function (i, value) {
+					jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.documentformatid).text(value.documentformatEn));
+				});
+				
+				$('#projection_code').empty();
+				 $('#projection_code').append($("<option></option>").attr("value", '').text('Please Select'));
+				jQuery.each(proj_projections, function (i, value) {
+					 jQuery("#projection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
+					
+				 });
+				
+				$('#layer_unit').empty();
+				 $('#layer_unit').append($("<option></option>").attr("value", '').text('Please Select'));
+				jQuery.each(units, function (i, value) {
+					jQuery("#layer_unit").append(jQuery("<option></option>").attr("value", value.unitid).text(value.unitEn));
+				});
+				
               
                 $('#url').attr("readonly", "true");
                 $('#btnConnect').attr("disabled", "disabled");
@@ -547,40 +466,52 @@ function getLayersInfo(type, _remoteurl,_act) {
         wfsVersion = '';
         $.ajax({
             type: "GET",
-            //url: "../Proxy.ashx?" + remoteurl,
+            async: false,
             url: PROXY_PATH + wfs_remoteurl,
             dataType: "xml",
             success: function (xml) {
-                var capabilityXML = new OpenLayers.Format.WFSCapabilities();
-                var obj = capabilityXML.read(xml);
-                var capability = obj.featureTypeList;
-                wfsVersion = obj.version;
+          
+            	var markers = 	xml.getElementsByTagName("FeatureTypeList")[0].childNodes.length;
+            	
 				$('#name').empty();
 				if(_act!='Edit'){
 					$('#name').append($("<option></option>").attr("value", '').text('Please Select'));
 				}
-                for (var i = 0, len = capability.featureTypes.length; i < len; i++) {
-                    layers[capability.featureTypes[i].name] = capability.featureTypes[i];
+                for (var i = 1, len = markers; i < len; i++) {
+                    layers[xml.getElementsByTagName("FeatureTypeList")[0].childNodes[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue] = xml.getElementsByTagName("FeatureTypeList")[0].childNodes[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue;
                     if(_act!='Edit'){
-                    	$('#name').append($("<option></option>").attr("value", capability.featureTypes[i].name).text(capability.featureTypes[i].name));
+                    	$('#name').append($("<option></option>").attr("value",xml.getElementsByTagName("FeatureTypeList")[0].childNodes[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue).text(xml.getElementsByTagName("FeatureTypeList")[0].childNodes[i].getElementsByTagName("Name")[0].childNodes[0].nodeValue));
                     }
 					
                 }
                 
 				$('#url').attr("readonly", "true");
                 $('#btnConnect').attr("disabled", "disabled");
-                //$('#btnConnect').hide();
 				jQuery('#layerGeneralBody > tr').show();
-								
-                //showLayerTR(type);
-                //$('#outputformat').empty();
-                //$(new Option('Please Select', '')).appendTo('#outputformat');
-                //$(new Option('GML2', 'GML2')).appendTo('#outputformat');
+				
+				 $('#project_outputFormat').empty();
+				 $('#project_outputFormat').append($("<option></option>").attr("value", '').text('Please Select'));
+			      jQuery.each(layer_format, function (i, value) {
+					jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.documentformatid).text(value.documentformatEn));
+				});
+				
+				$('#projection_code').empty();
+				 $('#projection_code').append($("<option></option>").attr("value", '').text('Please Select'));
+				jQuery.each(proj_projections, function (i, value) {
+					 jQuery("#projection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
+					
+				 });
+				
+				$('#layer_unit').empty();
+				 $('#layer_unit').append($("<option></option>").attr("value", '').text('Please Select'));
+				jQuery.each(units, function (i, value) {
+					jQuery("#layer_unit").append(jQuery("<option></option>").attr("value", value.unitid).text(value.unitEn));
+				});
+				
+				
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                // var err = eval("(" + XMLHttpRequest.responseText + ")");            
                 $('#name').empty();
-                //$(new Option('Please Select', '')).appendTo('#name');
                 $('#name').append($("<option></option>").attr("value", '').text('Please Select'));
                 alert('Error in fetching data');
             }
@@ -606,16 +537,13 @@ function enableLayerURL(_this) {
              $('#url').removeAttr("readonly", "");
              $('#btnConnect').removeAttr("disabled");
              $('#url').val('');
-            //hideAllLayerTR();
-            //$('.urlTR').show();
-        }
+          }
         
 		else if (_this.value == 'Tilecache') {
-			//alert('tile');
 			$('#url').removeAttr("disabled");
 			$('#url').val('');
             $('#btnConnect').attr("disabled", "disabled");
-			//showTilecacheTR();
+			
 		}
 	
 		
@@ -651,7 +579,7 @@ function selectWFSLayerName(__layerName) {
     var _wfsLayerName='';
     var _layerType = $('#layertype').val();
     var _wmsUrl = $('#url').val();
-    
+    $("#layerFieldBody").empty()
 
     getLayerInfo(_layerName, _layerName, _layerType, _wmsUrl);
     
@@ -662,103 +590,101 @@ function getLayerInfo(layer, wfsLayerName, _layerType, _wmsUrl) {
     var wmsformat=null;
     var srs;
     var srsActual;
-    var bbox;
+    var bbox=[];
     
     wfsUrl = replaceString(_wmsUrl, /wms/gi, 'wfs');
     if (layer == '') {
-        $('#outputformat').empty();
-        $('#projectionBean.code').empty();
+       
+       
     }
     else {
         layerInfo = layers[layer];
         if (layerInfo) {
             if (_layerType == 'WMS') {
                 wmsformat = layerInfo.formats;
-                srs = layerInfo.srs;
-                $.each(srs, function (val, text) {
-                    if (layerInfo.bbox[val]) {
-                        bbox = layerInfo.bbox[val].bbox;
-                        srsActual = layerInfo.bbox[val].srs;
-                    }
-                });
+                srs = layerInfo.BoundingBox[0].extent
 
+                	for (var i = 0; i < srs.length; i++) {
+					   bbox.push(srs[i]);
+					}
+
+                    srsActual = "";
+
+				
                 $('#maxextent').val(bbox[0] + ',' + bbox[1] + ',' + bbox[2] + ',' + bbox[3]);
                 $('#minextent').val(bbox[0] + ',' + bbox[1] + ',' + bbox[2] + ',' + bbox[3]);
-                $('#outputformat').empty();
-                
-                $.each(wmsformat, function (val, text) {
-                    //$('#outputformat').append($("<option></option>").attr("value", text).text(text));					
-					$.each(layer_format, function (key,lyrformat ) {
-				
-						if(text==lyrformat.name){
-							$('#outputformat').append($("<option></option>").attr("value", lyrformat.name).text(lyrformat.name));
-							
-						}
-					});
-					
-					
-                });
-				
-				
-                
+               // $('#outputformat').empty();
                
-                
-                $("#projectionBean").val(srsActual);
-                if ($("#projectionBean").val() == 'EPSG:4326') {
-                    $("#unitBean.name").val("dd");
-
-                }
-                $("#fieldGrid").show('fast');
-                populateLayerFields(wfsLayerName, wfsUrl);
+			   
+				 $("#fieldGrid").show('fast');
+               // populateLayerFields(wfsLayerName, _wmsUrl);
             }   //if wms
 
             if (_layerType == 'WFS') {
-                //$("#version").val(wfsVersion);
-                //$("#Alias").val(layerInfo.title);
-                //$("#featurens").val(layerInfo.featureNS);
-                //$('#outputformat').empty();
-               // $(new Option('Please Select', '')).appendTo('#outputformat');
-               // $(new Option('GML2', 'GML2')).appendTo('#outputformat');
-				
-
-				
+                var str="";				
                 srsActual = layerInfo.srs;               
-				$("#projectionBean").val(srsActual);
+				//$("#projectionBean").val(srsActual);
 				
-                var url = wfsUrl + "request=DescribeFeatureType&typeName=" + wfsLayerName + "&maxFeatures=1";
+                var url = wfsUrl + "request=DescribeFeatureType&typeName=" + wfsLayerName + "&maxFeatures=1&outputFormat=application/json";
                 $.ajax({                    
                 	type: "GET",
-                    cache: false,                    
+                    cache: false,   
+                    async: false, 				
                     url: PROXY_PATH + url, 
                 	success: function (data) {
-                        var featureTypesParser = new OpenLayers.Format.WFSDescribeFeatureType();
-                        var responseText = featureTypesParser.read(data);
-                        var featureTypes = responseText.featureTypes;
-                        featureNS = responseText.targetNamespace;
-
-                        for (var i = 0; i < featureTypes[0].properties.length; ++i) {
-                            if (featureTypes[0].properties[i].type.contains('gml')) {
-														
-                                
-								if (featureTypes[0].properties[i].type.contains('MultiSurface')||featureTypes[0].properties[i].type.contains('Polygon')) {
-                		
+                        
+						for (var i = 0; i < data.featureTypes[0].properties.length; ++i) {
+								if(data.featureTypes[0].properties[i].type.indexOf('gml')==-1){
+										str = str + '{ "LayerField": "' + data.featureTypes[0].properties[i].name + '"},';
+									
+								}
+								
+								else if (data.featureTypes[0].properties[i].type.indexOf('Surface')>0||data.featureTypes[0].properties[i].type.indexOf('MultiSurface')>0||data.featureTypes[0].properties[i].type.indexOf('Polygon')>0) {
+										
 									$("#geomtype").val('POLYGON');
 								}
-								else if(featureTypes[0].properties[i].type.contains('Line')){
+								else if(data.featureTypes[0].properties[i].type.indexOf('Line')>0){
 									$("#geomtype").val('LINESTRING');
 									
 								}
-								else if(featureTypes[0].properties[i].type.contains('Point')){
+								else if(data.featureTypes[0].properties[i].type.indexOf('Point')>0){
 									$("#geomtype").val('POINT');
 									
 								}
 								else{
 									$("#geomtype").val('');
-								}
-								
-                            }
-                        }   //for
-                    }       //success
+								}		                
+							} 
+
+							var commaidx = str.lastIndexOf(",");
+										if(commaidx > 0){
+											
+											str = str.substr(0,commaidx);
+										}
+										
+										str = '[' + str + ']';            
+										str = jQuery.parseJSON(str);
+								 
+										var markup = "<tr>"+            
+											"<td>${LayerField}</td>"+
+											"<td><input type='textbox' name='FieldAlias' id='FieldAlias__${LayerField}' value='${LayerField}' /></td>"+
+											
+											"<td><input type='checkbox' id='Displayable__${LayerField}' class='displayableCheckbox' name='Displayable' value='${LayerField}' checked onclick='toggleCheckbox(this);' /></td>" +           
+											"<td><input type='radio' id='Key__${LayerField}' name='Key' value='${LayerField}' /></td>" +                 
+										"</tr>";
+										$.template( "fieldTemplate", markup );
+										$("#layerFieldBody").empty()
+										$.tmpl( "fieldTemplate", str ).appendTo( "#layerFieldBody" );
+
+
+									$("#layerFieldBody").show();
+
+									//set Layer fields
+									setSelectedLayerFields(str[0].LayerField);
+
+		
+
+                    }       
                 });
 				
 				
@@ -768,44 +694,34 @@ function getLayerInfo(layer, wfsLayerName, _layerType, _wmsUrl) {
 }
 
 function populateLayerFields(selectedLayer, _featureUrl) {
+
     var str = "";
 	var _wfsurl = _featureUrl.replace(new RegExp( "wms", "i" ), "wfs");
     var layerFields = {};
-    var url = _wfsurl + "&version=1.1.0&service=WFS&request=DescribeFeatureType&typeName=" + selectedLayer + "&maxFeatures=1";
+    var url = _wfsurl + "&version=1.1.0&service=WFS&request=DescribeFeatureType&typeName=" + selectedLayer + "&maxFeatures=1&outputFormat=application/json";
     $("#layerFieldBody").empty();
     $.ajax({
-        //url: "../Proxy.ashx?" + _featureUrl + "&version=1.1.0&service=WFS&request=DescribeFeatureType&typeName=" + selectedLayer + "&maxFeatures=1",
     	type: "GET",
         cache: false,
         url: PROXY_PATH + url, 
         success: function (data) {
 		console.log(data);
-            var featureTypesParser = new OpenLayers.Format.WFSDescribeFeatureType();
-            var responseText = featureTypesParser.read(data);
-            var featureTypes = responseText.featureTypes;
-            featureNS = responseText.targetNamespace;
-            totalColumnWidth = 0; //re-initialize columnwidth
-
-            for (var i = 0; i < featureTypes[0].properties.length; ++i) {
-                //if (!featureTypes[0].properties[i].type.contains('gml')) {
-            	if(featureTypes[0].properties[i].type.indexOf('gml')==-1){
-                	//if (i == featureTypes[0].properties.length - 1) {
-                      //  str = str + '{ "LayerField": "' + featureTypes[0].properties[i].name + '"}';
-                    //}
-                    //else {
-                        str = str + '{ "LayerField": "' + featureTypes[0].properties[i].name + '"},';
-                    //}
+		
+            for (var i = 0; i < data.featureTypes[0].properties.length; ++i) {
+                if(data.featureTypes[0].properties[i].type.indexOf('gml')==-1){
+                	    str = str + '{ "LayerField": "' + data.featureTypes[0].properties[i].name + '"},';
+                    
                 }
                 
-                else if (featureTypes[0].properties[i].type.indexOf('Surface')>0||featureTypes[0].properties[i].type.indexOf('MultiSurface')>0||featureTypes[0].properties[i].type.indexOf('Polygon')>0) {
+                else if (data.featureTypes[0].properties[i].type.indexOf('Surface')>0||data.featureTypes[0].properties[i].type.indexOf('MultiSurface')>0||data.featureTypes[0].properties[i].type.indexOf('Polygon')>0) {
                 		
                 	$("#geomtype").val('POLYGON');
                 }
-                else if(featureTypes[0].properties[i].type.indexOf('Line')>0){
+                else if(data.featureTypes[0].properties[i].type.indexOf('Line')>0){
                 	$("#geomtype").val('LINESTRING');
                 	
                 }
-                else if(featureTypes[0].properties[i].type.indexOf('Point')>0){
+                else if(data.featureTypes[0].properties[i].type.indexOf('Point')>0){
                 	$("#geomtype").val('POINT');
                 	
                 }
@@ -831,6 +747,7 @@ function populateLayerFields(selectedLayer, _featureUrl) {
                 "<td><input type='radio' id='Key__${LayerField}' name='Key' value='${LayerField}' /></td>" +                 
 			"</tr>";
 			$.template( "fieldTemplate", markup );
+			$("#layerFieldBody").empty()
             $.tmpl( "fieldTemplate", str ).appendTo( "#layerFieldBody" );
 
 
@@ -852,9 +769,9 @@ function setSelectedLayerFields(_layerFieldKey) {
         $('[name^="FieldAlias"]').attr("disabled", "disabled");
 
         $.each(selectedLayerFields, function (name, value) {
-            $('#Displayable__' + value.field).attr('checked', true);
-            $('#FieldAlias__' + value.field).val(value.alias);
-            $('#FieldAlias__' + value.field).removeAttr("disabled");
+            $('#Displayable__' + value.layerfield).attr('checked', true);
+            $('#FieldAlias__' + value.layerfield).val(value.alias);
+            $('#FieldAlias__' + value.layerfield).removeAttr("disabled");
             $('#Key__' + selectedLayerKey).attr('checked', true);
 
         });
@@ -921,41 +838,33 @@ function loadTemplate(lyrtype,_action){
 						
 						
 							$('#btnConnect').hide();
-							
-							selectedLayerFields = _layerdata.layerFields;
-							if(selectedLayerFields.length > 0)
-								selectedLayerKey = selectedLayerFields[0].keyfield;
+							selectedLayerFields = _layerdata.layerField;
+							if(selectedLayerFields!=undefined && selectedLayerFields.length > 0)
+							   selectedLayerKey = selectedLayerFields[0].keyfield;							
+						   
+						   getLayersInfo(lyrtype, _layerdata.url, _action);                    
+						   getLayerInfo(_layerdata.name, _layerdata.name, lyrtype, _layerdata.url);
 							
 							
 							$('#url').val(_layerdata.url);
 							$('#url').attr("readonly", "true");
 							
-							$("#name").val(_layerdata.name);
-							$('#name').attr("readonly", "true");
+							
+							$('#name_layer').attr("readonly", "true");
 							
 							$("#layertype").val(currentLayerType);	
 							$('#layertype').attr("readonly", "true");		
-							
 							$('#alias').attr("readonly", "true");
-				
-							$("#geomtype").val(_layerdata.geomtype);
-							
-							$('#outputformat').append($("<option></option>").attr("value", 'Please select').text('Please select'));
-							$("#unitBean.name").val(_layerdata.unitBean.name);
-							
-							//$("#outputformat.name").val(_layerdata.outputformat.name);
-							$("#projectionBean.code").val(_layerdata.projectionBean.code);
-							$("#layerstyle").val(_layerdata.style);
-							
+				            $("#layerstyle").val(_layerdata.style);
 							$("#style").val(_layerdata.style);
 							$("#filter").val(_layerdata.filter);																		
 							
-							getLayersInfo(lyrtype, _layerdata.url, _action);                    
-							//getLayerInfo(data.name, data.wfsname, _type, _url);	//by Aparesh for remove wfs name
-							getLayerInfo(_layerdata.name, _layerdata.name, lyrtype, _layerdata.url);
 							
-							$("#outputformat").val(_layerdata.outputformat.name);
 							
+							$("#project_outputFormat").val(_layerdata.outputformat.documentformatid);
+							$("#layer_unit").val(_layerdata.unitBean.unitid);
+							$("#projection_code").val(_layerdata.projectionBean.projectionid);
+							$("#geomtype").val(_layerdata.geomtype);
 							
 							
 						}
@@ -1004,7 +913,7 @@ function loadTemplate(lyrtype,_action){
 						if(_action=="Edit"){
 						
 						
-							$("#LayerTemplateWFSForm").tmpl(_layerdata,
+							$("#LayerTemplateWMSForm").tmpl(_layerdata,
 								{
 									action: _action,
 									unitsList: units,
@@ -1028,50 +937,39 @@ function loadTemplate(lyrtype,_action){
 							}
 						 ).appendTo("#layerFilterBody");
 				
-						
-						
 							$('#btnConnect').hide();
 							
-							selectedLayerFields = _layerdata.layerFields;
+							selectedLayerFields = _layerdata.layerField;
+							if(selectedLayerFields){
 							if(selectedLayerFields.length > 0)
 								selectedLayerKey = selectedLayerFields[0].keyfield;
-							
+							}
+							getLayersInfo(lyrtype, _layerdata.url);                    
+							getLayerInfo(_layerdata.name, _layerdata.name, lyrtype, _layerdata.url);
 							
 							$('#url').val(_layerdata.url);
 							$('#url').attr("readonly", "true");
 							
-							$("#name").val(_layerdata.name);
-							$('#name').attr("readonly", "true");
+							$('#name_layer').attr("readonly", "true");
 							
 							$("#layertype").val(currentLayerType);	
 							$('#layertype').attr("readonly", "true");		
 							
 							$('#alias').attr("readonly", "true");
-				
+							
+							
+							
+					        $("#project_outputFormat").val(_layerdata.outputformat.documentformatid);
+							$("#layer_unit").val(_layerdata.unitBean.unitid);
+							$("#projection_code").val(_layerdata.projectionBean.projectionid);
 							$("#geomtype").val(_layerdata.geomtype);
-							
-							//$('#outputformat').append($("<option></option>").attr("value", 'Please select').text('Please select'));
-							//$("#unitBean.name").val(_layerdata.unitBean.name);
-							
-							
-							$("#projectionBean.code").val(_layerdata.projectionBean.code);
-							//$("#layerstyle").val(_layerdata.style);
-							
-							$("#style").val(_layerdata.style);
-							$("#filter").val(_layerdata.filter);																		
-							
-							//getLayersInfo(lyrtype, _layerdata.url);                    
-							
-							//getLayerInfo(_layerdata.name, _layerdata.name, lyrtype, _layerdata.url);
-							
-							//$("#outputformat").val(_layerdata.outputformat.name);
 							
 							
 							
 						}
 						else{
 						
-							$("#LayerTemplateWFSForm").tmpl(_layerdata,
+							$("#LayerTemplateWMSForm").tmpl(_layerdata,
 									{
 										action: _action,
 										unitsList: units,

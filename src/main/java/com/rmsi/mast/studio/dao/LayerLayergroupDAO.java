@@ -20,4 +20,8 @@ public interface LayerLayergroupDAO extends GenericDAO<LayerLayergroup, Long> {
 	
 	void deleteLayerLayergroupByName(String name);
 	
+	void deleteLayerLayergroupByLayerGroupId(Integer Id);
+	
+	
+	
 }

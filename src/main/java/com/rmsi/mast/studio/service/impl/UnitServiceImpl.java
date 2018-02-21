@@ -47,8 +47,8 @@ public class UnitServiceImpl implements UnitService{
 	}
 
 	@Override
-	public Unit findUnitById(Long id) {
-		return unitDAO.findById(id, false);
+	public Unit findUnitById(Integer id) {
+		return unitDAO.findUnitById(id);
 
 	}
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ProjectSpatialData;
 import com.rmsi.mast.studio.domain.Role;
@@ -45,9 +47,14 @@ public class ProjectDataController
 	
 	@Autowired
 	ProjectAttributeService  projectAttributeService;
+	
+	@Autowired
+	ProjectDAO projectDao;
+	
+	
 	@RequestMapping(value = "/mobileconfig/upload/", method = RequestMethod.POST)
 	@ResponseBody
-    public String uploadSpatialData(MultipartHttpServletRequest request, HttpServletResponse response)
+    public String uploadSpatialData(MultipartHttpServletRequest request, HttpServletResponse response, Principal principal)
     {	
 		//List<ProjectSpatialData> uploadDocuments = new ArrayList<ProjectSpatialData>();
 		try {
@@ -57,6 +64,9 @@ public class ProjectDataController
 			String alias ="";
 			alias= ServletRequestUtils.getRequiredStringParameter(request, "alias");
 			byte[] document = null;
+			String username = principal.getName();
+	        User user = userService.findByUniqueName(username);
+	        Long userid = user.getId();
 			while(file.hasNext()) 
 			{
 				String fileName = file.next();
@@ -67,6 +77,8 @@ public class ProjectDataController
 				ProjectSpatialData objDocument = new ProjectSpatialData();
 				
 				projName=ServletRequestUtils.getRequiredStringParameter(request, "ProjectID");
+				
+				Project projObj = projectDao.findByName(projName);
 				
 				String fileExtension = originalFileName.substring(originalFileName.indexOf(".") + 1,originalFileName.length()).toLowerCase();
 
@@ -89,14 +101,22 @@ public class ProjectDataController
 				objDocument.setFileName(originalFileName);
 				if(projName!="")
 				{
-					objDocument.setName(projName);
+					objDocument.setProjectnameid(projObj.getProjectnameid());
 				}
 				
-				objDocument.setFileExtension(fileExtension);
+//				objDocument.set(fileExtension);
 				objDocument.setSize(size/1024);
 				uploadFileName=("resources/documents/"+projName+"/mbtiles");
 				objDocument.setFileLocation(uploadFileName);
-				objDocument.setAlias(alias);
+				objDocument.setDescription("Mbtile file");
+				objDocument.setCreatedby(userid);
+				objDocument.setCreateddate(new Date());
+				objDocument.setDocumentformatid(1);
+				objDocument.setIsactive(true);
+				objDocument.setModifiedby(userid);
+				objDocument.setModifieddate(new Date());
+				
+//				objDocument.setAlias(alias);
 			
 			if(!fileExtension.equalsIgnoreCase("mbtiles"))
 			{
@@ -106,7 +126,9 @@ public class ProjectDataController
 			else{
 				objDocument =  projectDataService.saveUploadedDocuments(objDocument);
 			}
-				Integer id = objDocument.getId();
+				//Integer id = objDocument.getId();
+			
+			Integer id=2;
 				
 				try {
 					//String user=projName;
@@ -171,30 +193,22 @@ public class ProjectDataController
 	{
 		String username = principal.getName();
 		User user = userService.findByUniqueName(username);
-		Integer id = user.getId();
+		//@Integer id = user.getId();
 	
-		Set<Role> role = user.getRoles();
-		String rolename = role.iterator().next().getName();
+		//@Set<Role> role = user.getRoles();
+		//@String rolename = role.iterator().next().getName();
 		
 		//role.setName("ROLE_ADMIN");
 		List<Project> Projectlst= new ArrayList<Project>();
 		List<UserProject> UserProjectlst= new ArrayList<UserProject>();
 		
 		try {
-			if(rolename.equals("ROLE_ADMIN"))
+		//@	if(rolename.equals("ROLE_ADMIN"))
 			{
 			Projectlst=projectAttributeService.findallProjects();
 			return Projectlst;
 			}
-			else{
-				
-				UserProjectlst=projectAttributeService.findUserProjects(id);
-				for (int i = 0; i < UserProjectlst.size(); i++) {
-					Projectlst.add(UserProjectlst.get(i).getProjectBean());
-				}
-				
-				return Projectlst;
-			}
+			/* @*/
 		} catch (Exception e) {
 			
 			logger.error(e);

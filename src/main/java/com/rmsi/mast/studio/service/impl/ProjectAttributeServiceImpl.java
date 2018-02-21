@@ -1,5 +1,6 @@
 package com.rmsi.mast.studio.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -19,7 +20,6 @@ import com.rmsi.mast.studio.domain.UserProject;
 import com.rmsi.mast.studio.mobile.dao.SurveyProjectAttributeDao;
 import com.rmsi.mast.studio.mobile.dao.hibernate.AttributeValuesHiberanteDao;
 import com.rmsi.mast.studio.service.ProjectAttributeService;
-import com.rmsi.mast.viewer.web.mvc.LandRecordsController;
 
 
 @Service
@@ -48,6 +48,9 @@ public class ProjectAttributeServiceImpl implements ProjectAttributeService
 	@Autowired
 	UserProjectDAO userProjectDAO;
 	
+	
+	@Autowired
+	ProjectDAO projectDAO;
 	
 	@Override
 	public List<Project> findallProjects() {
@@ -82,22 +85,31 @@ public class ProjectAttributeServiceImpl implements ProjectAttributeService
 		return attributeMasterDAO.findById( l, false);
 	}
 	@Override
-	public boolean addsurveyProject(String[] id, String projName, Long attributecategory) 
+	public boolean addsurveyProject(String[] id, String projName, Long attributecategory, Integer userid) 
 	{
 		try 
 		{
 			//projectAttributeDao.deleteEntries(attributecategory.intValue(), projName);
-			for (int i = 0; i <id.length; i++) 
+			int j=1;
+			for (int i = 0; i <=id.length; i++) 
 			{
 				String[] splitids = id[i].split("_");
 				if(splitids.length==1)
 				{
+				
 					Surveyprojectattribute surveyprojectattribute = new Surveyprojectattribute();
 					AttributeMaster attributeMasterObj = findProjectById(Long.parseLong(splitids[0]));
 					surveyprojectattribute.setAttributeMaster(attributeMasterObj);
-					surveyprojectattribute.setName(projName);
-					surveyprojectattribute.setAttributecategoryid(attributecategory.intValue());					
+					Project objproject=projectDAO.findByName(projName);
+					surveyprojectattribute.setName(objproject);
+					surveyprojectattribute.setAttributecategoryid(attributecategory.intValue());
+					surveyprojectattribute.setAttributeorder(j);
+					surveyprojectattribute.setCreatedby(userid);
+					surveyprojectattribute.setModifiedby(userid);
+					surveyprojectattribute.setCreateddate(new Date());
+					surveyprojectattribute.setModifieddate(new Date());
 					projectAttributeDao.makePersistent(surveyprojectattribute);
+					j=j+1;
 				}
 			}
 		} catch (Exception e) {
@@ -120,13 +132,15 @@ public class ProjectAttributeServiceImpl implements ProjectAttributeService
 		try 
 		{
 			int order = 1;
+			Project projobj = projectDAO.findByName(projName);
+			Integer projId = projobj.getProjectnameid();
 			
 			//projectAttributeDao.deleteEntries(attributecategory.intValue(), projName);
 			for (Long i:id) 
 			{
 				
 				
-				 surveyProjectAttributeDao.surveyAttributesByName(i, projName,order,attributecategory);
+				 surveyProjectAttributeDao.surveyAttributesByName(i, projId,order,attributecategory);
 				 order=order+1;
 			}
 		} catch (Exception e) {
@@ -148,10 +162,18 @@ public class ProjectAttributeServiceImpl implements ProjectAttributeService
 	{
 		return surveyProjectAttributeDao.deleteMappedAttribute(uids);		
 	}
+	
+	
 	@Override
-	public List<UserProject>findUserProjects(Integer id) {
+	public List<UserProject>findUserProjects(Long id) {
 		
 		return userProjectDAO.findUserProjectsById(id);
+	}
+	
+	@Override
+	public List<Surveyprojectattribute> displaySelectedCategoryById(Long uid,String name, Integer id) {
+		
+		return projectAttributeDao.displaySelectedCategoryById(uid, name, id);
 	}
 	
 	

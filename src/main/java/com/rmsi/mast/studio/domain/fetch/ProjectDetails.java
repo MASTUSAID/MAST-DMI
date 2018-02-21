@@ -12,7 +12,7 @@ import javax.persistence.Temporal;
  * Returns project details 
  */
 @Entity
-@Table(name = "project_area")
+@Table(name = "LA_SpatialUnitGroup_Hierarchy")
 public class ProjectDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;

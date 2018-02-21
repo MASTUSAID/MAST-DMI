@@ -53,12 +53,18 @@ public class ProjectionServiceImpl implements ProjectionService{
 
 	@Override
 	public List<Projection> findAllProjection() {
-		return projectionDAO.findAll();
+		return projectionDAO.findAllProjection();
 	}
 
 	@Override
 	public Projection findProjectionByName(String name) {
 		return projectionDAO.findByName(name);
+	}
+
+	@Override
+	public Projection findProjectionById(Integer id) {
+		// TODO Auto-generated method stub
+		return projectionDAO.findProjectionById(id);
 	}
 	
 }

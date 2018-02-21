@@ -8,11 +8,12 @@ import java.util.List;
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.AttributeMaster;
 import com.rmsi.mast.studio.domain.AttributeValues;
+import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.Surveyprojectattribute;
 
 public interface SurveyProjectAttributeDao extends GenericDAO<Surveyprojectattribute, Long> {
 
-    List<AttributeMaster> getSurveyAttributes(String projectId);
+    List<AttributeMaster> getSurveyAttributes(Project projectId);
 
     List<AttributeValues> getSurveyAttributeValues(String projectId);
 
@@ -22,7 +23,7 @@ public interface SurveyProjectAttributeDao extends GenericDAO<Surveyprojectattri
 
     boolean updatesurveyProject(Surveyprojectattribute surveyprojectattribute);
 
-    boolean surveyAttributesByName(long id, String name, Integer attributeorder, Long attributecategory);
+    boolean surveyAttributesByName(long id, Integer name, Integer attributeorder, Long attributecategory);
 
     boolean deleteMappedAttribute(List<Long> uids);
 

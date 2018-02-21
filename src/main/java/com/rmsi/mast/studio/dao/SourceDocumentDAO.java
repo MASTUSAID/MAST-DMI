@@ -14,6 +14,7 @@ public interface SourceDocumentDAO extends GenericDAO<SourceDocument, Integer> {
     SourceDocument findDocumentByAdminId(Long adminID);
 
     SourceDocument getDocumentByPerson(Long person_gid);
+    SourceDocument getdocumentByPersonfortransaction(Long transactionid, Long personid);
     
     List<SourceDocument> getDocumentsByDispute(Long disputeId);
 

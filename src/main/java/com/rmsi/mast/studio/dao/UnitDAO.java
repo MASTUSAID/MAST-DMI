@@ -17,6 +17,7 @@ public interface UnitDAO extends GenericDAO<Unit, Long> {
 	Unit findByName(String name);
 	
 	boolean deleteUnitByName(String name);
+	Unit findUnitById(Integer id);
 	
 }
 

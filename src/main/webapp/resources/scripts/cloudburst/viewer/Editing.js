@@ -17,55 +17,36 @@ var editControls = null;
 var snap = null;
 var activeLayer = null;
 var validationRuleParams = {required: false, number: false};
-var editSelectionSymbolizer = {
-    "Point": {pointRadius: 4, graphicName: "circle", fillColor: "#CC9900", fillOpacity: 1, strokeWidth: 1, strokeOpacity: 1, strokeColor: "#333333"},
-    "Line": {strokeWidth: 3, strokeOpacity: 1, strokeColor: "#666666", strokeLinecap: "square", strokeDashstyle: "dash"},
-    "Polygon": {strokeWidth: 2, strokeOpacity: 1, strokeColor: "#CC9900", fillColor: "#CC9900", fillOpacity: 0.3, strokeLinecap: "square", strokeDashstyle: "solid"},
-    "RegularPolygon": {strokeWidth: 2, strokeOpacity: 1, strokeColor: "#CC9900", fillColor: "#CC9900", fillOpacity: 0.3}
-};
-
-var editSelectionSymbolizer2 = {
-    "Point": {pointRadius: 4, graphicName: "circle", fillColor: "#AA0000", fillOpacity: 1, strokeWidth: 1, strokeOpacity: 1, strokeColor: "#333333"},
-    "Line": {strokeWidth: 3, strokeOpacity: 1, strokeColor: "#FF0000", strokeLinecap: "square", strokeDashstyle: "solid"},
-    "Polygon": {strokeWidth: 2, strokeOpacity: 1, strokeColor: "#FF0000", fillOpacity: 0, strokeLinecap: "square", strokeDashstyle: "solid"},
-    "RegularPolygon": {strokeWidth: 2, strokeOpacity: 1, strokeColor: "#FF0000", fillOpacity: 0}
-};
-
-var style = new OpenLayers.Style();
-style.addRules([new OpenLayers.Rule({symbolizer: editSelectionSymbolizer})]);
-
-var styleSelected = new OpenLayers.Style();
-styleSelected.addRules([new OpenLayers.Rule({symbolizer: editSelectionSymbolizer2})]);
-
-var styleMap = new OpenLayers.StyleMap({
-    "default": style,
-    "select": styleSelected
-});
-
-var deleteSelectionSymbolizers = {
-    "Point": {pointRadius: 4, graphicName: "square", fillColor: "#ff0000", fillOpacity: 1, strokeWidth: 1, strokeOpacity: 1, strokeColor: "#ff0000"},
-    "Line": {strokeWidth: 3, strokeOpacity: 1, strokeColor: "#ff0000", strokeLinecap: "square", strokeDashstyle: "dash"},
-    "Polygon": {strokeWidth: 2, strokeOpacity: 1, strokeColor: "#ff0000", fillColor: "#ff0000", fillOpacity: 0.3, strokeLinecap: "square", strokeDashstyle: "solid"},
-    "RegularPolygon": {strokeWidth: 2, strokeOpacity: 1, strokeColor: "#ff0000", fillColor: "#ff0000", fillOpacity: 0.3}
-};
-var delStyle = new OpenLayers.Style();
-delStyle.addRules([new OpenLayers.Rule({symbolizer: deleteSelectionSymbolizers})]);
-var delStyleMap = new OpenLayers.StyleMap({"default": delStyle});
-
+var featureNS_;
+var featureType_;
+var formatWFS ;
+var formatGML ;
+var node;
+var insertedArr = [];
+var updateArr = [];
+var deleteArr = [];
+var s = new XMLSerializer();
+var url;
+var drawLine=null;
+var selectSingleClick=null;
+var vectorSource;
+var featureArr = [];
+var _landid;
+var _flagSplit=false;
 Cloudburst.Editing = function (_map, _searchdiv) {
     map = _map;
     searchdiv = _searchdiv;
     showResultsinDialog = true;
 
-    if (saveStrategy != null) {
-        this.Unregister();
-    }
-    saveStrategy = new OpenLayers.Strategy.Save();
+  //  if (saveStrategy != null) {
+  ///      this.Unregister();
+  //  }
+ //   saveStrategy = new OpenLayers.Strategy.Save();
 
-    $("#tabs-Tool").empty();
+   
 
     jQuery.get('resources/templates/viewer/editing.html', function (template) {
-
+      $("#tabs-Tool").empty();
         //Add tad
         addTab('Editing', template);
         $("#editing-help").tipTip({defaultPosition: "right"});
@@ -86,6 +67,11 @@ Cloudburst.Editing = function (_map, _searchdiv) {
             $("#options1-s-d").slideToggle('fast');
         });
 
+		$("#options1-s-a").click(function () {
+            $("#options1-s-b").slideToggle('fast');
+        });
+		
+		
         $("#options2-s-d").hide();
 
         $("#options2-s-t").click(function () {
@@ -121,20 +107,60 @@ Cloudburst.Editing = function (_map, _searchdiv) {
         });
 
         toggleButtons();
+		_flagSplit=false;
 
         $("#subcelladjust button").bind("click", function (e) {
             featureState = "";
-            for (var key in editControls) {
-                var control = editControls[key];
-                control.deactivate();
-
-            }
+           			
             switch (e.currentTarget.id) {
                 case 'selectionBox':
+
+					map.addInteraction(selectInteraction_edit);
+                    map.addInteraction(intraction_dragBox);
                     toggleEditControl('selectionBox');
+					intraction_dragBox.on('boxend', function(event) {
+					selectedFeaturesEdit = selectInteraction_edit.getFeatures();
+					selectedFeaturesEdit.clear();
+					var extent = intraction_dragBox.getGeometry().getExtent();
+					map.getLayers().forEach(function(layer) {
+						 if (layer instanceof ol.layer.Vector) {
+						 layer.getSource().forEachFeatureIntersectingExtent(extent, function(feature) {
+							 
+							 if(layer.values_.aname ==$("#edit_layer").val()){
+						    	selectedFeaturesEdit.push(feature);
+								
+							}
+
+							
+						 });
+						 
+						 }
+						 
+					});
+
+			 });
+           
+		 // clear selection when drawing a new box and when clicking on the map
+		    intraction_dragBox.on('boxstart', function() {
+			     if(selectedFeaturesEdit!=null){
+					selectedFeaturesEdit.clear();
+					
+					}				 
+				  });
+
+				
                     break;
                 case 'clearselection':
-                    onEditLayerChange();
+                   // onEditLayerChange();
+				    map.removeInteraction(selectSingleClick);
+				    map.removeInteraction(drawLine);
+				    map.removeInteraction(selectInteraction_edit);
+                    map.removeInteraction(intraction_dragBox);
+					map.removeInteraction(modifyInteraction);
+					map.removeInteraction(deleteInteraction);
+					map.removeInteraction(selectSingleClick);
+					if(selectedFeaturesEdit!=null)
+					selectedFeaturesEdit.clear();
                     break;
                 case 'selectUndo':
                     if (undoredo != undefined) {
@@ -153,28 +179,53 @@ Cloudburst.Editing = function (_map, _searchdiv) {
         });
         $("#subcelladjustcreate button").bind("click", function (e) {
 
-            if ($('#edit_layer').val() != "") {
+			map.removeInteraction(drawLine);
+			map.removeInteraction(selectSingleClick);
+		 	if ($('#edit_layer').val() != "") {
                 featureState = "";
-                for (var key in editControls) {
-                    var control = editControls[key];
-                    control.deactivate();
-                }
+             var _layer = getLayerByAliesName($("#edit_layer").val());
                 switch (e.currentTarget.id) {
                     case 'point':
-                        if (layerType == 'Point') {
-                            featureState = "insert"
-                            toggleEditControl('point');
-                        } else {
-                            jAlert("Layer selected is not point type", "Error");
-                        }
+                         selectSingleClick = new ol.interaction.Select({
+						layers: function (layer) {
+							return layer.get('aname') == $("#edit_layer").val();
+						}
+					
+					});
+                    map.addInteraction(selectSingleClick);
+					selectSingleClick.on('select', function(e) {
+                       console.log(  e.target.getFeatures());
+					   featureArr=[];
+					   featureArr.push(e.target.getFeatures());
+		             
+                      });
+					  
+					 snapInteraction = new ol.interaction.Snap({
+				     source: _layer.getSource(),
+					 edge:true,
+					 vertex:true
+                   });
+				    map.addInteraction(snapInteraction);
+						  
                         break;
                     case 'line':
-                        if (layerType == 'LineString') {
-                            featureState = "insert";
-                            toggleEditControl('line');
-                        } else {
-                            jAlert("Layer selected is not line type", "Error");
-                        }
+                    	  toggleEditControl('line');
+                    	  drawLine = new ol.interaction.Draw({
+  							source: _layer.getSource(),
+  							type: "LineString",
+  							geometryName: 'geometry'
+  						});
+  						map.addInteraction(drawLine);
+  							drawLine.on('drawend', function (e) {
+  							var features = e.feature;
+							cut(featureArr[0],features)	;
+                           });
+						   
+						   drawLine.on('drawstart', function (e) {
+							   vectorSource.clear(); 
+
+							});
+
                         break;
                     case 'polygon':
                         if (layerType == 'Polygon') {
@@ -190,37 +241,145 @@ Cloudburst.Editing = function (_map, _searchdiv) {
             }
 
         });
+        
+        
+        function cut(polygons, blade) {
+        	if (blade && polygons) {
+        		var claimtype= polygons.array_[0].getProperties().claimtypeid;
+				if(claimtype==3 && claimtype==4){
+					 jAlert("UnClaim and Disputed parcel can't be Splitted.");
+				   map.removeInteraction(selectSingleClick);
+				   map.removeInteraction(drawLine);
+				   setTimeout(
+					  function() 
+					  {
+					     vectorSource.clear();
+					  }, 2000);
+				  _flagSplit=false;
+				  
+				}else{
+					split(polygons, blade);
+				}
+        	}else{
+				   jAlert("Please Select Feature before Split");
+				   map.removeInteraction(selectSingleClick);
+				   map.removeInteraction(drawLine);
+				   setTimeout(
+					  function() 
+					  {
+					     vectorSource.clear();
+					  }, 2000);
+				  _flagSplit=false;
+
+			}
+        }
+
+        function split(polygon, blade) {
+			var _polygon=polygon;
+			insertedArr=[];
+			updateArr=[];
+			_landid=0;
+        	var parser = new jsts.io.OL3Parser();
+        	var writer = new jsts.io.WKTWriter();
+
+        	var jstsGeompoly = parser.read(polygon.array_[0].getGeometry());
+        	var jstsGeomline = parser.read(blade.getGeometry());
+
+        	var union = jstsGeompoly.getExteriorRing().union(jstsGeomline);
+
+
+        	var polygonizer = new jsts.operation.polygonize.Polygonizer();
+        	polygonizer.add(union);
+
+			var _j=0;
+			
+        	var polygons = polygonizer.getPolygons();
+			if(polygons.size()==2){
+				for (var i = polygons.iterator(); i.hasNext();) {
+        		var polygon = i.next();
+					console.log(writer.write(polygon));
+				var geometry=parser.write(polygon);
+				newFeature = new ol.Feature({
+					geometry: geometry,
+					
+			  });
+			   var properties = _polygon.array_[0].getProperties();
+			   _landid=properties.landid;
+			   delete properties.geometry;
+			   if( _j==0){
+				newFeature.setProperties(properties);
+				newFeature.setId(_polygon.array_[0].id_);
+				updateArr.push(newFeature);
+				console.log(newFeature);
+			 	}else{
+					delete properties.landid;
+					newFeature.setProperties(properties);
+					newFeature.setId('undefine');
+					newFeature.setProperties({'oldlandid':_landid})
+					newFeature.setProperties({'applicationstatusid':1})
+					newFeature.setProperties({'workflowstatusid':1})
+					insertedArr.push(newFeature);
+					console.log(newFeature);
+				}
+				
+				_j=_j+1;
+        	}
+             _flagSplit=true;
+        	map.removeInteraction(drawLine);
+			
+				}else{
+				  map.removeInteraction(selectSingleClick);
+				  insertedArr=[],
+			      updateArr=[];
+				  featureArr=[];
+				  jAlert("Please Split parcel into two parts", "Error");
+				   setTimeout(
+					  function() 
+					  {
+					     vectorSource.clear();
+					  }, 2000);
+				  _flagSplit=false;
+				}
+
+			
+        	
+        }
 
         $("#subcelladjustedit button").bind("click", function (e) {
             featureState = "";
-            for (var key in editControls) {
-                var control = editControls[key];
-                control.deactivate();
-
-            }
+           
+		
+		  var _layer = getLayerByAliesName($("#edit_layer").val());
+		  
+		  clearEditTool();
+		  snapInteraction = new ol.interaction.Snap({
+				     source: _layer.getSource(),
+					 edge:true,
+					 vertex:true
+                   });
+			map.addInteraction(snapInteraction);
+			
             switch (e.currentTarget.id) {
                 case 'move':
                     toggleEditControl('modify');
                     modifyMode('move');
-                    break;
+					break;
                 case 'reshape':
-                    toggleEditControl('modify');
-                    modifyMode('reshape');
+                   toggleEditControl('modify');
+				   modifyMode('reshape');
                     break;
                 case 'resize':
                     toggleEditControl('modify');
-                    modifyMode('resize');
-                    break;
+                    //modifyMode('resize');
+				    break;
                 case 'rotate':
                     toggleEditControl('modify');
-                    modifyMode('rotate');
+                    // modifyMode('rotate');
                     break;
-                    //case 'removeVertex':
-                    //toggleEditControl('modify');
-                    //break;
                 case 'removeFeature':
-                    toggleEditControl('deleteFeature');
-                    break;
+                    toggleEditControl('deleteFeature')
+					 modifyMode('removeFeature');;
+				    break;
                 case 'split':
                     //featureState = "insert";
                     toggleEditControl('split');
@@ -234,46 +393,40 @@ Cloudburst.Editing = function (_map, _searchdiv) {
     });
 }
 
+
 function populateEditableLayers() {
-    var lyrCount = map.getNumLayers();
-    $('#edit_layer').empty();
-    //$('#edit_layer').append($("<option></option>").attr("value", "Select Layer").text("Select Layer"));
+
+ $('#edit_layer').empty();
     $('#edit_layer').append($("<option></option>").attr("value", "").text("Select Layer"));
-    for (var i = 0; i < lyrCount; i++) {
-        if (map.layers[i] instanceof OpenLayers.Layer.WMS && map.layers[i].name.indexOf("Cosmetic") == -1 && map.layers[i].name != 'clone') {
-            if (map.layers[i].visibility == true && map.layers[i].editable == true) {
-                if (doesLayerExists(map.layers[i].name)) {
-                    //if (map.layers[i].queryable) {
-                    $('#edit_layer').append($("<option></option>").attr("value", map.layers[i].name).text(map.layers[i].name));
-                    // }else{
-                    if (map.layers[i].name == 'Cosmetic') {
-                        $('#edit_layer').append($("<option></option>").attr("value", map.layers[i].name).text(map.layers[i].name));
-                    }
-                    //}
-                }
-            }
-        }
-    }
+         for (var i=0;i<map.getLayers().getLength();i++) {
+			 layer =map.getLayers().getArray()[i];
+			  if (layer.getSource() instanceof ol.source.Vector) {
+                      if(layer.values_.visible==true){
+						   $('#edit_layer').append($("<option></option>").attr("value", map.getLayers().getArray()[i].values_.aname).text(map.getLayers().getArray()[i].values_.aname));
+					  }
+               }
+			 
+		 }
+		 
+		 $("#edit_layer").val(active_layerMap.values_.aname);
+		 vectorSource= active_layerMap.getSource();
+         onEditLayerChange() ;   
+       
 
-    if (lyrCount > 0) {
-        // $('#edit_layer').get(0).selectedIndex = 0;
-        //$("#edit_layer").val($("#edit_layer option:first").val());
-    }
+
 }
 
-function doesLayerExists(lyrName) {
-    var bFlag = true;
 
-    var count = $('#edit_layer option').size();
-    for (var i = 0; i < count; i++) {
-        var value = $("#layers option[value=" + lyrName + "]").text();
-        if (value == lyrName) {
-            bFlag = false;
-            break;
+function getLayerByAliesName(layer) {
+    var _layer = false;
+    for (var i=0;i<map.getLayers().getLength();i++) {
+        if (map.getLayers().getArray()[i].get('aname') === layer) { //check if layer exists
+            _layer = map.getLayers().getArray()[i];
         }
     }
-    return bFlag;
+    return _layer;
 }
+
 
 function getLayerType(layer, wfsurl) {
 
@@ -301,21 +454,7 @@ function onEditLayerChange() {
     //reset tolerance
     $('#edit_tolerance_two').val(10);
 
-    //Remove the previously add WFS and WFS_DEL layers
-    wfs = map.getLayersByName("WFS")[0];
-    if (verticesLayer !== null) {
-        map.removeLayer(verticesLayer);
-    }
-
-    if (wfs != undefined) {
-        map.removeLayer(wfs);
-    }
-    wfs_del = map.getLayersByName("WFS_DEL")[0];
-    if (wfs_del != undefined) {
-        //map.removeLayer(wfs_del);
-    }
     deactivateControls();
-    saveStrategy = new OpenLayers.Strategy.Save();
 
     var selected = $("#edit_layer option:selected");
     if (selected.text() == CONST_SELECT_LAYER) {
@@ -323,32 +462,20 @@ function onEditLayerChange() {
 
         //Get the Layer object
         var layerName = selected.text();
-        objLayer = map.getLayersByName(layerName)[0];
-        var _wfsurl = objLayer.url.replace(new RegExp("wms", "i"), "wfs");
-        var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + layerMap[objLayer.name];
+		objLayer=getLayerByAliesName(layerName);
+	
+	 var _wfsurl=objLayer.values_.url;
+        var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
 
-        /*Get Geometry column name, featureTypes, targetNamespace for the selected layer object*/
+        //Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
         $.ajax({
             url: PROXY_PATH + _wfsSchema,
-            dataType: "xml",
             async: false,
             success: function (data) {
-                var featureTypesParser = new OpenLayers.Format.WFSDescribeFeatureType();
-                var responseText = featureTypesParser.read(data);
-                var featureTypes = responseText.featureTypes;
-                targetNamespace = responseText.targetNamespace;
-                featPrefix = responseText.targetPrefix;
-                featureTypesFields = featureTypes[0].properties;
-
-                for (var i = 0; i < featureTypes[0].properties.length; ++i) {
-                    if (featureTypes[0].properties[i].type.indexOf('gml') >= 0) {
-                        geometryColName = featureTypes[0].properties[i].name;
-                        break;
-                    }
-                }
-
-                //Get the layer type
-                getLayerType(objLayer, _wfsurl);
+				 featureNS_=data.targetNamespace;
+                 featureType_=data.featureTypes[0].typeName;
+				
+               // getLayerType(objLayer, _wfsurl);
 
                 if (layerType == 'Point') {
                     $("#resize").attr("disabled", true);
@@ -364,256 +491,7 @@ function onEditLayerChange() {
             }
         });
 
-        var actualLayerName = layerMap[objLayer.name];
-        var pos = actualLayerName.indexOf(":");
-        var featType = null;
-        if (pos > 1)
-            featType = actualLayerName.substring(pos + 1);
-        else
-            featType = actualLayerName;
-
-        //Create Vector object for WFS(Selected feature) and WFS_DEL(Selected for delete feature)
-        var _projection = new OpenLayers.Projection(objLayer.projection.projCode);
-        var _protocol = new OpenLayers.Protocol.WFS({
-            version: "1.1.0",
-            srsName: objLayer.projection.projCode,
-            url: _wfsurl,
-            featureType: featType,
-            geometryName: geometryColName,
-            featurePrefix: featPrefix,
-            featureNS: targetNamespace,
-            schema: _wfsSchema
-        });
-
-        wfs = new OpenLayers.Layer.Vector(
-                "WFS", {
-                    reportError: true,
-                    strategies: [saveStrategy],
-                    projection: _projection,
-                    protocol: _protocol,
-                    isBaseLayer: false,
-                    visibility: true,
-                    styleMap: styleMap,
-                    displayInLayerSwitcher: false
-                }
-        );
-
-        verticesLayer = new OpenLayers.Layer.Vector('vertices', {styleMap: styleMap, force: true});
-
-        map.addLayers([verticesLayer, wfs]);
-
-        splitvector = new OpenLayers.Layer.Vector(
-                "SplitVector", {
-                    reportError: true,
-                    projection: _projection,
-                    isBaseLayer: false,
-                    visibility: true,
-                    styleMap: styleMap,
-                    displayInLayerSwitcher: false
-                }
-        );
-        map.addLayers([splitvector]);
-
-        snap = new OpenLayers.Control.Snapping({
-            layer: wfs,
-            targets: [wfs, verticesLayer],
-            greedy: false
-        });
-        snap.activate();
-
-        map.addControl(snap);
-
-        wfs_del = new OpenLayers.Layer.Vector(
-                "WFS_DEL", {
-                    reportError: true,
-                    projection: _projection,
-                    protocol: _protocol,
-                    isBaseLayer: false,
-                    visibility: true,
-                    styleMap: delStyleMap,
-                    displayInLayerSwitcher: false
-                }
-        );
-        map.addLayers([wfs_del]);
-        undoredo = new UndoRedo([wfs, wfs_del]);
-
-        /*For Markup*/
-        var lyrCount = map.getNumLayers();
-        var cosmetic_protocol;
-        for (var i = 0; i < lyrCount; i++) {
-            if (map.layers[i].name.indexOf("Cosmetic") != -1) {
-                var typeName;
-                if (layerType == 'Point') {
-                    typeName = workspace + ":" + "Cosmetic_Point";
-                } else if (layerType == 'LineString') {
-                    typeName = workspace + ":" + 'Cosmetic_Line';
-                } else if (layerType == 'Polygon') {
-                    typeName = workspace + ":" + 'Cosmetic_Poly';
-                }
-
-                var cosmeticLayer = map.getLayersByName("Cosmetic")[0];
-                //cosmeticlayers = cosmeticLayer.params.LAYERS.split(",");
-                var url = cosmeticLayer.url;
-                var cosmeticProjection = cosmeticLayer.projection;
-                var url = replaceString(url, /wms/gi, 'wfs');
-                var cosmetic_schema = url + "&request=DescribeFeatureType&version=1.0.0&service=WFS&typename=" + typeName;
-                var cosmetic_featureNS;
-                $.ajax({
-                    url: PROXY_PATH + cosmetic_schema,
-                    async: false,
-                    success: function (data) {
-                        var cosmetic_featureTypesParser = new OpenLayers.Format.WFSDescribeFeatureType();
-                        var cosmetic_responseText = cosmetic_featureTypesParser.read(data);
-                        var cosmetic_featureTypes = cosmetic_responseText.featureTypes;
-                        cosmetic_featureNS = cosmetic_responseText.targetNamespace;
-                        var cosmetic_featPrefix = cosmetic_responseText.targetPrefix;
-
-                        for (var i = 0; i < cosmetic_featureTypes[0].properties.length; ++i) {
-                            if (cosmetic_featureTypes[0].properties[i].type.indexOf("gml") >= 0) {
-                                cosmetic_geometryColName = cosmetic_featureTypes[0].properties[i].name;
-                                break;
-                            }
-                        }
-
-                        var _pos = typeName.indexOf(":");
-                        var _featType = null;
-                        if (pos > 1)
-                            _featType = typeName.substring(pos + 1);
-                        else
-                            _featType = typeName;
-
-                        //Create Vector object for WFS(Selected feature) and WFS_DEL(Selected for delete feature)
-                        cosmetic_protocol = new OpenLayers.Protocol.WFS({
-                            version: "1.1.0",
-                            srsName: cosmeticProjection.projCode,
-                            url: url,
-                            featureType: _featType,
-                            geometryName: cosmetic_geometryColName,
-                            featurePrefix: cosmetic_featPrefix,
-                            featureNS: cosmetic_featureNS,
-                            schema: cosmetic_schema
-                        });
-                    }
-                });
-                break;
-            }
-        }
-
-
-
-        wfs.events.on({
-            "beforefeaturemodified": showEditForm
-        });
-
-        editControls = {
-            modify: new OpenLayers.Control.ModifyFeature(wfs, {
-                displayClass: "olControlDefault",
-                clickout: false,
-                toggle: false,
-                unselectFeature: function (feature) {
-                    // add vertices for unselected feature
-                    if (typeof feature.data.usin !== 'undefined') {
-                        var coordinates = feature.geometry.getVertices();
-                        if (coordinates.length > 1) {
-                            var points = [];
-                            for (j = 0; j < coordinates.length; j++) {
-                                points.push(new OpenLayers.Geometry.Point(coordinates[j].x, coordinates[j].y));
-                            }
-
-                            var vertices = new OpenLayers.Geometry.MultiPoint(points);
-                            var attributes = {id: feature.data.usin, name: "vertices", editable: "f"};
-                            verticesLayer.addFeatures([new OpenLayers.Feature.Vector(vertices, attributes)]);
-                        }
-                    }
-                },
-                beforeSelectFeature: function (feature) {
-                    // remove vertices for selected feature
-                    if (typeof feature.data.usin !== 'undefined') {
-                        for (i = 0; i < verticesLayer.features.length; i++) {
-                            if (verticesLayer.features[i].attributes.id === feature.data.usin) {
-                                verticesLayer.removeFeatures([verticesLayer.features[i]]);
-                                break;
-                            }
-                        }
-                    }
-                },
-                //enforceTopology: true,
-                deleteCodes: [46, 68, 27]
-            }),
-            deleteFeature: new OpenLayers.Control.SelectFeature([wfs], {
-                displayClass: "olControlDefault",
-                renderIntent: "temporary",
-                //selectStyle:deleteSelectionSymbolizers,
-                onSelect: onFeatureSelection
-            }),
-            selectionBox: new OpenLayers.Control.GetFeature({
-                displayClass: "olControlDefault",
-                protocol: _protocol,
-                click: true,
-                single: false,
-                filterType: 'INTERSECTS',
-                box: true,
-                multiple: false,
-                clickout: true,
-                //maxFeatures: $('#max_features').val(),
-                toggle: false,
-                hover: false
-            }),
-            point: new OpenLayers.Control.DrawFeature(
-                    wfs, OpenLayers.Handler.Point, {
-                        displayClass: "olControlDefault",
-                        callbacks: {
-                            done: function (p) {
-                                var pointFeature = new OpenLayers.Feature.Vector(p);
-                                pointFeature.state = OpenLayers.State.INSERT;
-                                wfs.addFeatures([pointFeature]);
-                                showEditForm(pointFeature);
-                            }
-                        }
-                    }),
-            line: new OpenLayers.Control.DrawFeature(
-                    wfs, OpenLayers.Handler.Path, {
-                        displayClass: "olControlDefault",
-                        callbacks: {
-                            done: function (p) {
-                                var multiLine = new OpenLayers.Geometry.MultiLineString([p]);
-                                var lineFeature = new OpenLayers.Feature.Vector(multiLine);
-                                lineFeature.state = OpenLayers.State.INSERT;
-                                wfs.addFeatures([lineFeature]);
-                                showEditForm(lineFeature);
-                            }
-                        }
-                    }),
-            polygon: new OpenLayers.Control.DrawFeature(
-                    wfs, OpenLayers.Handler.Polygon, {
-                        displayClass: "olControlDefault",
-                        callbacks: {
-                            done: function (p) {
-                                var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-                                var polyFeature = new OpenLayers.Feature.Vector(multipolygon);
-                                polyFeature.state = OpenLayers.State.INSERT;
-                                wfs.addFeatures([polyFeature]);
-                                showEditForm(polyFeature);
-                            }
-                        }
-                    })
-        };
-
-        for (var key in editControls) {
-            map.addControl(editControls[key]);
-        }
-
-        if (layerType == 'Polygon') {
-            editControls["deleteFeature"].selectStyle = deleteSelectionSymbolizers.Polygon;
-        } else if (layerType == 'Point') {
-            editControls["deleteFeature"].selectStyle = deleteSelectionSymbolizers.Point;
-        } else if (layerType == 'LineString') {
-            editControls["deleteFeature"].selectStyle = deleteSelectionSymbolizers.Line;
-        }
-
-        saveStrategy.events.register('success', null, onSave);
-        saveStrategy.events.register('fail', null, onSaveFailed);
-        editControls["selectionBox"].events.register("featuresselected", this, selectFeature);
+	
     }
 
     $('#edit_tolerance').spinner().change(function () {
@@ -626,28 +504,21 @@ function onEditLayerChange() {
 
 
     $('#edit_tolerance_two').spinner().change(function () {
-        //snap.targets[0].tolerance= $('#edit_tolerance_two').val();
-        //target[type + "Tolerance"] = Number($('#edit_tolerance_two').val()) || 0; 
-        var types = ["node", "vertex", "edge"];
-        var target, type;
-        for (var i = 0; i < snap.targets.length; ++i) {
-            target = snap.targets[i];
-            for (var j = 0; j < types.length; ++j) {
-                type = types[j];
-                target[type + "Tolerance"] = Number($('#edit_tolerance_two').val()) || 0;
-            }
+    });
+	
+	
+}
+
+
+
+function getLayerByAliesName(layer) {
+    var _layer = false;
+    for (var i=0;i<map.getLayers().getLength();i++) {
+        if (map.getLayers().getArray()[i].get('aname') === layer) { //check if layer exists
+            _layer = map.getLayers().getArray()[i];
         }
-    });
-
-    var esc_hndl_edit_poly = new OpenLayers.Handler.Keyboard(editControls['polygon'], {
-        keydown: handleKeypress_edit
-    });
-    esc_hndl_edit_poly.activate();
-
-    var esc_hndl_edit_line = new OpenLayers.Handler.Keyboard(editControls['line'], {
-        keydown: handleKeypress_edit
-    });
-    esc_hndl_edit_line.activate();
+    }
+    return _layer;
 }
 
 function onFeatureSelect(feature) {
@@ -737,77 +608,141 @@ toggleEditControl = function (element) {
 }
 
 function modifyMode(mode) {
-    if (editControls != null) {
-        featureState = "modify";
+    
+	
         switch (mode) {
             case "move":
-                editControls.modify.mode = OpenLayers.Control.ModifyFeature.DRAG;
+               map.addInteraction(dragInteraction);
                 break;
             case "resize":
-                editControls.modify.mode = OpenLayers.Control.ModifyFeature.RESIZE;
                 break;
             case "rotate":
-                editControls.modify.mode = OpenLayers.Control.ModifyFeature.ROTATE;
                 break;
             case "reshape":
-                editControls.modify.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
-                break;
+               map.addInteraction(modifyInteraction);
+			   map.addInteraction(snapInteraction);
+			    break;
+			case "removeFeature":
+			   map.addInteraction(deleteInteraction);
+                break;	
             default:
-                editControls.modify.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+              
                 break;
         }
-    }
+    //}
 }
 
-function onFeatureSelection(feature) {
-    selectedFeature = feature;
+  dragInteraction.on('translateend', function(e) {
 
-    if (confirm('Are you sure you want to delete this feature?')) {
-        /*    selectedFeature.state = "Insert";
-         //wfs_del.addFeatures([selectedFeature]);
-         feature.state = OpenLayers.State.DELETE;
-         
-         */
-        var pos = feature.fid.indexOf(".");
-        if (pos >= -1) {
-            var _gid = parseInt(feature.fid.substring(++pos));
-        }
+		  _flagSplit=false;
+			updateArr=[];
+			var features = e.features.getArray();
+			for (var i=0;i<features.length;i++){
+			updateArr.push(features[i]);
+			}
+		
+			})
+			
+	modifyInteraction.on('modifyend', function(e) {
+		 _flagSplit=false;
+			updateArr=[];
+			var features = e.features.getArray();
+			for (var i=0;i<features.length;i++){
+			updateArr.push(features[i]);
+			}
 
-        jQuery.ajax({
-            url: "landrecords/spatialfalse/" + _gid,
-            async: false,
-            success: function (data) {
+			})	
+			
+			
+	deleteInteraction.getFeatures().on('add', function (e) {
+		 _flagSplit=false;
+      var geometry= e.target.array_[0].getGeometry().clone();
+           newFeature = new ol.Feature({
+                geometry: geometry,
+				
+          });			
+		 var properties =  e.target.array_[0].getProperties();
+         newFeature.setGeometryName("geometry");
+         newFeature.setProperties(properties);
+         newFeature.setId(e.target.array_[0].getId());
+		 newFeature.set('isactive', false);
+		
+		 deleteInteraction.getFeatures().clear();
+		 
+		 var _confirm=confirm('Are you sure you want to delete this feature?');
+if (_confirm) {
+       
+	  
+       updateArr=[];
+	   updateArr.push(newFeature);
+       saveEdit();
 
-                if (data == true)
-                {
-
-                    saveEdit();
-                    alert("Delete Successful");
-
-                } else {
-                    alert("Delete UnSuccessful");
-
-                }
-            }
+    } else{
+		map.removeInteraction(deleteInteraction);
+	    deleteInteraction.getFeatures().clear();
+		 updateArr=[];
+	}
+	
+				
+            });		
 
 
-        });
-
-
-
-    } else {
-        editControls["deleteFeature"].unselect(feature);
-    }
-}
 
 function saveEdit() {
-    saveStrategy.save();
-    wfs_del.removeAllFeatures(true);
-    wfs.removeAllFeatures(true);
-    if (verticesLayer !== null) {
-        verticesLayer.removeAllFeatures(true);
-    }
-    undoredo.resetEditIndex();
+   
+   formatWFS = new ol.format.WFS();
+	   node = formatWFS.writeTransaction(insertedArr, updateArr, deleteArr, {
+		   featureNS: featureNS_,
+			featureType: featureType_,
+			version: '1.1.0',
+			gmlOptions: {srsName: "CRS:84"},
+			srsName: "EPSG:4326"
+		});	
+			
+		url = featureNS_+"geoserver/ows";
+				
+				
+  $.ajax(url,{
+                type: 'POST',
+                dataType: 'xml',
+                processData: false,
+                contentType: 'text/xml',
+                data:  s.serializeToString(node)
+                }).done(function(response) {
+			  console.log(response);
+			insertedArr = [];
+			updateArr = [];
+			deleteArr = [];
+			featureArr=[];
+			map.removeInteraction(selectInteraction_edit);
+            map.removeInteraction(intraction_dragBox);
+			map.removeInteraction(modifyInteraction);
+			map.removeInteraction(deleteInteraction);
+			
+			if(selectedFeaturesEdit!=null)
+			   selectedFeaturesEdit.clear();
+			vectorSource.clear();
+			
+			if( _flagSplit){
+			 var result = formatWFS.readTransactionResponse(response);
+             console.log(result.insertIds[0]);
+			 var landId=result.insertIds[0].toString().split(".")[1]
+
+			    $.ajax({
+					url: "landrecords/updateParcelNumberSplit/" + landId,
+					async: false,
+					success: function (data) {
+						jAlert(""+data +"","info");
+					}
+				});
+			}			
+			
+		
+    }); 
+	     
+              
+			  
+			  
     $('#edit_content').empty();
     $("#editApply").hide();
 }

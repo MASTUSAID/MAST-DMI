@@ -16,4 +16,8 @@ public interface LayerFieldService {
 	
 	@Transactional
 	public String delete(String id);
+	
+	
+	@Transactional
+	public boolean deleteFeildByLayerId(Long id);
 }

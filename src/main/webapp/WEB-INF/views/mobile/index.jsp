@@ -184,36 +184,32 @@ div#users-contain table td, div#users-contain table th {
 </script>
 	<!--start:header-->
 	<!--start:header-->
-	<div class="header-alt">
-		<div class="subHead">
-			<img src="./resources/images/Logo_text.png" style="width: 100%" />
-		</div>
-		<!--/subHead-->
-		<!--<div class="loginInfo">
-			<div class="userText">
-				<div class="dropdown" style="cursor: pointer">
-					<i class="fa fa-user"></i>	  
-					Welcome <span class="username"><%=principal%></span>
-               	&nbsp;&nbsp;
-				</div>
-				<span class="logoutApp"><a
-					href="/mast/j_spring_security_logout">Logout</a></span>
-			</div>
-
-			<img src="./resources/images/userInfo.png" />
-		</div> -->
-		
-			    <div class="userinfo" >
+       <div class="header-top">
+            <div id="usaid_logo" onClick="window.location = 'http://usaid.gov/land-tenure';"></div>
+                    <div class="header_title">Mobile Application to Secure Tenure (MAST)<br />Data Management Infrastructure</div>
+            <!--/subHead-->
+			
+<!-- <div class="loginInfo">
+               <div class="userText">
+               <div class="dropdown" style="cursor:pointer">
+    				<i class="fa fa-user"></i>
+             		  Welcome <span class="username"><%=principal%></span>
+               	&nbsp;&nbsp;          </div>
+               <span class="logoutApp"><a href="/mast/j_spring_security_logout">Logout</a></span>
+        </div>
+               
+               <img src="./resources/images/userInfo.png"/>
+            </div> -->
+			<div class="userinfo" >
       <ul>
-        <li  style="cursor:pointer"><span>	<i class="fa fa-user"></i>
-             				  Welcome <span class="username"><%=principal%></span></span></li>
-        <li><a href="/mast/j_spring_security_logout">Logout</a></li>
+        <li   class="username">
+             				   <span ><%=principal%></span></li>
+        <li style="float: right; margin-top: 0px;"><a href="../index" class="home"><span class="home-separator">&nbsp;</span></a><a href="/mast/j_spring_security_logout" class="logout">Logout</a></li>
         
         
       </ul>
     </div>
-		<!--/loginInfo-->
-	</div>
+    </div>
 	<!--end:header-->
 	<!--end:header-->
 

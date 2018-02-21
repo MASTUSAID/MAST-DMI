@@ -14,4 +14,6 @@ public interface LandUseTypeDao extends GenericDAO<LandUseType, Integer>{
 
 	LandUseType getLandUseTypeById(int landUseTypeId);
 	
+	LandUseType getLandUseTypeBylandusetypeId(int landUseTypeId);
+	
 }

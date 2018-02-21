@@ -7,6 +7,7 @@
 		<div class="styleForm formPattern fg-buttonset fg-buttonset-single">
 			<table width="100%" border="0">
 				<tr>
+				<!--
 					<td align="left" width="5%">
 						<button class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right ui-state-active1" 
 						
@@ -20,17 +21,27 @@
 							<img src="resources/images/viewer/symbols/markers/mar12.png">
 						</button>
 					</td>
+					-->
+					
 					<td width="90%" align="right">
-						<label for="unit" id="measure_unit">Unit:</label> 
-						<select
-							style="width: 100px;"
-							id="measureUnit">
-							<!--<option value="m">Meter</option>
-							<option value="km">Kilometer</option>
-							<option value="mi">Mile</option>-->
+						<label for="type" id="typelabel">Measurement type:</label> 
+						<select style="width: 100px;" id="type" onchange="Typechange();">
+							 <option value="length">Length (LineString)</option>
+                             <option value="area">Area (Polygon)</option>
 						</select>
 					</td>
+					
 				</tr>
+				<td>
+					 <label class="checkbox">
+						  <input type="checkbox" id="geodesic">
+						  use geodesic measures
+						</label>
+					</td>
+				<tr>
+				
+				</tr>
+				<!--
 				<tr>
 					<td colspan="3">
 					<div class="pad5px"></div>
@@ -51,6 +62,8 @@
 					
 					</td>
 				</tr>
+				
+				-->
 				</table>
 			</div>
 			

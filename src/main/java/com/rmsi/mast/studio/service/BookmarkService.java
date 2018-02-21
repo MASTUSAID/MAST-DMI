@@ -16,7 +16,7 @@ public interface BookmarkService {
 	void addBookmark(Bookmark bookmark);
 	
 	@Transactional
-	void deleteBookmarkByProject(String name);
+	void deleteBookmarkByProjectId(Integer id);
 
 	@Transactional
 	boolean deleteBookmarkById(String name);
@@ -25,7 +25,7 @@ public interface BookmarkService {
 	void updateABookmark(Bookmark bookmark);
 
 	@Transactional(readOnly=true)
-	Bookmark findBookmarkById(Long id);
+	Bookmark findBookmarkById(Integer id);
 
 	@Transactional(readOnly=true)
 	List<Bookmark> findAllBookmarks();
@@ -33,5 +33,5 @@ public interface BookmarkService {
 	@Transactional(readOnly=true)
 	Bookmark findBookmarkByName(String name);
 	
-	List<Bookmark> getBookmarksByProject(String project);
+	List<Bookmark> getBookmarksByProject(Integer id);
 }

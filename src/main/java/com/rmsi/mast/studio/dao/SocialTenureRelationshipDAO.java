@@ -25,4 +25,6 @@ public interface SocialTenureRelationshipDAO extends GenericDAO<SocialTenureRela
 	boolean addDeletedPerson(Long gid);
 
 	boolean updateSharePercentage(String alias, long personGid);
+	//Abhay
+	public SocialTenureRelationship getPersonLandMapDetails(Integer landid);
 }

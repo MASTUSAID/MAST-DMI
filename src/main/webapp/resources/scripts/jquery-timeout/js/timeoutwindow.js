@@ -140,7 +140,8 @@ String.prototype.format = function() {
 
       destroyDialog: function() {
         if ($("#timeout-dialog").length) {
-          $(this).dialog("close");
+          //$(this).dialog("close");
+        	$("#timeout-dialog").dialog("close");
           $('#timeout-dialog').remove();
         }
       },

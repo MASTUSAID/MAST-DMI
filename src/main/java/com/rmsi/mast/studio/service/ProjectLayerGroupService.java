@@ -11,4 +11,6 @@ public interface ProjectLayerGroupService {
 	void deleteProjectLayergroupById(Long id);
 	
 	List<String> getProjectLayers(String project);
+	
+	String checkProjectLayergroupByLayergroupId(Integer id);
 }

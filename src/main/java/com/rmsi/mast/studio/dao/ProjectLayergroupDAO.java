@@ -17,7 +17,7 @@ public interface ProjectLayergroupDAO extends GenericDAO<ProjectLayergroup, Long
 	
 	List<ProjectLayergroup> findAllProjectLayergroup(String name);
 	
-	void deleteProjectLayergroupByProjectName(String name);
+	void deleteProjectLayergroupByProjectId(Integer id);
 	
 	List<String> getLayersByProjectName(String project);
 	
@@ -25,4 +25,5 @@ public interface ProjectLayergroupDAO extends GenericDAO<ProjectLayergroup, Long
 	
 	List<String> getProjectsByLayergroup(String layergroup);
 	
+	String checkProjectLayergroupByLayergroupId(Integer id);
 }

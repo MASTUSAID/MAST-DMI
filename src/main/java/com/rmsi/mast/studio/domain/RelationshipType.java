@@ -1,58 +1,70 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="relationship_type")
+@Table(name="la_partygroup_relationshiptype")
 public class RelationshipType implements Serializable {
-    private static final long serialVersionUID = 1L;
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-	@Id
-	private Long code;
-	@Column
-        private String name;
-        @Column(name="name_other_lang")
-        private String nameOtherLang;
-        @Column
-        boolean active;
+    
+    
+    @Id
+	private Long relationshiptypeid;
+
+	private Boolean isactive;
+
+	private String relationshiptype;
+
+	@Column(name="relationshiptype_en")
+	private String relationshiptypeEn;
+
+	
+	  public RelationshipType(){
         
-        public RelationshipType(){
-            
-        }
-
-    public Long getCode() {
-        return code;
     }
 
-    public void setCode(Long code) {
-        this.code = code;
-    }
+	public Long getRelationshiptypeid() {
+		return relationshiptypeid;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setRelationshiptypeid(Long relationshiptypeid) {
+		this.relationshiptypeid = relationshiptypeid;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public Boolean getIsactive() {
+		return isactive;
+	}
 
-    public String getNameOtherLang() {
-        return nameOtherLang;
-    }
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
 
-    public void setNameOtherLang(String nameOtherLang) {
-        this.nameOtherLang = nameOtherLang;
-    }
+	public String getRelationshiptype() {
+		return relationshiptype;
+	}
 
-    public boolean isActive() {
-        return active;
-    }
+	public void setRelationshiptype(String relationshiptype) {
+		this.relationshiptype = relationshiptype;
+	}
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+	public String getRelationshiptypeEn() {
+		return relationshiptypeEn;
+	}
+
+	public void setRelationshiptypeEn(String relationshiptypeEn) {
+		this.relationshiptypeEn = relationshiptypeEn;
+	}
+
+
 }

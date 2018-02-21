@@ -15,6 +15,7 @@ var exportRegionControls = null;
 var _bbox=null;
 var selFeatureBbox=null;
 var wfs_markup_poly=null;
+var extent="";
 Cloudburst.ExportData = function (map, _searchdiv) {
     this.map = map;
     searchdiv = _searchdiv;
@@ -25,6 +26,11 @@ Cloudburst.ExportData = function (map, _searchdiv) {
     //$("#layerSwitcherContent").hide();
 
     $("#tabs-Tool").empty();
+	if(active_layerMap == null){
+					jAlert('Please Select A layer First', 'Selection');
+			return false;
+	
+		}
 	
     jQuery.get('resources/templates/viewer/export.html', function (template) {
         
@@ -76,14 +82,45 @@ Cloudburst.ExportData = function (map, _searchdiv) {
 		$("#options-s-d input").click(function (e) {
            
             //_bbox=null;
-			wfs_markup_poly.removeAllFeatures();
+			//wfs_markup_poly.removeAllFeatures();
 			
 			var exportOpt = e.currentTarget.id;
             if(exportOpt=='selectRegion'){
-				clearSelection(true);
+				//clearSelection(true);
 				selFeatureBbox=null;		//clear selected feature's bbox value
 				$('#exportButtons').show();
 				toggleExportRegion('exportRegion_polygon');
+				
+					map.addInteraction(selectInteraction_export);
+                    map.addInteraction(intraction_dragBox_export);
+                    intraction_dragBox_export.on('boxend', function(event) {
+					selectedFeaturesExport = selectInteraction_export.getFeatures();
+					selectedFeaturesExport.clear();
+					 extent = intraction_dragBox_export.getGeometry().getExtent();
+					map.getLayers().forEach(function(layer) {
+						 if (layer instanceof ol.layer.Vector) {
+						 layer.getSource().forEachFeatureIntersectingExtent(extent, function(feature) {
+
+						 if(layer.values_.name ==$("#ExportLayers").text()){
+						    	selectedFeaturesExport.push(feature);
+							}
+
+							
+						 });
+						 
+						 }
+						 
+					});
+
+			 });
+           
+		 // clear selection when drawing a new box and when clicking on the map
+		    intraction_dragBox.on('boxstart', function() {
+			     if(selectedFeaturesExport!=null){
+					selectedFeaturesExport.clear();
+					}				 
+				  });
+				
 			}
 			else{
 				$('#exportButtons').hide();
@@ -97,103 +134,61 @@ Cloudburst.ExportData = function (map, _searchdiv) {
 		
 		
 				
-		$('#ExportLayers').text(OpenLayers.Map.activelayer.name);
+	
 		
-		
-		populateLayerFormat(OpenLayers.Map.activelayer.name);
-		
-		if(!OpenLayers.Map.activelayer.exportable){
-			$("#div-exportable").css("visibility", "visible");
-			$("#btnDownload").attr('disabled','disabled');
+		if (active_layerMap != null){
+			$('#ExportLayers').text(active_layerMap.get("name"));		
+		     layerMap=[];
+			 layerMap.push(active_layerMap.get("name"));
+			 populateLayerFormat()
 
+		}else{
 			
+			jAlert('Please Select A layer First', 'Selection');	
 		}
 		
-		//////Add controls
-	    // poly
-    wfs_markup_poly = new OpenLayers.Layer.Vector("exportRegion_Poly", {
-        reportError: true,
-        projection: "EPSG:27700",
-        isBaseLayer: false,
-        visibility: true,        
-        displayInLayerSwitcher: false
-    });
-    map.addLayers([wfs_markup_poly]);
-	
-	exportRegionControls = {
-        
-        exportRegion_polygon: new OpenLayers.Control.DrawFeature(
-        wfs_markup_poly, OpenLayers.Handler.Polygon, {
-			
-            callbacks: {
-                done: function (p) {
-					wfs_markup_poly.removeAllFeatures();
-                    var polyFeature = new OpenLayers.Feature.Vector(p);                   
-                    
-					wfs_markup_poly.addFeatures([polyFeature]);
-					selFeatureBbox=polyFeature.geometry.getBounds().toBBOX();
-
-
-                }
-            }
-        }),
-        
-        exportRegion_rectangle: new OpenLayers.Control.DrawFeature(
-        wfs_markup_poly, OpenLayers.Handler.RegularPolygon, {
-            handlerOptions: {
-                sides: 4,
-				irregular:true
-            },
-            callbacks: {
-                done: function (p) {
-                    
-					wfs_markup_poly.removeAllFeatures();
-					
-					var rectangleFeature = new OpenLayers.Feature.Vector(p);                    
-                    
-					wfs_markup_poly.addFeatures([rectangleFeature]);
-					selFeatureBbox=rectangleFeature.geometry.getBounds().toBBOX();
-						
-                }
-            }
-        })
-    };
-
-    for (var key in exportRegionControls) {
-        map.addControl(exportRegionControls[key]);
-
-    }
-	
-	
-	////////
 		
-      
+	   $("#clearselection_export").button().click(function(){
+		   
+	  		toggleButtons();
+       	if (selectInteraction_export !== null) {
+		     map.removeInteraction(selectInteraction_export);
+			
+	}	
+	
+	
+	 if (intraction_dragBox_export !== null) {
+		     map.removeInteraction(intraction_dragBox_export);
+			
+	}	
+	
+		 
+	if(selectedFeaturesExport!=null){
+		selectedFeaturesExport.clear()
+	}	
+    });   
 
     });
 };
 
 
 
-var populateLayerFormat = function (_activeLayer) {
-
-        export_wmsurl = (map.getLayersByName(_activeLayer)[0]).url;
-        export_wmsurl=replaceString(export_wmsurl, /wms/gi, 'wfs');
-
+var populateLayerFormat = function () {
+	    export_wmsurl = active_layerMap.get("url");
         var _url = PROXY_PATH + export_wmsurl + "&request=GetCapabilities&service=WFS&version=1.0.0";
 
         $.ajax({
             url: _url,
-            dataType: "text",
+            dataType: "xml",
             success: function (data) {
-                var parser = new OpenLayers.Format.WFSCapabilities();
-                var res = parser.read(data);
-                var formats = res.capability.request.getfeature.formats;
                 $('#formats').empty();
+				var _length=data.getElementsByTagName("Capability")[0].getElementsByTagName("ResultFormat")[0].childNodes.length
                 $('#formats').append($("<option></option>").attr("value", "").text("Please Select"));
-                
-                for (x = 0; x < formats.length; x++) {
-					if(formats[x]!="GML2" && formats[x]!="GML3" && formats[x]!="JSON")
-					$('#formats').append($("<option></option>").attr("value", formats[x]).text(formats[x]));
+                for (x = 0; x < _length; x++) {
+					if(data.getElementsByTagName("Capability")[0].getElementsByTagName("ResultFormat")[0].childNodes[x].tagName!="GML2" && 
+					data.getElementsByTagName("Capability")[0].getElementsByTagName("ResultFormat")[0].childNodes[x].tagName!="GML3" &&
+					data.getElementsByTagName("Capability")[0].getElementsByTagName("ResultFormat")[0].childNodes[x].tagName!="JSON")
+		             $('#formats').append($("<option></option>").attr("value", data.getElementsByTagName("Capability")[0].getElementsByTagName("ResultFormat")[0].childNodes[x].tagName).text(data.getElementsByTagName("Capability")[0].getElementsByTagName("ResultFormat")[0].childNodes[x].tagName));
                 }
 
             }
@@ -207,121 +202,29 @@ var downloadFeature = function () {
         var exporturl = "";
 		var bbox=null;
 		var outputformat = $("#formats").val();
-        var selectedViewType = $("input[@name='exportView']:checked", "#exportdiv").attr('id')
         var selectedLayer = $('#ExportLayers').html();
-		
-		//var bbox = map.getExtent().toBBOX();		
-		
+
 		if (selectedLayer != "" && outputformat != "") {
-            if (selectedViewType == 'all') {
-			
-				bbox = map.getExtent().toBBOX();
-				exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[selectedLayer] + "&bbox=" + bbox + "&outputformat=" + outputformat;	
-			}
-			else if(selectedViewType == 'selectRegion'){
-			
-				if($('#div-wkt').is(":visible")){
-					if(!$('#txtWkt').val()){	
-						
-						jAlert('Enter Coorinates', 'Export');
-						return;
-					}
-					bbox=$('#txtWkt').val();
-				}
-				else{
-						if(selFeatureBbox){
-							bbox = selFeatureBbox;
-						}
-						else{
-							
-							jAlert('Please Select Region', 'Export');
+            if ($("#all").is(":checked")) {
+				bbox=map.getView().calculateExtent(map.getSize());
+			   exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[0] + "&bbox=" + bbox + "&outputformat=" + outputformat;
+			    window.open(exporturl, "Export");
+				return
+			} if($("#selectRegion").is(":checked")){
+			  if(extent!=""){
+			   exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[0] + "&bbox=" + extent + "&outputformat=" + outputformat;
+			    window.open(exporturl, "Export");
+				return
+				}else{
+					jAlert('Please Select Region', 'Export');
 							return;
-						}
 				}
-				
-				
-				exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[selectedLayer] + "&bbox=" + bbox + "&outputformat=" + outputformat;
-				
 			}
-			else if(selectedViewType == 'selected'){
-					
-					bbox = selFeatureBbox;
-					
-					if(OpenLayers.Map.activelayer.selectFilter){
-						var xml = new OpenLayers.Format.XML();
-						var filter_1_0 = new OpenLayers.Format.Filter({
-							version: "1.0.0"
-						});
-						var xmlFilter = xml.write(filter_1_0.write(OpenLayers.Map.activelayer.selectFilter));
-						exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[OpenLayers.Map.activelayer.name] + "&outputformat=" + outputformat + "&filter=" + xmlFilter;
-					}
-					else{
-						
-						jAlert('Please Select Feature', 'Export');
-						
-						return;
-					}
-			}
-			
-			window.open(exporturl, "Export");
-		}
-		else {
-
-            
-			jAlert('Please select Format', 'Export');
-
-        }
-		
-		/*
-		if(selFeatureBbox){
-			bbox = selFeatureBbox;
-		}
-		else if(!selFeatureBbox && $('#txtWkt').val()){
-		
-		bbox=$('#txtWkt').val();
-		
-		}
-		else if(!selFeatureBbox && selectedViewType != 'selected') {
-			
-			alert("Please Select Region");
-			return;
-			//bbox = map.getExtent().toBBOX();
-		}
-		
-		alert("BBOX: "+ bbox);
-		
-        
-
-        if (selectedLayer != "" && outputformat != "") {
-            if (selectedViewType == 'all' || selectedViewType == 'selectRegion') {
 				
-                exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[selectedLayer] + "&bbox=" + bbox + "&outputformat=" + outputformat;
-            } else {
-                
-				
-
-				
-				var xml = new OpenLayers.Format.XML();
-                var filter_1_0 = new OpenLayers.Format.Filter({
-                    version: "1.0.0"
-                });
-                var xmlFilter = xml.write(filter_1_0.write(OpenLayers.Map.activelayer.selectFilter));
-
-					
-
-                exporturl = export_wmsurl + "&request=GetFeature&version=1.0.0&service=WFS&typename=" + layerMap[OpenLayers.Map.activelayer.name] + "&outputformat=" + outputformat + "&filter=" + xmlFilter;
-            }
-            window.open(exporturl, "Export");
-
-        } 
+		}
 		
-		else {
-
-            alert("Please select Format");
-
-        }
-		*/
 		
+
     };
 
 var visible = function (status) {
@@ -345,7 +248,6 @@ function toggleExportRegion(element) {
 	var control = exportRegionControls[key3];
 	control.deactivate();
 	}
-	
 	
 	for (key in exportRegionControls) {
         var control = exportRegionControls[key];

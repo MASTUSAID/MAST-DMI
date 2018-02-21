@@ -47,8 +47,18 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 			<table width="100%" cellpadding="0" cellspacing="0" class="project_table_adjust">
                 	
 					<tr>
-                    	<td class="project_cell_adjust styleForm">
-						<label class="searchLbl">Project:</label>&nbsp;
+					 <td class="project_cell_adjust styleForm">
+						<label class="">Category type:</label>&nbsp;
+						
+						<select  name="category_type" id="category_type" onchange="displayCategoryType(this);">
+						<option  value="" class="text ui-widget-content ui-corner-all">Please Select</option>   									  							
+                               							
+						</select>
+						
+					</td>
+					
+                    <td class="">
+						<label class="">Project:</label>&nbsp;
 						
 						<select name="projectAttr_project" id="projectAttr_project" value="${name}" onchange= "fillAccordians(this.value);">
 						<option  value="" class="text ui-widget-content ui-corner-all">Please Select</option>   									  							
@@ -69,7 +79,13 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 		<tr>
 			<td>
 			
+			
+			
 		<div id="projectAttr-accordion" style="text-align: left;">
+		
+		
+		
+		
 		<h3>
 			<a href="#"><span id="general">General</span></a>
 		</h3>
@@ -215,8 +231,159 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 			
 		</div>
 		
+		<h3>
+			<a href="#"><span id="general">Add Person</span></a>
+		</h3>
+
+		<div id="addPersonBody" title=""
+			style="min-height: 191px; overflow: hidden;">
+			
+			<div class="headerBtns">
+			<a href="#" id="addPerson_addRemove" onclick="openAttrDialog('add_Person');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
+			<a id="A_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('add_Person');"><span class="saveBTN">Save</span></a>
+			
+
+			</div>	
+			<table id="addPersontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+			</table>
+			
+		</div>
+		
+		
+		
 	
 	</div>
+	
+	<!-- resource mapping-->
+	
+	
+	<div id="projectAttr-accordion-resource" style="text-align: left;">
+	
+		
+		
+		<h3>
+			<a href="#"><span id="open">Open</span></a>
+		</h3>
+
+		<div id="OpenBody" title=""
+			style="min-height: 191px; overflow: hidden;">
+			
+			<div class="headerBtns">
+			<a href="#" id="open_addRemove" onclick="openAttrDialog('open');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
+			<a id="general_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('open');"><span class="saveBTN">Save</span></a>
+			
+
+			</div>	
+			<table id="opentbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+			</table>
+			
+			
+			
+			
+			
+		</div>
+		
+		<h3>
+			<a href="#"><span id="private">Private</span></a>
+		</h3>
+
+		<div id="privateBody" title=""
+			style="min-height: 191px; overflow: hidden;">
+			
+			<div class="headerBtns">
+			<a href="#" id="private_addRemove" onclick="openAttrDialog('private');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
+			<a id="private_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('private');"><span class="saveBTN">Save</span></a>
+			
+
+			</div>	
+			<table id="privatetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+			</table>
+			
+			
+			
+			
+			
+		</div>
+		
+		<h3>
+			<a href="#"><span id="common">Common</span></a>
+		</h3>
+
+		<div id="commonBody" title=""
+			style="min-height: 191px; overflow: hidden;">
+			
+			<div class="headerBtns">
+			<a href="#" id="common_addRemove" onclick="openAttrDialog('common');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
+			<a id="common_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('common');"><span class="saveBTN">Save</span></a>
+			
+
+			</div>	
+			<table id="commontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+			</table>
+			
+			
+			
+			
+			
+		</div>
+		
+		
+		
+		<h3>
+			<a href="#"><span id="community">Community</span></a>
+		</h3>
+
+		<div id="communityBody" title=""
+			style="min-height: 191px; overflow: hidden;">
+			
+			<div class="headerBtns">
+			<a href="#" id="community_addRemove" onclick="openAttrDialog('community');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
+			<a id="community_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('community');"><span class="saveBTN">Save</span></a>
+			
+
+			</div>	
+			<table id="communitytbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+			</table>
+			
+			
+			
+			
+			
+		</div>
+		
+		<h3>
+			<a href="#"><span id="public_state">Public / State</span></a>
+		</h3>
+
+		<div id="public_stateBody" title=""
+			style="min-height: 191px; overflow: hidden;">
+			
+			<div class="headerBtns">
+			<a href="#" id="public_state_addRemove" onclick="openAttrDialog('public_state');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
+			<a id="community_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('public_state');"><span class="saveBTN">Save</span></a>
+			
+
+			</div>	
+			<table id="public_statetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+			</table>
+			
+			
+			
+			
+			
+		</div>
+		
+		
+		
+	
+	</div>
+	<!--- resource end--->
         	</td>
 			</tr>
 			
@@ -357,12 +524,12 @@ label.error { float: none; color: red; padding-left: .5em; vertical-align: top; 
 </div>
 <script id="categoryattrTemplate" type="text/x-jquery-tmpl">
 <tr>
-<td id="${attributeMaster.id}">
-	${attributeMaster.alias}
+<td id="${attributeMaster.attributemasterid}">
+	${attributeMaster.fieldaliasname}
 </td>
 <td>
-            <a href="#" id="${alias}"  name="alias" value="${id}" class="lgup"><img src="resources/images/studio/move_up.png"></a>
-            <a href="#" id="${alias}"  name="alias" value="${id}" class="lgdown"><img src="resources/images/studio/move_down.png"></a>
+            <a href="#" id="${fieldaliasname}"  name="alias" value="${attributemasterid}" class="lgup"><img src="resources/images/studio/move_up.png"></a>
+            <a href="#" id="${fieldaliasname}"  name="alias" value="${attributemasterid}" class="lgdown"><img src="resources/images/studio/move_down.png"></a>
 			
 </td>
 

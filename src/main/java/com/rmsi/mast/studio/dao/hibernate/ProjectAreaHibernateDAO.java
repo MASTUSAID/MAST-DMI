@@ -2,6 +2,7 @@
 
 package com.rmsi.mast.studio.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -65,9 +66,6 @@ public class ProjectAreaHibernateDAO extends GenericHibernateDAO<ProjectArea, Lo
 
 	@Override
 	public void deleteByProjectAreaName(String name) {
-		
-
-		
 		try{
 			Query query = getEntityManager().createQuery(
 					"Delete from ProjectArea pa where pa.projectBean.name =:name")
@@ -79,34 +77,90 @@ public class ProjectAreaHibernateDAO extends GenericHibernateDAO<ProjectArea, Lo
 			logger.error(e);
 			
 		}
-		
-		
-		
-	
-		
-		
 	}
 
 	@Override
 	public List<ProjectArea> findByProjectName(String projectName) {
-try {
-			
-			Query query = getEntityManager().createQuery("Select p from ProjectArea p where p.projectName = :name");
-		
-		query.setParameter("name",projectName);
-		List<ProjectArea> projectArea = query.getResultList();
-		if(projectArea.size()>0)
-		{
-			return projectArea;	
+		try {
+
+			Query query = getEntityManager().createQuery("Select p from ProjectArea p where p.project.name = :name");
+
+			query.setParameter("name",projectName);
+			List<ProjectArea> projectArea = query.getResultList();
+			if(projectArea.size()>0)
+			{
+				return projectArea;	
+			}
+			else
+				return projectArea;
+
+		} catch (Exception e) {
+
+			logger.error(e);
+			return null;
 		}
-		else
-			return projectArea;
-		
-	} catch (Exception e) {
-		
-		logger.error(e);
-	return null;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ProjectArea findProjectAreaById(Long id) {
+
+		List<ProjectArea> projectArea = new ArrayList<ProjectArea>();
+
+		try {
+			Query query = getEntityManager().createQuery("Select p from ProjectArea p where p.isactive=true and  p.projectareaid = :id");
+			query.setParameter("id",id);
+			projectArea = query.getResultList();
+
+			if(projectArea.size()>0)
+			{
+				return projectArea.get(0);	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return null;
+
+	}
+
+	@Override
+	public void deleteProjectAreaByProjectId(Integer id) {
+		
+		try{
+			Query query = getEntityManager().createQuery("Delete from ProjectArea pa where pa.project.projectnameid =:id").setParameter("id", (int)id);
+			int count = query.executeUpdate();
+			System.out.println("row delete :" + count +" project Id" + id);
+			
+		}catch(Exception e){
+			logger.error(e);
+			
+		}
+
+		
+	}
+
+	@Override
+	public ProjectArea findProjectAreaByProjectId(Integer id) {
+		
+		List<ProjectArea> projectArea = new ArrayList<ProjectArea>();
+
+		try {
+			Query query = getEntityManager().createQuery("Select p from ProjectArea p where p.isactive=true and  p.project.projectnameid = :id");
+			query.setParameter("id",id);
+			projectArea = query.getResultList();
+
+			if(projectArea.size()>0)
+			{
+				return projectArea.get(0);	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return null;
 	}
 
 	

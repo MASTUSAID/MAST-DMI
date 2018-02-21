@@ -25,5 +25,11 @@ public class LayerFieldServiceImpl implements LayerFieldService {
 	public String delete(String id){
 		return layerFieldDao.delete(id);
 	}
+
+	@Override
+	public boolean deleteFeildByLayerId(Long id) {
+		// TODO Auto-generated method stub
+		return layerFieldDao.deleteFeildByLayerId(id);
+	}
 	
 }

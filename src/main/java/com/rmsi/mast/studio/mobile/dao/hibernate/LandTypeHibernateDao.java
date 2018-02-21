@@ -27,13 +27,32 @@ public class LandTypeHibernateDao extends
 	public LandType getLandTypeById(int landTypeId) {
 		try {
 
-			String query = "select lt.* from land_type lt inner join"
-					+ " attribute_options ao on ao.parent_id = lt.landtype_id "
-					+ "where ao.id = " + landTypeId;
+			String query = "select lt.* from la_baunit_landtype lt inner join"
+					+ " la_ext_attributeoptions ao on ao.parentid = lt.landtypeid "
+					+ "where ao.attributeoptionsid = " + landTypeId;
 
 			@SuppressWarnings("unchecked")
 			List<LandType> landType = getEntityManager().createNativeQuery(
 					query, LandType.class).getResultList();
+
+			if (landType != null && landType.size() > 0) {
+				return landType.get(0);
+			}
+		} catch (Exception ex) {
+			logger.error(ex);
+			throw ex;
+		}
+		return null;
+	}
+
+	@Override
+	public LandType getLandTypeBylandtypeId(int landTypeId) {
+		try {
+
+			String query = "select lt from LandType lt where lt.landtypeid  = " + landTypeId;
+
+			@SuppressWarnings("unchecked")
+			List<LandType> landType = getEntityManager().createQuery(query).getResultList();
 
 			if (landType != null && landType.size() > 0) {
 				return landType.get(0);

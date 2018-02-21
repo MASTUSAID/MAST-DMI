@@ -1,6 +1,5 @@
 package com.rmsi.mast.viewer.service.impl;
 
-import com.rmsi.mast.studio.dao.AcquisitionTypeDao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.rmsi.mast.studio.dao.AcquisitionTypeDao;
 import com.rmsi.mast.studio.dao.AttributeCategoryDAO;
 import com.rmsi.mast.studio.dao.AttributeMasterDAO;
 import com.rmsi.mast.studio.dao.AttributeValueFetchDAO;
@@ -43,13 +43,13 @@ import com.rmsi.mast.studio.domain.AttributeValues;
 import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.ClaimType;
 import com.rmsi.mast.studio.domain.Dispute;
-import com.rmsi.mast.studio.domain.DisputeStatus;
 import com.rmsi.mast.studio.domain.DisputeType;
 import com.rmsi.mast.studio.domain.DocumentType;
 import com.rmsi.mast.studio.domain.EducationLevel;
 import com.rmsi.mast.studio.domain.Gender;
 import com.rmsi.mast.studio.domain.GroupType;
 import com.rmsi.mast.studio.domain.IdType;
+import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.LandType;
 import com.rmsi.mast.studio.domain.LandUseType;
 import com.rmsi.mast.studio.domain.MaritalStatus;
@@ -66,16 +66,21 @@ import com.rmsi.mast.studio.domain.SlopeValues;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SoilQualityValues;
 import com.rmsi.mast.studio.domain.SourceDocument;
+import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.Status;
 import com.rmsi.mast.studio.domain.TenureClass;
 import com.rmsi.mast.studio.domain.Unit;
 import com.rmsi.mast.studio.domain.fetch.AttributeValuesFetch;
 import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
+import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
+import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
+import com.rmsi.mast.studio.domain.fetch.OwnerHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
 import com.rmsi.mast.studio.domain.fetch.PersonForEditing;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.RegistryBook;
+import com.rmsi.mast.studio.domain.fetch.ReportCertificateFetch;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitBasic;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitGeom;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitStatusHistory;
@@ -84,6 +89,8 @@ import com.rmsi.mast.studio.domain.fetch.SpatialUnitTemp;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonadministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
+import com.rmsi.mast.studio.domain.fetch.TransactionHistoryForFetch;
+import com.rmsi.mast.studio.domain.fetch.UploadedDocumentDetailsForFetch;
 import com.rmsi.mast.studio.domain.fetch.Usertable;
 import com.rmsi.mast.studio.mobile.dao.AttributeValuesDao;
 import com.rmsi.mast.studio.mobile.dao.CitizenshipDao;
@@ -96,13 +103,13 @@ import com.rmsi.mast.studio.mobile.dao.SurveyProjectAttributeDao;
 import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.dao.LandRecordsDao;
 import com.rmsi.mast.viewer.dao.PersonAdministratorDao;
+import com.rmsi.mast.viewer.dao.RegistrationRecordsDao;
 import com.rmsi.mast.viewer.dao.SpatialStatusDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitDeceasedPersonDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitPersonAdministratorDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitPersonWithInterestDao;
 import com.rmsi.mast.viewer.dao.SpatialUnitTempDao;
 import com.rmsi.mast.viewer.service.LandRecordsService;
-import java.util.Calendar;
 
 @Service
 public class LandRecordsServiceImpl implements LandRecordsService {
@@ -129,6 +136,8 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 
     @Autowired
     private NonNaturalPersonDao nonNaturalPersonDao;
+    
+    
     @Autowired
     private GenderDAO genderDAO;
 
@@ -237,7 +246,14 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 
     @Autowired
     private DisputeStatusDao disputeStatusDao;
+    
+    @Autowired
+    private RegistrationRecordsDao  registrationRecordsDao;
 
+    
+  
+    
+    
     @Override
     public List<SpatialUnitTable> findAllSpatialUnit(String defaultProject) {
         return landRecordsDao.findallspatialUnit(defaultProject);
@@ -292,7 +308,7 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     }
 
     @Override
-    public SpatialUnitGeom getParcelGeometry(long usin) {
+    public SpatialUnit getParcelGeometry(long usin) {
         return landRecordsDao.getParcelGeometry(usin);
     }
 
@@ -500,6 +516,7 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     }
 
     @Override
+    
     public boolean updateMultimedia(SourceDocument sourceDocument) {
         try {
             sourceDocumentDAO.makePersistent(sourceDocument);
@@ -514,9 +531,10 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     public Dispute updateDispute(Dispute dispute) {
         try {
             dispute = disputeDao.makePersistent(dispute);
-            SpatialUnitTable parcel = findSpatialUnitbyId(dispute.getUsin()).get(0);
+            SpatialUnitTable parcel = findSpatialUnitbyId(dispute.getId().longValue()).get(0);
 
             // Check for parcel to have new or referred status and be new claim or disputed
+            //@@ getcode new insteated of getcodeid
             if ((parcel.getStatus().getWorkflowStatusId() == Status.STATUS_NEW
                     || parcel.getStatus().getWorkflowStatusId() != Status.STATUS_REFERRED)
                     && parcel.getClaimType().getCode().equals(ClaimType.CODE_NEW)) {
@@ -535,9 +553,9 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     @Override
     public boolean deleteDispute(Dispute dispute) {
         try {
-            dispute.setDeleted(true);
+            dispute.setActive(true);
             disputeDao.makePersistent(dispute);
-            SpatialUnitTable parcel = findSpatialUnitbyId(dispute.getUsin()).get(0);
+            SpatialUnitTable parcel = findSpatialUnitbyId(dispute.getId().longValue()).get(0);
 
             // Check for parcel to have new or referred status and be new claim or disputed
             if (parcel.getStatus().getWorkflowStatusId() == Status.STATUS_REFERRED) {
@@ -558,11 +576,11 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     @Override
     public boolean resolveDispute(Dispute dispute) {
         try {
-            dispute.setStatus(disputeStatusDao.findById(DisputeStatus.STATUS_RESOLVED, false));
-            dispute.setResolutionDate(Calendar.getInstance().getTime());
+//            dispute.setStatus(disputeStatusDao.findById(DisputeStatus.STATUS_RESOLVED, false));
+//            dispute.setResolutionDate(Calendar.getInstance().getTime());
             disputeDao.makePersistent(dispute);
 
-            SpatialUnitTable parcel = findSpatialUnitbyId(dispute.getUsin()).get(0);
+            SpatialUnitTable parcel = findSpatialUnitbyId(dispute.getId().longValue()).get(0);
 
             // Check for parcel to have new or referred status and be new claim or disputed
             if (parcel.getStatus().getWorkflowStatusId() == Status.STATUS_REFERRED) {
@@ -588,15 +606,15 @@ public class LandRecordsServiceImpl implements LandRecordsService {
                 return false;
             }
 
-            if (dispute.getDisputingPersons() != null && dispute.getDisputingPersons().size() > 0) {
-                for (int i = 0; i < dispute.getDisputingPersons().size(); i++) {
-                    if (dispute.getDisputingPersons().get(i).getPerson_gid() == partyId) {
-                        dispute.getDisputingPersons().remove(i);
-                        break;
-                    }
-                }
-                disputeDao.makePersistent(dispute);
-            }
+//            if (dispute.getDisputingPersons() != null && dispute.getDisputingPersons().size() > 0) {
+//                for (int i = 0; i < dispute.getDisputingPersons().size(); i++) {
+//                    if (dispute.getDisputingPersons().get(i).getPersonid() == partyId) {
+//                        dispute.getDisputingPersons().remove(i);
+//                        break;
+//                    }
+//                }
+//                disputeDao.makePersistent(dispute);
+//            }
 
             return true;
         } catch (Exception e) {
@@ -619,9 +637,9 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     @Override
     public boolean deleteNatural(Long id) {
         //check if source document is not present against person_gid
-        if (getdocumentByPerson(id) != null) {
-            deleteMultimedia(Long.valueOf(getdocumentByPerson(id).getGid()));
-        }
+      /*  if (getdocumentByPerson(id) != null) {
+            deleteMultimedia(Long.valueOf(getdocumentByPerson(id).getDocumentid()));
+        }*/
 
         return socialTenureRelationshipDAO.deleteNatural(id);
     }
@@ -858,7 +876,7 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 
     @Override
     public List<GroupType> findAllGroupType() {
-        return groupTypeDAO.findAll();
+        return groupTypeDAO.findAllGroupType();
     }
 
     @Override
@@ -893,28 +911,28 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     }
 
     @Override
-    public List<SpatialUnitTemp> findAllSpatialUnitTemp(String defaultProject, int startfrom) {
-        return spatialUnitTempDao.findOrderedSpatialUnit(defaultProject, startfrom);
+    public List<SpatialUnitTemp> findAllSpatialUnitTemp(String defaultProject, int id) {
+        return spatialUnitTempDao.findOrderedSpatialUnit(defaultProject, id);
     }
 
-    @Override
+   /* @Override
     public List<SpatialUnitTable> search(String usinStr, String ukaNumber,
             String projname, String dateto, String datefrom,
             Long status, String claimType, Integer startpos) {
         return landRecordsDao.search(usinStr, ukaNumber, projname, dateto, datefrom, status, claimType, startpos);
-    }
+    }*/
 
     @Override
     public ArrayList<Long> findOwnerPersonByUsin(Long id) {
         List<SocialTenureRelationship> socailTenure = socialTenureRelationshipDAO.findbyUsin(id);
         ArrayList<Long> naturalPerson = new ArrayList<Long>();
 
-        for (int i = 0; i < socailTenure.size(); i++) {
+        /*for (int i = 0; i < socailTenure.size(); i++) {
 
-            naturalPerson.add(socailTenure.get(i).getPerson_gid().getPerson_gid());
-
+//            naturalPerson.add(socailTenure.get(i).getPersonlandid().getPerson_gid());
+            naturalPerson.add(socailTenure.get(i).getLaParty().getLaPartyPerson().getPersonid());
         }
-
+*/
         return naturalPersonDao.findOwnerByGid(naturalPerson);
 
     }
@@ -972,6 +990,11 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     @Override
     public SourceDocument getdocumentByPerson(Long person_gid) {
         return sourceDocumentDAO.getDocumentByPerson(person_gid);
+    }
+    
+    @Override
+    public SourceDocument getdocumentByPersonfortransaction(Long transactionid, Long partyid) {
+        return sourceDocumentDAO.getdocumentByPersonfortransaction(transactionid, partyid);
     }
 
     @Override
@@ -1239,7 +1262,25 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     }
     
     @Override
-    public List<PersonForEditing> getPersonsForEditing(String projectName, long usin, String firstName, String lastName, String middleName, String idNumber, String claimNumber, String neighbourN, String neighbourS, String neighbourE, String neighbourW){
+    public String checkruntopologychecks(String projectName) {
+        return landRecordsDao.checkruntopologychecks(projectName);
+    }
+    
+    @Override
+	public List<ReportCertificateFetch> getCertificatedetailsbytransactionid(Long usin)
+	{
+    	return landRecordsDao.getCertificatedetailsbytransactionid(usin);
+	}
+    
+    @Override
+   	public List<ReportCertificateFetch> getCertificatedetailsinbatch(Long startRecord,Long endRecord)
+   	{
+       	return landRecordsDao.getCertificatedetailsinbatch(startRecord,endRecord);
+   	}
+    
+    
+    @Override
+    public List<PersonForEditing> getPersonsForEditing(String projectName, long usin, String firstName, String lastName, String middleName, String idNumber, Integer claimNumber, String neighbourN, String neighbourS, String neighbourE, String neighbourW){
         return landRecordsDao.getPersonsForEditing(projectName, usin, firstName, lastName, middleName, idNumber, claimNumber, neighbourN, neighbourS, neighbourE, neighbourW);
     }
     
@@ -1247,4 +1288,165 @@ public class LandRecordsServiceImpl implements LandRecordsService {
     public PersonForEditing updatePersonForEditing(PersonForEditing pfe) throws Exception {
         return landRecordsDao.updatePersonForEditing(pfe);
     }
+    
+    //List<SpatialUnitTemp> AllSpatialUnitTemp(Integer id);
+    
+    @Override
+        public List<SpatialUnitTemp> AllSpatialUnitTemp(Integer id){
+        return spatialUnitTempDao.AllSpatialUnitTemp(id);
+        
+    }
+
+	
+	@Override
+	public List<LaSpatialunitLand> findAllSpatialUnitTemp_P(String defaultProject,
+			int startfrom) {
+		return landRecordsDao.findOrderedSpatialUnitRegistry(defaultProject, startfrom);
+	}
+	
+	 @Override
+	    public List<SpatialUnitTable> search(String usinStr, String ukaNumber,
+	            String projname, String dateto, String datefrom,
+	            Long status, String claimType, Integer startpos) {
+	        return landRecordsDao.search(usinStr, ukaNumber, projname, dateto, datefrom, status, claimType, startpos);
+	    }
+	
+	
+	 public  List<LaSpatialunitLand> search(Long status, Integer claimType, String project,String communeId,String transId,String parcelId,Integer startpos) {
+	        return landRecordsDao.search(status, claimType, project,communeId,transId,parcelId, startpos);
+	    }
+
+	@Override
+	public List<Object> findsummaryreport(String project)
+	{
+		 return landRecordsDao.findsummaryreport(project);
+	}
+	
+	@Override
+	public List<Object> findprojectdetailedsummaryreport(String project)
+	{
+		 return landRecordsDao.findprojectdetailedsummaryreport(project);
+	}
+	
+	@Override
+	public List<Object> findprojectapplicationstatussummaryreport(String project)
+	{
+		 return landRecordsDao.findprojectapplicationstatussummaryreport(project);
+	}
+    
+	@Override
+	public List<Object> findprojectapplicationtypesummaryreport(String project)
+	{
+		 return landRecordsDao.findprojectapplicationtypesummaryreport(project);
+	}
+    
+	
+	@Override
+	public List<Object> findprojectdetailedsummaryreportForCommune(String communeid)
+	{
+		 return landRecordsDao.findprojectdetailedsummaryreportForCommune(communeid);
+	}
+
+	@Override
+	public List<Object> findprojectworkflowsummaryreport(String project)
+	{
+		 return landRecordsDao.findprojectworkflowsummaryreport(project);
+	}
+    
+	@Override
+	public List<Object> findprojectTenureTypesLandUnitsummaryreport(String project)
+	{
+		 return landRecordsDao.findprojectTenureTypesLandUnitsummaryreport(project);
+	}
+
+	@Override
+	public Integer getTotalrecordByProject(String project) {
+		// TODO Auto-generated method stub
+		return landRecordsDao.getTotalrecordByProject(project);
+	}
+
+	@Override
+	public Integer searchCount(Long status, Integer claimType,String project,String communeId,String transId,String parcelId) {
+		
+		return landRecordsDao.searchCount(status, claimType, project,communeId,transId,parcelId);
+	}
+
+	@Override
+	public Integer spatialUnitWorkflowCount(int[] workflow_ids,int[] claim_ids,int[] status_ids, String project) {
+		
+		return landRecordsDao.spatialUnitWorkflowCount(workflow_ids, claim_ids, status_ids, project);
+	}
+
+	@Override
+	public List<LaSpatialunitLand> getspatialUnitWorkFlowResult(int[] workflow_ids,int[] claim_ids,int[] status_ids, Integer startfrom, String project) {
+		
+		return landRecordsDao.getspatialUnitWorkFlowResult(workflow_ids, claim_ids, status_ids, startfrom, project);
+	}
+
+	@Override
+	public List<OwnerHistoryForFetch> getownerhistorydetails(Long landid) 
+	{
+		return landRecordsDao.getownerhistorydetails(landid);
+	}
+
+	@Override
+	public List<LeaseHistoryForFetch> getleasehistorydetails(Long landid) 
+	{
+		return landRecordsDao.getleasehistorydetails(landid);
+	}
+	
+	@Override
+	public List<LeaseHistoryForFetch> findleasedetailbylandid(Long transactionid,Long landid) 
+	{
+		return landRecordsDao.findleasedetailbylandid(transactionid,landid);
+	}
+	
+	@Override
+	public List<LeaseHistoryForFetch> findsurrenderleasedetailbylandid(Long transactionid,Long landid) 
+	{
+		return landRecordsDao.findsurrenderleasedetailbylandid(transactionid,landid);
+	}
+	
+	@Override
+	public List<TransactionHistoryForFetch> gettransactiondetails(Long landid) 
+	{
+		return landRecordsDao.gettransactiondetails(landid);
+	}
+	
+	@Override
+	public List<MortageHistoryForFetch> getmortagagedetails(Long landid) 
+	{
+		return landRecordsDao.getmortagagedetails(landid);
+	}
+	
+	@Override
+	public List<UploadedDocumentDetailsForFetch> viewdocumentdetailbytransactioid(Long transactionid) 
+	{
+		return landRecordsDao.viewdocumentdetailbytransactioid(transactionid);
+	}
+	
+	@Override
+	public List<MortageHistoryForFetch> findmortagagedetailbylandid(Long transactionid,Long landid) 
+	{
+		return landRecordsDao.findmortagagedetailbylandid(transactionid,landid);
+	}
+	
+	@Override
+	public NonNaturalPerson addNonNaturalPerson(NonNaturalPerson nonNaturalPerson) {
+
+	 return nonNaturalPersonDao.addNonNaturalPerson(nonNaturalPerson);
+		
+	}
+
+    @Override
+    public NaturalPerson updateNaturalPersonDataForEdit(NaturalPerson np) {
+        try {
+			return landRecordsDao.updateNaturalPersonDataForEdit(np);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+    }
+    
+    
 }

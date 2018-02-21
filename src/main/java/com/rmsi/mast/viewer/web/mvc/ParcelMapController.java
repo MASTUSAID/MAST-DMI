@@ -1,5 +1,6 @@
 package com.rmsi.mast.viewer.web.mvc;
 
+import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitGeom;
 import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.service.LandRecordsService;
@@ -7,6 +8,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.ParseException;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -26,11 +28,14 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.jasperreports.engine.JasperExportManager;
+
 import org.apache.log4j.Logger;
 import org.geotools.data.DataUtilities;
 import org.geotools.factory.CommonFactoryFinder;
@@ -131,18 +136,19 @@ public class ParcelMapController {
             DefaultFeatureCollection parcelFeatures = new DefaultFeatureCollection("parcels", TYPE);
 
             // Get parcels
-            SpatialUnitGeom parcel = landRecordsService.getParcelGeometry(usin);
+            SpatialUnit parcel = landRecordsService.getParcelGeometry(usin);
             WKTReader2 wkt = new WKTReader2();
             
             if (parcel == null) {
                 return null;
             }
 
-            String claimLabel = StringUtils.empty(parcel.getPropertyno());
+            String claimLabel = StringUtils.empty(parcel.getLandno());
 
             SimpleFeature parcelFeature = SimpleFeatureBuilder.build(
                     TYPE,
-                    new Object[]{wkt.read(parcel.getUtmCoordinates()), claimLabel, true},
+                    //new Object[]{wkt.read(parcel.getGeometry().toString()), claimLabel, true},
+                    new Object[]{wkt.read(parcel.getGeomStr()), claimLabel, true},
                     Long.toString(usin));
 
             parcelFeatures.add(parcelFeature);

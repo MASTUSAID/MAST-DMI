@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Principal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +30,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.rmsi.mast.studio.domain.Layer;
 import com.rmsi.mast.studio.domain.LayerField;
 import com.rmsi.mast.studio.domain.Layertype;
+import com.rmsi.mast.studio.domain.RoleModule;
+import com.rmsi.mast.studio.domain.User;
+import com.rmsi.mast.studio.service.LayerFieldService;
 import com.rmsi.mast.studio.service.LayerService;
 import com.rmsi.mast.studio.service.LayertypeService;
 import com.rmsi.mast.studio.service.OutputformatService;
 import com.rmsi.mast.studio.service.ProjectionService;
+import com.rmsi.mast.studio.service.RoleModuleService;
 import com.rmsi.mast.studio.service.UnitService;
+import com.rmsi.mast.studio.service.UserService;
 
 @Controller
 public class LayerController {
@@ -49,6 +56,17 @@ public class LayerController {
 	private OutputformatService outputformatService;
 	@Autowired
 	private UnitService unitService;
+	
+	@Autowired
+	private LayerFieldService layerFieldService;
+
+	@Autowired
+	private UserService userService;
+	
+	@Autowired 
+	RoleModuleService roleModuleService;
+	
+	
 	private final String TENANT_ID = "1";
 	
 	@RequestMapping(value = "/studio/layer/", method = RequestMethod.GET)
@@ -59,7 +77,7 @@ public class LayerController {
 	
 	@RequestMapping(value = "/studio/layer/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public Layer details(@PathVariable("id") String id){
+	public Layer details(@PathVariable("id") String  id){
 		
 			return layerService.findLayerByName(id);
 		
@@ -74,34 +92,55 @@ public class LayerController {
 	
 	@RequestMapping(value="/studio/layer/delete/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean delete(@PathVariable("id") String id){
-		return layerService.deleteLayerById(id);
+	public String delete(@PathVariable("id") String id){
+		
+	 String status=	layerService.checklayerByid(Long.parseLong(id));
+	 
+	 if(status.equalsIgnoreCase("No")){
+		boolean flag= layerService.deleteLayerById(Long.parseLong(id));
+		if(flag)
+		{
+			status="success";
+		}
+		
+	 }
+	
+	 return status;
 	}
 	
 	@RequestMapping(value = "/studio/layer/create", method = RequestMethod.POST)
 	@ResponseBody
-	public Layer create(HttpServletRequest request, HttpServletResponse response) {
+	public Layer create(HttpServletRequest request, HttpServletResponse response,Principal principal) {
+		
+		String username = principal.getName();
+		User user = userService.findByUniqueName(username);
+		
+		Long id = user.getId();
+		
+		
 		try{
 			/*Create new Layer object*/
 			Layer layer = new Layer();
-			
+			long layerTypeId=0l;
 			//Set Layer Type
 			String strLayerType = ServletRequestUtils.getRequiredStringParameter(request, "layertype");
+			if(strLayerType.equalsIgnoreCase("wms")){
+				layerTypeId=2l;
+			}else
+			{
+				layerTypeId=1l;
+			}
 			System.out.println("LayerType Name ---- " + strLayerType);
-			Layertype lyrType = layertypeService.findLayertypeByName(strLayerType);
+			Layertype lyrType = layertypeService.findLayertypeById(layerTypeId);
 			layer.setLayertype(lyrType);
 			
 			if(strLayerType.equalsIgnoreCase("wms")){
-				
 				//Set URL
 				layer.setUrl(ServletRequestUtils.getRequiredStringParameter(request, "url"));
 
 				//Set Layer Name
+				layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "name"));				
 				
-					layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "name"));				
-				
-				//Set WFS name
-				layer.setWfsname(ServletRequestUtils.getRequiredStringParameter(request, "wfsname"));
 				
 				//Set Display Name
 				layer.setDisplayname(ServletRequestUtils.getStringParameter(request, "displayname"));
@@ -112,27 +151,149 @@ public class LayerController {
 				//Set Projection
 				
 				String strProjection = null;
-				
-				
-					strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projectionBean");			
-				
-				
+				strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projection_code");			
 				System.out.println("Projection ---- " + strProjection);
-				layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-			
+				layer.setProjectionBean(projectionService.findProjectionById(Integer.parseInt(strProjection)));
+				
 				//Set Output Format
 				String strFormat = null;
-				
-				
-					strFormat = ServletRequestUtils.getRequiredStringParameter(request, "outputformat");
-				
-				
-				System.out.println("Output Format ---- " + strFormat);
-				layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
+				strFormat = ServletRequestUtils.getRequiredStringParameter(request, "project_outputFormat");
+			    layer.setOutputformat(outputformatService.findOutputformatById(Integer.parseInt(strFormat)));
+			    
 				
 				//Set MaxExtent
 				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
 				
+				//Set Numzoom
+				int intNumzoomlevels=0;
+				try{
+					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
+					System.out.println("MinScale --- " + intNumzoomlevels);
+					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
+				}catch(Exception e){logger.error(e);}
+				
+				// set Displayinlayermanager
+				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
+				layer.setDisplayinlayermanager(new Boolean(blnDisplayinlayermanager));
+				
+				// set layer visibility
+				boolean blnVisibility = ServletRequestUtils.getRequiredBooleanParameter(request, "visibility");
+				layer.setVisibility(new Boolean(blnVisibility));
+				
+				//Set Queryable
+				//boolean blnQuerybale = ServletRequestUtils.getRequiredBooleanParameter(request, "queryable");
+				//System.out.println("Queryable ---- " + blnQuerybale);
+				layer.setQueryable(new Boolean(false));
+				
+				//Set Editable
+				//boolean blnEditable = ServletRequestUtils.getRequiredBooleanParameter(request, "editable");
+				layer.setEditable(new Boolean(false));
+				
+				//set selectable
+				//boolean blnSelectable = ServletRequestUtils.getRequiredBooleanParameter(request, "selectable");
+				layer.setSelectable(new Boolean(false));
+				
+				
+				//Set Unit
+				String strUnit = ServletRequestUtils.getRequiredStringParameter(request, "project_outputFormat");
+				System.out.println("Unit ---- " + strUnit);
+				layer.setUnitBean(unitService.findUnitById(Integer.parseInt(strUnit)));
+				
+				//Set MinExtent
+				layer.setMinextent(ServletRequestUtils.getRequiredStringParameter(request, "minextent"));
+				
+								
+				//Set Exportable
+				//boolean blnExportable = ServletRequestUtils.getRequiredBooleanParameter(request, "exportable");
+				//System.out.println("Exportable ---- " + blnExportable);
+				layer.setExportable(new Boolean(false));
+				
+				//Set Minscale
+				try{
+					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
+					System.out.println("MinScale --- " + intMinScale);
+					layer.setMinscale(new Integer(intMinScale));
+				}catch(Exception e){logger.error(e);}
+				
+				//Set MaxScale
+				try{
+					int intMaxScale = ServletRequestUtils.getIntParameter(request, "maxscale");
+					System.out.println("MaxScale --- " + intMaxScale);
+					layer.setMaxscale(new Integer(intMaxScale));
+				}catch(Exception e){logger.error(e);}
+				
+				
+				//Set Buffer
+				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
+				System.out.println("Buffer --- " + intBuffer);
+				layer.setBuffer(new Integer(intBuffer));
+				
+				
+				
+				//Set Display Outside Max Extent
+				boolean blnDisplayOutsideMaxExtent = ServletRequestUtils.getRequiredBooleanParameter(request, "displayoutsidemaxextent");
+				System.out.println("Spherical Mercator --- " + blnDisplayOutsideMaxExtent);
+				layer.setDisplayoutsidemaxextent(new Boolean(blnDisplayOutsideMaxExtent));
+				
+			
+				//Set isBase Layer
+				boolean blnIsBaseLayer = ServletRequestUtils.getRequiredBooleanParameter(request, "isbaselayer");
+				System.out.println("Is Base Layer --- " +  blnIsBaseLayer);
+				layer.setIsbaselayer(new Boolean(blnIsBaseLayer));
+				
+				//Set Geometry Type
+				String strGeomType = ServletRequestUtils.getStringParameter(request, "geomtype");
+				System.out.println("Geometry Type --- " + strGeomType);
+				layer.setGeomtype(strGeomType);
+				
+				//Set Filter
+				layer.setFilter(ServletRequestUtils.getStringParameter(request, "filter"));
+				
+				//Set version
+				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
+				
+				//Set Geometry Name
+				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				
+				//Set Tiled
+				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
+				System.out.println("Tiled ---- " + blnTiled);
+				layer.setTiled(new Boolean(blnTiled));		
+				
+				
+			}
+			
+			if(strLayerType.equalsIgnoreCase("wfs")){
+				
+				//Set URL
+				layer.setUrl(ServletRequestUtils.getRequiredStringParameter(request, "url"));
+
+				//Set Layer Name
+				layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "name"));				
+				
+				
+				//Set Display Name
+				layer.setDisplayname(ServletRequestUtils.getStringParameter(request, "displayname"));
+				
+				//Set Alias
+				layer.setAlias(ServletRequestUtils.getRequiredStringParameter(request, "alias"));
+				
+				//Set Projection
+				
+				String strProjection = null;
+				strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projection_code");			
+				System.out.println("Projection ---- " + strProjection);
+				layer.setProjectionBean(projectionService.findProjectionById(Integer.parseInt(strProjection)));
+				
+				//Set Output Format
+				String strFormat = null;
+				strFormat = ServletRequestUtils.getRequiredStringParameter(request, "project_outputFormat");
+				System.out.println("output ---- " + strFormat);
+			    layer.setOutputformat(outputformatService.findOutputformatById(Integer.parseInt(strFormat)));
+			    
+				
+				//Set MaxExtent
+				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
 				
 				//Set Numzoom
 				int intNumzoomlevels=0;
@@ -165,23 +326,14 @@ public class LayerController {
 				
 				
 				//Set Unit
-				String strUnit = ServletRequestUtils.getRequiredStringParameter(request, "unitBean.name");
+				String strUnit = ServletRequestUtils.getRequiredStringParameter(request, "layer_unit");
 				System.out.println("Unit ---- " + strUnit);
-				layer.setUnitBean(unitService.findUnitByName(strUnit));
+				layer.setUnitBean(unitService.findUnitById(Integer.parseInt(strUnit)));
 				
 				//Set MinExtent
 				layer.setMinextent(ServletRequestUtils.getRequiredStringParameter(request, "minextent"));
 				
-				//Set Layer Style
-				try{
-				String strLayerStyle = ServletRequestUtils.getStringParameter(request, "style");
-				System.out.println("--" + strLayerStyle + " -- ");
-				if(strLayerStyle != null && strLayerStyle.trim() != "")
-				{
-					layer.setStyle(strLayerStyle);
-				}
-				}catch(Exception e){logger.error(e);}
-				
+								
 				//Set Exportable
 				boolean blnExportable = ServletRequestUtils.getRequiredBooleanParameter(request, "exportable");
 				System.out.println("Exportable ---- " + blnExportable);
@@ -201,32 +353,20 @@ public class LayerController {
 					layer.setMaxscale(new Integer(intMaxScale));
 				}catch(Exception e){logger.error(e);}
 				
-				//Set Tile Size
-				//int intTileSize = ServletRequestUtils.getRequiredIntParameter(request, "tilesize");
-				//System.out.println("TileSize --- " + intTileSize);
-				//layer.setTilesize(new Integer(intTileSize));
 				
 				//Set Buffer
 				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
 				System.out.println("Buffer --- " + intBuffer);
 				layer.setBuffer(new Integer(intBuffer));
 				
-				//Set Spherical Mercator
-				//boolean blnSphericalMercator = ServletRequestUtils.getRequiredBooleanParameter(request, "sphericalmercator");
-				//System.out.println("Spherical Mercator --- " + blnSphericalMercator);
-				//layer.setSphericalmercator(new Boolean(blnSphericalMercator));
+				
 				
 				//Set Display Outside Max Extent
 				boolean blnDisplayOutsideMaxExtent = ServletRequestUtils.getRequiredBooleanParameter(request, "displayoutsidemaxextent");
 				System.out.println("Spherical Mercator --- " + blnDisplayOutsideMaxExtent);
 				layer.setDisplayoutsidemaxextent(new Boolean(blnDisplayOutsideMaxExtent));
 				
-				//Set Transition Effect
-				layer.setTransitioneffect(ServletRequestUtils.getStringParameter(request, "transitioneffect"));
-				
-				//Set Api Key
-				layer.setApikey(ServletRequestUtils.getStringParameter(request, "apikey"));
-				
+			
 				//Set isBase Layer
 				boolean blnIsBaseLayer = ServletRequestUtils.getRequiredBooleanParameter(request, "isbaselayer");
 				System.out.println("Is Base Layer --- " +  blnIsBaseLayer);
@@ -244,121 +384,23 @@ public class LayerController {
 				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
 				
 				//Set Geometry Name
-				layer.setGeometryname(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
 				
 				//Set Tiled
 				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
 				System.out.println("Tiled ---- " + blnTiled);
-				layer.setTiled(new Boolean(blnTiled));							
+				layer.setTiled(new Boolean(blnTiled));		
+				
+			
+				
+			
 			}
 			
-			if(strLayerType.equalsIgnoreCase("wfs")){
-				
-				//Set URL
-				layer.setUrl(ServletRequestUtils.getRequiredStringParameter(request, "url"));
-
-				//Set Layer Name
-				
-					layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "name"));				
-				
-				//Set WFS name
-				//layer.setWfsname(ServletRequestUtils.getRequiredStringParameter(request, "wfsname"));
-				
-				//Set Display Name
-				layer.setDisplayname(ServletRequestUtils.getStringParameter(request, "displayname"));
-				
-				//Set Alias
-				layer.setAlias(ServletRequestUtils.getRequiredStringParameter(request, "alias"));
-				
-				//Set Projection
-				
-				String strProjection = null;
-				
-				
-					strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projectionBean");			
-				
-				
-				System.out.println("Projection ---- " + strProjection);
-				layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-			
-				//Set Output Format
-				String strFormat = null;
-				
-				
-					strFormat = ServletRequestUtils.getRequiredStringParameter(request, "outputformat");
-				
-				
-				System.out.println("Output Format ---- " + strFormat);
-				layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
-				
-				//Set MaxExtent
-				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
-				
-				//Set Geometry Type
-				String strGeomType = ServletRequestUtils.getStringParameter(request, "geomtype");
-				System.out.println("Geometry Type --- " + strGeomType);
-				layer.setGeomtype(strGeomType);
-				
-			}
-			else if(strLayerType.equalsIgnoreCase("Tilecache")){
-				
-				//Set URL
-				layer.setUrl(ServletRequestUtils.getRequiredStringParameter(request, "url"));
-
-				//Set Layer Name
-				
-				layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "alias"));
-				
-				
-				//Set Alias
-				layer.setAlias(ServletRequestUtils.getRequiredStringParameter(request, "alias"));
-				
-				//Set Projection
-				
-				String strProjection = null;
-										
-				
-				strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projectionBean");
-					
-				
-				layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-			
-				//Set Output Format
-				String strFormat = null;
-				
-				
-					strFormat = ServletRequestUtils.getRequiredStringParameter(request, "outputformat");
-				
-				
-				System.out.println("Output Format ---- " + strFormat);
-				layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
-				
-				//Set MaxExtent
-				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
-				
-				
-				//Set Numzoom
-				int intNumzoomlevels=0;
-				try{
-					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
-					System.out.println("MinScale --- " + intNumzoomlevels);
-					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
-				}catch(Exception e){logger.error(e);}
-				
-				
-				layer.setDisplayinlayermanager(false);
-				layer.setQueryable(false);
-				layer.setEditable(false);
-				layer.setSelectable(false);
-				layer.setExportable(false);
-				layer.setSphericalmercator(false);
-				layer.setIsbaselayer(false);
-				layer.setDisplayoutsidemaxextent(false);
-				
-			}
+			layer.setVisibility(true);
+			layer.setCreatedby(id);
+			layer.setCreateddate(new Date());
 			
 			
-		
 			//Get Layer Field alias
 			String[] lyrFields_alias = ServletRequestUtils.getStringParameters(request, "FieldAlias");
 			//Get the Layer Fields
@@ -372,13 +414,14 @@ public class LayerController {
 			for(int i=0; i<lyrFields_alias.length; i++){
 				LayerField layerField = new LayerField();
 				layerField.setAlias(lyrFields_alias[i]);
-				layerField.setField(lyrFields[i]);
+				layerField.setLayerfield(lyrFields[i]);
+				layerField.setLayerfieldEn(lyrFields[i]);
 				layerField.setKeyfield(key[0]);
-				layerField.setTenantid(TENANT_ID);
-				layerField.setLayerBean(layer);
+				layerField.setLayer(layer);
+				layerField.setIsactive(true);
 				lyrFieldSet.add(layerField);
 			}
-			layer.setLayerFields(lyrFieldSet);
+			layer.setLayerField(lyrFieldSet);
 			
 			layerService.createLayer(layer);
 			
@@ -390,262 +433,349 @@ public class LayerController {
 		return null;
 	}
 	
+	
 	@RequestMapping(value = "/studio/layer/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public Layer edit(@ModelAttribute("layerfrm") Layer postLayer, HttpServletRequest request){
-		if(postLayer != null){
-			Layer lstLayers = layerService.findLayerByName(postLayer.getAlias());
-			
-				Layer layer = lstLayers;
-				
-				//Set Layer Type
-				String strLayerType = postLayer.getLayertype().getName();
-				//System.out.println("LayerType Name ---- " + strLayerType);
-				Layertype lyrType = layertypeService.findLayertypeByName(strLayerType);
-				layer.setLayertype(lyrType);
-				
-				if(strLayerType.equalsIgnoreCase("wms")){
-					//Set URL
-					layer.setUrl(postLayer.getUrl());
-	
-					//Set Layer Name
-					layer.setName(postLayer.getName());
-					
-					//Set WFS name
-					layer.setWfsname(postLayer.getWfsname());
-					
-					//Set Display Name
-					layer.setDisplayname(postLayer.getDisplayname());
-					
-					//Set Alias
-					layer.setAlias(postLayer.getAlias());
-					
-					//Set Projection
-					String strProjection = postLayer.getProjectionBean().getCode();
-					System.out.println("Projection ---- " + strProjection);
-					layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-				
-					//Set Output Format
-					String strFormat = postLayer.getOutputformat().getName();
-					System.out.println("Output Format ---- " + strFormat);
-					layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
-					
-					// set Displayinlayermanager
-					layer.setDisplayinlayermanager(postLayer.getDisplayinlayermanager());
-					
-					
-					// set layer visibility
-					
-					layer.setVisibility(postLayer.getVisibility());
-					
-									
-					//Set MaxExtent
-					layer.setMaxextent(postLayer.getMaxextent());
-					
-					//set numzoom
-					layer.setNumzoomlevels(postLayer.getNumzoomlevels());
-					
-					//Set Queryable
-					layer.setQueryable(postLayer.getQueryable());
-					
-					//Set Editable
-					layer.setEditable(postLayer.getEditable());
-					
-					//set selectable
-					layer.setSelectable(postLayer.getSelectable());
-									
-					//Set Unit
-					String strUnit = postLayer.getUnitBean().getName();
-					System.out.println("Unit ---- " + strUnit);
-					layer.setUnitBean(unitService.findUnitByName(strUnit));
-					
-					//Set MinExtent
-					layer.setMinextent(postLayer.getMinextent());
-					
-					//Set Layer Style
-					try{
-					String strLayerStyle = postLayer.getStyle();
-					System.out.println("--" + strLayerStyle + " -- ");
-					if(strLayerStyle != null && strLayerStyle.trim() != "")
-					{
-						layer.setStyle(strLayerStyle);
-					}
-					}catch(Exception e){logger.error(e);}
-					
-					//Set Exportable
-					layer.setExportable(postLayer.getExportable());
-					
-					//Set Minscale
-					layer.setMinscale(postLayer.getMinscale());
-					
-					//Set MaxScale
-					layer.setMaxscale(postLayer.getMaxscale());
-					
-					//Set Tile Size
-					layer.setTilesize(postLayer.getTilesize());
-					
-					//Set Buffer
-					layer.setBuffer(postLayer.getBuffer());
-					
-					//Set Spherical Mercator
-					layer.setSphericalmercator(postLayer.getSphericalmercator());
-					
-					//Set Display Outside Max Extent
-					layer.setDisplayoutsidemaxextent(postLayer.getDisplayoutsidemaxextent());
-					
-					//Set Transition Effect
-					layer.setTransitioneffect(postLayer.getTransitioneffect());
-					
-					//Set Api Key
-					layer.setApikey(postLayer.getApikey());
-					
-					//Set isBase Layer
-					layer.setIsbaselayer(postLayer.getIsbaselayer());
-					
-					//Set Geometry Type
-					layer.setGeomtype(postLayer.getGeomtype());
-					
-					//Set Filter
-					layer.setFilter(postLayer.getFilter());
-					
-					//Set version
-					layer.setVersion(postLayer.getVersion());
-					
-					//Set Geometry Name
-					layer.setGeometryname(postLayer.getGeometryname());
-					
-					layer.setTiled(postLayer.getTiled());
-				}
-				
-				else if(strLayerType.equalsIgnoreCase("wfs")){
-					//Set URL
-					layer.setUrl(postLayer.getUrl());
-	
-					//Set Layer Name
-					layer.setName(postLayer.getName());
-					
-					//Set WFS name
-					layer.setWfsname(postLayer.getWfsname());
-					
-					//Set Display Name
-					layer.setDisplayname(postLayer.getDisplayname());
-					
-					//Set Alias
-					layer.setAlias(postLayer.getAlias());
-					
-					//Set Projection
-					String strProjection = postLayer.getProjectionBean().getCode();
-					System.out.println("Projection ---- " + strProjection);
-					layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-				
-					//Set Output Format
-					String strFormat = postLayer.getOutputformat().getName();
-					System.out.println("Output Format ---- " + strFormat);
-					layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
-					
-														
-					//Set MaxExtent
-					layer.setMaxextent(postLayer.getMaxextent());
-					
-					//Set Geometry Type
-					layer.setGeomtype(postLayer.getGeomtype());					
-					
-				}
-				
-				else if(strLayerType.equalsIgnoreCase("Tilecache")){
-					
-					layer.setUrl(postLayer.getUrl());
-					
-					//Set Layer Name
-					layer.setName(postLayer.getAlias());
-										
-					//Set Alias
-					layer.setAlias(postLayer.getAlias());
-					
-					//Set Projection
-					String strProjection = postLayer.getProjectionBean().getCode();
-					System.out.println("Projection ---- " + strProjection);
-					layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-				
-					//Set Output Format
-					String strFormat = postLayer.getOutputformat().getName();
-					System.out.println("Output Format ---- " + strFormat);
-					layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
-					
-					
-					
-					/*String strProjection=null;
-					try{
-					strProjection = ServletRequestUtils.getRequiredStringParameter(request, "hid-projectionBean");
-										
-					layer.setProjectionBean(projectionService.findProjectionByName(strProjection));
-					}
-					catch(Exception e){}
-					//Set Output Format
-					String strFormat = null;
-					try{
-					strFormat = ServletRequestUtils.getRequiredStringParameter(request, "hid-outputformat");
-					layer.setOutputformat(outputformatService.findOutputformatByName(strFormat));
-					}
-					catch(Exception e){}*/
-					
-									
-					//Set MaxExtent
-					layer.setMaxextent(postLayer.getMaxextent());
-					
-					//set numzoom
-					layer.setNumzoomlevels(postLayer.getNumzoomlevels());
-					
-					
-					layer.setDisplayinlayermanager(false);
-					layer.setQueryable(false);
-					layer.setEditable(false);
-					layer.setSelectable(false);
-					layer.setExportable(false);
-					layer.setSphericalmercator(false);
-					layer.setIsbaselayer(false);
-					layer.setDisplayoutsidemaxextent(false);
-					
-				}
-				
-				
-				//Get Layer Field alias
-				String[] lyrFields_alias = ServletRequestUtils.getStringParameters(request, "FieldAlias");
-				//Get the Layer Fields
-				String[] lyrFields = ServletRequestUtils.getStringParameters(request, "Displayable");
-				//Get the Key
-				String[] key = null;
-				try{
-				key = request.getParameterValues("Key");
-				}
-				catch(Exception e){logger.error(e);}
-				
-				if(key!=null)System.out.println("-- Key -- " + key[0]);
-				
-				//Create Layer Field and attach it to the layer object
-				Set<LayerField> lyrFieldSet = new HashSet<LayerField>();
-				for(int i=0; i<lyrFields_alias.length; i++){
-					LayerField layerField = new LayerField();
-					layerField.setAlias(lyrFields_alias[i]);
-					layerField.setField(lyrFields[i]);
-					layerField.setKeyfield(key[0]);
-					layerField.setTenantid(TENANT_ID);
-					//layerField.setLayerBean(layer);
-					lyrFieldSet.add(layerField);
-				}
-				layerService.updateLayer(layer, lyrFieldSet);
-				
-				return layer;
-			}
-			return null;
-		}
+	public Layer edit(HttpServletRequest request, HttpServletResponse response,Principal principal) {
 		
+		String username = principal.getName();
+		User user = userService.findByUniqueName(username);
+		
+		Long id = user.getId();
+		
+		
+		try{
+			/*Create new Layer object*/
+			Layer layer = null;
+			
+			try{
+			String _layerId=	ServletRequestUtils.getRequiredStringParameter(request, "layer_id");
+			layer=layerService.findLayerById(Long.parseLong(_layerId));
+				
+			}catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			long layerTypeId=0l;
+			//Set Layer Type
+			String strLayerType = ServletRequestUtils.getRequiredStringParameter(request, "layertype");
+			if(strLayerType.equalsIgnoreCase("wms")){
+				layerTypeId=2l;
+			}else
+			{
+				layerTypeId=1l;
+			}
+			System.out.println("LayerType Name ---- " + strLayerType);
+			Layertype lyrType = layertypeService.findLayertypeById(layerTypeId);
+			layer.setLayertype(lyrType);
+			
+			
+			if(strLayerType.equalsIgnoreCase("wms")){
+				//Set URL
+				layer.setUrl(ServletRequestUtils.getRequiredStringParameter(request, "url"));
+
+				//Set Layer Name
+				layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "name_layer"));				
+				
+				
+				//Set Display Name
+				layer.setDisplayname(ServletRequestUtils.getStringParameter(request, "displayname"));
+				
+				//Set Alias
+				layer.setAlias(ServletRequestUtils.getRequiredStringParameter(request, "alias"));
+				
+				//Set Projection
+				
+				String strProjection = null;
+				strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projection_code");			
+				System.out.println("Projection ---- " + strProjection);
+				layer.setProjectionBean(projectionService.findProjectionById(Integer.parseInt(strProjection)));
+				
+				//Set Output Format
+				String strFormat = null;
+				strFormat = ServletRequestUtils.getRequiredStringParameter(request, "project_outputFormat");
+			    layer.setOutputformat(outputformatService.findOutputformatById(Integer.parseInt(strFormat)));
+			    
+				
+				//Set MaxExtent
+				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
+				
+				//Set Numzoom
+				int intNumzoomlevels=0;
+				try{
+					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
+					System.out.println("MinScale --- " + intNumzoomlevels);
+					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
+				}catch(Exception e){logger.error(e);}
+				
+				// set Displayinlayermanager
+				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
+				layer.setDisplayinlayermanager(new Boolean(blnDisplayinlayermanager));
+				
+				// set layer visibility
+				boolean blnVisibility = ServletRequestUtils.getRequiredBooleanParameter(request, "visibility");
+				layer.setVisibility(new Boolean(blnVisibility));
+				
+				//Set Queryable
+				//boolean blnQuerybale = ServletRequestUtils.getRequiredBooleanParameter(request, "queryable");
+			//	System.out.println("Queryable ---- " + blnQuerybale);
+				layer.setQueryable(new Boolean(false));
+				
+				//Set Editable
+				//boolean blnEditable = ServletRequestUtils.getRequiredBooleanParameter(request, "editable");
+				layer.setEditable(new Boolean(false));
+				
+				//set selectable
+				//boolean blnSelectable = ServletRequestUtils.getRequiredBooleanParameter(request, "selectable");
+				layer.setSelectable(new Boolean(false));
+				
+				
+				//Set Unit
+				String strUnit = ServletRequestUtils.getRequiredStringParameter(request, "project_outputFormat");
+				System.out.println("Unit ---- " + strUnit);
+				layer.setUnitBean(unitService.findUnitById(Integer.parseInt(strUnit)));
+				
+				//Set MinExtent
+				layer.setMinextent(ServletRequestUtils.getRequiredStringParameter(request, "minextent"));
+				
+								
+				//Set Exportable
+				//boolean blnExportable = ServletRequestUtils.getRequiredBooleanParameter(request, "exportable");
+				//System.out.println("Exportable ---- " + blnExportable);
+				layer.setExportable(new Boolean(false));
+				
+				//Set Minscale
+				try{
+					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
+					System.out.println("MinScale --- " + intMinScale);
+					layer.setMinscale(new Integer(intMinScale));
+				}catch(Exception e){logger.error(e);}
+				
+				//Set MaxScale
+				try{
+					int intMaxScale = ServletRequestUtils.getIntParameter(request, "maxscale");
+					System.out.println("MaxScale --- " + intMaxScale);
+					layer.setMaxscale(new Integer(intMaxScale));
+				}catch(Exception e){logger.error(e);}
+				
+				
+				//Set Buffer
+				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
+				System.out.println("Buffer --- " + intBuffer);
+				layer.setBuffer(new Integer(intBuffer));
+				
+				
+				
+				//Set Display Outside Max Extent
+				boolean blnDisplayOutsideMaxExtent = ServletRequestUtils.getRequiredBooleanParameter(request, "displayoutsidemaxextent");
+				System.out.println("Spherical Mercator --- " + blnDisplayOutsideMaxExtent);
+				layer.setDisplayoutsidemaxextent(new Boolean(blnDisplayOutsideMaxExtent));
+				
+			
+				//Set isBase Layer
+				boolean blnIsBaseLayer = ServletRequestUtils.getRequiredBooleanParameter(request, "isbaselayer");
+				System.out.println("Is Base Layer --- " +  blnIsBaseLayer);
+				layer.setIsbaselayer(new Boolean(blnIsBaseLayer));
+				
+				//Set Geometry Type
+				String strGeomType = ServletRequestUtils.getStringParameter(request, "geomtype");
+				System.out.println("Geometry Type --- " + strGeomType);
+				layer.setGeomtype(strGeomType);
+				
+				//Set Filter
+				layer.setFilter(ServletRequestUtils.getStringParameter(request, "filter"));
+				
+				//Set version
+				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
+				
+				//Set Geometry Name
+				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				
+				//Set Tiled
+				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
+				System.out.println("Tiled ---- " + blnTiled);
+				layer.setTiled(new Boolean(blnTiled));		
+				
+				
+			}
+			
+			if(strLayerType.equalsIgnoreCase("wfs")){
+				
+				//Set URL
+				layer.setUrl(ServletRequestUtils.getRequiredStringParameter(request, "url"));
+
+				//Set Layer Name
+				layer.setName(ServletRequestUtils.getRequiredStringParameter(request, "name_layer"));				
+				
+				
+				//Set Display Name
+				layer.setDisplayname(ServletRequestUtils.getStringParameter(request, "displayname"));
+				
+				//Set Alias
+				layer.setAlias(ServletRequestUtils.getRequiredStringParameter(request, "alias"));
+				
+				//Set Projection
+				
+				String strProjection = null;
+				strProjection = ServletRequestUtils.getRequiredStringParameter(request, "projection_code");			
+				System.out.println("Projection ---- " + strProjection);
+				layer.setProjectionBean(projectionService.findProjectionById(Integer.parseInt(strProjection)));
+				
+				//Set Output Format
+				String strFormat = null;
+				strFormat = ServletRequestUtils.getRequiredStringParameter(request, "project_outputFormat");
+				System.out.println("output ---- " + strFormat);
+			    layer.setOutputformat(outputformatService.findOutputformatById(Integer.parseInt(strFormat)));
+			    
+				
+				//Set MaxExtent
+				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
+				
+				//Set Numzoom
+				int intNumzoomlevels=0;
+				try{
+					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
+					System.out.println("MinScale --- " + intNumzoomlevels);
+					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
+				}catch(Exception e){logger.error(e);}
+				
+				// set Displayinlayermanager
+				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
+				layer.setDisplayinlayermanager(new Boolean(blnDisplayinlayermanager));
+				
+				// set layer visibility
+				boolean blnVisibility = ServletRequestUtils.getRequiredBooleanParameter(request, "visibility");
+				layer.setVisibility(new Boolean(blnVisibility));
+				
+				//Set Queryable
+				boolean blnQuerybale = ServletRequestUtils.getRequiredBooleanParameter(request, "queryable");
+				System.out.println("Queryable ---- " + blnQuerybale);
+				layer.setQueryable(new Boolean(blnQuerybale));
+				
+				//Set Editable
+				boolean blnEditable = ServletRequestUtils.getRequiredBooleanParameter(request, "editable");
+				layer.setEditable(new Boolean(blnEditable));
+				
+				//set selectable
+				boolean blnSelectable = ServletRequestUtils.getRequiredBooleanParameter(request, "selectable");
+				layer.setSelectable(new Boolean(blnSelectable));
+				
+				
+				//Set Unit
+				String strUnit = ServletRequestUtils.getRequiredStringParameter(request, "layer_unit");
+				System.out.println("Unit ---- " + strUnit);
+				layer.setUnitBean(unitService.findUnitById(Integer.parseInt(strUnit)));
+				
+				//Set MinExtent
+				layer.setMinextent(ServletRequestUtils.getRequiredStringParameter(request, "minextent"));
+				
+								
+				//Set Exportable
+				boolean blnExportable = ServletRequestUtils.getRequiredBooleanParameter(request, "exportable");
+				System.out.println("Exportable ---- " + blnExportable);
+				layer.setExportable(new Boolean(blnExportable));
+				
+				//Set Minscale
+				try{
+					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
+					System.out.println("MinScale --- " + intMinScale);
+					layer.setMinscale(new Integer(intMinScale));
+				}catch(Exception e){logger.error(e);}
+				
+				//Set MaxScale
+				try{
+					int intMaxScale = ServletRequestUtils.getIntParameter(request, "maxscale");
+					System.out.println("MaxScale --- " + intMaxScale);
+					layer.setMaxscale(new Integer(intMaxScale));
+				}catch(Exception e){logger.error(e);}
+				
+				
+				//Set Buffer
+				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
+				System.out.println("Buffer --- " + intBuffer);
+				layer.setBuffer(new Integer(intBuffer));
+				
+				
+				
+				//Set Display Outside Max Extent
+				boolean blnDisplayOutsideMaxExtent = ServletRequestUtils.getRequiredBooleanParameter(request, "displayoutsidemaxextent");
+				System.out.println("Spherical Mercator --- " + blnDisplayOutsideMaxExtent);
+				layer.setDisplayoutsidemaxextent(new Boolean(blnDisplayOutsideMaxExtent));
+				
+			
+				//Set isBase Layer
+				boolean blnIsBaseLayer = ServletRequestUtils.getRequiredBooleanParameter(request, "isbaselayer");
+				System.out.println("Is Base Layer --- " +  blnIsBaseLayer);
+				layer.setIsbaselayer(new Boolean(blnIsBaseLayer));
+				
+				//Set Geometry Type
+				String strGeomType = ServletRequestUtils.getStringParameter(request, "geomtype");
+				System.out.println("Geometry Type --- " + strGeomType);
+				layer.setGeomtype(strGeomType);
+				
+				//Set Filter
+				layer.setFilter(ServletRequestUtils.getStringParameter(request, "filter"));
+				
+				//Set version
+				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
+				
+				//Set Geometry Name
+				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				
+				//Set Tiled
+				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
+				System.out.println("Tiled ---- " + blnTiled);
+				layer.setTiled(new Boolean(blnTiled));		
+				
+			
+				
+			
+			}
+			
+			layer.setVisibility(true);
+			layer.setModifiedby(id);
+			layer.setModifieddate(new Date());
+			
+			//Get Layer Field alias
+			String[] lyrFields_alias = ServletRequestUtils.getStringParameters(request, "FieldAlias");
+			//Get the Layer Fields
+			String[] lyrFields = ServletRequestUtils.getStringParameters(request, "Displayable");
+			//Get the Key
+			String[] key = request.getParameterValues("Key");
+			//System.out.println("-- Key -- " + key[0]);
+			
+			//Create Layer Field and attach it to the layer object
+			Set<LayerField> lyrFieldSet = new HashSet<LayerField>();
+			for(int i=0; i<lyrFields_alias.length; i++){
+				LayerField layerField = new LayerField();
+				layerField.setAlias(lyrFields_alias[i]);
+				layerField.setLayerfield(lyrFields[i]);
+				layerField.setLayerfieldEn(lyrFields[i]);
+				layerField.setKeyfield(key[0]);
+				layerField.setLayer(layer);
+				layerField.setIsactive(true);
+				lyrFieldSet.add(layerField);
+			}
+			
+			layer.setLayerField(lyrFieldSet);
+			
+			layerFieldService.deleteFeildByLayerId(layer.getLayerid());
+			layerService.createLayer(layer);
+			
+		}catch(ServletRequestBindingException e){
+			logger.error(e);
+		}catch(Exception ex){
+			logger.error(ex);
+		}
+		return null;
+	}
 	
-	@RequestMapping(value="/studio/layer/getGeometryType/{id}", method=RequestMethod.GET)
+/*	@RequestMapping(value="/studio/layer/getGeometryType/{id}", method=RequestMethod.GET)
 	@ResponseBody
 	public String getGeometryType(@PathVariable("id") String id){
 		return layerService.getGeometryType(id);
-	}
+	}*/
 	
 	@RequestMapping(value="/studio/layer/saveSLD", method = RequestMethod.POST)
 	@ResponseBody
@@ -696,6 +826,12 @@ public class LayerController {
 		}
 		
 		return sw.toString();
+	}
+	
+	@RequestMapping(value = "/studio/role/Allmodule/{id}", method = RequestMethod.GET)
+	@ResponseBody
+    public List<RoleModule> getAllRolesModule(@PathVariable String id){
+		return 	roleModuleService.getRoleModuleByroleId(Integer.parseInt(id));
 	}
 	
 }

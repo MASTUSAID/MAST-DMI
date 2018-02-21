@@ -19,13 +19,10 @@
 
 <input type="hidden" name="MinResolution" id="MinResolution" value="0"/>
 <input type="hidden" name="MaxResolution" id="MaxResolution" value="0"/>
-<!-- input type="hidden" name="displayinlayermanager" id="displayinlayermanager" value="false"/-->
 <input type="hidden" name="WrapDateLine" id="WrapDateLine" value="false"/>
 <input type="hidden" name="Filter" id="Filter" value="0"/>
 <input type="hidden" name="hid-NumZoomLevels" id="hid-NumZoomLevels" value="0"/>
-
-<!--input type="hidden" name="hid-projectionBean" id="hid-projectionBean" value="EPSG:27700"/>
-<input type="hidden" name="hid-outputformat" id="hid-outputformat" value="image/png"/-->
+<input type="hidden" name="layer_id" id="layer_id" />
 <input type="hidden" name="wfsname" value="">
 
 </div>
@@ -232,11 +229,11 @@
             </td>
 			       
             <td>
-                ${layertype.name}
+                ${layertype.description}
             </td>
 			<td>
 			{{if (unitBean)}} 		
-			   ${unitBean.name}
+			   ${unitBean.unitEn}
 			   {{else}}
 			   n/a
 			
@@ -244,7 +241,7 @@
             </td>           
             <td>
                 {{if (projectionBean)}} 
-				${projectionBean.code}
+				${projectionBean.projection}
 				{{else}}
 				n/a
 				{{/if}}   
@@ -254,7 +251,7 @@
 				<a href="javascript:CreateEditLayerRecord('${alias}', '${layertype.name}', '${url}', 'layer');"><img src="resources/images/studio/edit.png" title="Edit"/></a>
             </td>
            <td align="center">
-				<a href="javascript:deleteLayerRecord('layer/delete/${alias}', '${alias}', 'layer');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
+				<a href="javascript:deleteLayerRecord('layer/delete/${layerid}', '${alias}', 'layer');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
            </td>
                     
         </tr>		
@@ -272,11 +269,11 @@
 				<select id="layertype" name="layertype" onChange="loadTemplate(this.value,'Create');">
 					<option SELECTED value="">Please select</option>		
 					{{each(i,_layerType) $item.layerTypesList}}              						
-						 <option  value="${_layerType.name}">${_layerType.name}</option>											
+						 <option  value="${_layerType.description}">${_layerType.description}</option>											
 					{{/each}}           
 				</select>		
 				 {{else}}
-						<input type="textbox" name="layertype.name" id="layertype" value="${layertype.name}"/>
+						<input type="textbox" name="layertype" id="layertype" value="${layertype.description}"/>
 				 {{/if}}       
 			</td>
 
@@ -314,7 +311,7 @@
 				</select>
 		
 			{{else}}
-				<input type="textbox" name="name" id="name" value="${name}"/>
+				<input type="textbox" name="name_layer" id="name_layer" value="${name}"/>
 			{{/if}}  
 		</td>  
  
@@ -331,11 +328,14 @@
 
 		<td><label class="lblint">Alias</label></td>
 		<td>                      
-                <input type="textbox" name="alias" id="alias" value="${alias}"/>
-                {{if ($item.action == 'Create')}} 
+                
+             {{if ($item.action == 'Create')}} 
+				<input type="textbox" name="alias" id="alias" value=""/>
                 <img src="resources/images/studio/search_button.png"  onclick="javascript:checkLayerExistence($('#alias').val());"/>
              
-                {{/if}}    
+               {{else}}
+				<input type="textbox" name="alias" id="alias" value="${alias}"/>
+			{{/if}}   
 		</td>    
 	
 		<td><label class="lblint">MaxExtent</label></td>
@@ -348,23 +348,31 @@
 		<td><label class="lblint">Format</label></td>
 		<td>
 	 
-			{{if ($item.action == 'Create')}} 
-				<select name="outputformat"  id="outputformat">
-				 <option value="">Please Select</option>
-				</select>
-			{{else}}
-				<select name="outputformat.name"  id="outputformat">
-					<option value="">Please Select</option>  
-				</select>
-		 {{/if}}
+			<!-- {{if ($item.action == 'Create')}}  -->
+				<!-- <select name="outputformat"  id="outputformat"> -->
+				 <!-- <option value="">Please Select</option> -->
+				<!-- </select> -->
+			<!-- {{else}} -->
+				<!-- <select name="outputformat.documentformat"  id="outputformat"> -->
+					<!-- <option value="">Please Select</option>   -->
+				<!-- </select> -->
+		 <!-- {{/if}} -->
+		 <select name="project_outputFormat" id="project_outputFormat">
+              <option  value="">Please Select</option>         
+        </select>
+		 
 		</td>
 		<td><label class="lblint">Projection</label></td>
 		<td>
-			{{if (projectionBean)}}		    
-				<input type="textbox" name="projectionBean.code" id="projectionBean.code" value="${projectionBean.code}"/> 
-			{{else}}
-				<input type="textbox" name="projectionBean" id="projectionBean" value=""/> 
-			{{/if}}
+			<!-- {{if (projectionBean)}}		     -->
+				<!-- <input type="textbox" name="projectionBean.code" id="projectionBean.code" value="${projectionBean.code}"/>  -->
+			<!-- {{else}} -->
+				<!-- <input type="textbox" name="projectionBean" id="projectionBean" value=""/>  -->
+			<!-- {{/if}} -->
+		<select name="projection_code" id = "projection_code">
+            <option  value="">Please Select</option>         
+       </select>	
+			
 		</td>
   
 
@@ -392,7 +400,7 @@
 	 </td>
 	 <td><label class="lblint">Editable</label></td>
 	 <td>
-		<select name="editable">
+		<select id="editable" name="editable">
 		
 		{{if (editable)}}		
 							
@@ -454,19 +462,9 @@
 	 <tr>
 	 <td><label class="lblint">Unit</label></td>
 	 <td>
-	 <select name="unitBean.name"  id="unitBean.name">
-				{{each(i,_unit) $item.unitsList}}
-						{{if (unitBean)}}
-							{{if (unitBean.name == _unit.name)}}
-								<option SELECTED value="${_unit.name}">${_unit.name}</option>
-							{{else}}
-								 <option  value="${_unit.name}">${_unit.name}</option>
-							{{/if}}
-						{{else}}
-							 <option  value="${_unit.name}">${_unit.name}</option>
-						{{/if}}	
-				{{/each}}           
-			</select>
+	 <select name="layer_unit"  id="layer_unit">
+	       <option  value="">Please Select</option>         			         
+	 </select>
 	<td><label class="lblint">MinExtent</label></td>
 	 <td><input type="textbox" name="minextent" id="minextent" value="${minextent}"/></td>
 
@@ -668,18 +666,6 @@
 
 
 <script id="LayerTemplateWFSForm" type="text/x-jquery-tmpl"> 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	<tr id="urlTR">
 	<td colspan="4">
 	<div style="float:left;">
@@ -695,14 +681,6 @@
 	</td>
 	
 	</tr>  	
-	
-	
-	
-	
-	
-	
-	
-	
 
    <tr>   
 		{{if ($item.action == 'Create')}} 				
@@ -743,7 +721,9 @@
                 {{if ($item.action == 'Create')}} 
                 <img src="resources/images/studio/search_button.png"  onclick="javascript:checkLayerExistence($('#alias').val());"/>
              
-                {{/if}}    
+				{{else}}
+				<input type="textbox" name="alias" id="alias" value="${alias}"/>
+			{{/if}}  
 		</td>    
 	
 		<td>MaxExtent</td>
@@ -764,7 +744,7 @@
 	
 	 <td>GeomType</td>
 	 <td> 	 
-	 <select id="geomtype" name = "geomtype">
+	 <select id="" name = "">
 	 <option value="">Please Select</option>	
 	 <option value="POINT">POINT</option>	
 	 <option value="LINESTRING">LINESTRING</option>	

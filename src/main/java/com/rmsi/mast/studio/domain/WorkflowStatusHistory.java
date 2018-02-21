@@ -8,64 +8,185 @@ import javax.persistence.*;
 /**
  * Entity implementation class for Entity: WorkflowStatusHistory
  *
+package model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
+
+
+/**
+ * The persistent class for the la_ext_landworkflowhistory database table.
+ * 
  */
 @Entity
-@Table(name = "sunit_workflow_status_history")
+@Table(name="la_ext_landworkflowhistory")
 public class WorkflowStatusHistory implements Serializable {
-
 	private static final long serialVersionUID = 1L;
-
+	
+	@SequenceGenerator(name = "WORK_FLOW_STATUS_HISTORY", sequenceName = "la_ext_landworkflowhistory_landworkflowhistoryid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WORK_FLOW_STATUS_HISTORY")
 	@Id
-	@SequenceGenerator(name = "sunit_workflow_status_history_id", sequenceName = "sunit_workflow_status_history_seq", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sunit_workflow_status_history_id")
-	private long status_hist_id;
-	private long usin;
-	private int workflow_status_id;
-	private long userid;
-	private Date status_change_time;
+	private Integer landworkflowhistoryid;
+
+	private String comments;
+
+	private Integer createdby;
+
+	@Temporal(TemporalType.DATE)
+	private Date createddate;
+
+	private Boolean isactive;
+
+	private Integer modifiedby;
+
+	@Temporal(TemporalType.DATE)
+	private Date modifieddate;
+
+	@Temporal(TemporalType.DATE)
+	private Date statuschangedate;
+
+	private Integer userid;
+
+	//bi-directional many-to-one association to LaExtApplicationstatus
+	@ManyToOne
+	@JoinColumn(name="applicationstatusid")
+	private Status status;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="workflowid" )
+	private Workflow workflow;
+	
+
+	//bi-directional many-to-one association to LaSpatialunitLand
+	/*@ManyToOne
+	@JoinColumn(name="landid")
+	private LaSpatialunitLand laSpatialunitLand;*/
+	
+	
+	@Transient
+	User user;
+	
+	
+	private long landid;
 
 	public WorkflowStatusHistory() {
-		super();
+		
 	}
 
-	public long getStatus_hist_id() {
-		return this.status_hist_id;
+	public Integer getLandworkflowhistoryid() {
+		return landworkflowhistoryid;
 	}
 
-	public void setStatus_hist_id(long status_hist_id) {
-		this.status_hist_id = status_hist_id;
+	public void setLandworkflowhistoryid(Integer landworkflowhistoryid) {
+		this.landworkflowhistoryid = landworkflowhistoryid;
 	}
 
-	public long getUsin() {
-		return this.usin;
+	public String getComments() {
+		return comments;
 	}
 
-	public void setUsin(long usin) {
-		this.usin = usin;
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
-	public int getWorkflow_status_id() {
-		return this.workflow_status_id;
+	public Integer getCreatedby() {
+		return createdby;
 	}
 
-	public void setWorkflow_status_id(int workflow_status_id) {
-		this.workflow_status_id = workflow_status_id;
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
 	}
 
-	public long getUserid() {
-		return this.userid;
+	public Date getCreateddate() {
+		return createddate;
 	}
 
-	public void setUserid(long userid) {
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+	public Date getStatuschangedate() {
+		return statuschangedate;
+	}
+
+	public void setStatuschangedate(Date statuschangedate) {
+		this.statuschangedate = statuschangedate;
+	}
+
+	public Integer getUserid() {
+		return userid;
+	}
+
+	public void setUserid(Integer userid) {
 		this.userid = userid;
 	}
 
-	public Date getStatus_change_time() {
-		return this.status_change_time;
+	public Status getStatus() {
+		return status;
 	}
 
-	public void setStatus_change_time(Date status_change_time) {
-		this.status_change_time = status_change_time;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
+
+	public long getLandid() {
+		return landid;
+	}
+
+	public void setLandid(long landid) {
+		this.landid = landid;
+	}
+
+	public Workflow getWorkflow() {
+		return workflow;
+	}
+
+	public void setWorkflow(Workflow workflow) {
+		this.workflow = workflow;
+	}
+
+	@Transient
+	public User getUser() {
+		return user;
+	}
+
+	@Transient
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	
+  
+	
+	
+	
+	
 
 }

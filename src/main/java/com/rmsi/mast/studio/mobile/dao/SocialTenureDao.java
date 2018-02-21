@@ -5,6 +5,8 @@ package com.rmsi.mast.studio.mobile.dao;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 
@@ -26,6 +28,7 @@ public interface SocialTenureDao extends GenericDAO<SocialTenureRelationship, In
 	 * @param socialTenureRelationship
 	 * @return
 	 */
+	@Transactional
 	SocialTenureRelationship addSocialTenure(SocialTenureRelationship socialTenureRelationship);
 	
 	/**
@@ -35,4 +38,7 @@ public interface SocialTenureDao extends GenericDAO<SocialTenureRelationship, In
 	 * @return
 	 */
 	List<SocialTenureRelationship> findSocailTenureByUsin(Long usin);
+	
+	
+	Boolean   updateSocialTenure(Integer Id, Long landId);
 }

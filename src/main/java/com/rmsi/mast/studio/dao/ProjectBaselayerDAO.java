@@ -19,7 +19,7 @@ import com.rmsi.mast.studio.domain.UserRole;
 
 public interface ProjectBaselayerDAO extends GenericDAO<ProjectBaselayer, Long> {
 	
-	void deleteProjectBaselayer(String name);
+	void deleteProjectBaselayerByProjectId(Integer id);
 	
 	void addProjectBaselayer(Set<ProjectBaselayer> projectBaselayer,String projectname);
 

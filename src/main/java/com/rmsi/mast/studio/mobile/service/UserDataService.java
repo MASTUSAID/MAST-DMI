@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rmsi.mast.studio.domain.NaturalPerson;
 import com.rmsi.mast.studio.domain.NonNaturalPerson;
+import com.rmsi.mast.studio.domain.ResourceSourceDocument;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SourceDocument;
 import com.rmsi.mast.studio.domain.Surveyprojectattribute;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.mobile.transferobjects.Property;
+
 
 /**
  * @author shruti.thakur
@@ -62,6 +63,16 @@ public interface UserDataService {
          * @return 
          */
         Map<String, String> saveClaims(List<Property> properties, String projectName, int userId) throws Exception;
+
+        /** 
+         * Saves claim/property and returns property ID, generated on the server. 
+         * @param prop Property object to save
+         * @param projectName Project name/ID
+         * @param userId User ID who created the claim
+         * @return 
+         */
+        Map<String, String> saveResource(List<Property> resource, String projectName, int userId) throws Exception;
+     
         
 	/**
 	 * This will be used to fetch record from source document if USIN and
@@ -109,5 +120,9 @@ public interface UserDataService {
 	 * @return
 	 */
 	List<Long> updateAdjudicatedData(Long userId, List<Long> usin);
+
+	ResourceSourceDocument uploadResourceMultimedia(
+			ResourceSourceDocument sourceDocument, MultipartFile mpFile,
+			File documentsDir);
 
 }

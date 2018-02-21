@@ -31,7 +31,7 @@ public class SpatialDataServiceImp implements SpatialDataService {
 
 	@Override
 	public List<ProjectSpatialData> getProjectSpatialDataByProjectId(
-			String projectId) {
+			Integer projectId) {
 
 		return spatialData.getProjectSpatialDataByProjectId(projectId);
 

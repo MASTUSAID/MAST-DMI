@@ -1,9 +1,7 @@
-
-
 package com.rmsi.mast.studio.domain;
 
+
 import java.io.Serializable;
-import java.util.Set;
 
 import javax.persistence.*;
 
@@ -11,63 +9,77 @@ import org.hibernate.annotations.BatchSize;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.List;
+
 
 /**
- * The persistent class for the baselayer database table.
+ * The persistent class for the la_ext_baselayer database table.
  * 
  */
 @Entity
-@Table(name="baselayer")
+@Table(name="la_ext_baselayer")
 public class Baselayer implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String name;
-	private String description;
-	//private Integer id;
-	private Set<ProjectBaselayer> projectBaselayers;
 
-    public Baselayer() {
-    }
-    
-    @JsonIgnore
-	@OneToMany(mappedBy="baselayerBean", fetch = FetchType.EAGER, cascade=CascadeType.ALL)	
+	@Id
+	private Integer baselayerid;
+
+	private String baselayer;
+
+	@Column(name="baselayer_en")
+	private String baselayerEn;
+
+	private Boolean isactive;
+
+    @OneToMany(mappedBy="Baselayers", fetch = FetchType.EAGER, cascade=CascadeType.ALL)	
 	@BatchSize(size=16)
-	public Set<ProjectBaselayer> getProjectBaselayers() {
+	private List<ProjectBaselayer> projectBaselayers;
+
+
+	public Baselayer() {
+	}
+
+	public Integer getBaselayerid() {
+		return this.baselayerid;
+	}
+
+	public void setBaselayerid(Integer baselayerid) {
+		this.baselayerid = baselayerid;
+	}
+
+	public String getBaselayer() {
+		return this.baselayer;
+	}
+
+	public void setBaselayer(String baselayer) {
+		this.baselayer = baselayer;
+	}
+
+	public String getBaselayerEn() {
+		return this.baselayerEn;
+	}
+
+	public void setBaselayerEn(String baselayerEn) {
+		this.baselayerEn = baselayerEn;
+	}
+
+	public Boolean getIsactive() {
+		return this.isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	@JsonIgnore
+	public List<ProjectBaselayer> getProjectBaselayers() {
 		return projectBaselayers;
 	}
 
-	public void setProjectBaselayers(Set<ProjectBaselayer> projectBaselayers) {
+	public void setProjectBaselayers(List<ProjectBaselayer> projectBaselayers) {
 		this.projectBaselayers = projectBaselayers;
 	}
 
 
-	@Id
-	//@Column(unique=true, nullable=false, length=50)
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	@Column(length=100)
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	/*@Column(nullable=false)
-	public Integer getId() {
-		return this.id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}*/
 
 }

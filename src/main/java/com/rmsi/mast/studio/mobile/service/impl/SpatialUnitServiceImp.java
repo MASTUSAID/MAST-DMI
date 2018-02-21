@@ -1,6 +1,7 @@
 package com.rmsi.mast.studio.mobile.service.impl;
 
 import com.rmsi.mast.studio.dao.AcquisitionTypeDao;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +42,7 @@ import com.rmsi.mast.studio.dao.DocumentTypeDao;
 import com.rmsi.mast.studio.domain.AcquisitionType;
 import com.rmsi.mast.studio.domain.DisputeType;
 import com.rmsi.mast.studio.domain.DocumentType;
+import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
 
 @Service
 public class SpatialUnitServiceImp implements SpatialUnitService {
@@ -144,8 +146,8 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
     @Override
     public SpatialUnit getSpatialUnitByUsin(long usin) {
 
-        return spatialUnitDao.getSpatialUnitByUsin(usin);
-
+//        return spatialUnitDao.getSpatialUnitByUsin(usin);
+return null;
     }
 
     @Override
@@ -162,7 +164,7 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
 
             while (spatialUnitIter.hasNext()) {
 
-                usinList.add(spatialUnitIter.next().getUsin());
+                usinList.add(spatialUnitIter.next().getLandid());
             }
         }
         return usinList;
@@ -251,4 +253,10 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
     public List<Gender> getGenders(){
         return genderDao.findAll();
     }
+
+	@Override
+	public List<ClaimBasic> getClaimsBasicByLandId(Long landid) {
+		
+		return spatialUnitDao.getClaimsBasicByLandId(landid);
+	}
 }

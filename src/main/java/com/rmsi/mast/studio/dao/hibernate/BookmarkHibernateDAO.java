@@ -27,7 +27,7 @@ implements BookmarkDAO {
 	@SuppressWarnings("unchecked")
 	public Bookmark findByName(String name) {
 		List<Bookmark> bookmark =
-			getEntityManager().createQuery("Select b from Bookmark b where b.name = :name").setParameter("name", name).getResultList();
+			getEntityManager().createQuery("Select b from Bookmark b where b.bookmarkname = :name").setParameter("name", name).getResultList();
 				
 		if(bookmark.size() > 0)
 			return bookmark.get(0);
@@ -37,33 +37,50 @@ implements BookmarkDAO {
 
 	@SuppressWarnings("unchecked")
 	public boolean deleteBookmarkByName(String name) {
-		Bookmark bookmark= findByName(name);				
-		//System.out.println("DELETE BOOKMARK: "+bookmark.getName()+"-"+bookmark.getProjectBean().getName());
-		if(bookmark != null){
-			getEntityManager().remove(bookmark);
-			return true;
-		}else{
+		
+		Integer id=Integer.parseInt(name);
+		try{
+			Query query = getEntityManager().createQuery(
+					"Delete from Bookmark bm where bm.bookmarkid =:id")
+					.setParameter("id", id);
+			
+			int count = query.executeUpdate();
+			System.out.println("Delete count: " + count);
+			if(count > 0){
+				return true;
+			}else{
+				return false;
+			}
+		}catch(Exception e){
+			logger.error(e);
 			return false;
 		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Bookmark> getBookmarksByProject(String projectname) {
-		List<Bookmark> bookmark =
-			getEntityManager().createQuery("Select b from Bookmark b where b.projectBean.name = :name").setParameter("name", projectname).getResultList();		
-		if(bookmark.size() > 0)
-			return bookmark;
-		else
+	public List<Bookmark> getBookmarksByProject(Integer projectname) {
+		try {
+			List<Bookmark> bookmark =
+				getEntityManager().createQuery("Select b from Bookmark b where b.projectnameid = :id").setParameter("id", projectname).getResultList();		
+			if(bookmark.size() > 0)
+				return bookmark;
+			else
+				return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			return null;
+		}
 	}
 
 	@Override
-	public boolean deleteByProjectName(String name) {
+	public boolean deleteByProjectId(Integer id) {
 		
 		try{
 			Query query = getEntityManager().createQuery(
-					"Delete from Bookmark bm where bm.projectBean.name =:name")
-					.setParameter("name", name);
+					"Delete from Bookmark bm where bm.projectnameid =:id")
+					.setParameter("id", id);
 			
 			int count = query.executeUpdate();
 			System.out.println("Delete count: " + count);
@@ -79,6 +96,22 @@ implements BookmarkDAO {
 		
 		
 		
+	}
+
+	@Override
+	public Bookmark findBookmarkById(Integer id) {
+		try{
+		List<Bookmark> bookmark =
+				getEntityManager().createQuery("Select b from Bookmark b where b.bookmarkid = :id").setParameter("id", id).getResultList();		
+			if(bookmark.size() > 0)
+				return bookmark.get(0);
+			else
+				return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

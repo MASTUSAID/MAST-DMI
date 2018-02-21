@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 //import com.googlecode.ehcache.annotations.Cacheable;
 
+
 import com.rmsi.mast.studio.dao.ActionDAO;
 import com.rmsi.mast.studio.dao.BaselayerDAO;
 import com.rmsi.mast.studio.domain.Action;
@@ -26,6 +27,11 @@ public class BaselayerServiceImpl implements BaselayerService {
 	//@Cacheable(cacheName = "baseLayerFBNCache")	
 	public List<Baselayer> findAllBaselayer() {
 		return baselayerDAO.findAll();
+	}
+
+	@Override
+	public Baselayer findBaselayerById(Integer id) {
+		return baselayerDAO.findBaselayerById(id);
 	}
 
 	

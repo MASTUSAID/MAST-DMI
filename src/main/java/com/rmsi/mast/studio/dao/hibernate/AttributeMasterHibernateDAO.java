@@ -19,19 +19,28 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
 
     @Override
     public List<AttributeMaster> findAllAttributeMaster() {
-        Query query = getEntityManager().createQuery("Select d from AttributeMaster d where d.active = true");
-        List<AttributeMaster> definedAttribs = query.getResultList();
+    	  List<AttributeMaster> definedAttribs=null;
+        
+    	 try {
+			Query query = getEntityManager().createQuery("Select d from AttributeMaster d where d.isactive = true");
+			definedAttribs = query.getResultList();
+			 if (definedAttribs.size() > 0) {
+		            return definedAttribs;
+		        } else {
+		            return null;
+		        }
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 
-        if (definedAttribs.size() > 0) {
-            return definedAttribs;
-        } else {
-            return null;
-        }
+       
     }
 
     @Override
     public boolean deleteEntry(Long id) {
-        Query query = getEntityManager().createQuery("UPDATE AttributeMaster d SET d.active = false  where d.id = :id and d.active = true");
+        Query query = getEntityManager().createQuery("UPDATE AttributeMaster d SET d.isactive = false  where d.attributemasterid = :id and d.isactive = true");
 
         query.setParameter("id", id);
 
@@ -47,7 +56,7 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
     @Override
     public List<AttributeMaster> selectedCategory(Long id) {
         if (id == 0) {
-            Query query = getEntityManager().createQuery("Select d from AttributeMaster d where d.active = true");
+            Query query = getEntityManager().createQuery("Select d from AttributeMaster d where d.isactive = true");
             List<AttributeMaster> definedAttribs = query.getResultList();
 
             if (definedAttribs.size() > 0) {
@@ -56,22 +65,27 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
                 return null;
             }
         } else {
-            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.attributeCategory.attributecategoryid = :id and c.active=true");
-            query.setParameter("id", id);
-            List<AttributeMaster> selectedcategory = query.getResultList();
+            try {
+				Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.laExtAttributecategory.attributecategoryid = :id and c.isactive=true");
+				query.setParameter("id", id);
+				List<AttributeMaster> selectedcategory = query.getResultList();
 
-            if (selectedcategory.size() > 0) {
-                return selectedcategory;
-            } else {
-                return null;
-            }
+				if (selectedcategory.size() > 0) {
+				    return selectedcategory;
+				} else {
+				    return null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
         }
 
     }
 
     @Override
     public List<AttributeMaster> selectedList(Long uid) {
-        Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.attributeCategory.attributecategoryid = :uid and c.active=true");
+        Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.laExtAttributecategory.attributecategoryid = :uid and c.isactive=true");
         query.setParameter("uid", uid);
         List<AttributeMaster> selectedcategory = query.getResultList();
 
@@ -86,7 +100,7 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
     @Override
     public boolean duplicatevalidate(Long id, String alias, String fieldname) {
         try {
-            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.attributeCategory.attributecategoryid = :uid and ((lower(c.alias) =:alias or lower(c.fieldname) =:fieldname)and c.active=true)");
+            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.laExtAttributecategory.attributecategoryid = :uid and ((lower(c.fieldaliasname) =:alias or lower(c.fieldname) =:fieldname)and c.isactive=true)");
 
             query.setParameter("uid", id);
             query.setParameter("alias", alias.toLowerCase());
@@ -109,16 +123,14 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
     }
 
     @Override
-    public List<AttributeMaster> findByAttributeId(Long id) {
+    public AttributeMaster findByAttributeId(Long id) {
         try {
-            Query query = getEntityManager().createQuery("Select d from AttributeMaster d where d.id = :id");
-            List<AttributeMaster> editAttrib = query.setParameter("id", id).getResultList();
+            Query query = getEntityManager().createQuery("Select d from AttributeMaster d where d.attributemasterid = :id");
+            AttributeMaster editAttrib = (AttributeMaster) query.setParameter("id", id).getSingleResult();
 
-            if (editAttrib.size() > 0) {
+            
                 return editAttrib;
-            } else {
-                return null;
-            }
+           
         } catch (Exception e) {
 
             logger.error(e);
@@ -156,7 +168,7 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
     public List<AttributeMaster> findByCategoryId(Long id) {
 
         try {
-            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.attributeCategory.attributecategoryid = :uid and ( c.active=true and c.master_attrib=false)");
+            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.attributeCategory.attributecategoryid = :uid and ( c.active=true)");
 
             query.setParameter("uid", id);
 
@@ -219,5 +231,49 @@ public class AttributeMasterHibernateDAO extends GenericHibernateDAO<AttributeMa
             return null;
         }
     }
+
+	@Override
+	public List<AttributeMaster> getAttributeMasterByTypeId(Integer id) {
+		  try {
+	            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.laExtAttributecategory.categorytype.categorytypeid = :uid and ( c.isactive=true)");
+
+	            query.setParameter("uid", id);
+
+	            List<AttributeMaster> rows = query.getResultList();
+
+	            if (rows.size() > 0) {
+	                return rows;
+	            } else {
+	                return null;
+	            }
+	        } catch (Exception e) {
+
+	            logger.error(e);
+	            return null;
+	        }
+	}
+
+	@Override
+	public List<AttributeMaster> getAttributeMasterByAttributeMasterId(long id) {
+		
+		 try {
+	            Query query = getEntityManager().createQuery("Select c from AttributeMaster c where c.attributemasterid = :uid and ( c.isactive=true)");
+
+	            query.setParameter("uid", id);
+
+	            List<AttributeMaster> rows = query.getResultList();
+
+	            if (rows.size() > 0) {
+	                return rows;
+	            } else {
+	                return null;
+	            }
+	        } catch (Exception e) {
+
+	            logger.error(e);
+	            return null;
+	        }
+		 
+	}
 
 }

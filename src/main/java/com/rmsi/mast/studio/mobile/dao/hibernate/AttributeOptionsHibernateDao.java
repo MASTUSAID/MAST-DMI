@@ -5,6 +5,8 @@ package com.rmsi.mast.studio.mobile.dao.hibernate;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
@@ -26,13 +28,13 @@ public class AttributeOptionsHibernateDao extends
     @Override
     public List<AttributeOptions> getAttributeOptions(Long attributeId) {
 
-        String query = "select a from AttributeOptions a where a.attributeId = :attributeId";
+        String query = "select a from AttributeOptions a where a.attributeMaster.attributemasterid = :attributeId";
 
         try {
             @SuppressWarnings("unchecked")
             List<AttributeOptions> attributeOptions = getEntityManager()
                     .createQuery(query)
-                    .setParameter("attributeId", (int) (long) attributeId)
+                    .setParameter("attributeId",attributeId)
                     .getResultList();
 
             if (!attributeOptions.isEmpty()) {
@@ -47,19 +49,16 @@ public class AttributeOptionsHibernateDao extends
 
     @SuppressWarnings("unchecked")
     @Override
-    public String getAttributeOptionsId(Integer attributeId, int parentid) {
-        String query = "select a.id from AttributeOptions a where a.attributeId = :attributeId "
-                + "and a.parentId =:parentId";
+    public AttributeOptions getAttributeOptionsId(Integer attributeId) {
+        String query = "select a from AttributeOptions a where a.attributeoptionsid = :attributeId ";
 
         try {
-            List<Integer> attributeids = getEntityManager()
+            List<AttributeOptions> attributeids = getEntityManager()
                     .createQuery(query)
-                    .setParameter("attributeId", attributeId)
-                    .setParameter("parentId", parentid)
-                    .getResultList();
+                    .setParameter("attributeId", attributeId).getResultList();
 
             if (attributeids != null && attributeids.size() > 0) {
-                return attributeids.get(0).toString();
+                return attributeids.get(0);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -67,5 +66,28 @@ public class AttributeOptionsHibernateDao extends
         }
         return null;
     }
+
+	@Override
+	public boolean deleteAttributeOptionsbyId(Long id) {
+		try{
+			Query query = getEntityManager().createQuery(
+					"Delete from AttributeOptions pbl where pbl.attributeMaster.attributemasterid =:id")
+					.setParameter("id", id);
+			
+			int count = query.executeUpdate();
+			if(count>0){
+				return true;
+			}else
+			{
+				return false;
+			}
+			
+		}catch(Exception e){
+		logger.error(e);
+		return false;
+			
+		}
+		
+	}
 
 }

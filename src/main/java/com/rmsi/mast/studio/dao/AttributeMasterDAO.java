@@ -20,7 +20,7 @@ public interface AttributeMasterDAO extends GenericDAO<AttributeMaster, Long> {
 
 	boolean duplicatevalidate(Long id, String alias, String fieldname);
 
-	List<AttributeMaster> findByAttributeId(Long id);
+	AttributeMaster findByAttributeId(Long id);
 
 	boolean duplicateEditvalidate(long id,long categoryId, String alias,
 			String fieldName);
@@ -28,5 +28,7 @@ public interface AttributeMasterDAO extends GenericDAO<AttributeMaster, Long> {
 	List<AttributeValuesFetch> fetchCustomAttribs(Long parentgid, int category);
 
 	List<AttributeMaster> findByCategoryId(Long id);
-
+	 List<AttributeMaster> getAttributeMasterByTypeId(Integer id);
+	 List<AttributeMaster> getAttributeMasterByAttributeMasterId(long id);
+	 
 }

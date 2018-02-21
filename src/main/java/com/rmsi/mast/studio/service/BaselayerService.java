@@ -16,4 +16,6 @@ public interface BaselayerService {
 	List<Baselayer> findAllBaselayer();
 
 
+	Baselayer findBaselayerById(Integer id);
+	
 }

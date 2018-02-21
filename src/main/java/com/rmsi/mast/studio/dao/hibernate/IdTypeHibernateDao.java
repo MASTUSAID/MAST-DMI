@@ -13,10 +13,8 @@ public class IdTypeHibernateDao extends GenericHibernateDAO<IdType, Integer> imp
     @Override
     public IdType getTypeByAttributeOptionId(int optId) {
         try {
-            String query = "select t.* from id_type t inner join attribute_options ao on ao.parent_id = t.code where ao.id =" + optId;
-            List<IdType> result = getEntityManager()
-                    .createNativeQuery(query, IdType.class)
-                    .getResultList();
+            String query = "select t from IdType t where  t.identitytypeid =" + optId;
+            List<IdType> result = getEntityManager().createQuery(query).getResultList();
 
             if (result != null && result.size() > 0) {
                 return result.get(0);

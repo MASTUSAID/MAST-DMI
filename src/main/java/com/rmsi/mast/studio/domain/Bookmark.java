@@ -1,117 +1,173 @@
-
-
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
+
 /**
- * The persistent class for the bookmark database table.
+ * The persistent class for the la_ext_bookmark database table.
  * 
  */
 @Entity
+@Table(name="la_ext_bookmark")
 public class Bookmark implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String name;
-	private String description;
-	//private Long id;
-	private double maxx;
-	private double maxy;
-	private double minx;
-	private double miny;
-	private String tenantid;
+
+	@Id
+	@SequenceGenerator(name="LA_EXT_BOOKMARK_BOOKMARKID_GENERATOR",sequenceName="la_ext_bookmark_bookmarkid_seq" ,allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="LA_EXT_BOOKMARK_BOOKMARKID_GENERATOR")
+	private Integer bookmarkid;
+
+	private String bookmarkname;
+
+	@Transient
+	private String projectName;
 	
-	private Project projectBean;
+	private Integer createdby;
 
-    public Bookmark() {
-    }
+	@Temporal( TemporalType.DATE )
+	private Date createddate;
 
+	private String description;
 
-    @Id
-	//@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public String getName() {
-		return this.name;
+	private Boolean isactive;
+
+	private double maxx;
+
+	private double maxy;
+
+	private double minx;
+
+	private double miny;
+
+	private Integer modifiedby;
+
+	@Temporal( TemporalType.DATE )
+	private Date modifieddate;
+
+	private Integer projectnameid;
+	
+	public Bookmark() {
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Integer getBookmarkid() {
+		return bookmarkid;
 	}
 
+	public void setBookmarkid(Integer bookmarkid) {
+		this.bookmarkid = bookmarkid;
+	}
+
+	public String getBookmarkname() {
+		return bookmarkname;
+	}
+
+	public void setBookmarkname(String bookmarkname) {
+		this.bookmarkname = bookmarkname;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
 
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	
-	/*public Long getId() {
-		return this.id;
+	public Boolean getIsactive() {
+		return isactive;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}*/
-
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
 
 	public double getMaxx() {
-		return this.maxx;
+		return maxx;
 	}
 
 	public void setMaxx(double maxx) {
 		this.maxx = maxx;
 	}
 
-
 	public double getMaxy() {
-		return this.maxy;
+		return maxy;
 	}
 
 	public void setMaxy(double maxy) {
 		this.maxy = maxy;
 	}
 
-
 	public double getMinx() {
-		return this.minx;
+		return minx;
 	}
 
 	public void setMinx(double minx) {
 		this.minx = minx;
 	}
 
-
 	public double getMiny() {
-		return this.miny;
+		return miny;
 	}
 
 	public void setMiny(double miny) {
 		this.miny = miny;
 	}
 
-
-	public String getTenantid() {
-		return this.tenantid;
+	public Integer getModifiedby() {
+		return modifiedby;
 	}
 
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
 	}
 
-
-	//bi-directional many-to-one association to Project
-//	@JsonIgnore	
-	@ManyToOne	
-	@JoinColumn(name="project", nullable=false)
-
-	public Project getProjectBean() {
-		return this.projectBean;
+	public Date getModifieddate() {
+		return modifieddate;
 	}
 
-	public void setProjectBean(Project projectBean) {
-		this.projectBean = projectBean;
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
 	}
+
+	public Integer getProjectnameid() {
+		return projectnameid;
+	}
+
+	public void setProjectnameid(Integer projectnameid) {
+		this.projectnameid = projectnameid;
+	}
+
+	@Transient
+	public String getProjectName() {
+		return projectName;
+	}
+
+	@Transient
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
 	
+
 }

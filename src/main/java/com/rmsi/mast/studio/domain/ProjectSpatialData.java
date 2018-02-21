@@ -1,6 +1,7 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -9,89 +10,174 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@Table(name = "project_spatial_data")
+@Table(name = "la_ext_projectfile")
 public class ProjectSpatialData implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "PROJECT_SPATIAL_DATA_ID_GENERATOR", sequenceName = "PROJECT_SPATIAL_DATA_ID_SEQ", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROJECT_SPATIAL_DATA_ID_GENERATOR")
+	@SequenceGenerator(name = "pk_la_ext_projectfile", sequenceName = "la_ext_projectfile_projectfileid_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pk_la_ext_projectfile")
+	 @Column(name = "projectfileid")
 	private Integer id;
-
-	@Column(name = "file_extension")
-	private String fileExtension;
-
-	@Column(name = "file_location")
-	private String fileLocation;
-
-	@Column(name = "file_name")
+	
+	
+	@Column(name = "projectfilename")
 	private String fileName;
-	@Column(name="file_size")
+	
+	private Integer projectnameid;
+	@Column(name = "filelocation")
+	private String fileLocation;
+	private String description;
+	private Boolean isactive;
+	
+	private long createdby;
+	private long modifiedby;
+    private Date createddate;
+    private Date modifieddate;
+	
+    //below before extra column
+	@Column(name = "documentformatid")
+	private Integer documentformatid;
+	@Column(name="filesize")
 	private Long size;
+//	@Column(name="alias")
+//	private String alias;
+
 	
-	@Column(name="alias")
-	private String alias;
+	/*@ManyToOne
+	@JoinColumn(name="projectnameid")
+	private LaSpatialsourceProjectname laSpatialsourceProjectname;*/
 	
+   public ProjectSpatialData(){
+	
+}
 
-	public String getAlias() {
-		return alias;
-	}
 
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+public Integer getId() {
+	return id;
+}
 
-	public Long getSize() {
-		return size;
-	}
 
-	public void setSize(Long size) {
-		this.size = size;
-	}
+public void setId(Integer id) {
+	this.id = id;
+}
 
-	private String name;
 
-	public ProjectSpatialData() {
-	}
+public String getFileName() {
+	return fileName;
+}
 
-	public Integer getId() {
-		return this.id;
-	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+public void setFileName(String fileName) {
+	this.fileName = fileName;
+}
 
-	public String getFileExtension() {
-		return this.fileExtension;
-	}
 
-	public void setFileExtension(String fileExtension) {
-		this.fileExtension = fileExtension;
-	}
+public Integer getProjectnameid() {
+	return projectnameid;
+}
 
-	public String getFileLocation() {
-		return this.fileLocation;
-	}
 
-	public void setFileLocation(String fileLocation) {
-		this.fileLocation = fileLocation;
-	}
+public void setProjectnameid(Integer projectnameid) {
+	this.projectnameid = projectnameid;
+}
 
-	public String getFileName() {
-		return this.fileName;
-	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+public String getFileLocation() {
+	return fileLocation;
+}
 
-	public String getName() {
-		return this.name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+public void setFileLocation(String fileLocation) {
+	this.fileLocation = fileLocation;
+}
+
+
+public String getDescription() {
+	return description;
+}
+
+
+public void setDescription(String description) {
+	this.description = description;
+}
+
+
+public Boolean getIsactive() {
+	return isactive;
+}
+
+
+public void setIsactive(Boolean isactive) {
+	this.isactive = isactive;
+}
+
+
+public long getCreatedby() {
+	return createdby;
+}
+
+
+public void setCreatedby(long createdby) {
+	this.createdby = createdby;
+}
+
+
+public long getModifiedby() {
+	return modifiedby;
+}
+
+
+public void setModifiedby(long modifiedby) {
+	this.modifiedby = modifiedby;
+}
+
+
+public Date getCreateddate() {
+	return createddate;
+}
+
+
+public void setCreateddate(Date createddate) {
+	this.createddate = createddate;
+}
+
+
+public Date getModifieddate() {
+	return modifieddate;
+}
+
+
+public void setModifieddate(Date modifieddate) {
+	this.modifieddate = modifieddate;
+}
+
+
+public Integer getDocumentformatid() {
+	return documentformatid;
+}
+
+
+public void setDocumentformatid(Integer documentformatid) {
+	this.documentformatid = documentformatid;
+}
+
+
+public Long getSize() {
+	return size;
+}
+
+
+public void setSize(Long size) {
+	this.size = size;
+}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

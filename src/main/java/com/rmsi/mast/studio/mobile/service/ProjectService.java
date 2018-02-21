@@ -3,6 +3,8 @@
  */
 package com.rmsi.mast.studio.mobile.service;
 
+import java.util.List;
+
 import com.rmsi.mast.studio.domain.ProjectArea;
 
 /**
@@ -11,6 +13,6 @@ import com.rmsi.mast.studio.domain.ProjectArea;
  */
 public interface ProjectService {
 
-	public ProjectArea getProjectArea(String projectName);
+	public List<ProjectArea> getProjectArea(String projectName);
 
 }

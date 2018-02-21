@@ -1,256 +1,178 @@
 
 
-var selectedItem=null;
-function Bookmark(_selectedItem)
-{
-	
-	selectedItem=_selectedItem;
-	
-	if( jQuery("#bookmarkFormDiv").length<=0){
-		displayRefreshedBookmark();
-	}
-	else{
-		
-		displayBookmark();
-	}
-}
-
-
-function displayRefreshedBookmark(){
-	jQuery.ajax({
-		url: "bookmark/" + "?" + token,
-         success: function (data) {
-        	jQuery("#tableGrid").empty(); 
-        	jQuery("#bookmarks").empty(); 
-			jQuery.get("resources/templates/studio/" + selectedItem + ".html", function (template) {
-		    			    	
-		    	jQuery("#bookmarks").append(template);
-		    	jQuery('#bookmarkFormDiv').css("visibility", "visible");
-		    	
-		    	jQuery("#bookmarkDetails").hide();	        	
-	        	jQuery("#BookmarksRowData").empty();
-	        	jQuery("#bookmarkTable").show();	        		        			    
-		    	
-				jQuery("#bookmark_accordion").hide();
-				
-		    	jQuery("#BookmarkTemplate").tmpl(data).appendTo("#BookmarksRowData");
-		    	 		    	
-		    	jQuery("#bookmark_btnSave").hide();
-		    	jQuery("#bookmark_btnBack").hide();
-		    	jQuery("#bookmark_btnNew").show();		    			    
-		    	
-                $("#bookmarkTable").tablesorter({ 
-                	headers: {7: {sorter: false  },  8: {  sorter: false } },	
-                	debug: false, sortList: [[0, 0]], widgets: ['zebra'] })
-                       .tablesorterPager({ container: $("#bookmark_pagerDiv"), positionFixed: false })
-                       .tablesorterFilter({ filterContainer: $("#bookmark_txtSearch"),                           
-                           filterColumns: [0],
-                           filterCaseSensitive: false
-                       });
-		    	
-			});
+var map;
+var _project='';
+Cloudburst.Bookmark = function(_map, _searchdiv) {
+   // alert(projectName); 
+    map = _map;    
+    this.map = map;
+    searchdiv = _searchdiv;
+    _project=project;
     
-         }
-	 });
+	//removeChildElement("sidebar","layerSwitcherContent");
+    $("#tabs-Tool").empty();
 	
-}
+	//$("#layerSwitcherContent").hide();
+        $.ajax({
+        		
+            url: STUDIO_URL + "bookmark/project/"+project + "?" + token,
+            success: function (bookmarks) {           
+                
+            	jQuery.get('resources/templates/viewer/bookmark.html', function(template) {
+            		
+            		//$("#"+searchdiv).append(template);
+            		//Add tad
+            		addTab($._('bookmark'),template);
+            		
+            		$("#bookmark-help").tipTip({defaultPosition:"right"});
+            		
+            		$("#addbk").hide();
+            		
+            		$("#bookmarkstar").click(function(){
+            			$("#addbk").toggle();            			
+            		});
+					
+					$("#bk-save").click(function(){
+						createBookmark();
+            		});
+					
+            		jQuery("#bokkmarkBody").empty();
 
-function displayBookmark(){
-	
-	jQuery("#bookmark_accordion").hide();
-	
-	jQuery("#bookmarkDetails").hide();	        		
-	jQuery("#bookmarkTable").show();
-	
-	jQuery("#bookmark_btnSave").hide();
-	jQuery("#bookmark_btnBack").hide();
-	jQuery("#bookmark_btnNew").show();	
-	
-}
+            		jQuery("#bookmarkTemplate").tmpl(null,
 
-var bookmark_projectList=null;
+            		{
+            			bookmarkList : bookmarks
+            		}
 
-var createEditBookmark = function (_name) {
+            		).appendTo("#bokkmarkBody");
+            		
+            		translateBookmarks();
+            	  });
+
+            }
+
+        });
   
-	    jQuery("#bookmark_btnNew").hide();    
-	    jQuery("#bookmark_btnSave").hide();
-	    jQuery("#bookmark_btnBack").hide();
-	    
-	    jQuery("#bookmarkTable").hide();
-	    jQuery("#bookmarkDetails").show();    
-	    jQuery("#bookmarkDetailsBody").empty();
-	
-	    
-	    jQuery.ajax({
-	        url: "project/" + "?" + token,
-	        success: function (data) {
-	        	bookmark_projectList = data;
-	        },
-	        async: false
-	    });
-	    
-    if (_name) {
 
-            jQuery.ajax({
-            url: selectedItem+"/" + _name + "?" + token,
-            async:false,
-            success: function (data) {
+};
 
-                jQuery("#BookmarkTemplateForm").tmpl(data,
+function translateBookmarks(){
+	$('.bk-s').html($._('Save'));
+	$('.zoomlink-s').html($._('bookmark_zoom'));
+	$('.removebklink-s').html($._('bookmark_remove'));
+}
 
-                            {
-                	
-                            }
+var zoomBookmark = function(bookmarkName) {
 
-                         ).appendTo("#bookmarkDetailsBody");
-                
-                jQuery('#name').attr('readonly', true);
-                jQuery.each(bookmark_projectList, function (i, project) {    	
-                	jQuery("#bookmark_project").append(jQuery("<option></option>").attr("value", project.name).text(project.name));        
-                });
-                
-                jQuery('#bookmark_project').val(data.projectBean.name);
-                
-                
-            },
-            cache: false
+
+    if (bookmarkName) {
+        $.ajax({
+            url: STUDIO_URL + "bookmark/" + bookmarkName + "?" + token,
+            success: function (data) {                
+				  map.getView().fit([data.minx, data.miny, data.maxx, data.maxy]);
+            }
         });
-    } else {
+    }
 
-        jQuery("#BookmarkTemplateForm").tmpl(null,
+};
 
-                {
-        	
-                }
-            ).appendTo("#bookmarkDetailsBody");
-        
-        jQuery('#name').removeAttr('readonly');
-        
-        jQuery.each(bookmark_projectList, function (i, project) {    	
-        	jQuery("#bookmark_project").append(jQuery("<option></option>").attr("value", project.name).text(project.name));        
-        });
-        
-       
-        
+
+var createBookmark = function() {
+
+    var currentExtent = map.getView().calculateExtent(map.getSize()) ;
+
+    if ($("#name").val() == '') {        
+        jAlert('Enter Bookmark Name', 'Bookmark');
+		return;
     }
     
-    jQuery("#bookmark_accordion").show();
-	jQuery("#bookmark_accordion").accordion({fillSpace: true});
     
-    jQuery("#bookmark_btnSave").show();
-    jQuery("#bookmark_btnBack").show();
-    
-    
-} 
+    $("#description").val($("#name").val());
+    $("#minx").val(currentExtent[0]);
+    $("#miny").val(currentExtent[1]);
+    $("#maxx").val(currentExtent[2]);
+    $("#maxy").val(currentExtent[3]);
+	$("#bkProjectName").val(_project);
+  
 
-var saveBookmarkData= function () {
-	
-	jQuery.ajax({
-        type: "POST",              
-        url: "bookmark/create" + "?" + token,
-        data: jQuery("#bookmarkForm").serialize(),
-        success: function () {        
+    $.ajax({
+        type: "POST",
+        url: STUDIO_URL + "bookmark/create" + "?" + token,
+        data: $("#BookmarkForm").serialize(),
+        success: function () {
+              
+            //$("#Bookmark").append($("<option></option>").attr("value", $("#name").val()).text($("#name").val()));                                    
             
-        	jAlert('Data Successfully Saved', 'Bookmark');
-           //back to the list page 
-           // var bookmark=new Bookmark('bookmark');
-        	displayRefreshedBookmark();
-            
+			$("#name").val('');
+			var bookmark = new Cloudburst.Bookmark(map,"sidebar");
+
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            
-            alert('err.Message');
+            var err = eval("(" + XMLHttpRequest.responseText + ")");
+            alert(err.Message)
         }
     });
-	
-}
+};
 
 
+var removeBookmark = function(bookmarkId ,bookmarkName) {
+   
+    //var bookmarkName = $("#Bookmark").val();         
+    if (bookmarkName) {
 
+        jConfirm('Are You Sure You Want To Delete : <strong>' + bookmarkName + '</strong>', 'Delete Confirmation', function (r) {
 
-function saveBookmark(){
-	
-	jQuery("#bookmarkForm").validate({
+            if (r) {
+                $.ajax({
+                    url: STUDIO_URL + "bookmark/delete/" + bookmarkId + "?" + token,
+                    success: function () {
+                       // $("#"+bookmarkName).remove();
+                    	
+                    	var bookmark = new Cloudburst.Bookmark(map,"sidebar");
+                        
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert('Error', 'Bookmark');
+                    }
+                });
+           }
 
-		rules: {
-			name:"required",
-			description: "required",			
-			minx: {
-			required: true,
-			number: true
-			},
-			miny: {
-			required: true,
-			number: true
-			},
-			maxx: {
-			required: true,
-			number: true
-			},
-			maxy: {
-			required: true,
-			number: true
-			},
-			"projectBean.name": "required"
-			
-		},
-		messages: {
-			name: "Please enter Name",
-			description: "Please enter  Description",						
-			minx: {
-			required: "Please enter Minx",
-			number: "Please enter a valid number.  "
-			},
-			
-			miny: {
-				required: "Please enter MinY",
-				number: "Please enter a valid number.  "
-			},
-			maxx: {
-				required: "Please enter Maxx",
-				number: "Please enter a valid number.  "
-			},
-			maxy: {
-				required: "Please enter Maxy",
-				number: "Please enter a valid number.  "
-			},
-			"projectBean.name": "Please enter  Project"
-		}		
-			
-	});
-	
-	if(jQuery("#bookmarkForm").valid())	{						
-		saveBookmarkData();
-	
-	}
-	
-	
-}
-var deleteBookmark= function (_bookmarkName) {
-	
-	jConfirm('Are You Sure You Want To Delete : <strong>' + _bookmarkName + '</strong>', 'Delete Confirmation', function (response) {
+        });
 
-        if (response) {
-        	jQuery.ajax({          
-                url: "bookmark/delete/"+_bookmarkName  + "?" + token,
-                success: function () { 
-                	
-                	jAlert('Data Successfully Deleted', 'Bookmark');
-                   //back to the list page 
-                	displayRefreshedBookmark();
-                    
+    }
+
+    else {
+        
+        
+    
+    }
+};
+
+var removeAll = function() {
+
+   // jConfirm('Are You Sure You Want To Delete all Bookmarks', 'Delete Confirmation', function (r) {
+
+     //   if (r) {
+            $.ajax({
+                url: STUDIO_URL + "bookmark/delete/project/" + project+"/" + "?" + token,
+                success: function () {
+                    $("#Bookmark").empty(); 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    
-                    alert('err.Message');
+                    alert('Error', 'Bookmark');
                 }
             });
-        }
+    //   }
 
-    });
-	
-	
-	
+  //  });
 
-	
-}
+
+};
+
+Cloudburst.Bookmark.prototype.toggle = function() {
+	if ($('#bookmarkdiv').dialog('isOpen')) {
+		//$('#printdiv').dialog('close');
+	} else {
+		$('#bookmarkdiv').dialog('open');
+	}
+};

@@ -12,6 +12,10 @@ public interface ReportsSerivce {
     
     JasperPrint getCcroForms(String projectName, Long usin, int startRecord, int endRecord, String appUrl);
     
+    JasperPrint getCcroFormsinbatch(String projectName, Long usin, Long startRecord, Long endRecord, String appUrl);
+    
+    JasperPrint getCcroFormsLadm(String projectName, Long usin, int startRecord, int endRecord, String appUrl);
+
     JasperPrint getDistrictRegistryBook(String projectName, String appUrl);
     
     JasperPrint getVillageRegistryBook(String projectName, String appUrl);
@@ -21,4 +25,9 @@ public interface ReportsSerivce {
     JasperPrint getTransactionSheet(String projectName, Long usin, String appUrl);
     
     JasperPrint getClaimsProfile(String projectName);
+
+    JasperPrint getLandFormsinbatch(String projectName, Long usin, Long startRecord, Long endRecord, String appUrl);
+
+	JasperPrint getlandverificationForm(String projectName, Long usin, int startRecord, int endRecord, String appUrl);
+  
 }

@@ -39,6 +39,128 @@ var complainants;
 var contacts;
 var access_land_sld;
 
+var active_layerMap;
+var measure_draw;
+var helpTooltipElement;
+var helpTooltip;
+var measureTooltipElement;
+var measureTooltip;
+var selectedFeatures=null;
+var selectedFeaturesPoint=null;
+var selectedFeaturesEdit=null;
+var selectedFeaturesSearch=null;
+var selectedFeaturesExport=null;
+var draw;
+var drawLine=null;
+var selectSingleClick=null;
+var selectInteraction = new ol.interaction.Select({
+                condition: ol.events.condition.never
+            });
+var dragBoxInteraction = new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [250, 25, 25, 1]
+                    })
+                })
+            });
+var selectClick = new ol.interaction.Select({
+				condition: ol.events.condition.click,
+				
+			  });
+var zIn = new ol.interaction.DragBox({
+			condition: ol.events.condition.always,
+			boxEndCondition : function(mapBrowserEvent, startPixel, endPixel){zoomOnBox(mapBrowserEvent, startPixel, endPixel, 'in')}
+		});
+var zOut = new ol.interaction.DragBox({
+			condition: ol.events.condition.always,
+			boxEndCondition : function(mapBrowserEvent, startPixel, endPixel){zoomOnBox(mapBrowserEvent, startPixel, endPixel, 'out')}
+		});
+		
+		
+var intraction_dragBox =new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [250, 25, 25, 1]
+                    })
+                })
+            });
+	
+	var intraction_dragBox_aoi =new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [250, 25, 25, 1]
+                    })
+                })
+            });
+			
+			var intraction_dragBox_aoi1 =new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [250, 25, 25, 1]
+                    })
+                })
+            });
+			
+var selectInteraction_edit  = new ol.interaction.Select({
+                condition: ol.events.condition.never
+			});	
+	 
+var  modifyInteraction = new ol.interaction.Modify({
+      features: selectInteraction_edit.getFeatures()
+    });
+
+var dragInteraction = new ol.interaction.Translate({
+        features: selectInteraction_edit.getFeatures()
+      });
+
+	  
+var snapInteraction ;
+
+var snapInteraction_aoi;
+
+var deleteInteraction = new ol.interaction.Select({
+        condition: ol.events.condition.click
+      });
+	  
+var  modifyInteraction_aoi = new ol.interaction.Modify({
+      features: selectInteraction_edit.getFeatures()
+    });
+	  
+var dragInteraction_aoi = new ol.interaction.Translate({
+        features: selectInteraction_edit.getFeatures()
+      });
+
+var deleteInteraction_aoi = new ol.interaction.Select({
+        condition: ol.events.condition.click
+      });	  
+var selectInteraction_search  = new ol.interaction.Select({
+                condition: ol.events.condition.never
+			});
+
+
+var intraction_dragBox_search =new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [250, 25, 25, 1]
+                    })
+                })
+            });		
+
+
+var selectInteraction_export  = new ol.interaction.Select({
+                condition: ol.events.condition.never
+			});
+
+
+var intraction_dragBox_export =new ol.interaction.DragBox({
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: [250, 25, 25, 1]
+                    })
+                })
+            });	
+
+			
 var selectionSymbolizer = {
 	    'Polygon': {fillColor: '#FFFFFF', fillOpacity:0.1, stroke: true, strokeColor:'#07FCFB', strokeWidth: 2},
 	    'Line': {strokeColor: '#07FCFB', strokeWidth: 2},
@@ -106,18 +228,6 @@ function replaceString(mainString , regExp, replaceBy) {
 
 
 function clearAllSelections() {
-
-    /*if (currentControl) {
-        var layerCache = mapControls[currentControl].layerCache;
-        if (layerCache) {
-            var selectionLayer = layerCache[activeLayer.id];
-            if (selectionLayer) {
-                selectionLayer.destroy();
-            }
-            delete layerCache[activeLayer.id];
-        }
-    }*/
-	
 	
 	var __activelayer=OpenLayers.Map.activelayer;
 	
@@ -317,61 +427,139 @@ function closeDialog(dialog){
 }
 
 function clearSelection(clearResultGrid, _lyr){
-	selFeatureBbox=null;
-	OpenLayers.Map.activelayer.selectFilter=null;
-	var sel_clonedLayer = map.getLayersByName("clone")[0];
-	var sel_vectorLayer = map.getLayersByName("vector")[0];
-	if(sel_clonedLayer != undefined){
-		map.removeLayer(sel_clonedLayer);
+	
+	$(".tooltip-static").remove();
+
+	if(measure_draw!=null)
+	{
+		map.removeInteraction(measure_draw);
 	}
 	
-	if(sel_vectorLayer != undefined){
-		map.removeLayer(sel_vectorLayer);
+	if(draw!=null)
+	{
+		map.removeInteraction(draw);
 	}
 	
-	
-	var __activelayer=OpenLayers.Map.activelayer;
-	
-	if(clearResultGrid){
-		delete __activelayer.params["SLD"];
-			__activelayer.redraw(true);
-			refreshLegends();	
-	}
-	/*if(_lyr != undefined && _lyr.name == 'Access_Land'){
-		 //var al_layer = map.getLayersByName(_lyr)[0];
-		   var al_theme = new AccessLand_Theme(_lyr);
-		   var ap_filter = al_theme.createDisplayCriteria();
-		   al_theme.applySLD(ap_filter);
-	}*/
-	
-	var labelCloneLayer = map.getLayersByName(__activelayer.name + "_Clone")[0];	
-	
-	if(labelCloneLayer != undefined){
-		map.removeLayer(labelCloneLayer);
-	}
-	
-	 if(markers){
-		 markers.clearMarkers();
+	if (helpTooltipElement!=null) {
+	  if(helpTooltipElement.parentNode!=null){
+		if(helpTooltipElement.parentNode.hasChildNodes(helpTooltipElement))
+	            helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+			
+	  }	
+	} 
+	 if (measureTooltipElement!=null) {
+	    if(measureTooltipElement.parentNode!=null){
+		 if(measureTooltipElement.parentNode.hasChildNodes(measureTooltipElement))
+		 	measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+		}	 
 	 }
-	 
-	 //Clear the result panel.
-	 if(clearResultGrid){
-		   var recordCount = $("#tablegrid1").jqGrid('getGridParam', 'records');
-		   if(recordCount > 0){
-			   //$("#tablegrid1").jqGrid().clearGridData();
-			   //$("#grid").remove();
-			   $("#bottombar").empty();
-			   $("#bottombar").hide();
-				$("#bottomcollapse").css("bottom", "0px");
-				$("#bottomcollapse").removeClass("bottom_collapse_down");
-				$("#bottomcollapse").addClass("bottom_collapse");
-		   }
-	 }
-	 
-	 var searchVector = map.getLayersByName("selected_vector")[0];
-		if(searchVector != undefined){
-			removeBoundExtentFeature();
+	  
+	  if(helpTooltip!=null){
+		   map.removeOverlay(helpTooltip);
+	  }
+	  
+	  if(measureTooltip!=null){
+		  map.removeOverlay(measureTooltip);
+	  }
+	  if (map.getOverlays().getArray().length >= 2) {
+		  map.getOverlays().clear()
+		  
+	  };
+	  
+	  map.getLayers().forEach(function (layer) {
+			if (layer.get('aname') != undefined & layer.get('aname') === 'measure') {
+				map.removeLayer(layer);
+			}
+			if (layer.get('aname') != undefined & layer.get('aname') === 'pan_icon') {
+				map.removeLayer(layer);
+			}
+			if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
+				map.removeLayer(layer);
+			}
+		});
+		
+		if(selectedFeatures!=null){
+			selectedFeatures.clear();
+			map.removeInteraction(selectInteraction);
+            map.removeInteraction(dragBoxInteraction);
 		}
+		if (selectClick != null) {
+		   var features = selectClick.getFeatures();
+           features.clear();
+			map.removeInteraction(selectClick);
+			selectClick.un('select', myCallback);
+		}
+
+		if(zIn!=null)
+		{
+		 zIn.setActive(false);	
+		}
+        
+		if(zOut!=null)
+		{
+		  zOut.setActive(false);	
+		}
+      
+		 if (intraction_dragBox != null) {
+		     map.removeInteraction(intraction_dragBox);
+			
+		 }
+		  if (intraction_dragBox_aoi != null) {
+		     map.removeInteraction(intraction_dragBox_aoi);
+			
+		 }
+		 
+		  if (intraction_dragBox_aoi1 != null) {
+		     map.removeInteraction(intraction_dragBox_aoi1);
+			
+		 }
+		 
+	if (dragInteraction != null) {
+		     map.removeInteraction(dragInteraction);
+			
+		 }
+		 
+	if (modifyInteraction != null) {
+		     map.removeInteraction(modifyInteraction);
+			
+		 }	
+
+if (modifyInteraction_aoi != null) {
+		     map.removeInteraction(modifyInteraction_aoi);
+			
+		 }
+	 if (selectInteraction_edit != null) {
+		     map.removeInteraction(selectInteraction_edit);
+			
+	}	
+	 
+		 
+	if(selectedFeaturesEdit!=null){
+		selectedFeaturesEdit.clear()
+	}	 
+	
+
+	if($("#tablegrid1").length>0)
+    {
+		 $("#tablegridContainer").html("");
+		 $("#bottombar").empty();
+		 $("#bottombar").hide();
+		 $("#bottomcollapse").css("bottom", "0px");
+		 $("#bottomcollapse").removeClass("bottom_collapse_down");
+		$("#bottomcollapse").addClass("bottom_collapse");
+		     
+	}
+	if (draw != null)
+		  map.removeInteraction(draw);
+	  
+	  
+	if (selectSingleClick != null)
+		map.removeInteraction(selectSingleClick);
+     
+     if (drawLine != null)	 
+	  map.removeInteraction(drawLine);
+
+
 		
 }
 
@@ -385,45 +573,162 @@ function addTab(tool,_template){
 
 
 function removeDeactiveMarkupTool(){
-	//remove feature
-	if(wfs_markup_point) wfs_markup_point.removeAllFeatures();
-    if(wfs_markup_line) wfs_markup_line.removeAllFeatures();
-    if(wfs_markup_poly) wfs_markup_poly.removeAllFeatures();    
-	//Deactive markup tool
 	
-	//toggleMarkupControl('');
 	
-	/*Deactivate Edit Controls*/
-	for (editKey in editControls) {
-		var control = editControls[editKey];
-		control.deactivate();
+	$(".tooltip-static").remove();
+
+	
+	if(measure_draw!=null)
+	{
+		map.removeInteraction(measure_draw);
 	}
-	/*Deactivate Markup Controls*/	
-	for (key in markupControls) {
-        var control = markupControls[key];      
-        control.deactivate();
-    }
 	
-	/*Deactivate Export Controls*/	
-	for (exportkey in exportRegionControls) {
-        var control = exportRegionControls[exportkey];        
-            control.deactivate();
-	}
-	/*Deactivate measure Controls*/	
-	for ( var key in mapControls) {
-		if(key=='measurelength'|| key=='measurearea'){
-			var control = mapControls[key];		
-			control.deactivate();
+	
+	if (helpTooltipElement!=null) {
+	  if(helpTooltipElement.parentNode!=null){
+		if(helpTooltipElement.parentNode.hasChildNodes(helpTooltipElement))
+	            helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+			
+	  }	
+	} 
+	 if (measureTooltipElement!=null) {
+	    if(measureTooltipElement.parentNode!=null){
+		 if(measureTooltipElement.parentNode.hasChildNodes(measureTooltipElement))
+		 	measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+		}	 
+	 }
+	  
+	  if(helpTooltip!=null){
+		   map.removeOverlay(helpTooltip);
+	  }
+	  
+	  if(measureTooltip!=null){
+		  map.removeOverlay(measureTooltip);
+	  }
+	  if (map.getOverlays().getArray().length >= 2) {
+		  map.getOverlays().clear()
+		  
+	  };
+	  
+	  map.getLayers().forEach(function (layer) {
+			if (layer.get('aname') != undefined & layer.get('aname') === 'measure') {
+				map.removeLayer(layer);
+			}
+			if (layer.get('aname') != undefined & layer.get('aname') === 'pan_icon') {
+				map.removeLayer(layer);
+			}if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
+				map.removeLayer(layer);
+			}
+		});
+		
+		if(selectedFeatures!=null){
+			selectedFeatures.clear();
+			map.removeInteraction(selectInteraction);
+            map.removeInteraction(dragBoxInteraction);
 		}
-	
+		if (selectClick !== null) {
+		   var features = selectClick.getFeatures();
+           features.clear();
+			map.removeInteraction(selectClick);
+			selectClick.un('select', myCallback);
+		}
+
+		if(zIn!=null)
+		{
+		 zIn.setActive(false);	
+		}
+        
+		if(zOut!=null)
+		{
+		  zOut.setActive(false);	
+		}
+       
+	   if (intraction_dragBox != null) {
+		     map.removeInteraction(intraction_dragBox);
+			
+		 }
+		   if (intraction_dragBox_aoi != null) {
+		     map.removeInteraction(intraction_dragBox_aoi);
+			
+		 }
+		  if (intraction_dragBox_aoi1 != null) {
+		     map.removeInteraction(intraction_dragBox_aoi1);
+			
+		 }
+		 
+		if (dragInteraction != null) {
+				 map.removeInteraction(dragInteraction);
+				
+			 }
+			 
+		if (modifyInteraction != null) {
+				 map.removeInteraction(modifyInteraction);
+				
+			 }	
+
+if (modifyInteraction_aoi != null) {
+				 map.removeInteraction(modifyInteraction_aoi);
+				
+			 }	
+
+		 if (selectInteraction_edit != null) {
+				 map.removeInteraction(selectInteraction_edit);
+				
+		}	
+		 
+			 
+		if(selectedFeaturesEdit!=null){
+			selectedFeaturesEdit.clear()
+		}	 
+		
+		if(deleteInteraction!=null)
+		{
+		map.removeInteraction(deleteInteraction);
+	    }
+		
+		if(deleteInteraction_aoi!=null)
+		{
+		map.removeInteraction(deleteInteraction_aoi);
+	    }
+		
+		if(dragInteraction_aoi!=null)
+		{
+		map.removeInteraction(dragInteraction_aoi);
+	    }
+
+	if(selectInteraction_export!=null)
+	  map.removeInteraction(selectInteraction_export);
+
+   if(intraction_dragBox_export!=null)
+       map.removeInteraction(intraction_dragBox_export);
+    
+	if(selectedFeaturesExport!=null){
+			selectedFeaturesExport.clear()
+	}		
+if (draw != null)
+	 map.removeInteraction(draw);
+
+if($("#tablegrid1").length!=0)
+    {
+		   var recordCount = $("#tablegrid1").jqGrid('getGridParam', 'records');
+		   if(recordCount > 0){
+			   $("#bottombar").empty();
+			   $("#bottombar").hide();
+				$("#bottomcollapse").css("bottom", "0px");
+				$("#bottomcollapse").removeClass("bottom_collapse_down");
+				$("#bottomcollapse").addClass("bottom_collapse");
+		   }
 	}
 	
-	/* Deactive editControls_issue controls of issue
-	for (key_issue in editControls_issue) {
-		var control = editControls_issue[key_issue];
-			control.deactivate();
-	}	
-	*/
+	
+	if (selectSingleClick != null)
+		map.removeInteraction(selectSingleClick);
+     
+     if (drawLine != null)	 
+	  map.removeInteraction(drawLine);
+  
+  
+	
 }
 
 
@@ -507,409 +812,30 @@ function businessDays(_nomdays,txtdate,D){
 
 	return new Date().toDDMMYYYYString();
  
-function isHoliday(_D){
-			
-				for (i = 0; i < _hilidayList.length; i++) {	
-				var hday=_hilidayList[i];
-				var str="this is my new tutorial";
-				var dateArr = new Array();
-				dateArr=(hday.holidayDate).split("-");
-				if ((_D.getFullYear() == dateArr[0]
-				  && _D.getMonth() == dateArr[1] - 1
-				  && _D.getDate() == dateArr[2])
-				 // ||(date.getDay()==0)
-				  ) {							
-						return true;
+	function isHoliday(_D){
+				
+					for (i = 0; i < _hilidayList.length; i++) {	
+					var hday=_hilidayList[i];
+					var str="this is my new tutorial";
+					var dateArr = new Array();
+					dateArr=(hday.holidayDate).split("-");
+					if ((_D.getFullYear() == dateArr[0]
+					  && _D.getMonth() == dateArr[1] - 1
+					  && _D.getDate() == dateArr[2])
+					 // ||(date.getDay()==0)
+					  ) {							
+							return true;
+					}
+
 				}
+				
+	return false;
 
-			}
-			
-return false;
-
-}
+	}
  
  
  }
-/*
-function populateLayerLookups(_layer){
-	
-	if(_layer=='Access_Land'){
-		if(accesslandTypes==null){
-			jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: STUDIO_URL + "accessland/type",
-			success: function (data) {
-				accesslandTypes = data
 
-			}
-			});
-		}
-	jQuery.each(
-		accesslandTypes, function (i, accesslandType) {
-		lkp_Access_Land_type[accesslandType.typeid] = (lang=='en')?accesslandType.type:accesslandType.math;				
-	});
-	//load AL LKP	lkp_Access_Land_type
-	
-	}
-	else if(_layer=='RoW_Path'){
-		
-		if(_pathtype==null){
-		jQuery.ajax({
-	       async:false,
-	    	type: "GET",              
-	        url: STUDIO_URL + "path/type",        		               
-	        success: function (data) {
-	        	_pathtype=data
-	        	
-	        }
-	    });
-		}
-
-
-		if(_pathclassLkp==null){
-			 jQuery.ajax({
-				   async:false,
-					type: "GET",              
-					url: STUDIO_URL + "path/classLkp/",        		               
-					success: function (data) {
-						_pathclassLkp=data
-						
-					}
-				});
-		}
-	  				
-		if(_pathdeptLkp==null){
-			jQuery.ajax({
-				   async:false,
-					type: "GET",              
-					url: STUDIO_URL + "path/dept/",        		               
-					success: function (data) {
-						_pathdeptLkp=data
-						
-					}
-				});
-		}
-		
-		if(_pathcondition==null){
-			jQuery.ajax({
-			   async:false,
-				type: "GET",              
-				url: STUDIO_URL + "path/condition",        		               
-				success: function (data) {
-					_pathcondition=data
-					
-				}
-			});
-		}
-					
-	if(_pathlegalstatus==null){  
-		jQuery.ajax({
-			   async:false,
-				type: "GET",              
-				url: STUDIO_URL + "path/legalstatus/",        		               
-				success: function (data) {
-					_pathlegalstatus=data
-					
-				}
-			});	
-	}
-	if(patheSurveyor==null){  
-		jQuery.ajax({
-		async:false,
-		type: "GET",              
-		 url: STUDIO_URL + "furniture/surveyor",        		               
-		 success: function (data) {
-			 patheSurveyor=data
-			
-		 }
-		});
-	}
-	
-
-	jQuery.each(
-		_pathtype, function (i, pathtype) {
-		lkp_Row_Path_type[pathtype.pathTypeId] = (lang=='en')?pathtype.type:pathtype.math;				
-	});
-	jQuery.each(
-		_pathclassLkp, function (i, pathclassLkp) {
-		lkp_Row_Path_class[pathclassLkp.id] = pathclassLkp.priority;				
-	});
-	jQuery.each(
-		_pathdeptLkp, function (i, pathdeptLkp) {
-		lkp_Row_Path_dept[pathdeptLkp.departmentid] = (lang=='en')?pathdeptLkp.department:pathdeptLkp.adran;				
-	});
-	jQuery.each(
-		_pathcondition, function (i, pathcondition) {
-		lkp_Row_Path_condition[pathcondition.conditionid] = (lang=='en')?pathcondition.condition:pathcondition.cyflwr;				
-	});
-	jQuery.each(
-		_pathlegalstatus, function (i, pathlegalstatus) {
-		lkp_Row_Path_status[pathlegalstatus.legalstatusid] = (lang=='en')?pathlegalstatus.status:pathlegalstatus.statws;				
-	});
-	jQuery.each(
-		patheSurveyor, function (i, surveyor) {
-		lkp_Row_Path_surveyor[surveyor.id] = surveyor.name;				
-	});
-	
-	
-}
-else if(_layer=='Furniture'){
-
-
-		if(furnitureTypes==null){
-			jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: STUDIO_URL + "furniture/type/" + lang,
-			success: function (data) {
-				furnitureTypes = data
-
-			}
-			});
-		}
-		if(furnitureCondition==null){
-			jQuery.ajax({
-				async: false,
-				type: "GET",
-				url: STUDIO_URL + "furniture/condition",
-				success: function (data) {
-					furnitureCondition = data
-
-				}
-			});
-		}
-		if(furnitureSurveyor==null){
-			jQuery.ajax({
-				async: false,
-				type: "GET",
-				url: STUDIO_URL + "furniture/surveyor",
-				success: function (data) {
-					furnitureSurveyor = data
-
-				}
-			});
-		}
-		
-		jQuery.each(
-			furnitureTypes, function (i, furnitureType) {
-			lkp_Furniture_type[furnitureType.typeid] = (lang=='en')?furnitureType.type:furnitureType.math;				
-		});
-		
-		jQuery.each(
-			furnitureCondition, function (i, _furnitureCondition) {
-			lkp_Furniture_condition[_furnitureCondition.conditionid] = _furnitureCondition.condition;				
-		});
-		
-		jQuery.each(
-			furnitureSurveyor, function (i, _furnitureSurveyor) {
-			lkp_Furniture_surveyor[_furnitureSurveyor.id] = _furnitureSurveyor.name;				
-		});
-	
-}
-
-else if(_layer=='Issue'){
-
-
-		if(issueTypes==null){
-			jQuery.ajax({
-			async:false,
-			type: "GET",              
-			 url: STUDIO_URL + "issue/type/lang/"+lang,        		               
-			 success: function (data) {
-				 issueTypes=data;
-				
-			 }
-			});
-		}
-		if(issueStatusList==null){
-			jQuery.ajax({
-			async:false,
-			type: "GET",              
-			 url: STUDIO_URL + "issue/status",        		               
-			 success: function (data) {
-				 issueStatusList=data;
-				
-			 }
-		 });
-		}
-		if(issueurgencyList==null){
-			jQuery.ajax({
-			async:false,
-			type: "GET",              
-			 url: STUDIO_URL + "issue/urgency",        		               
-			 success: function (data) {
-				 issueurgencyList=data;
-				
-			 }
-		 });
-		}
-		if(issueResponsibleDeptList==null){
-			jQuery.ajax({
-			async:false,
-			type: "GET",              
-			 url: STUDIO_URL + "issue/responsibledept",        		               
-			 success: function (data) {
-				 issueResponsibleDeptList=data;
-				
-			 }
-		 });
-
-		}
-		if(issueReasonList==null){
-			jQuery.ajax({
-			async:false,
-			type: "GET",              
-			 url: STUDIO_URL + "issue/reason",        		               
-			 success: function (data) {
-				 issueReasonList=data;
-				
-			 }
-		 });
-		}
-		if(issueUserList==null){
-			jQuery.ajax({
-				async: false,
-				type: "GET",
-				url: STUDIO_URL + "user/",
-				success: function (data) {
-					issueUserList = data
-
-				}
-			});
-		}
-		
-		
-		jQuery.each(
-			issueTypes, function (i, _issueTypes) {
-			lkp_Issue_issuetype[_issueTypes.issuetypeid] = (lang=='en')?_issueTypes.type:_issueTypes.math;				
-		});
-		
-		jQuery.each(
-			issueStatusList, function (i, _issueStatusList) {
-			lkp_Issue_actionstatus[_issueStatusList.actionstatusid] = (lang=='en')?_issueStatusList.actionStatus:_issueStatusList.statws;				
-		});
-		
-		jQuery.each(
-			issueurgencyList, function (i, _issueurgencyList) {
-			lkp_Issue_urgency[_issueurgencyList.urgencyid] = (lang=='en')?_issueurgencyList.urgencyType:_issueurgencyList.brys;				
-		});
-
-		jQuery.each(
-			issueResponsibleDeptList, function (i, _issueResponsibleDeptList) {
-			lkp_Issue_responsibility[_issueResponsibleDeptList.departmentid] = (lang=='en')?_issueResponsibleDeptList.department:_issueResponsibleDeptList.adran;				
-		});
-		
-		jQuery.each(
-			issueReasonList, function (i, _issueReasonList) {
-			lkp_Issue_why[_issueReasonList.reasonid] = (lang=='en')?_issueReasonList.reason:_issueReasonList.math;				
-		});
-		
-		jQuery.each(
-			issueUserList, function (i, _issueUserList) {
-			lkp_Issue_assignto[_issueUserList.id] = _issueUserList.name;	
-	
-		});
-	
-}
-else if(_layer=='Surface'){
-
-
-	if(surfaceTypes==null){
-		jQuery.ajax({
-		async: false,
-		type: "GET",
-		url: STUDIO_URL + "surface/type",
-		success: function (data) {
-			surfaceTypes = data
-
-		}
-		});
-	}
-	if(surfaceCondition==null){
-		jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: STUDIO_URL + "surface/condition",
-			success: function (data) {
-				surfaceCondition = data
-
-			}
-		});
-	}
-	if(surfaceSurveyor==null){
-		jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: STUDIO_URL + "surface/surveyor",
-			success: function (data) {
-				surfaceSurveyor = data
-
-			}
-		});
-	}
-	
-	jQuery.each(
-			surfaceTypes, function (i, surfaceType) {
-		lkp_Surface_type[surfaceType.typeid] = surfaceType.type;				
-	});
-	
-	jQuery.each(
-			surfaceCondition, function (i, _surfaceCondition) {
-		lkp_Surface_condition[_surfaceCondition.conditionid] = _surfaceCondition.condition;				
-	});
-	
-	jQuery.each(
-		surfaceSurveyor, function (i, _surfaceSurveyor) {
-		lkp_Surface_surveyor[_surfaceSurveyor.id] = _surfaceSurveyor.name;				
-	});
-
-	}else if(_layer == 'Complaint_Layer'){
-		if(complaintEnquiryTypes==null){
-			jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: "/spatialvue/viewer/complaint/enquiryTypes",
-			success: function (data) {
-				complaintEnquiryTypes = data
-			}
-			});
-		}
-		jQuery.each(
-				complaintEnquiryTypes, function (i, complaintEnquiryType) {
-					lkp_Complaint_enquiryType[complaintEnquiryType.enquiryid] = complaintEnquiryType.enquiryType;				
-		});
-		
-		jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: "/spatialvue/viewer/complaint/complainants",
-			success: function (data) {
-				complainants = data
-			}
-		});
-		jQuery.each(
-				complainants, function (i, complainant) {
-					lkp_Complaint_complainant[complainant.complainantid] 
-						= complainant.email;				
-			});
-		
-		jQuery.ajax({
-			async: false,
-			type: "GET",
-			url: "/spatialvue/viewer/listcontact",
-			success: function (data) {
-				contacts = data
-			}
-		});
-		jQuery.each(
-				contacts, function (i, contact) {
-					lkp_Complaint_contacts[contact.contactid] 
-						= contact.email;				
-			});
-		
-	}
-}*/
 
 function convertDateToEuropeanFormat(dateString){
 	if(dateString != undefined && dateString != null && dateString != ""){
@@ -1029,5 +955,119 @@ function getPathConditionIssueCount(_rowId){
 		return pathConditionAndIssueCount;
 	}
 
+var zoomOnBox = function(mapBrowserEvent, startPixel, endPixel, direction) {
 
+	var width = endPixel[0] - startPixel[0];
+	var height = endPixel[1] - startPixel[1];
+	var start_x = map.getCoordinateFromPixel([startPixel[0],startPixel[1]])[0];
+	var start_y = map.getCoordinateFromPixel([startPixel[0],startPixel[1]])[1];
+	var end_x = map.getCoordinateFromPixel([endPixel[0],endPixel[1]])[0];
+	var end_y = map.getCoordinateFromPixel([endPixel[0],endPixel[1]])[1];
+	
+	var x_min = (start_x>end_x) ? end_x : start_x;
+	var x_max = (start_x>end_x) ? start_x : end_x;
+	var y_min = (start_y>end_y) ? end_y : start_y;
+	var y_max = (start_y>end_y) ? start_y : end_y;
+	
+//	if(direction=='in' && ((x_max-x_min<1)||(y_max-y_min<1))) return false;
+	
+	if(direction=='out'){
+		var dx = x_max - x_min;
+		var dy = y_max - y_min;
+		var mitte_x = (x_max + x_min)/2;
+		var mitte_y = (y_max + y_min)/2;
+		
+		var extent_now = map.getView().calculateExtent(map.getSize());
 
+		var edx = extent_now[2] - extent_now[0];
+		var edy = extent_now[3] - extent_now[1];
+		
+		var max_dx_ext = extent_now[2] - extent_now[0];
+		var max_dy_ext = extent_now[3] - extent_now[1];
+		
+		
+		var exponent4zoom_out = Math.pow((1.5-(Math.round(map.getView().getResolution()*1000).toString().length*0.1)), 1.5);
+		exponent4zoom_out = (exponent4zoom_out<1) ? 1 : exponent4zoom_out; 
+		
+	
+		if(edx/edy >= dx/dy){
+
+			x_max = mitte_x + (dx/2);
+			x_min = mitte_x - (dx/2);
+			y_max = mitte_y + (dy/2) + Math.pow((edy-dy), exponent4zoom_out);
+			y_min = mitte_y - (dy/2) - Math.pow((edy-dy), exponent4zoom_out);
+
+		} else {
+
+			x_max = mitte_x + (dx/2) + Math.pow((edx-dx), exponent4zoom_out);
+			x_min = mitte_x - (dx/2) - Math.pow((edx-dx), exponent4zoom_out);
+			y_max = mitte_y + (dy/2);
+			y_min = mitte_y - (dy/2);
+
+		}
+		
+		if(max_dx_ext<(x_max-x_min) || max_dy_ext<(y_max-y_min)){
+			x_max = mitte_x + (max_dx_ext/2);
+			x_min = mitte_x - (max_dx_ext/2);
+			y_max = mitte_y + (max_dy_ext/2);
+			y_min = mitte_y - (max_dy_ext/2);
+		}
+
+	}
+	
+	map.getView().fit([x_min, y_min, x_max, y_max], map.getSize(), {constrainResolution:false});
+};
+
+function clearEditTool() {
+
+    if(intraction_dragBox!=null)
+	     map.removeInteraction(intraction_dragBox);
+	 
+	 if(intraction_dragBox_aoi!=null)
+	     map.removeInteraction(intraction_dragBox_aoi);
+	 
+	  if(intraction_dragBox_aoi1!=null)
+	     map.removeInteraction(intraction_dragBox_aoi1);
+	 
+
+	if (dragInteraction != null) 
+         map.removeInteraction(dragInteraction);
+		 
+	if (modifyInteraction != null) 
+		  map.removeInteraction(modifyInteraction);
+		
+		
+	if(deleteInteraction!=null)	
+	  map.removeInteraction(deleteInteraction);	
+  
+  if (modifyInteraction_aoi != null) 
+		  map.removeInteraction(modifyInteraction_aoi);
+	  
+  if(deleteInteraction_aoi!=null)	
+	  map.removeInteraction(deleteInteraction_aoi);	
+  
+	if(dragInteraction_aoi!=null)
+		{
+		map.removeInteraction(dragInteraction_aoi);
+	    }
+		
+    if (snapInteraction != null)
+		  map.removeInteraction(snapInteraction);
+	  
+	if (snapInteraction_aoi != null)
+		  map.removeInteraction(snapInteraction_aoi);
+
+	if (draw != null)
+		  map.removeInteraction(draw);
+    
+	
+	if (selectSingleClick != null)
+		map.removeInteraction(selectSingleClick);
+     
+     if (drawLine != null)	 
+	  map.removeInteraction(drawLine);
+  
+  
+  
+		
+}

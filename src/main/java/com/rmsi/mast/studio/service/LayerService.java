@@ -13,7 +13,7 @@ import com.rmsi.mast.studio.domain.LayerField;
 public interface LayerService {
 
 	public List<Layer> findAllLayers();
-	public Layer findLayerByName(String alias);
+	public Layer findLayerByName(String layerid);
 	public List<String> detailsByOrder(String id);
 	public List<Object[]> getLayersVisibility(String[] layers);
 	
@@ -23,10 +23,14 @@ public interface LayerService {
 	public Layer createLayer(Layer layer);
 	
 	@Transactional
-	public boolean deleteLayerById(String id);
-	public String getGeometryType(String id);
+	public boolean deleteLayerById(Long id);
 	
 	@Transactional
 	public String saveSLD(String layerName, String sld);
+
+	public Layer findLayerById(long layerid);
+	
+	public String checklayerByid(Long id);
+	
 	public Set<LayerField> getLayerFieldsByLayerName(String alias);
 }

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ccro" pageWidth="595" pageHeight="842" columnWidth="527" leftMargin="34" rightMargin="34" topMargin="28" bottomMargin="10" uuid="34e83ee4-79a7-4e09-8eed-721ca4bfad0c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<subDataset name="OwnersForSignature" uuid="751763e3-9b88-4600-a4f6-1ae67bbfbd07">
+		<parameter name="APP_URL" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<subDataset name="Dataset1" uuid="3cd43879-5a2a-41c1-ba5a-61a64c48c2d4">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<subDataset name="Dataset2" uuid="2c08ac90-4c47-478b-b29e-1b9ccbfbe2c9">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="APP_URL" class="java.lang.String"/>
+	<parameter name="DATE" class="java.lang.String"/>
+	<parameter name="LAND_OFFICER_SIGNATURE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="usin" class="java.lang.Long">
+		<fieldDescription><![CDATA[usin]]></fieldDescription>
+	</field>
+	<field name="partyid" class="java.lang.Long">
+		<fieldDescription><![CDATA[partyid]]></fieldDescription>
+	</field>
+	<field name="firstname" class="java.lang.String">
+		<fieldDescription><![CDATA[firstname]]></fieldDescription>
+	</field>
+	<field name="certificateno" class="java.lang.String">
+		<fieldDescription><![CDATA[certificateno]]></fieldDescription>
+	</field>
+	<field name="landno" class="java.lang.String">
+		<fieldDescription><![CDATA[landno]]></fieldDescription>
+	</field>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[address]]></fieldDescription>
+	</field>
+	<field name="area" class="java.lang.Long">
+		<fieldDescription><![CDATA[area]]></fieldDescription>
+	</field>
+	<field name="landusetype" class="java.lang.String">
+		<fieldDescription><![CDATA[landusetype]]></fieldDescription>
+	</field>
+	<field name="neighbor_east" class="java.lang.String">
+		<fieldDescription><![CDATA[neighbor_east]]></fieldDescription>
+	</field>
+	<field name="neighbor_west" class="java.lang.String">
+		<fieldDescription><![CDATA[neighbor_west]]></fieldDescription>
+	</field>
+	<field name="neighbor_north" class="java.lang.String">
+		<fieldDescription><![CDATA[neighbor_north]]></fieldDescription>
+	</field>
+	<field name="neighbor_south" class="java.lang.String">
+		<fieldDescription><![CDATA[neighbor_south]]></fieldDescription>
+	</field>
+	<field name="sharepercentage" class="java.lang.String">
+		<fieldDescription><![CDATA[sharepercentage]]></fieldDescription>
+	</field>
+	<field name="middlename" class="java.lang.String">
+		<fieldDescription><![CDATA[middlename]]></fieldDescription>
+	</field>
+	<field name="lastname" class="java.lang.String">
+		<fieldDescription><![CDATA[lastname]]></fieldDescription>
+	</field>
+	<field name="capture_date" class="java.util.Date">
+		<fieldDescription><![CDATA[capture_date]]></fieldDescription>
+	</field>
+	<field name="landsharetype" class="java.lang.String">
+		<fieldDescription><![CDATA[landsharetype]]></fieldDescription>
+	</field>
+	<field name="gender" class="java.lang.String">
+		<fieldDescription><![CDATA[gender]]></fieldDescription>
+	</field>
+	<field name="age" class="java.lang.Long">
+		<fieldDescription><![CDATA[age]]></fieldDescription>
+	</field>
+	<field name="maritalstatus" class="java.lang.String">
+		<fieldDescription><![CDATA[maritalstatus]]></fieldDescription>
+	</field>
+	<field name="identitytype" class="java.lang.String">
+		<fieldDescription><![CDATA[identitytype]]></fieldDescription>
+	</field>
+	<field name="identityno" class="java.lang.String">
+		<fieldDescription><![CDATA[identityno]]></fieldDescription>
+	</field>
+	<field name="dateofregistration" class="java.util.Date">
+		<fieldDescription><![CDATA[dateofregistration]]></fieldDescription>
+	</field>
+	<field name="duration" class="java.lang.Long">
+		<fieldDescription><![CDATA[duration]]></fieldDescription>
+	</field>
+	<field name="contactno" class="java.lang.Long">
+		<fieldDescription><![CDATA[contactno]]></fieldDescription>
+	</field>
+	<field name="landtype" class="java.lang.String">
+		<fieldDescription><![CDATA[landtype]]></fieldDescription>
+	</field>
+	<field name="country" class="java.lang.String">
+		<fieldDescription><![CDATA[country]]></fieldDescription>
+	</field>
+	<field name="region" class="java.lang.String">
+		<fieldDescription><![CDATA[region]]></fieldDescription>
+	</field>
+	<field name="province" class="java.lang.String">
+		<fieldDescription><![CDATA[province]]></fieldDescription>
+	</field>
+	<field name="commune" class="java.lang.String">
+		<fieldDescription><![CDATA[commune]]></fieldDescription>
+	</field>
+	<field name="place" class="java.lang.String">
+		<fieldDescription><![CDATA[place]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="760" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="33" width="527" height="19" uuid="0e8a9120-fd57-4ed9-8dba-7f5eba82657f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Land Record Verification Form]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="8" width="527" height="19" uuid="0e8a9120-fd57-4ed9-8dba-7f5eba82657f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MOBILE APPLICATION TO SECURE TENURE]]></text>
+			</staticText>
+			<break>
+				<reportElement x="0" y="759" width="100" height="1" uuid="bc7fc0ed-b046-408c-a924-85da2563c579"/>
+			</break>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="5" y="82" width="203" height="20" uuid="e4b6d7d6-648f-4d7b-a11f-8589fb537095"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Date - " + new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="4" y="105" width="203" height="20" uuid="bd9e7295-a4f7-4cf7-91f4-3f8f05fb719e"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Transaction ID - " + $F{usin}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="4" y="171" width="203" height="20" uuid="39e21eb6-431a-46e5-a12b-124c6dae7729"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1. Occupancy Type - " + $F{landsharetype}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="140" width="191" height="21" uuid="b4e5a335-8537-423d-9343-5a3ec0089874"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Occupancy and Ownership]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="196" width="270" height="21" uuid="0fa618c7-f706-4e11-b743-729d87bf1e13"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2. Full Name of Owners/management members]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="5" y="287" width="203" height="20" uuid="50d636b3-86c2-4ff0-aa69-6184b1caf03d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3. Date of Occupancy Commencement - "]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="4" y="311" width="203" height="20" uuid="7123b581-e0fe-4c1d-a6c8-81daf1e227b3"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["4. Duration - "]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="6" y="333" width="203" height="20" uuid="e9d98967-355e-4dab-8262-c9d2ac6b9302"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["5. Address - " +$F{address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="385" width="191" height="21" uuid="05351c48-41d7-4c6d-843e-17eaa3d26ba9"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Land Characteristics]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="6" y="357" width="203" height="20" uuid="536c757d-25bf-47b2-8d84-89b3c3bd7aa5"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["6. Contact No - "+ $F{contactno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="5" y="412" width="203" height="20" uuid="ce779567-365f-4565-9843-8de143e58b64"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1. Provisional Parcel number - " +$F{landno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="5" y="436" width="203" height="20" uuid="c2ee094f-86d8-4c0a-91d7-9e59648afc2d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2. Use of occupancy of land - " +$F{landusetype}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="5" y="458" width="203" height="20" uuid="eb2d6716-d1eb-4e86-ab82-47f9df4fc640"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3. Land Type - " +$F{landtype}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="25" y="500" width="203" height="20" uuid="36cbe714-1425-4fde-b83a-bc5463ef3192"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["a. Country - " +$F{country}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="479" width="191" height="21" uuid="a49e18cd-10bc-442f-b911-18834b80bada"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[4. Location of Land]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="25" y="521" width="203" height="20" uuid="7fad971c-45fa-498d-aef1-e5d430258b87"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["b. Region - " +$F{region}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="25" y="541" width="203" height="20" uuid="341ba93a-d9f7-4810-a1c6-5c7822f11ea0"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["c. Province - " +$F{province}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="25" y="580" width="203" height="20" uuid="cd5b09c8-1934-41ea-87da-c6ee2b735d10"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["F. Place - " +$F{place}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="5" y="605" width="203" height="20" uuid="30f8aaa0-4e37-4d73-a2ad-cf0d060ac207"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["5. Approximate Area - " +$F{area}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="25" y="560" width="203" height="20" uuid="9e34589e-be5b-4277-a552-f666db5956c1"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["d. Commune - " +$F{commune}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="28" y="220" width="61" height="21" uuid="d1640f9f-ecc1-4b1f-a823-5800482add1c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="90" y="220" width="61" height="21" uuid="4f823e23-e631-4744-954b-42986564ae27"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="151" y="220" width="61" height="21" uuid="c358c079-c275-4f37-96e8-6d85c9f46480"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="213" y="220" width="61" height="21" uuid="a832d0d4-3fef-4860-b165-5ba18fc54d6a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="274" y="220" width="61" height="21" uuid="299b1717-dedd-47dd-af4c-f61885c16d16"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="336" y="220" width="61" height="21" uuid="3ea1f330-b10f-4e02-84f2-e02f6036f27a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="28" y="242" width="61" height="21" uuid="874f3265-7400-40b9-b86e-44f5478655af"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="90" y="242" width="61" height="21" uuid="a80043cb-1d28-4ed5-a080-b64b7fdad49e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="151" y="242" width="61" height="21" uuid="b54022c8-f3fd-41ca-ae9a-a073cb982905"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="213" y="242" width="61" height="21" uuid="b5538fdf-f09e-4855-b8a6-99e235e8b566"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="274" y="242" width="61" height="21" uuid="eb13d779-e746-406a-9b98-4c6efc159d0c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="336" y="242" width="61" height="21" uuid="cf692865-ec9a-4884-8811-747763ff3d2e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="6" y="220" width="21" height="21" uuid="e9b3406d-abf5-4e52-91fa-8c63adef4c75"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="6" y="242" width="21" height="21" uuid="142b6e5f-d1b3-44c2-a212-f361c1c9fe7b"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="12" y="224" width="13" height="18" uuid="a88e4fc6-de66-4e39-8851-e1f1bfb62f22"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="225" width="42" height="14" uuid="6cd62dba-0314-44aa-9316-8e6c7b3ba01d"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Surname]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="97" y="224" width="42" height="14" uuid="dc1ef18a-f117-4246-bd65-34a0f95cd222"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firstname]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="35" y="244" width="61" height="20" uuid="115714f3-7c11-4db7-a2d0-40e973a5ed64"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lastname}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="96" y="244" width="61" height="20" uuid="ecc12526-cd11-430c-834e-f2bc07ffc42e"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{firstname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="158" y="224" width="42" height="14" uuid="7020a191-1a87-4ebd-8c7e-efdedfd5828e"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sex]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="155" y="244" width="61" height="20" uuid="91c53dd7-dcc2-421e-bc8d-20648f211535"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="225" width="42" height="14" uuid="42ca9f83-964f-4a97-a22c-fe0f507527d3"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Age]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="278" y="222" width="57" height="14" uuid="5dbfd12f-ccb1-4bdd-add3-5b476148105b"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marital Status]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="279" y="243" width="61" height="20" uuid="c2995a48-991f-4b4a-87a5-f871f1f88a3c"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{maritalstatus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="339" y="223" width="57" height="14" uuid="9dd0d334-c2f1-44f1-9196-b66cc4e3538d"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Citizenship]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="340" y="246" width="61" height="20" uuid="687b742c-d58c-45e7-9727-5b1a174f6c35"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{identityno}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="804">
+			<rectangle>
+				<reportElement x="-7" y="66" width="262" height="241" uuid="abfc71b6-ae9c-478b-9bbf-5c3428110de3"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="11" y="70" width="231" height="80" uuid="fedf11f0-dd56-4f84-9908-0e1f09f8a5f6"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="11" isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["This parcel of land with and area of <b>" + $F{area} + " is located at "+ $F{address} +  " It is currently being used for  " + $F{landusetype} + "</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="6" y="155" width="211" height="20" uuid="c85fc747-c2e9-4f95-87eb-882b2885bcd1"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["North Boundary : " + $F{neighbor_north} + ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="190" width="211" height="20" uuid="edaad59c-a581-4631-978a-5e36b41fcfff"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["South Boundary : " + $F{neighbor_south} + ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="230" width="211" height="20" uuid="d3c13f78-7d65-4bc0-b65d-21b93e5190a7"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["East Boundary : " + $F{neighbor_east} + ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="4" y="270" width="211" height="20" uuid="11327862-af73-4c21-a96d-497e0fee10ad"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["West Boundary : " + $F{neighbor_west} + ""]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="284" y="67" width="241" height="241" uuid="3e558406-ea3f-4614-9ab6-ad4b6171cae9"/>
+			</rectangle>
+			<image scaleImage="RealSize" hAlign="Center" vAlign="Middle">
+				<reportElement x="294" y="70" width="221" height="235" uuid="b0410b1a-be18-4375-8b30-c370461f09f6"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{APP_URL} + "/viewer/parcelmap/map/" + $F{usin}.toString()]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

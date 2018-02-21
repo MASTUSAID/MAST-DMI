@@ -27,7 +27,7 @@ public interface OutputformatService {
 	void updateOutputformat(Outputformat outputformat);
 
 	@Transactional(readOnly=true)
-	Outputformat findOutputformatById(Long id);
+	Outputformat findOutputformatById(Integer id);
 
 	@Transactional(readOnly=true)
 	List<Outputformat> findAllOutputformat();

@@ -1,6 +1,5 @@
 package com.rmsi.mast.studio.dao.hibernate;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +8,8 @@ import javax.persistence.Query;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import com.rmsi.mast.studio.dao.ActionDAO;
 import com.rmsi.mast.studio.dao.SocialTenureRelationshipDAO;
-import com.rmsi.mast.studio.domain.Action;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
-import com.rmsi.mast.studio.domain.SpatialUnit;
 
 @Repository
 public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<SocialTenureRelationship, Long>
@@ -21,11 +17,12 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 
     private static final Logger logger = Logger.getLogger(SocialTenureRelationshipHibernateDAO.class);
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<SocialTenureRelationship> findbyUsin(Long id) {
 
         try {
-            Query query = getEntityManager().createQuery("Select st from SocialTenureRelationship st where (st.usin = :usin and st.isActive=true)");
+            Query query = getEntityManager().createQuery("Select st from SocialTenureRelationship st where (st.landid = :usin and st.isactive=true and st.laPartygroupPersontype.persontypeid in (1,2,3))");
             List<SocialTenureRelationship> socialTenure = query.setParameter("usin", id).getResultList();
 
             if (socialTenure.size() > 0) {
@@ -46,7 +43,8 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 
         try {
             Query query = getEntityManager().createQuery("Select st from SocialTenureRelationship st where st.gid = :gid and st.isActive = true");
-            List<SocialTenureRelationship> socialTenureBygid = query.setParameter("gid", id).getResultList();
+            @SuppressWarnings("unchecked")
+			List<SocialTenureRelationship> socialTenureBygid = query.setParameter("gid", id).getResultList();
 
             if (socialTenureBygid.size() > 0) {
                 return socialTenureBygid;
@@ -91,9 +89,12 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 
     @Override
     public boolean deleteNatural(Long id) {
+    	
+    	
         try {
 
-            Query query = getEntityManager().createQuery("UPDATE SocialTenureRelationship st SET st.isActive = false  where st.person_gid.person_gid = :gid");
+            Query query = getEntityManager().createQuery("UPDATE SocialTenureRelationship st SET st.isactive = false  where st.partyid = :gid");
+
 
             query.setParameter("gid", id);
 
@@ -109,6 +110,9 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
             logger.error(e);
             return false;
         }
+        
+        
+        
 
     }
 
@@ -116,7 +120,7 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
     public boolean deleteNonNatural(Long id) {
         try {
 
-            Query query = getEntityManager().createQuery("UPDATE SocialTenureRelationship st SET st.isActive = false  where st.person_gid.person_gid = :gid");
+            Query query = getEntityManager().createQuery("UPDATE SocialTenureRelationship st SET st.isactive = false  where st.partyid = :gid");
 
             query.setParameter("gid", id);
 
@@ -141,7 +145,8 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 
         ArrayList<SocialTenureRelationship> objTemp = new ArrayList<SocialTenureRelationship>();
         try {
-            Query query = getEntityManager().createQuery("Select su from SocialTenureRelationship su where (su.usin = :usin and su.isActive=false)");
+            Query query = getEntityManager().createQuery("UPDATE SocialTenureRelationship st SET st.isactive = false  where st.partyid = :gid");
+
             List<SocialTenureRelationship> personList = query.setParameter("usin", id).getResultList();
 
             if (personList.size() > 0) {
@@ -196,5 +201,13 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
         }
 
     }
+
+	@Override
+	public SocialTenureRelationship getPersonLandMapDetails(Integer landid) {
+		String qry = "Select st from SocialTenureRelationship st";
+		Query query = getEntityManager().createQuery(qry);
+		query.getResultList();
+		return null;
+	}
 
 }

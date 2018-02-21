@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 //import com.googlecode.ehcache.annotations.Cacheable;
 //import com.googlecode.ehcache.annotations.TriggersRemove;
 
+
 import com.rmsi.mast.studio.dao.ActionDAO;
 import com.rmsi.mast.studio.dao.BookmarkDAO;
 import com.rmsi.mast.studio.domain.Bookmark;
@@ -29,7 +30,12 @@ public class BookmarkServiceImpl  implements BookmarkService{
 	//@TriggersRemove(cacheName="bookmarkFBNCache", removeAll=true)	    
 	public void addBookmark(Bookmark bookmark) {
 		
-		bookmarkDAO.makePersistent(bookmark);
+		try {
+			bookmarkDAO.makePersistent(bookmark);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -47,9 +53,9 @@ public class BookmarkServiceImpl  implements BookmarkService{
 	}
 
 	@Override
-	//@Cacheable(cacheName="bookmarkFBNCache")
-	public Bookmark findBookmarkById(Long id) {
-		return bookmarkDAO.findById(id, false);
+	public Bookmark findBookmarkById(Integer id) {
+		return bookmarkDAO.findBookmarkById(id);
+		
 
 	}
 
@@ -67,14 +73,14 @@ public class BookmarkServiceImpl  implements BookmarkService{
 
 	@Override
 	//@Cacheable(cacheName="bookmarkFBNCache")
-	public List<Bookmark> getBookmarksByProject(String project) {
-		return bookmarkDAO.getBookmarksByProject(project);
+	public List<Bookmark> getBookmarksByProject(Integer id) {
+		return bookmarkDAO.getBookmarksByProject(id);
 	}
 
 	@Override
 	//@TriggersRemove(cacheName="bookmarkFBNCache", removeAll=true)	    
-	public void deleteBookmarkByProject(String name) {
-		bookmarkDAO.deleteByProjectName(name);
+	public void deleteBookmarkByProjectId(Integer id) {
+		bookmarkDAO.deleteByProjectId(id);
 	}
 	
 }

@@ -29,8 +29,12 @@ public interface AttributeMasterService {
 
     boolean checkdeleteAttribute(Long id);
 
-    List<AttributeMaster> findbyAttributeId(Long id);
+    AttributeMaster findbyAttributeId(Long id);
 
     boolean checkeditduplicate(long id, long categoryId, String alias, String fieldName);
+    
+    List<AttributeMaster> getAttributeMasterByTypeId(Integer id);
+    
+    List<AttributeMaster> getAttributeMasterByAttributeMasterId(long id);
 
 }

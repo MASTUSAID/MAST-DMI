@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 //import com.googlecode.ehcache.annotations.Cacheable;
 //import com.googlecode.ehcache.annotations.TriggersRemove;
 
+
 import com.rmsi.mast.studio.dao.RoleDAO;
 import com.rmsi.mast.studio.dao.RoleModuleDAO;
 import com.rmsi.mast.studio.dao.UserRoleDAO;
@@ -100,6 +101,12 @@ public class RoleServiceImpl implements RoleService{
 	@Override
 	public List<Role> findAllRole(int roleId) {
 		return roleDAO.findAll(roleId);
+	}
+
+	@Override
+	public Role findRoleById(Integer id) {
+		// TODO Auto-generated method stub
+		return roleDAO.findRoleById(id);
 	}
 	
 	

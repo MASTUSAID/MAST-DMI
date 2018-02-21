@@ -25,7 +25,7 @@ implements SpatialUnitDeceasedPersonDao {
 	@Override
 	public List<SpatialunitDeceasedPerson> findPersonByUsin(Long usin) {
 		try {
-			Query query = getEntityManager().createQuery("Select sd from SpatialunitDeceasedPerson sd where sd.usin = :usin");
+			Query query = getEntityManager().createQuery("Select sd from SpatialunitDeceasedPerson sd where  sd.isactive=true and   sd.laSpatialunitLand = :usin");
 			@SuppressWarnings("unchecked")
 			List<SpatialunitDeceasedPerson> spatialUnitDeceasedPerson = query.setParameter("usin", usin).getResultList();
 
@@ -56,7 +56,7 @@ implements SpatialUnitDeceasedPersonDao {
 			while (deceasedPersonter.hasNext()) {
 
 				deceasedPerson = deceasedPersonter.next();
-				deceasedPerson.setUsin(usin);
+//				deceasedPerson.setUsin(usin);
 
 				makePersistent(deceasedPerson);
 

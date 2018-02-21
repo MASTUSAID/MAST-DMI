@@ -19,5 +19,10 @@ public interface  ProjectAreaDAO extends GenericDAO<ProjectArea, Long> {
 	void deleteByProjectAreaName(String name);
 
 	List<ProjectArea> findByProjectName(String projectName);
+	
+	ProjectArea findProjectAreaById(Long id);
+	ProjectArea findProjectAreaByProjectId(Integer id);
+	
+	void deleteProjectAreaByProjectId(Integer id);
 
 }

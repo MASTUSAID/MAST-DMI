@@ -16,12 +16,14 @@ public interface UserRoleDAO extends GenericDAO<UserRole, Long> {
 	
 	boolean deleteUserRoleByUser(Integer username);
 	
-	//List<UserRole> findAllUserRole(String name);
+	List<UserRole> findAllUserRole(String name);
 	
 	//void deleteUserRole(String name);
 	
 	void addUserRoles(Set<Role> roles,User user);
 
-	List<UserRole> selectedUserByUserRole(List<String> lstRole);
+	List<UserRole> selectedUserByUserRole(List<Integer> lstRole);
+	 boolean deleteUserRoleByUserId(Long userId) ;
 	
+	 public List<UserRole> findAllUserByRole(String name);
 }

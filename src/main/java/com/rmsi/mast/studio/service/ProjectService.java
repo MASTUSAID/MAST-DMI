@@ -11,6 +11,7 @@ import com.rmsi.mast.studio.domain.Bookmark;
 import com.rmsi.mast.studio.domain.Layergroup;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ProjectAdjudicator;
+import com.rmsi.mast.studio.domain.ProjectArea;
 import com.rmsi.mast.studio.domain.ProjectHamlet;
 import com.rmsi.mast.studio.domain.ProjectRegion;
 import com.rmsi.mast.studio.domain.Savedquery;
@@ -35,7 +36,7 @@ public interface ProjectService {
 	void deleteProject();
 
 	@Transactional
-	void deleteProjectById(String name);
+	void deleteProjectById(Integer id);
 
 	@Transactional
 	void updateProject(Project project);
@@ -54,13 +55,13 @@ public interface ProjectService {
 
 	List<ProjectRegion> findAllCountry();
 
-	List<ProjectRegion> findRegionByCountry(String countryname);
+	List<ProjectRegion> findRegionByCountry(Integer Id);
 
-	List<ProjectRegion> findDistrictByRegion(String countryname);
+	List<ProjectRegion> findDistrictByRegion(Integer Id);
 
-	List<ProjectRegion> findVillageByDistrict(String countryname);
+	List<ProjectRegion> findVillageByDistrict(Integer Id);
 
-	List<ProjectRegion> findHamletByVillage(String countryname);
+	List<ProjectRegion> findPlaceByVillage(Integer Id);
 
 	boolean checkprojectname(String projectName);
 
@@ -71,7 +72,7 @@ public interface ProjectService {
 	List<String> getUserEmailByProject(String id);
 
 
-	List<UserRole> findAlluserrole(List<String> lstRole);
+	List<UserRole> findAlluserrole(List<Integer> lstRole);
 
 	boolean checkduplicatename(String projectName);
 
@@ -104,6 +105,9 @@ public interface ProjectService {
 
 	List<String> getHamletCodesbyProject(String projectName);
 
+	 public List<Project> getdAllProjectsNames();
 
+	List<Project> getdAllProjectsdetails();
+	public List<ProjectArea> getProjectArea(String projectName);
 
 }

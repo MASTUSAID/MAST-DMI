@@ -1,10 +1,12 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -12,36 +14,68 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="education_level")
+@Table(name="la_partygroup_educationlevel")
 public class EducationLevel implements Serializable {
 
+/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 
+//	private static final long serialVersionUID = 1L;
+
 	@Id
-	@Column(name = "level_Id")
-	private int levelId;
+	private Integer educationlevelid;
 
-	@Column(name = "education_level")
-	private String educationLevel;
+	private String educationlevel;
 
+	@Column(name="educationlevel_en")
+	private String educationlevelEn;
+
+	private Boolean isactive;
+
+	/*//bi-directional many-to-one association to LaPartyPerson
+	@OneToMany(mappedBy="laPartygroupEducationlevel")
+	private List<NaturalPerson> laPartyPersons;
+	*/
 	public EducationLevel() {
 		super();
 	}
 
-	public int getLevelId() {
-		return this.levelId;
+	public Integer getEducationlevelid() {
+		return educationlevelid;
 	}
 
-	public void setLevelId(int levelId) {
-		this.levelId = levelId;
+	public void setEducationlevelid(Integer educationlevelid) {
+		this.educationlevelid = educationlevelid;
 	}
 
-	public String getEducationLevel() {
-		return this.educationLevel;
+	public String getEducationlevel() {
+		return educationlevel;
 	}
 
-	public void setEducationLevel(String educationLevel) {
-		this.educationLevel = educationLevel;
+	public void setEducationlevel(String educationlevel) {
+		this.educationlevel = educationlevel;
 	}
 
+	public String getEducationlevelEn() {
+		return educationlevelEn;
+	}
+
+	public void setEducationlevelEn(String educationlevelEn) {
+		this.educationlevelEn = educationlevelEn;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	
+	
+	
+	
 }

@@ -96,11 +96,13 @@
         if (!jsFiles) {
             jsFiles = [
                     	
-               "openlayers/OpenLayers.js",
+             /*  "openlayers/OpenLayers.js",
                "openlayers/Watermark.js",
                "openlayers/MapQuestOSM.js",
                "openlayers/LayerSwitcherNew.js",
                "openlayers/UndoRedo.js",
+               "openlayers/Jsonix-all.js",*/
+               "openlayers/ol-debug.js",
                "jquery-1.7.1/jquery-1.7.1.min.js",                        
                "jquery-1.6.3/jquery.cookie.js",
                "jquery-1.6.3/jquery.formHints.js",

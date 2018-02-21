@@ -3,7 +3,7 @@
 	min-width: 300px; /* Dialog will be no smaller than this */
 	max-width: 600px; /* Dialog will wrap after this width */
 	background: #fff;
-	border: solid 5px #0F57A8;
+	border: solid 5px #362e58;
 	color: #000;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -17,7 +17,7 @@
 	text-align: left;
 	line-height: 1.75em;
 	color: #fff;
-	background: #0F57A8 top repeat-x;
+	background: #362e58 top repeat-x;
 	border: solid 0px #0F57A8;
 	border-bottom: solid 0px #999;
 	cursor: default;

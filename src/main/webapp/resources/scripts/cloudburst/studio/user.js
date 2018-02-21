@@ -76,7 +76,7 @@ var user_role = null;
 var user_roleList = null;
 var user_ProjectList = null;
 var user_ManagerList = null;
-
+var user_genderList = null;
 var CreateEditUser = function (_userId) {
 
     jQuery("#user_btnNew").hide();
@@ -99,6 +99,7 @@ var CreateEditUser = function (_userId) {
         }
     });
 
+    
     //add for edit for reporTo dropdown data start
     jQuery.ajax({
         url: "user/?" + token,
@@ -117,6 +118,17 @@ var CreateEditUser = function (_userId) {
 
         }
     });
+
+	
+	jQuery.ajax({
+        url: "Allgender/?" + token,
+        async: false,
+        success: function (data) {
+            user_genderList = data;
+
+        }
+    });
+
 
 
     if (_userId) {
@@ -141,6 +153,11 @@ var CreateEditUser = function (_userId) {
                 jQuery.each(user_ProjectList, function (i, projects) {
                     jQuery("#user_defaultproject").append(jQuery("<option></option>").attr("value", projects.name).text(projects.name));
                 });
+				
+				jQuery.each(user_genderList, function (i, obj) {
+                    jQuery("#user_gender").append(jQuery("<option></option>").attr("value", obj.genderId).text(obj.gender));
+                });
+
 
                 //add for new reportTo start
                 jQuery.each(user_ManagerList, function (i, manager) {
@@ -160,10 +177,17 @@ var CreateEditUser = function (_userId) {
                 });
 
                 //set DD value
+                
+				
+				jQuery("#address").val(data.address);
                 jQuery("#user_defaultproject").val(data.defaultproject);
+                
+                jQuery("#user_gender").val(data.gender);
+				
+				
                 jQuery("#user_active").val((data.active).toString());
                 jQuery("#manager_name").val(data.manager_name);
-                jQuery("#functionalRole").val(data.roles[0].name);
+                jQuery("#functionalRole").val("ROLE_ADMIN");
                 showSignature("SignatureUser", data.signaturePath);
                 jQuery('.accessKey').show();
                 jQuery('#name').attr('readonly', true);
@@ -185,6 +209,8 @@ var CreateEditUser = function (_userId) {
                 }
         ).appendTo("#userDetailBody");
 
+		
+		jQuery('#name').val('');
         jQuery('#name').removeAttr('readonly');
         jQuery('[id="ROLE_USER"]').attr('checked', true);
 
@@ -202,6 +228,9 @@ var CreateEditUser = function (_userId) {
             }
         });
 
+		jQuery.each(user_genderList, function (i, obj) {
+                    jQuery("#user_gender").append(jQuery("<option></option>").attr("value", obj.genderId).text(obj.gender));
+                });
 
         /*
          jQuery.each(user_roleList, function (i, role) {
@@ -224,7 +253,8 @@ var CreateEditUser = function (_userId) {
     jQuery("#user_btnSave").show();
     jQuery("#user_btnBack").show();
 
-
+	
+	
 }
 
 
@@ -272,35 +302,62 @@ function saveUser() {
     $("#userForm").validate({
         rules: {
             name: "required",
-            //password: "required",
-            //confirmPassword: {
-            //     equalTo: "#password"
-            // },
+            password: "required",
+            confirmPassword: {
+				required: true,
+                 equalTo: "#password"
+             },
 
             defaultproject: "required",
             email: {
                 required: true,
                 email: true
             },
-            active: "required",
+			mobile:{
+				required: true,
+				number: true,
+				minlength:10,
+				maxlength:10
+			},
+            user_active: "required",
             passwordexpires: "required",
             lastactivitydate: "required",
-            //managerName: "required",
-            functionalRole: "required"
+            managerName: "required",
+            functionalRole: "required",
+			user_gender:"required",
+			address:{
+				required: true,
+				maxlength:100
+			}
 
         },
         messages: {
             name: "Please enter Name",
-            // password: "Please enter Password",
-            // confirmPassword: "Confirm Password should be same as Password",
-            defaultproject: "Please enter  DefaultProject",
+             password: "Please enter Password",
+             confirmPassword: {
+				required: "Confirm Password Required",
+				equalTo:  "Confirm Password should be same as Password"
+            },
+             defaultproject: "Please enter  DefaultProject",
             email: "Please enter a valid Email",
-            active: "Please enter  Active",
+			mobile: {
+            required: "Enter Mobile Number",
+			number: jQuery.format("Only Numeric Allowed"),
+            minlength: jQuery.format("Required Minimum {0} characters"),
+			maxlength: jQuery.format("Required Maximum {0} characters")
+            
+            },
+            user_active: "Please enter  Active",
             passwordexpires: "Please enter  PasswordExpires",
             lastactivitydate: "Please enter  LastActivityDate",
-            //managerName:"Select Reporting To",
-            functionalRole: "Select Role"
-
+            managerName:"Select Reporting To",
+            functionalRole: "Select Role",
+			user_gender:"Select Gender",
+            address:{
+            required: "Enter Address",
+            maxlength: jQuery.format(" Maximum {0} characters Allowed")
+            
+            }
         }
 
     });
@@ -323,6 +380,9 @@ function saveUser() {
 
 }
 
+
+
+		
 var deleteUser = function (id, name)
 {
 

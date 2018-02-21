@@ -88,8 +88,27 @@
             div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
             .ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none; !important; cursor:pointer; position: relative; text-align: center; }
             .ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
-
-
+            
+			.main-topolist{
+			  padding:0
+			  margin:0;
+			}
+			.main-topolist > li{
+			  list-style-type: none;
+			  margin-bottom:10px;
+			 
+			}
+			.sub-topolist{
+			   padding:0
+			   margin:0;
+			}
+              .sub-topolist > li{
+			    line-height:27px;
+			  
+			  }
+			  .runTopo{
+			    padding-left:45px !important;
+			  }
         </style>
 
         <link rel="stylesheet" type="text/css" media="print, projection, screen"
@@ -128,18 +147,33 @@
                     });
         </script>
         <!--start:header-->
-        <div class="header-alt">
-            <div class="subHead">
-                <img src="./resources/images/Logo_text.png" style="width:100%"/>	
-            </div>
-            <div class="userinfo" >
-                <ul>
-                    <li  style="cursor:pointer"><span>	<i class="fa fa-user"></i>
-                            Welcome <span class="username"><%=principal%></span></span></li>
-                    <li><a href="/mast/j_spring_security_logout">Logout</a></li>
-                </ul>
-            </div>
+                 <div class="header-top">
+            <div id="usaid_logo" onClick="window.location = 'http://usaid.gov/land-tenure';"></div>
+                    <div class="header_title">Mobile Application to Secure Tenure (MAST)<br />Data Management Infrastructure</div>
+            <!--/subHead-->
+			
+<!-- <div class="loginInfo">
+               <div class="userText">
+               <div class="dropdown" style="cursor:pointer">
+    				<i class="fa fa-user"></i>
+             		  Welcome <span class="username"><%=principal%></span>
+               	&nbsp;&nbsp;          </div>
+               <span class="logoutApp"><a href="/mast/j_spring_security_logout">Logout</a></span>
         </div>
+               
+               <img src="./resources/images/userInfo.png"/>
+            </div> -->
+			<div class="userinfo" >
+      <ul>
+        <li   class="username">
+             				   <span ><%=principal%></span></li>
+        <li style="float: right; margin-top: 0px;"><a href="../index" class="home"><span class="home-separator">&nbsp;</span></a><a href="/mast/j_spring_security_logout" class="logout">Logout</a></li>
+        
+        
+      </ul>
+    </div>
+    </div>
+        
 
         <div id="vtab">
             <ul>
@@ -148,15 +182,42 @@
                 <li id="layergroup" class="login"><img src="resources/images/studio/vtab/layergroup.png" /><span>Layers Groups</span></li>
                 <li id="project" class="login"><img src="resources/images/studio/vtab/project.png" /><span>Survey Projects</span></li>
                 <li id="masterattribute"  class="login"><img src="resources/images/studio/vtab/users.png" /><span>Master Attribute</span></li>
+                <li id="topologycheck"  class="login"><img src="resources/images/studio/vtab/users.png" /><span>Topology Check</span></li>
             </ul>
 
             <div id="users"></div>  
             <div id="layers"></div>    		
             <div id="layergroups"></div> 
             <div id="projects"></div>
-            <div id="masterattribute-div"></div>  
+            <div id="masterattribute-div"></div>
 
-        </div>
+		<div id="topologycheck">
+			<div>
+			  <ul class="main-topolist">
+			    <li><b>Below Topology checks will be run using this tool :</b>
+				  <ul class="sub-topolist">
+					<li>Overlaps between geometries</li>
+					<li>Intersects between geometries</li>
+					<li>Smaller area parcels</li>
+					 <li>Empty geometry parcels</li>
+					<li>Self-intersecting parcels</li>
+					<li> Duplicate nodes in the parcels</li>
+			    </ul>
+			</li>
+				
+			  </ul>
+			</div>
+			
+			
+			<div class="project_cell_adjust styleForm runTopo">
+			
+				<label class="searchLbl">Run Topology</label>&nbsp;
+				<button value="Submit" onclick="RunTopologyChecks();">Run
+					Topology</button>
+			</div>
+		</div>
+
+	</div>
         <div id="footer"></div>
         <div id="signature-dialog-form" title="Signature" style="display: none;">
             <form id="formSignature" action="" onsubmit="return false;">

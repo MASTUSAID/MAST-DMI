@@ -1,7 +1,12 @@
 package com.rmsi.mast.studio.domain.fetch;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rmsi.mast.studio.domain.LaParty;
+import com.rmsi.mast.studio.domain.PersonType;
 import com.rmsi.mast.studio.util.StringUtils;
+
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -10,35 +15,47 @@ import javax.persistence.*;
  *
  */
 @Entity
-@Table(name = "spatialunit_deceased_person")
-public class SpatialunitDeceasedPerson implements Serializable {
+@Table(name = "la_party_deceasedperson")
+@PrimaryKeyJoinColumn(name = "PARTYID", referencedColumnName = "PARTYID")
+public class SpatialunitDeceasedPerson extends LaParty implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @SequenceGenerator(name = "DECEASED_PERSON_ID_GENERATOR", sequenceName = "spatial_unit_deceased_person_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DECEASED_PERSON_ID_GENERATOR")
-    private Long id;
-    
-    @Column
+   
+    @Column(name="firstname")
     private String firstname;
     
-    @Column
+    @Column(name="middlename")
     private String middlename;
     
-    @Column
+    @Column(name="lastname")
     private String lastname;
     
-    @Column
-    private long usin;
+    @ManyToOne
+	@JoinColumn(name="persontypeid")
+	private PersonType laPartygroupPersontype;
 
-    public Long getId() {
-        return id;
-    }
+    private Boolean isactive;
+    
+    @Column(name="modifiedby")
+	private Integer modifiedby;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Temporal(TemporalType.DATE)
+	private Date modifieddate;
+    
+//    @ManyToOne
+//	@JoinColumn(name="landid")
+    @Column(name="landid")
+	private Long laSpatialunitLand;
+    
+
+    @Column(name="createdby")
+	private Integer createdby;
+
+	@Temporal(TemporalType.DATE)
+	private Date createddate;
+	
+	
 
     public String getFirstname() {
         return firstname;
@@ -64,15 +81,18 @@ public class SpatialunitDeceasedPerson implements Serializable {
         this.lastname = lastname;
     }
 
-    public long getUsin() {
-        return usin;
-    }
+    
 
-    public void setUsin(long usin) {
-        this.usin = usin;
-    }
 
-    public String getFullName() {
+	public Long getLaSpatialunitLand() {
+		return laSpatialunitLand;
+	}
+
+	public void setLaSpatialunitLand(Long laSpatialunitLand) {
+		this.laSpatialunitLand = laSpatialunitLand;
+	}
+
+	public String getFullName() {
         String name = "";
         if (!StringUtils.isEmpty(getFirstname())) {
             name = getFirstname().trim();
@@ -93,4 +113,63 @@ public class SpatialunitDeceasedPerson implements Serializable {
         }
         return name;
     }
+
+	public PersonType getLaPartygroupPersontype() {
+		return laPartygroupPersontype;
+	}
+
+	public void setLaPartygroupPersontype(PersonType laPartygroupPersontype) {
+		this.laPartygroupPersontype = laPartygroupPersontype;
+	}
+
+	public Integer getModifiedby() {
+		return modifiedby;
+	}
+
+	public void setModifiedby(Integer modifiedby) {
+		this.modifiedby = modifiedby;
+	}
+
+	public Date getModifieddate() {
+		return modifieddate;
+	}
+
+	public void setModifieddate(Date modifieddate) {
+		this.modifieddate = modifieddate;
+	}
+
+	public Integer getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(Integer createdby) {
+		this.createdby = createdby;
+	}
+
+	public Date getCreateddate() {
+		return createddate;
+	}
+
+	public void setCreateddate(Date createddate) {
+		this.createddate = createddate;
+	}
+
+	public Boolean getIsactive() {
+		return isactive;
+	}
+
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

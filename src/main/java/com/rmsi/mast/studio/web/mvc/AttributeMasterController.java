@@ -1,9 +1,14 @@
 package com.rmsi.mast.studio.web.mvc;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,11 +17,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.rmsi.mast.studio.domain.AttributeCategory;
+import com.rmsi.mast.studio.domain.AttributeCategoryType;
 import com.rmsi.mast.studio.domain.AttributeMaster;
+import com.rmsi.mast.studio.domain.AttributeOptions;
+import com.rmsi.mast.studio.domain.Baselayer;
 import com.rmsi.mast.studio.domain.DatatypeId;
+import com.rmsi.mast.studio.domain.ProjectBaselayer;
 import com.rmsi.mast.studio.service.AttributeCategoryService;
+import com.rmsi.mast.studio.service.AttributeCategoryTypeService;
 import com.rmsi.mast.studio.service.AttributeMasterService;
+import com.rmsi.mast.studio.service.AttributeOptionsService;
 import com.rmsi.mast.studio.service.DataTypeIdService;
 
 @Controller
@@ -32,12 +44,39 @@ public class AttributeMasterController {
 
     @Autowired
     private AttributeCategoryService attributecategoryService;
+    
+    
+    @Autowired
+    private AttributeCategoryTypeService attributeCategoryTypeService;
+    
+    
+    
+    @Autowired
+    private AttributeOptionsService attributeOptionsService;
 
     @RequestMapping(value = "/studio/masterattrib/", method = RequestMethod.GET)
     @ResponseBody
     public List<AttributeMaster> list() {
         return masterAttributeService.findAllAttributeMasater();
     }
+    
+    @RequestMapping(value = "/studio/masterattributes/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<AttributeMaster> list(@PathVariable Integer id) {
+        return masterAttributeService.getAttributeMasterByAttributeMasterId(id);
+    }
+    
+    
+    
+    @RequestMapping(value = "/studio/attribcategoryType/", method = RequestMethod.GET)
+    @ResponseBody
+    public List<AttributeCategoryType> getAttributeCategoryTypelist() {
+        return attributeCategoryTypeService.getAllAttributeCategoryType();
+    }
+
+    
+    
+    
 
     @RequestMapping(value = "/studio/masterattrib/create", method = RequestMethod.POST)
     @ResponseBody
@@ -50,6 +89,7 @@ public class AttributeMasterController {
         String alias = "";
         String alias_otherlang = "";
         String mandatory = "";
+        String attribute_option[] = null;
 
         AttributeMaster attributemaster = new AttributeMaster();
         try {
@@ -67,9 +107,9 @@ public class AttributeMasterController {
                 logger.error(e);
             }
 
-            attributemaster.setAlias(alias);
-            attributemaster.setActive(true);
-            attributemaster.setReftable("custom");
+            attributemaster.setFieldaliasname(alias);
+            attributemaster.setIsactive(true);
+            attributemaster.setReferencetable("custom");
             attributemaster.setSize(size);
             if (mandatory != "") {
                 attributemaster.setMandatory(Boolean.parseBoolean(mandatory.toString()));
@@ -79,18 +119,42 @@ public class AttributeMasterController {
 
             }
 
-            attributemaster.setMaster_attrib(false);
+            //attributemaster.setMaster_attrib(false);
             attributemaster.setFieldname(fieldName);
-            attributemaster.setAlias_second_language(alias_otherlang);
+         //   attributemaster.setAlias_second_language(alias_otherlang);
             if (dataTypeId != 0) {
                 DatatypeId datatypeIdObj = masterAttributeService.findDataTypeById(dataTypeId);
-                attributemaster.setDatatypeIdBean(datatypeIdObj);
+                attributemaster.setLaExtAttributedatatype(datatypeIdObj);
             }
 
             if (categoryId != 0) {
                 AttributeCategory categoryIdObj = masterAttributeService.findCategoryById(categoryId);
-                attributemaster.setAttributeCategory(categoryIdObj);
+                attributemaster.setLaExtAttributecategory(categoryIdObj);
             }
+            attributemaster.setListing("1");
+            
+            List<AttributeOptions> options = new ArrayList<AttributeOptions>();
+            
+            try{
+            	attribute_option = request.getParameterValues("selected_options");
+            	
+            	
+            }catch(Exception e)
+            {
+            	e.printStackTrace();
+            }
+            
+            if (attribute_option != null) {
+                for (int j = 0; j < attribute_option.length; j++) {
+                	AttributeOptions ObjAttributeOptions = new AttributeOptions();
+                	ObjAttributeOptions.setOptiontext(attribute_option[j]);
+                	ObjAttributeOptions.setAttributeMaster(attributemaster);
+                	options.add(ObjAttributeOptions);
+                }
+                
+                attributemaster.setOptions(options); 
+            }
+            
 
             boolean value1 = masterAttributeService.checkduplicate(categoryId, alias, fieldName);
 
@@ -144,6 +208,26 @@ public class AttributeMasterController {
         return categorylst;
 
     }
+    
+    
+    @RequestMapping(value = "/studio/attribcategoryById/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<AttributeCategory> AttributeCategoryByTypeid(@PathVariable Integer id) {
+    	   List<AttributeCategory> categorylst = new ArrayList<AttributeCategory>();
+
+           try {
+
+               categorylst = attributecategoryService.findAttributeCategoryByTypeId(id);
+
+           } catch (Exception e) {
+
+               logger.error(e);
+               return categorylst;
+           }
+
+           return categorylst;
+    }
+    
 
     @RequestMapping(value = "/studio/masterattrib/delete/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -155,6 +239,7 @@ public class AttributeMasterController {
             return false;
 
         } else {
+           	attributeOptionsService.deleteAttributeOptionsbyId(id);
             masterAttributeService.deleteAttribute(id);
             return true;
         }
@@ -169,13 +254,13 @@ public class AttributeMasterController {
 
     }
 
-    @RequestMapping(value = "/studio/masterattrib/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public List<AttributeMaster> editAttribute(@PathVariable Long id) {
-
-        return masterAttributeService.findbyAttributeId(id);
-
-    }
+//    @RequestMapping(value = "/studio/masterattrib/{id}", method = RequestMethod.GET)
+//    @ResponseBody
+//    public List<AttributeMaster> editAttribute(@PathVariable Long id) {
+//
+//        return masterAttributeService.findbyAttributeId(id);
+//
+//    }
 
     @RequestMapping(value = "/studio/masterattrib/updateattribute", method = RequestMethod.POST)
     @ResponseBody
@@ -187,7 +272,8 @@ public class AttributeMasterController {
         String fieldName = "";
         String alias = "";
         String alias_otherlang = "";
-
+        String attribute_option[] = null;
+        
         AttributeMaster attributemaster = new AttributeMaster();
         try {
             id = ServletRequestUtils.getRequiredLongParameter(request, "primeryky");
@@ -199,7 +285,7 @@ public class AttributeMasterController {
             alias_otherlang = ServletRequestUtils.getRequiredStringParameter(request, "alias_other");
 
             if (id != 0) {
-                attributemaster.setId(id);
+                attributemaster.setAttributemasterid(id);
 
             }
 
@@ -207,9 +293,9 @@ public class AttributeMasterController {
                 return "duplicate";
 
             }
-            List<AttributeMaster> attributelst = masterAttributeService.findbyAttributeId(id);
-            attributemaster = attributelst.get(0);
-            attributemaster.setAlias(alias);
+            AttributeMaster attributelst = masterAttributeService.findbyAttributeId(id);
+            attributemaster = attributelst;
+            attributemaster.setFieldaliasname(alias);
             attributemaster.setSize(size);
 
             try {
@@ -220,16 +306,43 @@ public class AttributeMasterController {
                 logger.error(e);
             }
             attributemaster.setFieldname(fieldName);
-            attributemaster.setAlias_second_language(alias_otherlang);
+            
+            if(attributemaster.getLaExtAttributedatatype().getDatatypeId()==6){
+            	attributeOptionsService.deleteAttributeOptionsbyId(attributemaster.getAttributemasterid());
+            }
+           // attributemaster.setAlias_second_language(alias_otherlang);
             if (dataTypeId != 0) {
                 DatatypeId datatypeIdObj = masterAttributeService.findDataTypeById(dataTypeId);
-                attributemaster.setDatatypeIdBean(datatypeIdObj);
+                attributemaster.setLaExtAttributedatatype(datatypeIdObj);
             }
 
             if (categoryId != 0) {
                 AttributeCategory categoryIdObj = masterAttributeService.findCategoryById(categoryId);
-                attributemaster.setAttributeCategory(categoryIdObj);
+                attributemaster.setLaExtAttributecategory(categoryIdObj);
             }
+            
+            List<AttributeOptions> options = new ArrayList<AttributeOptions>();
+
+            try{
+            	attribute_option = request.getParameterValues("selected_options");
+            	
+            	
+            }catch(Exception e)
+            {
+            	e.printStackTrace();
+            }
+            
+            if (attribute_option != null) {
+                for (int j = 0; j < attribute_option.length; j++) {
+                	AttributeOptions ObjAttributeOptions = new AttributeOptions();
+                	ObjAttributeOptions.setOptiontext(attribute_option[j]);
+                	ObjAttributeOptions.setAttributeMaster(attributemaster);
+                	options.add(ObjAttributeOptions);
+                }
+                
+                attributemaster.setOptions(options); 
+            }
+            
 
             masterAttributeService.addAttributeMaster(attributemaster);
             return "true";

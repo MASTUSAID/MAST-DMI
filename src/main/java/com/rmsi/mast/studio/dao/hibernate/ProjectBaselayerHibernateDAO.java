@@ -34,15 +34,15 @@ public class ProjectBaselayerHibernateDAO extends GenericHibernateDAO<ProjectBas
 	private static final Logger logger = Logger.getLogger(ProjectBaselayerHibernateDAO.class);
 
 	@Override
-	public void deleteProjectBaselayer(String name) {
+	public void deleteProjectBaselayerByProjectId(Integer id) {
 		
 		try{
 			Query query = getEntityManager().createQuery(
-					"Delete from ProjectBaselayer pbl where pbl.projectBean.name =:name")
-					.setParameter("name", name);
+					"Delete from ProjectBaselayer pbl where pbl.project.projectnameid =:id")
+					.setParameter("id", id);
 			
 			int count = query.executeUpdate();
-			System.out.println("Deleted count: " + count+"-"+name);
+			System.out.println("Deleted count: " + count+"-"+id);
 			
 		}catch(Exception e){
 		logger.error(e);
@@ -57,7 +57,7 @@ public class ProjectBaselayerHibernateDAO extends GenericHibernateDAO<ProjectBas
 	public void addProjectBaselayer(Set<ProjectBaselayer> projectBaselayer,String projectname) 
 	{		
 		//Delete the existing record
-		deleteProjectBaselayer(projectname);	 
+	//	deleteProjectBaselayer(projectname);	 
 		
 		//insert new record
 	    Iterator iter1 = projectBaselayer.iterator();

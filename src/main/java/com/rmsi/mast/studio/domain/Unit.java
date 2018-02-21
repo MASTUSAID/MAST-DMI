@@ -4,8 +4,10 @@ package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 /**
@@ -13,41 +15,58 @@ import javax.persistence.Id;
  * 
  */
 @Entity
+@Table(name="la_ext_unit")
 public class Unit implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String name;
-	private String description;
-	//private Integer id;
-	private String tenantid;
+	
+	 @Id
+     private Integer unitid;
+	
+	private Boolean isactive;
+	
+	@Column(name="unit_en",unique=true)
+	private String unitEn;
+	
+	@Column(name="unit")
+	private String unit;
+	
 	
     public Unit() {
     }
 
-
-	@Id
-	public String getName() {
-		return this.name;
+	public Integer getUnitid() {
+		return unitid;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUnitid(Integer unitid) {
+		this.unitid = unitid;
 	}
 
-
-	public String getDescription() {
-		return this.description;
+	
+	public Boolean getIsactive() {
+		return isactive;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
 	}
 
-	public String getTenantid() {
-		return this.tenantid;
+	public String getUnitEn() {
+		return unitEn;
 	}
 
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
+	public void setUnitEn(String unitEn) {
+		this.unitEn = unitEn;
 	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+    
+    
 	
 }

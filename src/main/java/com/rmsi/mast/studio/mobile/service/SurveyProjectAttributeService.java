@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.rmsi.mast.studio.domain.AttributeMaster;
 import com.rmsi.mast.studio.domain.ClaimType;
+import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ProjectAdjudicator;
 import com.rmsi.mast.studio.domain.ProjectHamlet;
 import com.rmsi.mast.studio.domain.Surveyprojectattribute;
@@ -26,7 +27,7 @@ public interface SurveyProjectAttributeService {
 	 * @param projectId
 	 * @return
 	 */
-	List<AttributeMaster> getSurveyAttributesByProjectId(String projectId);
+	List<AttributeMaster> getSurveyAttributesByProjectId(Project projectId);
 
 	/**
 	 * Returns list of properties by project id and property status

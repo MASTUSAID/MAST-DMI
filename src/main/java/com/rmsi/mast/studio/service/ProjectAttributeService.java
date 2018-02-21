@@ -27,7 +27,7 @@ public interface ProjectAttributeService {
 	AttributeMaster findProjectById(long l);
 
 	@Transactional
-	boolean addsurveyProject(String[] id, String projName,Long attributecategory);
+	boolean addsurveyProject(String[] id, String projName,Long attributecategory,Integer userid);
 	
 	
 	@Transactional
@@ -43,14 +43,11 @@ public interface ProjectAttributeService {
 	@Transactional
 	boolean deleteMappedAttribute(List<Long> uids);
 
-	List<UserProject> findUserProjects(Integer id);
+	List<UserProject> findUserProjects(Long id);
 
 
-	//boolean updatesurveyProject(long id, String projName,Integer attributecategory);
-	
-	//@Transactional
-	//boolean updatesurveyProjectSave(long[] id, String projName,Long attributecategory);
-	
+	List<Surveyprojectattribute> displaySelectedCategoryById(Long uid,String name,Integer id);
+
 
 
 }

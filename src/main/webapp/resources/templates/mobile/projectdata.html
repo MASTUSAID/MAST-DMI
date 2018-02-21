@@ -54,7 +54,6 @@
 <table class="tablesorter" id="projectDataTable">
 <thead>
         <tr>
-							<th>Alias</th>
 							<th>File</th>
 							<th>Size(in Kb)</th>
 							<th>Project</th>
@@ -115,9 +114,7 @@
 
 <script id="projectDataTemplate" type="text/x-jquery-tmpl">
 <tr>
-<td>
-	${alias}
-</td>
+
 <td>
 	${fileName}
 </td>
@@ -125,10 +122,10 @@
 	${size}
 </td>
 <td>
-	${name}
+	
 </td>
  <td align="center">
-				<a href="javascript:deleteProjectData('${id}','${alias}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
+				<a href="javascript:deleteProjectData('${id}','${fileName}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
  </td>	
 
 </tr>

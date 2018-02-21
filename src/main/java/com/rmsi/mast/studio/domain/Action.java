@@ -20,7 +20,7 @@ public class Action implements Serializable {
 	private String name;
 	private String description;
 	// private Integer id;
-	private String tenantid;
+	//private String tenantid;
 
 	// private Set<Module> modules;
 	// private Set<RoleModule> roleModules;
@@ -65,14 +65,14 @@ public class Action implements Serializable {
 	 * public void setId(Integer id) { this.id = id; }
 	 */
 
-	@Column(length = 50)
+	/*@Column(length = 50)
 	public String getTenantid() {
 		return this.tenantid;
 	}
 
 	public void setTenantid(String tenantid) {
 		this.tenantid = tenantid;
-	}
+	}*/
 
 	// //bi-directional many-to-one association to ModuleAction
 	// @OneToMany(mappedBy="action", fetch = FetchType.EAGER)

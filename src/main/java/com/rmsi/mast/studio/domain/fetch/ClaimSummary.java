@@ -422,7 +422,7 @@ public class ClaimSummary implements Serializable {
         this.statusDate = statusDate;
     }
 
-    public List<PersonWithRightSummary> getPersonsForSignature() {
+/*    public List<PersonWithRightSummary> getPersonsForSignature() {
         ArrayList<PersonWithRightSummary> persons = new ArrayList<>();
 
         if (getNaturalOwners() == null || getNaturalOwners().size() < 1) {
@@ -439,9 +439,9 @@ public class ClaimSummary implements Serializable {
         } else {
             return getNaturalOwners();
         }
-    }
+    }*/
 
-    public String getOwnerNames() {
+   /* public String getOwnerNames() {
         if ((getNaturalOwners() == null || getNaturalOwners().size() < 1)
                 && (getNonNaturalOwners() == null || getNonNaturalOwners().size() < 1)) {
             return "";
@@ -550,7 +550,7 @@ public class ClaimSummary implements Serializable {
         }
         return false;
     }
-    
+    */
     public Date getStartDate(){
         if(getCertDate() != null){
             Calendar cal = Calendar.getInstance();

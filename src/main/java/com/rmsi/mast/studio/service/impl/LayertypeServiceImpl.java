@@ -37,7 +37,6 @@ public class LayertypeServiceImpl implements LayertypeService{
 
 	@Override
 	public void deleteLayertypeById(Long id) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -64,6 +63,12 @@ public class LayertypeServiceImpl implements LayertypeService{
 	//@Cacheable(cacheName="layertypeFBNCache")
 	public Layertype findLayertypeByName(String name) {
 		return layertypeDAO.findByName(name);
+	}
+
+	@Override
+	public Layertype findLayertypeById(long id) {
+		// TODO Auto-generated method stub
+		return layertypeDAO.findLayertypeById(id);
 	}
 	
 }

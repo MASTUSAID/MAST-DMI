@@ -757,7 +757,7 @@ textarea,
     -moz-border-radius: 4px;
     border-radius: 4px;
     vertical-align: middle;
-    background-color: #ffffff;
+   /* background-color: #ffffff;*/
     border: 1px solid #cccccc;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -827,21 +827,18 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
 
 .btn1 {
     display: inline-block;
-    *display:inline;
-    *zoom:1;
     padding: 3px 12px;
     margin-bottom: 0;
     font-size: 13px;
     line-height: 20px;
-    *line-height:20px;
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
     color: #333333;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-    background-color: rgb(0, 116, 204);
-    background-image: -moz-linear-gradient(center top , rgb(0, 136, 204), rgb(0, 85, 204));
-    background-repeat: repeat-x;
+    /* text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); */
+    background-color: rgb(135, 35, 9);
+   
+    /* background-repeat: repeat-x; */
     border-bottom-color: rgba(0, 0, 0, 0.25);
     border-left-color: rgba(0, 0, 0, 0.1);
     border-right-color: rgba(0, 0, 0, 0.1);
@@ -850,10 +847,9 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    *margin-left:.3em;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    /* -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05); */
     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+    /* box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05); */
 }
 .btn1:hover {
     color: #eee;
@@ -869,6 +865,98 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     height: 26px;
 }
 
+.single-drop-down {
+
+}
+ .topnav {
+	padding:0px 0px 0px;
+	line-height:23px;
+	
+	
+	position: relative;
+	
+}
+
+.topnav a.signin {
+	background:#fff;
+	padding:5px 6px;
+	text-decoration:none;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	*background:transparent url("images/signin-nav-bg-ie.png") no-repeat 0 0;
+	*padding:4px 12px 6px;
+	border: 1px solid #ccc;
+	
+}
+.topnav a.signin:hover {
+	
+	*background:transparent url("images/signin-nav-bg-hover-ie.png") no-repeat 0 0;
+	*padding:4px 12px 6px;
+}
+.topnav a.signin, .topnav a.signin:hover {
+	*background-position:0 3px!important;
+}
+
+a.signin {
+	position:relative;
+	margin-left:3px;
+	width: 60px;
+}
+a.signin span {
+	background-image:url("../../images/viewer/toggle_down_light.png");
+	background-repeat:no-repeat;
+	background-position:100% 50%;
+	padding:4px 16px 6px 0;
+}
+.topnav a.menu-open {
+	background:#fff!important;
+	
+	outline:none;
+}
+.small_signup {
+	display:inline;
+	float:none;
+	line-height:23px;
+	margin:25px 0 0;
+	width:170px;
+}
+a.signin.menu-open span {
+	border: none;
+	
+}
+
+.signin_menu {
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    display: none;
+    background-color: #fff;
+    position: absolute;
+    width: 210px;
+    z-index: 99999;
+    border: 1px transparent;
+    text-align: left;
+    padding: 0 12px;
+    top: 22px;
+	left:-166px;
+    margin-right: 0px;
+    *margin-right: -1px;
+    color: #789;
+    border: 1px solid #ccc;
+}
+.signin_menu ul {
+  padding: 0 10px;
+  margin-bottom: 0px;
+}
+.signin_menu ul li {
+  border-bottom: 1px solid #ccc;
+  line-height: 21px;
+  padding: 3px 0;
+}
 
 .btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] {
     color: #333333;
@@ -916,3 +1004,13 @@ input[type="radio"][disabled], input[type="checkbox"][disabled], input[type="rad
     margin-bottom: 10px;
     border-bottom: dotted #aaa 3px;
 }
+.addBg{
+	background: #ffbc00;
+    color: #000;
+}
+
+.disabledTabs{
+   pointer-events:none;
+}
+
+

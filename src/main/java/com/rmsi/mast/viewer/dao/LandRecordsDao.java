@@ -3,15 +3,25 @@ package com.rmsi.mast.viewer.dao;
 import java.util.List;
 
 import com.rmsi.mast.studio.dao.GenericDAO;
+import com.rmsi.mast.studio.domain.LaSpatialunitLand;
+import com.rmsi.mast.studio.domain.NaturalPerson;
+import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
+import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
+import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.NaturalPersonBasic;
+import com.rmsi.mast.studio.domain.fetch.OwnerHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.PersonForEditing;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.RegistryBook;
+import com.rmsi.mast.studio.domain.fetch.ReportCertificateFetch;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitBasic;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitGeom;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
+import com.rmsi.mast.studio.domain.fetch.TransactionHistoryForFetch;
+import com.rmsi.mast.studio.domain.fetch.UploadedDocumentDetailsForFetch;
+
 import org.springframework.transaction.annotation.Transactional;
 
 public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
@@ -29,7 +39,7 @@ public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
 
     String findBiggestUkaNumber(String ukaPrefix);
 
-    SpatialUnitGeom getParcelGeometry(long usin);
+    SpatialUnit getParcelGeometry(long usin);
 
     SpatialUnitTable getSpatialUnit(Long id);
 
@@ -61,7 +71,7 @@ public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
     
     ProjectDetails getProjectDetails(String projectName);
     
-    List<PersonForEditing> getPersonsForEditing(String projectName, long usin, String firstName, String lastName, String middleName, String idNumber, String claimNumber, String neighbourN, String neighbourS, String neighbourE, String neighbourW);
+    List<PersonForEditing> getPersonsForEditing(String projectName, long usin, String firstName, String lastName, String middleName, String idNumber, Integer claimNumber, String neighbourN, String neighbourS, String neighbourE, String neighbourW);
     
     SpatialUnitBasic getSpatialUnitBasic(Long usin);
     
@@ -69,4 +79,46 @@ public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
     
     @Transactional
     PersonForEditing updatePersonForEditing(PersonForEditing pfe) throws Exception;
+    
+    @Transactional
+    NaturalPerson updateNaturalPersonDataForEdit(NaturalPerson np) throws Exception;
+    
+    
+    List<LaSpatialunitLand> findOrderedSpatialUnitRegistry(String defaultProject,int startfrom);
+    
+    List<LaSpatialunitLand> search(Long status, Integer claimType, String project,String communeId,String transId,String parcelId,Integer startpos);
+    
+	List<ReportCertificateFetch> getCertificatedetailsbytransactionid(Long usin);
+
+	List<Object> findsummaryreport(String project);
+
+	List<Object> findprojectdetailedsummaryreport(String project);
+	List<Object> findprojectapplicationstatussummaryreport(String project);
+	List<Object> findprojectapplicationtypesummaryreport(String project);
+	List<Object> findprojectdetailedsummaryreportForCommune(String communeid);
+	List<Object> findprojectworkflowsummaryreport(String project);
+	List<ReportCertificateFetch> getCertificatedetailsinbatch(Long startRecord,Long endRecord);   
+	List<Object> findprojectTenureTypesLandUnitsummaryreport(String project);
+	Integer getTotalrecordByProject(String project);
+	
+	Integer searchCount(Long status, Integer claimType,String project,String communeId,String transId,String parcelId);
+	 
+	 Integer spatialUnitWorkflowCount(int[] workflow_ids,int[] claim_ids,int[] status_ids, String project);
+	    
+	List<LaSpatialunitLand> getspatialUnitWorkFlowResult(int[] workflow_ids,int[] claim_ids,int[] status_ids, Integer startfrom, String project);
+
+	List<OwnerHistoryForFetch> getownerhistorydetails(Long landid);
+
+	String checkruntopologychecks(String projectName);
+
+	List<LeaseHistoryForFetch> getleasehistorydetails(Long landid);
+
+	List<MortageHistoryForFetch> getmortagagedetails(Long landid);
+
+	List<TransactionHistoryForFetch> gettransactiondetails(Long landid);
+	 
+	List<LeaseHistoryForFetch> findleasedetailbylandid(Long transactionid,Long landid);
+	List<LeaseHistoryForFetch> findsurrenderleasedetailbylandid(Long transactionid,Long landid);
+	List<MortageHistoryForFetch> findmortagagedetailbylandid(Long transactionid,Long landid);
+	List<UploadedDocumentDetailsForFetch>  viewdocumentdetailbytransactioid(Long transactionid);
 }

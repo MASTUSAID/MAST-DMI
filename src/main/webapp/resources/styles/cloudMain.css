@@ -5,21 +5,42 @@
 	mz-box-sizing: border-box;
 	webkit-box-sizing: border-box;
 }
-html
-{
-
-	
+html {
+  height: 100%;
+  box-sizing: border-box;
 }
-body
-{
-	background: url(../images/background_image.png) repeat-x;
-	color: #393939;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	line-height: 1.5;
-	margin: 0;
-	padding-bottom: 0;
-	
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}   
+   
+ 
+@font-face {
+    font-family: 'titilliumregular';
+    src: url('fonts/titillium-regular-webfont.woff2') format('woff2'), url('fonts/titillium-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+
+  margin: 0px;
+
+   width:100%;
+
+   background-image:url(../images/homebg.png) ;/*your background image*/  
+   background-repeat:no-repeat;/*we want to have one single image not a repeated one*/  
+   background-size:cover;/*this sets the image to fullscreen covering the whole screen*/  
+   /*css hack for ie*/     
+   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.image.jpg',sizingMethod='scale');
+   -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='image.jpg',sizingMethod='scale')";
+  position:relative;
+ 
+  min-height:100%;
+  
+  font: normal 14px 'titilliumregular', sans-serif;
+
 }
 .cloudBx-container
 {
@@ -30,13 +51,15 @@ body
 }
 .header
 {
-	background-image: url(../images/header_bkg.jpg);
-	background-repeat: no-repeat;
+
 	margin: 0;
 	min-height: 90px;
 	padding: 0;
 	width: 100%;
-	 background-color: #0180dd;
+	background:#362d59;
+    border-bottom:2px solid #00b7bd;
+    box-shadow: 0 3px 3px rgba(0,0,0,.5);
+	 
 }
 .subHead
 {
@@ -1033,7 +1056,7 @@ background-image: url(../images/userInfo.png);
 position:absolute;
 right:0px;
 top:0px;
-height:20px;
+height:90px;
 background-repeat:no-repeat;
 padding:0.1em 0 0 2.5em;
 color: #fff;
@@ -1044,22 +1067,197 @@ margin:0;
 padding:0;
 }
 .userinfo ul li{
-  float: left;
-  background: url(../images/separator-cb.png) no-repeat right 3px;
+
+
+  font-size: 16px;
+  color: #000;
+  margin: 10px;
+  border-bottom: 1px solid #000;
 }
+.userinfo ul li a{ text-decoration: none; color: #000;}
+
 .userinfo ul li:last-child {
-  background: none;
+  border: none;
 }
 .userinfo ul li span{
   color: #393939;
   padding: 0 6px;
 }
 .userinfo ul li a{
-  color: #1491FF;
+  color: #000;
   padding: 0 6px;
 }
 .userinfo ul li a:hover{
-  color: #393939;
+  color: #352d59;
   
 
+}
+
+.username {
+  background: url(../images/user.png) no-repeat;
+  margin-left: 20px;	
+  padding-left: 24px;
+}
+
+.home-separator {
+	background: url(../images/home-separator.png) no-repeat right;
+	padding-right: 20px!important;
+
+
+
+
+}
+.home{
+  background: url(../images/home-icon.png) no-repeat;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 20px;
+
+
+}
+
+.logout{
+  background: #352d59 url(../images/logout-icon.png) no-repeat 10px 5px;
+  display: inline-block;
+  padding: 0 10px 0 30px!important;
+  line-height: 24px;
+  color: #fff!important;
+  border-radius: 3px;
+  font-size: 14px;
+
+}
+
+
+
+.items-container {
+    max-width: 430px;
+    max-height: 430px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    bottom: 0;
+    margin: auto;
+    width: 100%;
+}
+
+.dashboard-item{
+	background: url('../images/ds_item_bg.png') no-repeat;
+	height: 91px;
+	width: 439px;
+	margin-bottom: 15px;
+	cursor:pointer;
+	transition: 1s all ease;
+    -moz-transition: 1s all ease;
+    -webkit-transition: 1s all ease;
+    -o-transition: 1s all ease;
+    -ms-transition: 1s all ease;
+	
+}
+
+.dashboard-item:hover{
+    background: url('../images/ds_item_bg_active.png') no-repeat;
+	height: 91px;
+	width: 439px;
+	
+	
+}
+.icon-img {
+    margin-left: 25px;
+    position: relative;
+    top: 20px;
+    float: left;
+
+}
+.icon-img-2{
+	margin-left: 25px;
+	position: relative;
+	top: 20px;
+	float: left;
+
+}
+.icon-img-3{
+	margin-left: 25px;
+	position: relative;
+	top: 20px;
+	float: left;
+}
+.dashboard-title h2{
+	float: left;
+	font-size: 18px;
+	line-height: 18px;
+	margin-left: 25px;
+	margin-top: 25px;
+	color: #000044;
+	font-weight: normal;
+}
+.margin-top-35{
+	margin-top:35px !important;
+	
+}
+
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+   background-color: rgb(0, 0, 0);
+    /* RGBa with 0.6 opacity */
+    background-color: rgba(0, 0, 0, 0.6);
+    /* For IE 5.5 - 7*/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+    /* For IE 8*/
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+  text-align: center;
+  min-height: 75px;
+  
+}
+
+.copyright-text{
+  color: #fff;
+  float: right;
+  line-height: 20px;
+  padding: 28px 15px;
+}
+
+#android_logo {
+  width: 162px;
+  height: 56px;
+  background: url(../images/android.png) no-repeat;
+  float: left;
+  margin-top: 10px;
+
+}
+
+#brochure_button {
+ width: 173px;
+height: 85px;
+background: url(../images/brochure.png) no-repeat;
+margin-left: 15px;
+margin-top: -12px;
+float: left;
+}
+
+#usaid_logo {
+width: 70px;
+background: url(../images/usaid_logo_300.png) no-repeat;
+height: 70px;
+float: left;
+margin-top: 10px;
+margin-left: 15px;
+display: inline-block;
+position: absolute;
+left: 15px;}
+
+.header_title {
+ 
+font-size: 22px;
+padding-top: 15px;
+margin-left: 15px;
+
+color: #fff;
+text-align: center;
 }

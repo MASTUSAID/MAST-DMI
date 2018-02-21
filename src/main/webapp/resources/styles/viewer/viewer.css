@@ -11,8 +11,7 @@ html,body {
 	/* font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; */
 	font-size:12px;
 	*font-size:small;
-	*font:x-small
-}
+882}
 div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td
 	{
 	margin: 0;
@@ -324,19 +323,19 @@ padding:0;
 
 .toolBarBG
 {
-background: url(../../images/viewer/bg_Toolbar.png) left top repeat-x; 
+background:#c8e7e2; 
 overflow:hidden;
 border-bottom:1px solid #0787ce;
 }
 
 .toolbar {
 
-	background:#052e5c url(../../images/viewer/bg_Toolbar.png) left top repeat-x; 
+	background:#c8e7e2; 
 	/*background-image: url(../../resources/images/bgsnow2.png) repeat-x 0px 10px; */
 	/*border: 1px solid #EEEEEE;*/
 	height: 38px;
 	/*padding-left: 195px;*/
-	padding-right: 320px;
+	padding-right: 410px;
 }
 
 .fg-button {
@@ -400,7 +399,7 @@ a.fg-button {
 
 .fg-buttonset-single .fg-button,.fg-buttonset-multi .fg-button {
 	
-	margin:0 0.1em 0 0;
+	margin:0 0.3em 0 0;
 	padding:0;
 } /* debs */
 .fg-toolbar {
@@ -418,7 +417,7 @@ a.fg-button {
 }
 
 .ui-state-default1,.ui-widget-content1 .ui-state-default1 {
-	background: none repeat scroll 0 0 #0787ce;
+	background: none repeat scroll 0 0 #362d59;
 	padding: 1px;
 	border: 0px solid #063263;
 	font-weight: normal;
@@ -500,8 +499,8 @@ a.fg-button {
 }
 
 .ui-widget-header {
-	/* background: none repeat scroll 0 0 #5B5B5B; */
-	border: 0px solid #5B5B5B;
+	background: none repeat scroll 0 0 #872209;
+	border: 0px solid #872209;
 	color: #FFFFFF;
 	font-weight: bold;
 }
@@ -881,7 +880,7 @@ input.btn {
 
 .jcarousel-skin-tango .jcarousel-clip-horizontal {
 	height: 75px;
-	width: 660px;
+	width: 805px;
 }
 
 .jcarousel-skin-tango .jcarousel-item {
@@ -904,12 +903,14 @@ input.btn {
 .jcarousel-skin-tango .jcarousel-prev-horizontal {
 	left: 830px;
 	top: 3px;
+	display: none!important;
 }
 
 .jcarousel-skin-tango .jcarousel-next-horizontal {
 	left: 858px;
 	right: 0;
 	top: 3px;
+	display: none!important;
 }
 
 .jcarousel-skin-tango .jcarousel-container {
@@ -2110,9 +2111,10 @@ line-height:1.3em;
 /*************** Left panel tabs ********************/
 .ui-tabs .ui-tabs-nav {
 	
-	background:#e1e1e1 url('../../images/viewer/bg_Grey.gif') left top repeat-x; 
+	background:#00b7bd; 
 	margin: 0;
 	padding: 0.2em 0.2em 0;
+	margin-top:-4px;
 }
 
 .ui-tabs .ui-tabs-panel {
@@ -2579,12 +2581,13 @@ table.tablesorter {
 }
 
 table.tablesorter tr:hover td{
-    background: #dbedff;
+    background: #fcf2c8;
 }
 
 table.tablesorter td:last-child {
   border:none;
 }
+table.tablesorter tr:nth-child(odd) {background-color: #fff!important;}
 
  table.tablesorter thead tr th,table.tablesorter tfoot tr th {
 
@@ -2612,14 +2615,14 @@ table.tablesorter thead tr .headerSortDown,table.tablesorter thead tr .headerSor
 
 table.tablesorter td
 {
-	border-right:1px solid #f2f3f3;
+	border-right:1px solid #ddd;
 }
 
 #landrecords_pagerDiv .cell_color{
 	/*background-color: #DDDDDD;*/
 }
 #landrecords_pagerDiv .table_adjust{
-	margin-bottom:0.0em;  width:30%; padding-left:320px; float:left;  margin-left:320px\9; 
+	margin-bottom:0.0em;  width:30%; padding-left:35%; float:left;  margin-left:320px\9; 
 }
 #landrecords_pagerDiv .cell_adjust{
 	 padding:5px 4px 0px 4px;
@@ -3538,6 +3541,7 @@ background: transparent url('../../images/viewer/existing_issue_24.png') no-repe
   postion: relative; 
   margin-right: 10px; 
   height: 34px;
+  display:none;
 }
 .btn-wrap{
   padding-top: 5px;
@@ -3653,3 +3657,51 @@ body.loading {
 body.loading .modal {
     display: block;
 }
+
+#mainTabs.ui-tabs{
+    position: relative;
+    padding: .2em 0!important;
+	border:none;	
+}
+
+/*-------------*/
+.taskManagerBtn{
+	float: left;
+    position: relative;
+    top: 5px;
+    left: 5px;
+    max-width: 150px;
+	
+}
+.btn-tsk{
+	font-size: 13px !important;
+    color: #2e6e9e !important;
+    font-weight: normal !important;
+    padding: 4px 8px !important;
+}
+.ProjectSelectContainer{
+	float:right;
+	margin-right: 9px;
+	
+	}
+.lblProject{
+	display: inline;
+    position: relative;
+    top: 4px;
+    right: 1px;
+    color: #393939;
+    font-weight: 600;
+}
+.ShowProjectName{
+	position: relative;
+    top: 4px;
+    color: #ffffff;
+    font-size: 13px;
+    border: 1px solid #362d59;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #362d59;
+}
+
+
+

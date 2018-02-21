@@ -14,7 +14,7 @@ import com.rmsi.mast.studio.domain.Outputformat;
 public interface OutputformatDAO extends GenericDAO<Outputformat, Long> {
 	
 	Outputformat findByName(String name);
-
+	public Outputformat findOutputformatById(Integer id) ;
 	
 }
 

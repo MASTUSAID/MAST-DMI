@@ -3,16 +3,21 @@
 package com.rmsi.mast.studio.domain;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -22,31 +27,39 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
  * 
  */
 @Entity
-@Table(name = "module")
+@Table(name = "la_ext_module")
 public class Module implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String name;
-	private String description;
-	// private Integer id;
-	private String tenantid;
-	private Set<Action> actions;
+	
+	@Id
+	private Integer moduleid;
 
-	// private Set<Role> roles;
+	private String description;
+
+	private Boolean isactive;
+
+	private String modulename;
+
+	@Column(name="modulename_en")
+	private String modulenameEn;
+
+	//bi-directional many-to-one association to LaExtRolemodulemapping
+	@OneToMany(mappedBy="module", fetch=FetchType.EAGER)
+	private List<RoleModule> roelModule;
+
+	
 
 	public Module() {
 	}
 
-	@Id
-	// @Column(unique = true, nullable = false, length = 25)
-	public String getName() {
-		return this.name;
+	public Integer getModuleid() {
+		return this.moduleid;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setModuleid(Integer moduleid) {
+		this.moduleid = moduleid;
 	}
 
-	@Column(length = 255)
 	public String getDescription() {
 		return this.description;
 	}
@@ -55,42 +68,31 @@ public class Module implements Serializable {
 		this.description = description;
 	}
 
-	/*
-	 * @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 * 
-	 * @Column(nullable = false) public Integer getId() { return this.id; }
-	 * 
-	 * public void setId(Integer id) { this.id = id; }
-	 */
-	@Column(length = 25)
-	public String getTenantid() {
-		return this.tenantid;
+	public Boolean getIsactive() {
+		return this.isactive;
 	}
 
-	public void setTenantid(String tenantid) {
-		this.tenantid = tenantid;
+	public void setIsactive(Boolean isactive) {
+		this.isactive = isactive;
 	}
 
-	// bi-directional many-to-one association to ModuleAction
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "module_action", joinColumns = { @JoinColumn(name = "module") }, inverseJoinColumns = { @JoinColumn(name = "action") })
-	@JsonManagedReference
-	public Set<Action> getActions() {
-		return this.actions;
+	public String getModulename() {
+		return this.modulename;
 	}
 
-	public void setActions(Set<Action> actions) {
-		this.actions = actions;
+	public void setModulename(String modulename) {
+		this.modulename = modulename;
 	}
 
-	// bi-directional many-to-one association to ModuleAction
-	/*
-	 * @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	 * 
-	 * @JoinTable(name = "module_role", joinColumns = { @JoinColumn(name =
-	 * "module") }, inverseJoinColumns = { @JoinColumn(name = "role") }) public
-	 * Set<Role> getRoles() { return this.roles; }
-	 * 
-	 * public void setRoles(Set<Role> roles) { this.roles = roles; }
-	 */
+	public String getModulenameEn() {
+		return this.modulenameEn;
+	}
+
+	public void setModulenameEn(String modulenameEn) {
+		this.modulenameEn = modulenameEn;
+	}
+
+	
+	
+	
 }

@@ -119,7 +119,7 @@
             </td>
 
             <td>
-            ${roles[0].description}
+            ${userRole[0].roleBean.roletype_en}
             </td>
 
             <td>
@@ -191,6 +191,22 @@
 
             <tr>
                 <td class="labelHeader">
+                    Mobile number
+                </td>
+                <td>
+                    <input type="textbox" name="mobile"  id="mobile" value="${phone}"/>
+                </td>
+                <td class="labelHeader">
+                    Address
+                </td>
+                <td>
+                    <textarea rows="3" cols="30"  name="address"  id="address" />
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="labelHeader">
                     Role
                 </td>
                 <td>
@@ -202,11 +218,22 @@
                     Active
                 </td>
                 <td>
-                    <select name="active" id="user_active">
+                    <select name="user_active" id="user_active">
                         <option value="false">No</option>	
                         <option value="true">Yes</option>			
                     </select>
                 </td>
+            </tr>
+       <tr>
+                <td class="labelHeader">
+                    Gender
+                </td>
+                <td>
+                    <select name="user_gender" id="user_gender">
+                        <option  value="">Please Select</option> 		
+                    </select>
+                </td>
+                
             </tr>
             </table>
         </script>

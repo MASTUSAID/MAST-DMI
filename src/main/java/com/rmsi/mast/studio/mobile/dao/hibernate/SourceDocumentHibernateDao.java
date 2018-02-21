@@ -41,7 +41,7 @@ public class SourceDocumentHibernateDao extends
 	@Override
 	public SourceDocument findByUsinandFile(String fileName, Long usin) {
 
-		String query = "select sd from SourceDocument sd where sd.ScanedSourceDoc =:fileName and sd.usin =:usin";
+		String query = "select sd from SourceDocument sd where sd.documentname =:fileName and sd.documentid =:usin";
 
 		try {
 			@SuppressWarnings("unchecked")
@@ -72,6 +72,28 @@ public class SourceDocumentHibernateDao extends
 
 			if (sourceDocumentList.size() > 0) {
 				return sourceDocumentList;
+			}
+		} catch (Exception ex) {
+
+			logger.error(ex);
+			throw ex;
+		}
+		return null;
+	}
+
+	@Override
+	public SourceDocument findBypartyandtransid(Long partyid, Long transid) {
+
+		String query = "select sd from SourceDocument sd where sd.laParty.partyid =:partyid and sd.laExtTransactiondetail.transactionid =:transid";
+
+		try {
+			@SuppressWarnings("unchecked")
+			List<SourceDocument> sourceDocumentList = getEntityManager()
+					.createQuery(query).setParameter("partyid", partyid)
+					.setParameter("transid", transid).getResultList();
+
+			if (sourceDocumentList.size() > 0) {
+				return sourceDocumentList.get(0);
 			}
 		} catch (Exception ex) {
 
