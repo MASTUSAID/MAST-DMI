@@ -210,4 +210,26 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 		return null;
 	}
 
+	@Override
+	public SocialTenureRelationship getSocialTenureObj(Long partyid,
+			Long landId) {
+
+        try {
+            Query query = getEntityManager().createQuery("Select st from SocialTenureRelationship st where st.partyid = :partyid and st.landid = :landid");
+            @SuppressWarnings("unchecked")
+			List<SocialTenureRelationship> socialTenureBygid = query.setParameter("partyid", partyid).setParameter("landid", landId).getResultList();
+
+            if (socialTenureBygid.size() > 0) {
+                return socialTenureBygid.get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+
+            logger.error(e);
+            return null;
+        }
+
+    }
+
 }

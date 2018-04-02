@@ -1,5 +1,7 @@
 package com.rmsi.mast.studio.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,12 @@ public class ProjectRegionServiceImpl implements ProjectRegionService {
 	public ProjectRegion findProjectRegionById(Integer id) {
 		// TODO Auto-generated method stub
 		return projectRegionDAO.findProjectRegionById(id);
+	}
+
+	@Override
+	public List<ProjectRegion> findAllProjectRegion() {
+		// TODO Auto-generated method stub
+		return projectRegionDAO.findAllProjectRegion();
 	}
 
 }

@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -30,12 +31,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.rmsi.mast.studio.domain.Layer;
 import com.rmsi.mast.studio.domain.LayerField;
 import com.rmsi.mast.studio.domain.Layertype;
+import com.rmsi.mast.studio.domain.ProjectRegion;
 import com.rmsi.mast.studio.domain.RoleModule;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.service.LayerFieldService;
 import com.rmsi.mast.studio.service.LayerService;
 import com.rmsi.mast.studio.service.LayertypeService;
 import com.rmsi.mast.studio.service.OutputformatService;
+import com.rmsi.mast.studio.service.ProjectRegionService;
 import com.rmsi.mast.studio.service.ProjectionService;
 import com.rmsi.mast.studio.service.RoleModuleService;
 import com.rmsi.mast.studio.service.UnitService;
@@ -66,7 +69,11 @@ public class LayerController {
 	@Autowired 
 	RoleModuleService roleModuleService;
 	
-	
+
+    @Autowired
+    private ProjectRegionService  projectRegionService;
+    
+    
 	private final String TENANT_ID = "1";
 	
 	@RequestMapping(value = "/studio/layer/", method = RequestMethod.GET)
@@ -165,12 +172,12 @@ public class LayerController {
 				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
 				
 				//Set Numzoom
-				int intNumzoomlevels=0;
+				/*int intNumzoomlevels=0;
 				try{
 					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
 					System.out.println("MinScale --- " + intNumzoomlevels);
 					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
-				}catch(Exception e){logger.error(e);}
+				}catch(Exception e){logger.error(e);}*/
 				
 				// set Displayinlayermanager
 				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
@@ -208,7 +215,7 @@ public class LayerController {
 				//System.out.println("Exportable ---- " + blnExportable);
 				layer.setExportable(new Boolean(false));
 				
-				//Set Minscale
+				/*//Set Minscale
 				try{
 					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
 					System.out.println("MinScale --- " + intMinScale);
@@ -228,7 +235,7 @@ public class LayerController {
 				System.out.println("Buffer --- " + intBuffer);
 				layer.setBuffer(new Integer(intBuffer));
 				
-				
+				*/
 				
 				//Set Display Outside Max Extent
 				boolean blnDisplayOutsideMaxExtent = ServletRequestUtils.getRequiredBooleanParameter(request, "displayoutsidemaxextent");
@@ -253,7 +260,7 @@ public class LayerController {
 				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
 				
 				//Set Geometry Name
-				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				//layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
 				
 				//Set Tiled
 				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
@@ -296,12 +303,12 @@ public class LayerController {
 				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
 				
 				//Set Numzoom
-				int intNumzoomlevels=0;
+				/*int intNumzoomlevels=0;
 				try{
 					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
 					System.out.println("MinScale --- " + intNumzoomlevels);
 					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
-				}catch(Exception e){logger.error(e);}
+				}catch(Exception e){logger.error(e);}*/
 				
 				// set Displayinlayermanager
 				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
@@ -339,7 +346,7 @@ public class LayerController {
 				System.out.println("Exportable ---- " + blnExportable);
 				layer.setExportable(new Boolean(blnExportable));
 				
-				//Set Minscale
+				/*//Set Minscale
 				try{
 					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
 					System.out.println("MinScale --- " + intMinScale);
@@ -358,7 +365,7 @@ public class LayerController {
 				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
 				System.out.println("Buffer --- " + intBuffer);
 				layer.setBuffer(new Integer(intBuffer));
-				
+				*/
 				
 				
 				//Set Display Outside Max Extent
@@ -384,7 +391,7 @@ public class LayerController {
 				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
 				
 				//Set Geometry Name
-				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				//layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
 				
 				//Set Tiled
 				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
@@ -501,13 +508,13 @@ public class LayerController {
 				//Set MaxExtent
 				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
 				
-				//Set Numzoom
+			/*	//Set Numzoom
 				int intNumzoomlevels=0;
 				try{
 					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
 					System.out.println("MinScale --- " + intNumzoomlevels);
 					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
-				}catch(Exception e){logger.error(e);}
+				}catch(Exception e){logger.error(e);}*/
 				
 				// set Displayinlayermanager
 				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
@@ -545,7 +552,7 @@ public class LayerController {
 				//System.out.println("Exportable ---- " + blnExportable);
 				layer.setExportable(new Boolean(false));
 				
-				//Set Minscale
+				/*//Set Minscale
 				try{
 					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
 					System.out.println("MinScale --- " + intMinScale);
@@ -564,7 +571,7 @@ public class LayerController {
 				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
 				System.out.println("Buffer --- " + intBuffer);
 				layer.setBuffer(new Integer(intBuffer));
-				
+				*/
 				
 				
 				//Set Display Outside Max Extent
@@ -590,7 +597,7 @@ public class LayerController {
 				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
 				
 				//Set Geometry Name
-				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				//layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
 				
 				//Set Tiled
 				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
@@ -631,14 +638,14 @@ public class LayerController {
 				
 				//Set MaxExtent
 				layer.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
-				
+				/*
 				//Set Numzoom
 				int intNumzoomlevels=0;
 				try{
 					intNumzoomlevels = ServletRequestUtils.getIntParameter(request, "numzoomlevels");
 					System.out.println("MinScale --- " + intNumzoomlevels);
 					layer.setNumzoomlevels(new Integer(intNumzoomlevels));
-				}catch(Exception e){logger.error(e);}
+				}catch(Exception e){logger.error(e);}*/
 				
 				// set Displayinlayermanager
 				boolean blnDisplayinlayermanager = ServletRequestUtils.getRequiredBooleanParameter(request, "displayinlayermanager");
@@ -675,7 +682,7 @@ public class LayerController {
 				boolean blnExportable = ServletRequestUtils.getRequiredBooleanParameter(request, "exportable");
 				System.out.println("Exportable ---- " + blnExportable);
 				layer.setExportable(new Boolean(blnExportable));
-				
+			/*	
 				//Set Minscale
 				try{
 					int intMinScale = ServletRequestUtils.getIntParameter(request, "minscale");
@@ -695,7 +702,7 @@ public class LayerController {
 				int intBuffer = ServletRequestUtils.getRequiredIntParameter(request, "buffer");
 				System.out.println("Buffer --- " + intBuffer);
 				layer.setBuffer(new Integer(intBuffer));
-				
+				*/
 				
 				
 				//Set Display Outside Max Extent
@@ -721,7 +728,7 @@ public class LayerController {
 				layer.setVersion(ServletRequestUtils.getStringParameter(request, "version"));
 				
 				//Set Geometry Name
-				layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
+				//layer.setGeomtype(ServletRequestUtils.getStringParameter(request, "geometryname"));
 				
 				//Set Tiled
 				boolean blnTiled= ServletRequestUtils.getRequiredBooleanParameter(request, "tiled");
@@ -834,4 +841,24 @@ public class LayerController {
 		return 	roleModuleService.getRoleModuleByroleId(Integer.parseInt(id));
 	}
 	
+	
+	 @RequestMapping(value = "/studio/user/info", method = RequestMethod.GET)
+	    @ResponseBody
+	    public List<User> userInfolist() {
+
+	        List<User> templist = userService.findAllUser();
+	     
+	        return templist;
+
+	    }
+	 
+	    @RequestMapping(value = "/studio/region/info", method = RequestMethod.GET)
+	    @ResponseBody
+	    public List<ProjectRegion>  regionInfolist() {
+	    	List<ProjectRegion> templist = projectRegionService.findAllProjectRegion();
+	        return templist;
+
+	    }
+	 
+	 
 }

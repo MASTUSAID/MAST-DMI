@@ -28,6 +28,16 @@ var land_handled = "";
 var Community = ""; 
 var Authority = ""; 
 var collective_members_no = ""; 
+var projectId = 0;
+var Custom1 = "";
+var Custom2 = "";
+
+var Custom3 = "";
+
+var Custom4 = "";
+
+var Custom5 = "";
+
 
 
 
@@ -56,6 +66,7 @@ function displayRefreshedResourceRecords() {
         async: false,
         success: function (data) {
             dataList = data;
+           projectId =  dataList[0].projectId
 			
 
         jQuery("#landresource-div").empty();
@@ -147,7 +158,7 @@ function RegistrationRecords_Res(records_from_Res){
 
 function ActionfillResource(landid,geomType){
 	
-		var appid='#'+landid+"";
+		var appid='#'+landid+"_resource";
 		$(""+appid+"").empty();
 		$(".containerDiv").empty();
 		
@@ -171,7 +182,9 @@ function ActionfillResource(landid,geomType){
 }
 function viewOnMap(usin,geom) {
 	var fieldName;
+	var layerAlias;
 	var _featureTypes= [];
+	$(".signin_menu").hide();
  
 	var relLayerName ;
     $.ajaxSetup({
@@ -181,20 +194,41 @@ function viewOnMap(usin,geom) {
 		 relLayerName = "Mast:la_spatialunit_resource_land";
 		 fieldName = "landid";
 		 _featureTypes.push("la_spatialunit_resource_land");
+		 layerAlias="Resource";
 	 }else if(geom=="Line"){
 		  relLayerName = "Mast:la_spatialunit_resource_line";
           fieldName = "landid";
 		  _featureTypes.push("la_spatialunit_resource_line");
+		  layerAlias="Line";
 	 }else if(geom=="Point"){
 		 relLayerName = "Mast:la_spatialunit_resource_point";
           fieldName = "landid";
 		  _featureTypes.push("la_spatialunit_resource_point");
+		  layerAlias="point";
 	 }
     var fieldVal = usin;
-    zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes);
+    zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes,layerAlias);
 }
-function zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes) {
-var _featureNS= window.location.protocol+'//'+window.location.host+'/';
+function zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes,layerAlias) {
+var _featureNS;
+//Get the Layer object
+        var layerName = layerAlias;
+		objLayer=getLayerByAliesName(layerName);
+	
+    	 var _wfsurl=objLayer.values_.url;
+        var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+        //Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+        $.ajax({
+            url: PROXY_PATH + _wfsSchema,
+            async: false,
+            success: function (data) {
+				 featureNS_=data.targetNamespace;
+                 featureType_=data.featureTypes[0].typeName;
+	        }
+        });
+
+		
 var _featurePrefix="Mast";
  featureRequest = new ol.format.WFS().writeGetFeature({
 						srsName: 'EPSG:4326',
@@ -248,8 +282,25 @@ function zoomToResource(geom) {
 		featureOverlay.set('aname', "featureaoilayer");	
 		featureOverlay.getSource().addFeature(geom[0]);
 		map.addLayer(featureOverlay)
-		map.getView().fit(featureOverlay.getSource().getExtent(), map.getSize());
-		map.getView().setZoom(9);
+		//map.getView().fit(featureOverlay.getSource().getExtent(), map.getSize());
+		//map.getView().setZoom(9);
+			
+		var projection = new ol.proj.Projection({
+          code: 'EPSG:4326',
+          units: 'degrees',
+          axisOrientation: 'neu',
+          global: true
+      })
+	  
+		var ext=featureOverlay.getSource().getExtent();
+		var center=ol.extent.getCenter(ext);
+		map.setView( new ol.View({
+			projection: projection,//or any projection you are using
+			center: [center[0] , center[1]],//zoom to the center of your feature
+			zoom: 14 //here you define the levelof zoom
+		}));
+		
+		closeDialog('editingdiv')
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#map-tab"]').parent().index());
         $('#sidebar').show();
         $('#collapse').show();
@@ -267,18 +318,23 @@ function zoomToResource(geom) {
 }
 function viewAttribute(usin)
 {
-	
+	$(".signin_menu").hide();
 	landId = usin;
 	
 	FillResourcePersonDataNew();
+	FillResourceCustoAttributes();
 
 	
 	attributeHistoryDialog = $( "#attributeDialog" ).dialog({
 		autoOpen: false,
-		height: 242,
-		width: 900,
+		height: 500,
+		width: 1161,
+		left: 95,
 		resizable: true,
 		modal: true,
+		close: function () {
+			attributeHistoryDialog.dialog("destroy");
+        },
 
 		buttons: [{
 			text: "Cancel",
@@ -318,10 +374,10 @@ function FillResourcePersonDataNew()
 	var myColumns1 = [];
 	var data = [];
 	myColumns1[0] = {type: "control", deleteButton: false};
-	myColumns1[1] = {name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"} };
+	myColumns1[1] = {name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false,visible: false, validate: {validator: "required", message: "Enter LandId"} };
 
 	$.ajax({
-		url :"resource/allAttribtesDatatype/" + landId,
+		url :"resource/allAttribtesDatatype/" + landId+ "/" + projectId,
 		 async: false,
 		success : function(data1) {
 			data=data1;
@@ -377,7 +433,7 @@ function FillResourcePersonDataNew()
 //						val.index = 4;
 //					}
 					else if(id==1022 || id==1064 || id==1116){
-						val.items=[{id: 1, name: "un-married"}, {id: 2, name: "married"},{id: 3, name: "divorced"}, {id: 4, name: "widow"},{id: 5, name: "widower"}];
+						val.items=[{id: 1, name: "un-Married"}, {id: 2, name: "married"},{id: 3, name: "divorced"}, {id: 4, name: "widow"},{id: 5, name: "widower"}];
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -441,13 +497,13 @@ function FillResourcePersonDataNew()
 	
 	
 	// Init editing grid
-    $("#personsEditingGrid0").jsGrid({
+    $("#ResourcepersonsEditingGrid0").jsGrid({
         width: "100%",
         height: "200px",
         inserting: false,
         editing: true,
-        sorting: true,
-        filtering: true,
+        sorting: false,
+        filtering: false,
         paging: true,
         autoload: false,
         controller: personsEditingControllerForResourcePerson,
@@ -476,9 +532,9 @@ function FillResourcePersonDataNew()
 //        ]
     });
 
-    $("#personsEditingGrid0 .jsgrid-table th:first-child :button").click();
+    $("#ResourcepersonsEditingGrid0 .jsgrid-table th:first-child :button").click();
    
-    $("#personsEditingGrid0").jsGrid("loadData");
+    $("#ResourcepersonsEditingGrid0").jsGrid("loadData");
     
     
 }
@@ -490,7 +546,7 @@ var personsEditingControllerForResourcePerson = {
 	    loadData: function (filter) {
 	        return $.ajax({
 	            type: "GET",
-	            url: "resource/allAttribue/" + landId,
+	            url: "resource/allAttribue/" + landId+ "/" + projectId,
 	            data: filter,
 				async: false,
 	            success: function(data)
@@ -693,12 +749,182 @@ var personsEditingControllerForResourcePerson = {
 
 
 
+
+function FillResourceCustoAttributes()
+{
+	var name_Columns = [];
+	var myColumns = [];	
+	var myColumns1 = [];
+	var data = [];
+	myColumns1[0] = {type: "control", deleteButton: false};
+	myColumns1[1] = {name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"} };
+
+	$.ajax({
+		url :"resource/allCustomAttribtesDatatype/" + landId+ "/" + projectId,
+		 async: false,
+		success : function(data1) {
+			
+			if(data1 == ""){
+				$("#CustomAttributeEditingGrid0").hide();
+				$("#CustomAttributes").hide();
+			}
+			else{
+				$("#CustomAttributeEditingGrid0").show();
+				$("#CustomAttributes").show();
+			data=data1;
+		console.log(data);
+			
+			var ctr = 2;
+			
+			var lastsel;
+			for ( var i = 0; i < data.length; ++i) {
+					name_Columns[ctr] = data[i][0];
+					var id = data[i][1];
+					
+					var val = new Object();
+					val.name = name_Columns[ctr];
+					
+					
+					val.index = ctr;
+					val.width = 120;
+					val.editable = true;
+					val.type= "text";
+					
+					
+					myColumns1[ctr] = val;
+					ctr++;
+					
+
+			}
+			}
+			}
+
+	});
+		
 //
-//"address": result[i].address,
-//"identityno": result[i].identityno,
-//"dateofbirth": result[i],
-//"mobileno": result[i].mobileno,
-//"genderid": result[i].genderid,
-//"identitytypeid": result[i].laPartygroupIdentitytype.identitytypeid,
-//"maritalstatusid": result[i].laPartygroupMaritalstatus.maritalstatusid
+//		
+//			
+////			var rowHeight = 200;
+
+	
+	
+	// Init editing grid
+    $("#CustomAttributeEditingGrid0").jsGrid({
+        width: "100%",
+        height: "200px",
+        inserting: false,
+        editing: true,
+        sorting: false,
+        filtering: false,
+        paging: true,
+        autoload: false,
+        controller: ControllerForResourceCustomAttributes,
+        pageSize: 50,
+        pageButtonCount: 20,
+        fields: myColumns1
+//        	[
+//            {type: "control", deleteButton: false},
+//			{name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"} },
+//            {name: "firstname", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
+//            {name: "middlename", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
+//            {name: "lastname", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
+//			{name: "mobNo", title: "ContactNo", align: "left", type: "text", width: 80,editing: true, filtering: false},
+//			{name:"groupId", title:"GroupId", align:"left", type:"number",  width: 120,editing: false, hidden:true,  validate: {validator: "required", message: "Enter GroupId"} },
+//
+//			//            {name:"age", title:"Age", align:"left", type:"number",  width: 120, validate: {validator: "required", message: "Enter Age"} },
+////		    {name: "maritalstatus", title: "Marital Status", type: "text", width: 80,editing: true, filtering: false},
+////			{name: "citizenship", title: "Citizenship", type: "text", width: 80,editing: true, filtering: false},
+////			{name: "ethnicity", title: "Ethnicity", type: "text", width: 80,editing: true, filtering: false},
+////		    {name: "resident", title: "Resident", type: "text", width: 80,editing: true, filtering: false},
+////            {name: "address", title: "Address", type: "text", width: 120, validate: {validator: "required", message: "Enter Address"}},
+////            {name: "mobileno", title: "Mobile Number", type: "text", width: 120},
+////			{name: "groupId", title: "GroupId", type: "number", width: 120},
+//           
+//
+//        ]
+    });
+
+    $("#CustomAttributeEditingGrid0 .jsgrid-table th:first-child :button").click();
+   
+    $("#CustomAttributeEditingGrid0").jsGrid("loadData");
+    
+    
+}
+
+
+var ControllerForResourceCustomAttributes = {
+	    loadData: function (filter) {
+	        return $.ajax({
+	            type: "GET",
+	            url: "resource/allCustomAttribue/" + landId+ "/" + projectId,
+	            data: filter,
+				async: false,
+	            success: function(data)
+	            {
+	            }
+	        }).then(function(result){
+	        	var persondataArray=[];
+	        	
+					 
+					 for(var i=0; i<result.length; i++){
+					 if(result[i].fieldname == "2"){
+						 LandId = result[0].landid;
+						 Custom1 = result[i].attributevalue;
+					 }
+					 else if(result[i].fieldname == "5"){
+						 Custom2 = result[i].attributevalue;
+					 }
+					 else if(result[i].fieldname == "6"){
+						 Custom3 = result[i].attributevalue;
+					 }
+					 else if(result[i].fieldname == "7"){
+						 Custom4 = result[i].attributevalue;
+					 }
+					
+					 }
+					 var persondata ={
+			        			"landid"   :LandId,
+				    			"Resource Custom Attribute":  Custom1,
+				    			"Resource Custom Attribute Sub Class 3":  Custom2,
+				    			"Resource Custom Attribute Sub Class 4":  Custom3,
+				    			"Resource Custom Attribute Sub Class 5":Custom4,
+				    			
+				    		};
+							
+							persondataArray.push(persondata);
+					
+
+
+					 return persondataArray;	
+	        });
+	       
+	    },
+	    insertItem: function (item) {
+	        return false;
+	    },
+	    updateItem: function (item) {
+	    
+	    	
+	    	
+	        return $.ajax({
+	            type: "POST",
+//	            contentType: "application/json; charset=utf-8",
+	            traditional: true,
+	            url: "landrecords/saveResourceCustomAttributes",
+	            data: item,
+				success:function(){
+					FillResourceCustoAttributes();
+				},
+	            error: function (request, textStatus, errorThrown) {
+	                jAlert(request.responseText);
+	            }
+	        });
+	    },
+	    deleteItem: function (item) {
+	        return false;
+	    }
+	};
+
+
+
 

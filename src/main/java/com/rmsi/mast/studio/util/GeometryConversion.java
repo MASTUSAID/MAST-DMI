@@ -93,6 +93,15 @@ public class GeometryConversion {
         return new Point(getCoordinateSequence(wkt), new GeometryFactory(new PrecisionModel(), 4326));
     }
     
+    
+    public double getArea(String wkt) {
+
+        Geometry geom= new Polygon(new LinearRing(getCoordinateSequence(wkt),
+                    new GeometryFactory(new PrecisionModel(), 900913)), null, new GeometryFactory());
+        return geom.getArea();
+  }
+
+    
    
 
 }

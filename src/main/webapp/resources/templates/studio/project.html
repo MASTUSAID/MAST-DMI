@@ -1,6 +1,8 @@
 <div id="ProjectFormDiv" style="visibility: hidden">
 
     <form class="cmxform" id="projectForm" action="" onsubmit="return false;">
+    
+    <input type="hidden" name="extention" id="extention" value="">
 
         <div class="topmenu">
             <a class="btn02" id="project_btnNew"
@@ -279,8 +281,8 @@
             <td>
 			 {{if (projectArea.length)}}
             {{if (projectArea[0].laSpatialunitgroup3!=null)}}
-			   {{if (projectArea[0].laSpatialunitgroupHierarchy3!=null)}}
-                   ${projectArea[0].laSpatialunitgroupHierarchy3.nameEn}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy4!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy4.nameEn}
                {{/if}}
 			{{/if}}
 			{{/if}}
@@ -467,7 +469,7 @@
 
 			-->
 			
-            <tr>
+            <!-- <tr>
             <td>
             <label class="lblint">Active Layer</label>
             </td>
@@ -484,7 +486,7 @@
             <option SELECTED value="">Please Select</option>
             </td>
 
-            </tr>
+            </tr> -->
         </script>
 
         <script id="ProjectTemplateDisclaimer" type="text/x-jquery-tmpl">

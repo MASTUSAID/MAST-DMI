@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.Project;
+import com.rmsi.mast.studio.domain.fetch.ProjectData;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 
 
@@ -171,5 +172,33 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Long>
 				getEntityManager().createQuery("Select p from Project p where p.projectnameid = :name").setParameter("name", Id).getSingleResult();
 		return project;
 	}
+
 	
+	@Override
+	public List<ProjectData> getAllProjectInfo() {
+	 List<ProjectData> pdata= new ArrayList<ProjectData>();
+		
+		try {
+			String hqlstr="Select p from Project p where p.active=true";
+			List<Project> project =
+					getEntityManager().createQuery(hqlstr).getResultList();
+			
+			if(project.size()>0)
+			{
+				for(Project obj:project){
+					ProjectData objPd= new ProjectData();
+					objPd.setId(obj.getProjectnameid());
+					objPd.setName(obj.getName());
+					pdata.add(objPd);
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			
+			logger.error(e);
+			return null;
+		}
+		return pdata;
+	}
 }

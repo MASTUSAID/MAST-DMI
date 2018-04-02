@@ -18,6 +18,7 @@ import com.rmsi.mast.studio.domain.Savedquery;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserProject;
 import com.rmsi.mast.studio.domain.UserRole;
+import com.rmsi.mast.studio.domain.fetch.ProjectData;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.ProjectTemp;
 
@@ -110,4 +111,8 @@ public interface ProjectService {
 	List<Project> getdAllProjectsdetails();
 	public List<ProjectArea> getProjectArea(String projectName);
 
+	
+	public List<ProjectData> getAllProjectInfo();
+	
+	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
+import com.rmsi.mast.studio.domain.LandUseType;
 import com.rmsi.mast.viewer.dao.LaSpatialunitLandDao;
 
 @Repository
@@ -70,7 +71,7 @@ implements LaSpatialunitLandDao{
 				//laSpatialunitLand.setClaimtypeid(object[17].toString())
 				
 				if(object[17] != null && !object[17].toString().isEmpty())
-					laSpatialunitLand.setClaimtypeid(Integer.parseInt(object[18].toString()));
+					laSpatialunitLand.setClaimtypeid(Integer.parseInt(object[17].toString()));
 				
 				
 				if(object[18] != null && !object[18].toString().isEmpty())
@@ -109,6 +110,7 @@ implements LaSpatialunitLandDao{
 				
 				if(object[32] != null && !object[32].toString().isEmpty())
 					laSpatialunitLand.setProposedused(Integer.parseInt(object[32].toString()));
+				
 				
 				
 				lstLaSpatialunitLands.add(laSpatialunitLand);

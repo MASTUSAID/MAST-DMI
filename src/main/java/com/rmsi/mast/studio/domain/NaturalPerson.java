@@ -11,6 +11,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "la_party_person")
@@ -110,6 +111,9 @@ public class NaturalPerson extends LaParty implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="tenureclassid")
 	private TenureClass laRightTenureclass;
+	
+	@Transient
+	private String gender;
 
 	public LaSpatialunitgroup getLaSpatialunitgroup1() {
 		return laSpatialunitgroup1;
@@ -158,6 +162,14 @@ public class NaturalPerson extends LaParty implements Serializable {
 		
 	}
 	
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
 	public byte[] getPhoto() {
 		return photo;

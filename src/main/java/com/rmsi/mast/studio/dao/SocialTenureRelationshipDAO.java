@@ -13,6 +13,8 @@ public interface SocialTenureRelationshipDAO extends GenericDAO<SocialTenureRela
 	List<SocialTenureRelationship> findByGid(Integer id);
         
         SocialTenureRelationship getSocialTenure(long id);
+        
+        SocialTenureRelationship getSocialTenureObj(Long partyid, Long landId);
 
 	boolean deleteTenure(Long id);
 

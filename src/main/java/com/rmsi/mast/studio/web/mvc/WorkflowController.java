@@ -19,12 +19,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.dao.WorkflowStatusHistoryDAO;
 import com.rmsi.mast.studio.domain.Project;
+import com.rmsi.mast.studio.domain.ProjectArea;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.Workflow;
 import com.rmsi.mast.studio.domain.WorkflowActionmapping;
 import com.rmsi.mast.studio.domain.WorkflowStatusHistory;
 import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
+import com.rmsi.mast.studio.domain.fetch.UserParcel;
 import com.rmsi.mast.studio.mobile.dao.SpatialUnitDao;
+import com.rmsi.mast.studio.mobile.service.SpatialUnitService;
+import com.rmsi.mast.studio.service.ClaimBasicService;
+import com.rmsi.mast.studio.service.ProjectAreaService;
+import com.rmsi.mast.studio.service.ProjectRegionService;
 import com.rmsi.mast.studio.service.UserService;
 import com.rmsi.mast.studio.service.WorkflowActionService;
 import com.rmsi.mast.studio.service.WorkflowService;
@@ -54,6 +60,24 @@ public class WorkflowController {
 	
 	@Autowired
 	SpatialUnitDao spatialUnitDao;
+	
+	
+     @Autowired
+	 private SpatialUnitService spatialUnitService;
+	
+	 @Autowired
+	 private ProjectRegionService  projectRegionService;
+	 
+	 
+	 @Autowired
+	 private ProjectAreaService projectAreaService;
+	 
+	 
+	 @Autowired
+	 private ClaimBasicService claimBasicService;
+	 
+	 
+	 
 	 
 	@RequestMapping(value = "/viewer/landrecords/workflow", method = RequestMethod.GET)
     @ResponseBody
@@ -142,6 +166,47 @@ public class WorkflowController {
 			String username = principal.getName();
 			User user = userService.findByUniqueName(username);
 			long userid = user.getId();
+			
+			if(workflowId==4){
+
+				String  _userDefineparcelnum="";
+
+				try {
+					ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(land).get(0);
+					if(null!=spatialUnit){
+
+						ProjectArea objProjectArea= projectAreaService.findProjectAreaByProjectId(spatialUnit.getProjectnameid()); 
+
+						if(null!=objProjectArea && null!=objProjectArea.getLaSpatialunitgroupHierarchy1()){
+
+							_userDefineparcelnum=_userDefineparcelnum+objProjectArea.getLaSpatialunitgroupHierarchy1().getAreaCode() ;
+						}
+
+						if(null!=objProjectArea && null!=objProjectArea.getLaSpatialunitgroupHierarchy2()){
+
+							_userDefineparcelnum=_userDefineparcelnum+objProjectArea.getLaSpatialunitgroupHierarchy2().getAreaCode() ;
+						}
+
+						if(null!=objProjectArea && null!=objProjectArea.getLaSpatialunitgroupHierarchy3()){
+
+							_userDefineparcelnum=_userDefineparcelnum+objProjectArea.getLaSpatialunitgroupHierarchy3().getAreaCode() ;
+
+						}
+						_userDefineparcelnum=_userDefineparcelnum+spatialUnit.getLandid();
+
+						spatialUnit.setUdparcelno(_userDefineparcelnum);
+
+						claimBasicService.saveClaimBasicDAO(spatialUnit);
+
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+
 			return workflowActionService.actionRegister(land, userid,workflowId,comments);
 			
 
@@ -212,4 +277,128 @@ public class WorkflowController {
 	    	
 		}
 	
+	    
+	    @RequestMapping(value = "/viewer/landrecords/action/getUserParcel/{land}", method = RequestMethod.GET)
+	  		@ResponseBody
+	  		public UserParcel getUserParcel(@PathVariable Long land, Principal principal,HttpServletRequest request, HttpServletResponse response) {
+	  	    	
+	  	    	UserParcel objUserParcel = new UserParcel();
+	  	    	
+	  	   	 try {
+	  				ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(land).get(0);
+	  				 if(null!=spatialUnit){
+	  					 
+	  					 ProjectArea objProjectArea= projectAreaService.findProjectAreaByProjectId(spatialUnit.getProjectnameid()); 
+	  					 
+	  					 if(null!=objProjectArea && null!=objProjectArea.getLaSpatialunitgroupHierarchy1()){
+	  						 
+	  						 objUserParcel.setHierarchy1(objProjectArea.getLaSpatialunitgroupHierarchy1().getAreaCode());
+	  					 }
+	  					 
+	  					 if(null!=objProjectArea && null!=objProjectArea.getLaSpatialunitgroupHierarchy2()){
+	  						 
+	  						 objUserParcel.setHierarchy2(objProjectArea.getLaSpatialunitgroupHierarchy2().getAreaCode());
+	  					 }
+	  					 
+	  				    if(null!=objProjectArea && null!=objProjectArea.getLaSpatialunitgroupHierarchy3()){
+	  						 
+	  				    	 objUserParcel.setHierarchy3(objProjectArea.getLaSpatialunitgroupHierarchy3().getAreaCode());
+	  					
+	  				    }
+	  				    
+	  				    if(spatialUnit.getUdparcelno()==""){
+	  				    objUserParcel.setLandid(spatialUnit.getLandid());
+	  				    }else{
+	  				    
+	  				    	String str=	spatialUnit.getUdparcelno();
+	  				    	StringBuilder sb = new StringBuilder();
+	  				    	for (int i = str.length() - 1; i >= 0; i --) {
+	  				    	    char c = str.charAt(i);
+	  				    	    if (Character.isDigit(c)) {
+	  				    	        sb.insert(0, c);
+	  				    	    } else {
+	  				    	        break;
+	  				    	    }
+	  				    	}
+	  				    	String result = sb.toString();
+	  				    	 objUserParcel.setLandid(Long.parseLong(result)); 
+	  				    
+	  				    }
+
+	  				    
+	  					 
+	  				 }
+	  			} catch (Exception e) {
+	  				// TODO Auto-generated catch block
+	  				e.printStackTrace();
+	  			}
+	  	   	 
+	  	   	 
+	  	    	return objUserParcel;
+	  	    	
+	  	    }
+
+	  	   
+	  		 @RequestMapping(value = "/viewer/landrecords/action/savenewparcel/{land}", method = RequestMethod.POST)
+	  			@ResponseBody
+	  			public boolean updateParcel(@PathVariable Long land, Principal principal,HttpServletRequest request, HttpServletResponse response) {
+
+	  				
+	  				
+	  				String hierarchy1="";
+	  				String hierarchy2="";
+	  				String hierarchy3="";
+	  				String parcelId="";
+	  				
+	  				String userDefineParcel="";
+	  				try {
+	  					hierarchy1 = ServletRequestUtils.getRequiredStringParameter(request, "hierarchy1");
+	  					userDefineParcel=userDefineParcel+hierarchy1;
+	  				} catch (ServletRequestBindingException e) {
+	  					
+	  				}
+	  				
+	  			
+	  				try {
+	  					hierarchy2 = ServletRequestUtils.getRequiredStringParameter(request, "hierarchy1");
+	  					userDefineParcel=userDefineParcel+hierarchy2;
+	  				} catch (ServletRequestBindingException e) {
+	  					
+	  				}
+
+	  				
+	  				
+	  				try {
+	  					hierarchy3 = ServletRequestUtils.getRequiredStringParameter(request, "hierarchy1");
+	  					userDefineParcel=userDefineParcel+hierarchy3;
+	  				} catch (ServletRequestBindingException e) {
+	  					
+	  				}
+
+	  				try {
+	  					parcelId = ServletRequestUtils.getRequiredStringParameter(request, "parcelId");
+	  					userDefineParcel=userDefineParcel+parcelId;
+	  				} catch (ServletRequestBindingException e) {
+	  					
+	  				}
+	  				
+	  				
+	  				try{
+	  				 ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(land).get(0);
+	  				 if(null!=spatialUnit){
+	  					 spatialUnit.setUdparcelno(userDefineParcel);
+	  					 claimBasicService.saveClaimBasicDAO(spatialUnit);
+	  				 }
+	  				
+	  				}catch(Exception e){
+	  					e.printStackTrace();
+	  					return false;
+	  				}
+	  				 
+	  				
+	  				
+	  				return true;
+
+	  			}
+	  		 
 }

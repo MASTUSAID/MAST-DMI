@@ -61,10 +61,9 @@ public class ReportCertificateFetch implements Serializable {
 	private String province;
 	private String commune;
 	private String place;
+	private String udparcelno;
 	
-	
-	
-	
+		
 	public Long getRnum() {
 		return rnum;
 	}
@@ -268,6 +267,12 @@ public class ReportCertificateFetch implements Serializable {
 	}
 	public void setPlace(String place) {
 		this.place = place;
+	}
+	public String getUdparcelno() {
+		return udparcelno;
+	}
+	public void setUdparcelno(String udparcelno) {
+		this.udparcelno = udparcelno;
 	}
 	
 	

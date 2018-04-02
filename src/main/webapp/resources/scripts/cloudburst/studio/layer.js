@@ -167,18 +167,18 @@ function saveLayer() {
                     // required: true,
                     digits: true
                 },
-                minscale: {
+                /* minscale: {
                      required: true,
                     digits: true
                 },
                 maxscale: {
                      required: true,
                     digits: true
-                },
+                }, 
                 buffer: {
                     // required: true,
                     digits: true
-                },
+                }*/
                 tilesize: {
                     required: true,
                     digits: true
@@ -203,14 +203,14 @@ function saveLayer() {
                     // required: "Please Enter Gutter",
                     digits: "Please Enter a valid number.  "
                 },
-                minscale: {
+               /*  minscale: {
                      required: "Please Enter MinScale",
                     digits: "Please Enter a valid number.  "
-                },
+                }, 
                 maxscale: {
                      required: "Please Enter MaxScale",
                     digits: "Please Enter a valid number.  "
-                },
+                },*/
                 tilesize: {
                      required: "Please Enter TileSize",
                     digits: "Please Enter a valid number.  "
@@ -331,6 +331,7 @@ function CreateEditLayerRecord(_id, _type, _url, type) {
 				
 				$('#maxextent').val(data.maxextent);
                 $('#minextent').val(data.minextent);
+				$('#geomtype').val(data.geomtype);
                 if(data.tiled){
                 	$('#tiled').val("true");                	
                 }
@@ -566,7 +567,10 @@ function checkLayerExistence(_layerAlias) {
             if (data.alias != undefined && data.alias != null) {
                 jAlert('Layer Alias Already Exists', 'Layer');
                 return;
-            }
+            }else{
+				jAlert('Layer Alias Not Exists', 'Layer');
+                return;
+			}
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             //alert('ERROR')
@@ -617,7 +621,7 @@ function getLayerInfo(layer, wfsLayerName, _layerType, _wmsUrl) {
                
 			   
 				 $("#fieldGrid").show('fast');
-               // populateLayerFields(wfsLayerName, _wmsUrl);
+                populateLayerFields(wfsLayerName, _wmsUrl);
             }   //if wms
 
             if (_layerType == 'WFS') {

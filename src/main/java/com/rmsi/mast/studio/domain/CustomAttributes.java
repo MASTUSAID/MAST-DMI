@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "la_ext_resource_custom_attributevalue")
@@ -42,6 +43,10 @@ public class CustomAttributes implements Serializable{
 	private Integer subclassificationid;
 	
 	private String geomtype;
+	
+	@Transient
+	private Integer Fieldname;
+
 	
 	
 	public CustomAttributes(){
@@ -105,6 +110,16 @@ public class CustomAttributes implements Serializable{
 
 	public void setSubclassificationid(Integer subclassificationid) {
 		this.subclassificationid = subclassificationid;
+	}
+
+
+	public Integer getFieldname() {
+		return Fieldname;
+	}
+
+
+	public void setFieldname(Integer fieldname) {
+		Fieldname = fieldname;
 	}
 	
 	

@@ -114,7 +114,12 @@ Cloudburst.Editing = function (_map, _searchdiv) {
            			
             switch (e.currentTarget.id) {
                 case 'selectionBox':
-
+					map.getLayers().forEach(function (layer) {
+						if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
+							map.removeLayer(layer);
+						}
+					});
+				
 					map.addInteraction(selectInteraction_edit);
                     map.addInteraction(intraction_dragBox);
                     toggleEditControl('selectionBox');

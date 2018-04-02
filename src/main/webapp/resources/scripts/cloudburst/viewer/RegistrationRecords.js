@@ -12,6 +12,7 @@ var claimTypes_R = null;
 var landRecordsInitialized_R = false;
 var maritalStatus_R = null;
 var genderStatus_R = null;
+surrendermortagagedata= null;
 var idtype_R = null;
 var country_r_id = 1;// would be null
 var region_r_id = 2; // would be null
@@ -23,6 +24,7 @@ var province_r = null;
 var processdetails_R = null;
 var selectedlandid = null;
 var laspatialunitland_R = null;
+var laMortgage_R = null;
 var financialagency_R = null;
 var monthoflease_R = null;
 // var statusList_R = null;
@@ -30,6 +32,10 @@ var attributeEditDialog = null;
 var documenttype_R = null;
 var communeList=null;
 var currentdiv = null;
+var isVisible = true;
+var TransLandId = null;
+var processid =0;
+var persontypeid =0;
 
 function RegistrationRecords(_selectedItem) {
 	/*
@@ -134,39 +140,33 @@ function RegistrationRecords(_selectedItem) {
         }
  });
  
- 
-	// displayRefreshedRegistryRecords();
-
 	displayRefreshedRegistryRecords_ABC();
 }
 
 function displayRefreshedRegistryRecords_ABC() {
-	// var URL = "landrecords/";
-	// if (activeProject_R != "") {
-	// URL = "landrecords/" + activeProject_R;
-	// }
-
-	if (!landRecordsInitialized_R) {
-		landRecordsInitialized_R = true;
 		jQuery("#registryTab-div").empty();
 		jQuery.get("resources/templates/viewer/" + selectedItem_R + ".html",
 				function(template) {
-					jQuery("#registryTab-div").append(template);
-					jQuery('#registryRecordsFormdiv').css("visibility",
-							"visible");
-					jQuery("#registryRecordsTable").show();
+				
 
-					jQuery("#registryRecordsRowData1").empty();
-					jQuery("#community_id_R").empty();
+             	jQuery("#registryTab-div").append(template);
+				jQuery('#registryRecordsFormdiv').css("visibility","visible");
+				jQuery("#registryRecordsTable").show();
+
+					
+				jQuery.ajax({
+					url : URL,
+					async : false,
+					success : function(data) {
+						dataList_R = data;
+				jQuery("#registryRecordsRowData1").empty();
+				jQuery("#community_id_R").empty();
 				jQuery("#community_id_R").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
 				jQuery.each(communeList, function (i, CommuneObj) {
-                 jQuery("#community_id_R").append(jQuery("<option></option>").attr("value", CommuneObj.communeid).text(CommuneObj.commune));
-             });
+                jQuery("#community_id_R").append(jQuery("<option></option>").attr("value", CommuneObj.communeid).text(CommuneObj.commune));
+                });
 			 
-			 
-
-					if (dataList_R.length != 0
-							&& dataList_R.length != undefined) {
+			    	if (dataList_R.length != 0 && dataList_R.length != undefined) {
 						jQuery("#registryRecordsAttrTemplate1")
 								.tmpl(dataList_R).appendTo(
 										"#registryRecordsRowData1");
@@ -192,8 +192,14 @@ function displayRefreshedRegistryRecords_ABC() {
 										.text(claimType_R.name));
 					});
 
+					}
 				});
-	}
+				
+
+				
+
+				});
+	
 
 }
 
@@ -485,19 +491,21 @@ $(document).ready(
 		});
 
 function leaseAttribute(landid) {
-
+//	 isVisible = $('#buyersavebutton').is(':visible');
+	$(".signin_menu").hide();
 	var lease = document.getElementById("Tab_1");
 	var sale = document.getElementById("Tab_2");
 	var mortgage = document.getElementById("Tab_3");
+	var split = document.getElementById("Tab_4");
 	lease.style.display = "none"; // lease.style.display = "block";
 	sale.style.display = "none";
 	mortgage.style.display = "none";
-
-	var selectedprocess = $("#registration_process").val();
+    split.style.display = "none";
+	
+	clearBuyerDetails_sale();
 	
 	
-	
-	
+	$("#buyersavebutton").prop("disabled",false).hide();
 	selectedlandid = landid;
 	$("#landidhide").val(landid);
 	/*
@@ -543,6 +551,17 @@ function leaseAttribute(landid) {
 	});
 	
 	jQuery.ajax({
+		url : "registration/laMortgage/" + landid,
+		async : false,
+		success : function(data) {
+			laMortgage_R = data;
+			if (data.length > 0) {
+
+			}
+		}
+	});
+	
+	jQuery.ajax({
 		url : "registration/relationshiptypes/",
 		async : false,
 		success : function(data) {
@@ -573,7 +592,639 @@ function leaseAttribute(landid) {
 	});
 	
 	
-	jQuery.ajax({
+
+	
+	
+	// jAlert('This Land is not under Lease.');
+
+	var arry_Seller=[];
+	var arry_Buyer=[];
+	jQuery
+	.ajax({
+		url : "registration/partydetails/sale/" + landid,
+		async : false,
+		success : function(objdata) {
+			jQuery.each(objdata, function(i, obj) 
+					{
+						if(obj.persontype == 1)  // sler
+							{
+								arry_Seller.push(obj);
+							}
+						else if(obj.persontype == 11)  //buyer
+						{
+							arry_Buyer.push(obj);	
+						}		
+						
+					});
+			
+			if(arry_Seller != null  && arry_Seller.length ==1)
+			{
+				data = arry_Seller[0];
+				fillLeaseDetails(data);
+				fillMortgageDetails(data);
+				fillSurrenderLeaseDetails(landid);					
+
+				jQuery("#firstname_r_sale").val(data.firstname);
+				jQuery("#middlename_r_sale").val(data.middlename);
+				jQuery("#lastname_r_sale").val(data.lastname);
+				jQuery("#id_r").val(data.identityno);
+				jQuery("#contact_no_sale").val(data.contactno);
+				jQuery("#address_sale").val(data.address);
+				jQuery("#date_Of_birth_sale").val(data.dob);
+
+				jQuery("#sale_martial_status").empty();
+				jQuery("#sale_gender").empty();
+				jQuery("#sale_id_type").empty();
+
+				jQuery.each(maritalStatus_R, function(i, obj) {
+					jQuery("#sale_martial_status").append(
+							jQuery("<option></option>").attr("value",
+									obj.maritalstatusid).text(
+											obj.maritalstatusEn));
+				});
+
+				jQuery("#sale_martial_status").val(data.maritalstatusid);
+
+				jQuery.each(genderStatus_R, function(i, obj1) {
+					jQuery("#sale_gender").append(
+							jQuery("<option></option>").attr("value",
+									obj1.genderId).text(obj1.gender_en));
+				});
+
+				jQuery("#sale_gender").val(data.genderid);
+
+				jQuery.each(idtype_R, function(i, obj1) {
+					jQuery("#sale_id_type").append(
+							jQuery("<option></option>").attr("value",
+									obj1.identitytypeid).text(
+											obj1.identitytypeEn));
+				});
+				jQuery("#sale_id_type").val(data.identitytypeid);
+			}
+			
+			
+			
+			
+			if(arry_Seller != null && arry_Seller.length >1)
+			{
+			
+				data = arry_Seller[0];
+				fillLeaseDetails(data);
+				fillMortgageDetails(data);
+				fillSurrenderLeaseDetails(landid);					
+
+				jQuery("#firstname_r_sale").val(data.firstname);
+				jQuery("#middlename_r_sale").val(data.middlename);
+				jQuery("#lastname_r_sale").val(data.lastname);
+				jQuery("#id_r").val(data.identityno);
+				jQuery("#contact_no_sale").val(data.contactno);
+				jQuery("#address_sale").val(data.address);
+				jQuery("#date_Of_birth_sale").val(data.dob);
+
+				jQuery("#sale_martial_status").empty();
+				jQuery("#sale_gender").empty();
+				jQuery("#sale_id_type").empty();
+
+				jQuery.each(maritalStatus_R, function(i, obj) {
+					jQuery("#sale_martial_status").append(
+							jQuery("<option></option>").attr("value",
+									obj.maritalstatusid).text(
+											obj.maritalstatusEn));
+				});
+
+				jQuery("#sale_martial_status").val(data.maritalstatusid);
+
+				jQuery.each(genderStatus_R, function(i, obj1) {
+					jQuery("#sale_gender").append(
+							jQuery("<option></option>").attr("value",
+									obj1.genderId).text(obj1.gender_en));
+				});
+
+				jQuery("#sale_gender").val(data.genderid);
+
+				jQuery.each(idtype_R, function(i, obj1) {
+					jQuery("#sale_id_type").append(
+							jQuery("<option></option>").attr("value",
+									obj1.identitytypeid).text(
+											obj1.identitytypeEn));
+				});
+				jQuery("#sale_id_type").val(data.identitytypeid);
+				
+				if(arry_Seller[1] != null)
+				{
+					data1 = arry_Seller[1];
+					jQuery("#firstname_r_sale1second").val(data1.firstname);
+					jQuery("#middlename_r_sale1second").val(data1.middlename);
+					jQuery("#lastname_r_sale1second").val(data1.lastname);
+					jQuery("#id_r1second").val(data1.identityno);
+					jQuery("#contact_no_sale1second").val(data1.contactno);
+					jQuery("#address_sale1second").val(data1.address);
+					jQuery("#date_Of_birth_sale1second").val(data1.dob);
+
+					jQuery("#sale_martial_status1second").empty();
+					jQuery("#sale_gender1second").empty();
+					jQuery("#sale_id_type1second").empty();
+
+					jQuery.each(maritalStatus_R, function(i, obj) {
+						jQuery("#sale_martial_status1second").append(
+								jQuery("<option></option>").attr("value",
+										obj.maritalstatusid).text(
+												obj.maritalstatusEn));
+					});
+
+					jQuery("#sale_martial_status1second").val(data.maritalstatusid);
+
+					jQuery.each(genderStatus_R, function(i, obj1) {
+						jQuery("#sale_gender1second").append(
+								jQuery("<option></option>").attr("value",
+										obj1.genderId).text(obj1.gender_en));
+					});
+
+					jQuery("#sale_gender1second").val(data.genderid);
+
+					jQuery.each(idtype_R, function(i, obj1) {
+						jQuery("#sale_id_type1second").append(
+								jQuery("<option></option>").attr("value",
+										obj1.identitytypeid).text(
+												obj1.identitytypeEn));
+					});
+					jQuery("#sale_id_type1second").val(data.identitytypeid);
+				
+				}
+				
+				jQuery("#Owner_Elimanated").empty();
+				jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+				
+				jQuery.each(objdata, function(i, obj1) 
+				{
+					jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value",obj1.personid).text(obj1.firstname));
+				});
+				
+				$("#SecondOwner").css("display","block");
+			}
+			
+			if(arry_Seller != null && arry_Seller.length ==1) 
+			{
+				jQuery("#Owner_Elimanated").empty();
+				jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value", "").text("Please Select"));							
+				jQuery.each(arry_Seller, function(i, obj1) 
+				{
+					jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value",obj1.personid).text(obj1.firstname));
+				});
+				jQuery("#Owner_Elimanated").val(objdata[0].personid);
+			}
+			
+			// Buyer
+
+			jQuery("#sale_marital_buyer").empty();
+			jQuery("#sale_gender_buyer").empty();
+			jQuery("#sale_idtype_buyer").empty();
+
+			jQuery("#doc_Type_Sale").empty();
+
+			jQuery("#sale_marital_buyer").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_gender_buyer").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_idtype_buyer").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#doc_Type_Sale").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+
+			jQuery.each(maritalStatus_R, function(i, obj1) {
+				jQuery("#sale_marital_buyer").append(
+						jQuery("<option></option>").attr("value",
+								obj1.maritalstatusid).text(
+										obj1.maritalstatusEn));
+			});
+			jQuery.each(genderStatus_R, function(i, obj1) {
+				jQuery("#sale_gender_buyer").append(
+						jQuery("<option></option>").attr("value",
+								obj1.genderId).text(obj1.gender_en));
+			});
+			jQuery.each(idtype_R, function(i, obj1) {
+				jQuery("#sale_idtype_buyer").append(
+						jQuery("<option></option>").attr("value",
+								obj1.identitytypeid).text(
+										obj1.identitytypeEn));
+			});
+
+			jQuery.each(documenttype_R, function(i, obj) {
+				jQuery("#doc_Type_Sale").append(
+						jQuery("<option></option>").attr("value",
+								obj.code).text(obj.nameOtherLang));
+			});
+			
+			if(arry_Buyer != null && arry_Buyer.length >0) 
+			{
+				databuyer = arry_Buyer[0];
+				
+                jQuery("#firstname_r_sale1").val(databuyer.firstname);
+                jQuery("#middlename_r_sale1").val(databuyer.middlename);
+                jQuery("#lastname_r_sale1").val(databuyer.lastname);
+                jQuery("#id_r1").val(databuyer.identityno);
+                jQuery("#contact_no1").val(databuyer.contactno);
+                jQuery("#address_sale1").val(databuyer.address);
+                jQuery("#date_Of_birth_sale1").val(databuyer.dob);
+
+				jQuery("#sale_gender_buyer").val(databuyer.genderid);
+				jQuery("#sale_idtype_buyer").val(databuyer.identitytypeid);
+				jQuery("#sale_marital_buyer").val(databuyer.maritalstatusid);
+
+			}
+			
+			
+
+			// Land Details landtype_r
+			jQuery("#sale_land_type").empty();
+			jQuery("#sale_country").empty();
+			jQuery("#sale_region").empty();
+			jQuery("#province_r").empty();
+			jQuery("#sale_land_Share_type").empty();
+			jQuery("#sale_province").empty();
+
+			jQuery("#sale_country").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_region").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_province").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_land_type").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_land_Share_type").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+
+			jQuery.each(landtype_r,
+					function(i, obj1) {
+				jQuery("#sale_land_type").append(
+						jQuery("<option></option>").attr(
+								"value", obj1.landtypeid).text(
+										obj1.landtypeEn));
+			});
+			jQuery.each(allcountry, function(i, obj) {
+				jQuery("#sale_country").append(
+						jQuery("<option></option>").attr("value",
+								obj.hierarchyid).text(obj.nameEn));
+			});
+
+			jQuery.each(region_r, function(i, obj) {
+				jQuery("#sale_region").append(
+						jQuery("<option></option>").attr("value",
+								obj.hierarchyid).text(obj.nameEn));
+			});
+			jQuery.each(province_r, function(i, obj) {
+				jQuery("#sale_province").append(
+						jQuery("<option></option>").attr("value",
+								obj.hierarchyid).text(obj.nameEn));
+			});
+
+			jQuery.each(landsharetype_r, function(i, obj) {
+				jQuery("#sale_land_Share_type").append(
+						jQuery("<option></option>").attr("value",
+								obj.landsharetypeid).text(
+										obj.landsharetypeEn));
+			});
+
+			jQuery("#sale_land_type").val(
+					laspatialunitland_R[0].landtypeid);
+		if(laspatialunitland_R[0].firstname != ""){
+			jQuery("#proposedUse_lease").val(laspatialunitland_R[0].firstname)
+			jQuery("#sale_proposeduse").val(laspatialunitland_R[0].firstname)
+			jQuery("#mortgage_proposed_use").val(laspatialunitland_R[0].firstname)
+		}
+			jQuery("#sale_country").val(
+					laspatialunitland_R[0].hierarchyid1);
+			jQuery("#sale_region").val(
+					laspatialunitland_R[0].hierarchyid2);
+			jQuery("#sale_province").val(
+					laspatialunitland_R[0].hierarchyid3);
+
+			jQuery("#parcel_r").val("000000"+laspatialunitland_R[0].landid);
+			jQuery("#sale_land_Share_type").val(
+					laspatialunitland_R[0].landusetypeid);
+			jQuery("#sale_area").val(laspatialunitland_R[0].area);
+			jQuery("#sale_land_use").val(
+					laspatialunitland_R[0].landusetype_en);
+			
+			
+
+			jQuery("#neighbor_west_sale").val(
+					laspatialunitland_R[0].neighbor_west);
+			jQuery("#neighbor_north_sale").val(
+					laspatialunitland_R[0].neighbor_north);
+			jQuery("#neighbor_south_sale").val(
+					laspatialunitland_R[0].neighbor_south);
+			jQuery("#neighbor_east_sale").val(
+					laspatialunitland_R[0].neighbor_east);
+
+			
+			jQuery("#registration_process").empty();
+			jQuery("#registration_process").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));
+			jQuery.each(processdetails_R, function(i, obj) 
+			{
+				jQuery("#registration_process").append(jQuery("<option></option>").attr("value", obj.processid).text(obj.processname_en));
+				
+			});
+			
+
+		}
+	});
+
+	$(function() {
+
+		$("#Tab_1").hide();
+		$("#Tab_2").hide();
+		$("#Tab_3").hide();
+//		var isVisible = $('#buyersavebutton').is(':visible')height : 600,width : 1000, ;
+		attributeEditDialog = $("#lease-dialog-form").dialog({
+			autoOpen : false,
+			height : 700,
+			width : 1000,
+			resizable : true,
+			modal : true,
+			close: function () {
+				attributeEditDialog.dialog("destroy");
+	            $("input,select,textarea").removeClass('addBg');
+	        },
+
+			buttons : [ {
+				text : "Save & Next",
+				"id" : "comment_Next",
+				click : function()
+				{
+					 $("input,select,textarea").removeClass('addBg');
+					if(currentdiv == "Sale")
+					{
+						//var selectedtab = document.getElementsByClassName("aria-selected");
+						
+						if($('#Seller_Details').css('display') == 'block')
+						{								
+							$("#Seller_Details").hide();
+							$("#Land_Details_Sale").show();
+							$("#Buyer_Details").hide();
+							$("#Upload_Document_Sale").hide();
+							$("#selectedseller").removeClass("ui-tabs-active");
+							$("#selectedseller").removeClass("ui-state-active");	
+							$("#selectedland").addClass("ui-tabs-active");
+							$("#selectedland").addClass("ui-state-active");
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Land_Details_Sale').css('display') == 'block')
+						{								
+							$("#Buyer_Details").show();
+							$("#Seller_Details").hide();
+							$("#Land_Details_Sale").hide();
+							$("#Upload_Document_Sale").hide();
+
+							$("#selectedland").removeClass("ui-tabs-active");
+							$("#selectedland").removeClass("ui-state-active");	
+							$("#selectedbuyer").addClass("ui-tabs-active");
+							$("#selectedbuyer").addClass("ui-state-active");
+							
+							
+							
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Buyer_Details').css('display') == 'block')
+						{
+							savebuyerdetails();
+							$("#Seller_Details").hide();
+							$("#Buyer_Details").hide();
+							$("#Land_Details_Sale").hide();
+							$("#Upload_Document_Sale").show();
+							$("#selectedbuyer").removeClass("ui-tabs-active");
+							$("#selectedbuyer").removeClass("ui-state-active");	
+							$("#selecteddoc").addClass("ui-tabs-active");
+							$("#selecteddoc").addClass("ui-state-active");
+							$("#comment_Save").show();
+							$("#comment_Next").hide();
+						}	
+					}
+					else if (currentdiv == "Lease")
+					{
+						if($('#Owner_Details').css('display') == 'block')
+						{								
+							$("#Owner_Details").hide();
+							$("#Land_Details_lease").show();
+							$("#Applicant_Details").hide();
+							$("#Lease_Details").hide();
+							$("#Upload_Documents_Lease").hide();
+							$("#selectedowner").removeClass("ui-tabs-active");
+							$("#selectedowner").removeClass("ui-state-active");	
+							$("#selectedLanddetails").addClass("ui-tabs-active");
+							$("#selectedLanddetails").addClass("ui-state-active");
+							
+							
+							
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Land_Details_lease').css('display') == 'block')
+						{								
+							$("#Owner_Details").hide();
+							$("#Land_Details_lease").hide();
+							$("#Applicant_Details").show();
+							$("#Lease_Details").hide();
+							$("#Upload_Documents_Lease").hide();
+							$("#selectedLanddetails").removeClass("ui-tabs-active");
+							$("#selectedLanddetails").removeClass("ui-state-active");	
+							$("#selectedApplicant").addClass("ui-tabs-active");
+							$("#selectedApplicant").addClass("ui-state-active");
+
+							
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Applicant_Details').css('display') == 'block')
+						{
+							saveattributesLeasePersonData();
+							$("#Owner_Details").hide();
+							$("#Land_Details_lease").hide();
+							$("#Upload_Documents_Lease").hide();
+							$("#selectedApplicant").removeClass("ui-tabs-active");
+							$("#selectedApplicant").removeClass("ui-state-active");	
+							$("#selectedsleasedetails").addClass("ui-tabs-active");
+							$("#selectedsleasedetails").addClass("ui-state-active");
+							
+							
+							
+							
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+						}	
+						else if($('#Lease_Details').css('display') == 'block')
+						{
+							
+							if(processid == "5")
+							{
+								saveattributesSurrenderLease();
+							}
+						else
+							{
+							saveattributesLeaseDetails();
+							}
+							
+							$("#Owner_Details").hide();
+							$("#Land_Details_lease").hide();
+							$("#Applicant_Details").hide();
+							$("#Upload_Documents_Lease").hide();
+							$("#selectedsleasedetails").removeClass("ui-tabs-active");
+							$("#selectedsleasedetails").removeClass("ui-state-active");	
+							$("#selecteddocs").addClass("ui-tabs-active");
+							$("#selecteddocs").addClass("ui-state-active");
+							
+							
+							
+							
+							$("#comment_Save").show();
+							$("#comment_Next").hide();
+						}	
+					}
+					else if(currentdiv == "Mortgage")
+					{
+						
+						if($('#MortgageOwner_Details').css('display') == 'block')
+						{								
+							$("#MortgageOwner_Details").hide();
+							$("#Land_Details_Mortgage").show();
+							$("#Mortgage_Details").hide();
+							$("#Upload_Document_Mortgage").hide();
+							$("#selectedownerdetails").removeClass("ui-tabs-active");
+							$("#selectedownerdetails").removeClass("ui-state-active");	
+							$("#selectelandmortgage").addClass("ui-tabs-active");
+							$("#selectelandmortgage").addClass("ui-state-active");
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Land_Details_Mortgage').css('display') == 'block')
+						{								
+							$("#MortgageOwner_Details").hide();
+							$("#Land_Details_Mortgage").hide();
+							$("#Mortgage_Details").show();
+							$("#Upload_Document_Mortgage").hide();
+							$("#selectelandmortgage").removeClass("ui-tabs-active");
+							$("#selectelandmortgage").removeClass("ui-state-active");	
+							$("#selectemortgage").addClass("ui-tabs-active");
+							$("#selectemortgage").addClass("ui-state-active");
+							
+							
+							
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Mortgage_Details').css('display') == 'block')
+						{
+							
+							if(processid == "9")
+							{
+								saveattributesSurrenderMortagage();
+							}
+						else
+							{
+							saveMortgage();
+							}
+							
+							$("#MortgageOwner_Details").hide();
+							$("#Land_Details_Mortgage").hide();
+							$("#Mortgage_Details").hide();
+							$("#Upload_Document_Mortgage").show();
+							$("#selectemortgage").removeClass("ui-tabs-active");
+							$("#selectemortgage").removeClass("ui-state-active");	
+							$("#selectemortgagedocs").addClass("ui-tabs-active");
+							$("#selectemortgagedocs").addClass("ui-state-active");
+							$("#comment_Save").show();
+							$("#comment_Next").hide();
+						}	
+						
+					}else if(currentdiv == "split"){
+						$("#comment_Save").hide();
+					    $("#comment_Next").show();
+						attributeEditDialog.dialog("close");
+						showOnMap(selectedlandid, 0);
+					}					
+				}
+
+			} ,
+			{
+				text : "Save",
+				"id" : "comment_Save",
+				
+				click : function()
+				{	
+					
+//					$("#buyersavebutton").prop("disabled", false).hide();
+//					 $("input,select,textarea").removeClass('addBg');
+					if(currentdiv == "Sale")
+					{					
+						saveattributessale();
+					
+					}
+					else if (currentdiv == "Lease")
+					{
+						
+						saveattributesLease();
+					}
+					else
+					{
+						saveattributesMortagage()
+						
+					}					
+				}
+
+			},
+
+			{
+				text : "Cancel",
+				"id" : "comment_cancel",
+				click : function() {
+					 $("input,select,textarea").removeClass('addBg');
+					setInterval(function() {
+
+					}, 4000);
+
+					attributeEditDialog.dialog("close");
+
+				}
+
+			}
+
+
+			],
+			Cancel : function() {
+
+				attributeEditDialog.dialog("close");
+				 $("input,select,textarea").removeClass('addBg');
+
+			}
+		});
+		$("#comment_cancel").html('<span class="ui-button-text">Cancel</span>');
+		attributeEditDialog.dialog("open");
+		$("#comment_Save").hide();
+		$("#comment_Next").hide();
+
+	});
+
+
+	
+	
+	/*jQuery.ajax({
 		url : "registration/islandunderlease/" + landid,
 		async : false,
 		success : function(data) 
@@ -976,405 +1627,600 @@ function leaseAttribute(landid) {
 				
 			}
 			else
-			{
-				// jAlert('This Land is not under Lease.');
+			{}
+		}
+	});*/
 
-				jQuery
-				.ajax({
-					url : "registration/partydetails/sale/" + landid,
-					async : false,
-					success : function(objdata) {
-						data = objdata[0];
-						fillLeaseDetails(data);
-						fillMortgageDetails(data);
-						fillSurrenderLeaseDetails(landid);					
+	
 
-						jQuery("#firstname_r_sale").val(data.firstname);
-						jQuery("#middlename_r_sale").val(data.middlename);
-						jQuery("#lastname_r_sale").val(data.lastname);
-						jQuery("#id_r").val(data.identityno);
-						jQuery("#contact_no_sale").val(data.contactno);
-						jQuery("#address_sale").val(data.address);
-						jQuery("#date_Of_birth_sale").val(data.dob);
+}
 
-						jQuery("#sale_martial_status").empty();
-						jQuery("#sale_gender").empty();
-						jQuery("#sale_id_type").empty();
+function FillDataforRegistration(selectedlandid) {
+//	 isVisible = $('#buyersavebutton').is(':visible');
+	
+	if(laMortgage_R.length ==0){
+	jQuery("#mortgage_to").val("");
+	jQuery("#mortgage_from").val("");
+	}
 
-						jQuery.each(maritalStatus_R, function(i, obj) {
-							jQuery("#sale_martial_status").append(
-									jQuery("<option></option>").attr("value",
-											obj.maritalstatusid).text(
-													obj.maritalstatusEn));
-						});
+	var lease = document.getElementById("Tab_1");
+	var sale = document.getElementById("Tab_2");
+	var mortgage = document.getElementById("Tab_3");
+	lease.style.display = "none"; // lease.style.display = "block";
+	sale.style.display = "none";
+	mortgage.style.display = "none";
 
-						jQuery("#sale_martial_status").val(data.maritalstatusid);
+	var selectedprocess = $("#registration_process").val();
+	clearBuyerDetails_sale();
+	
+	
+	$("#buyersavebutton").prop("disabled",false).hide();
+	landid = selectedlandid;
+	$("#landidhide").val(landid);
+	/*
+	 * jQuery.ajax({ url: "registration/landsharetype111111/" , async: false,
+	 * success: function (data) { landsharetype=data; alert('1');
+	 * if(data.length>0){
+	 *  } } });
+	 */
 
-						jQuery.each(genderStatus_R, function(i, obj1) {
-							jQuery("#sale_gender").append(
-									jQuery("<option></option>").attr("value",
-											obj1.genderId).text(obj1.gender_en));
-						});
+	jQuery.ajax({
+		url : "registration/doctype/",
+		async : false,
+		success : function(data) {
+			documenttype_R = data;
+		}
+	});
 
-						jQuery("#sale_gender").val(data.genderid);
+	jQuery.ajax({
+		url : "registration/monthoflease/",
+		async : false,
+		success : function(data) {
+			monthoflease_R = data;
+		}
+	});
 
-						jQuery.each(idtype_R, function(i, obj1) {
-							jQuery("#sale_id_type").append(
-									jQuery("<option></option>").attr("value",
-											obj1.identitytypeid).text(
-													obj1.identitytypeEn));
-						});
-						jQuery("#sale_id_type").val(data.identitytypeid);
-						
-						
-						
-						if(objdata != null && objdata.length >1)
-						{
-							if(objdata[1] != null)
-							{
-								data1 = objdata[1];
-								jQuery("#firstname_r_sale1second").val(data1.firstname);
-								jQuery("#middlename_r_sale1second").val(data1.middlename);
-								jQuery("#lastname_r_sale1second").val(data1.lastname);
-								jQuery("#id_r1second").val(data1.identityno);
-								jQuery("#contact_no_sale1second").val(data1.contactno);
-								jQuery("#address_sale1second").val(data1.address);
-								jQuery("#date_Of_birth_sale1second").val(data1.dob);
+	jQuery.ajax({
+		url : "registration/financialagency/",
+		async : false,
+		success : function(data) {
+			financialagency_R = data;
+		}
+	});
 
-								jQuery("#sale_martial_status1second").empty();
-								jQuery("#sale_gender1second").empty();
-								jQuery("#sale_id_type1second").empty();
-
-								jQuery.each(maritalStatus_R, function(i, obj) {
-									jQuery("#sale_martial_status1second").append(
-											jQuery("<option></option>").attr("value",
-													obj.maritalstatusid).text(
-															obj.maritalstatusEn));
-								});
-
-								jQuery("#sale_martial_status1second").val(data.maritalstatusid);
-
-								jQuery.each(genderStatus_R, function(i, obj1) {
-									jQuery("#sale_gender1second").append(
-											jQuery("<option></option>").attr("value",
-													obj1.genderId).text(obj1.gender_en));
-								});
-
-								jQuery("#sale_gender1second").val(data.genderid);
-
-								jQuery.each(idtype_R, function(i, obj1) {
-									jQuery("#sale_id_type1second").append(
-											jQuery("<option></option>").attr("value",
-													obj1.identitytypeid).text(
-															obj1.identitytypeEn));
-								});
-								jQuery("#sale_id_type1second").val(data.identitytypeid);
-							
-							}
-							
-							jQuery("#Owner_Elimanated").empty();
-							jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
-							
-							jQuery.each(objdata, function(i, obj1) 
-							{
-								jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value",obj1.personid).text(obj1.firstname));
-							});
-							
-							$("#SecondOwner").css("display","block");
-						}
-					else if(objdata != null && objdata.length ==1) 
-						{
-							jQuery("#Owner_Elimanated").empty();
-							jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value", "").text("Please Select"));							
-							jQuery.each(objdata, function(i, obj1) 
-							{
-								jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value",obj1.personid).text(obj1.firstname));
-							});
-							jQuery("#Owner_Elimanated").val(objdata[0].personid);
-						}
-						
-						// Buyer
-
-						jQuery("#sale_marital_buyer").empty();
-						jQuery("#sale_gender_buyer").empty();
-						jQuery("#sale_idtype_buyer").empty();
-
-						jQuery("#doc_Type_Sale").empty();
-
-						jQuery("#sale_marital_buyer").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#sale_gender_buyer").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#sale_idtype_buyer").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#doc_Type_Sale").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-
-						jQuery.each(maritalStatus_R, function(i, obj1) {
-							jQuery("#sale_marital_buyer").append(
-									jQuery("<option></option>").attr("value",
-											obj1.maritalstatusid).text(
-													obj1.maritalstatusEn));
-						});
-						jQuery.each(genderStatus_R, function(i, obj1) {
-							jQuery("#sale_gender_buyer").append(
-									jQuery("<option></option>").attr("value",
-											obj1.genderId).text(obj1.gender_en));
-						});
-						jQuery.each(idtype_R, function(i, obj1) {
-							jQuery("#sale_idtype_buyer").append(
-									jQuery("<option></option>").attr("value",
-											obj1.identitytypeid).text(
-													obj1.identitytypeEn));
-						});
-
-						jQuery.each(documenttype_R, function(i, obj) {
-							jQuery("#doc_Type_Sale").append(
-									jQuery("<option></option>").attr("value",
-											obj.code).text(obj.nameOtherLang));
-						});
-
-						// Land Details landtype_r
-						jQuery("#sale_land_type").empty();
-						jQuery("#sale_country").empty();
-						jQuery("#sale_region").empty();
-						jQuery("#province_r").empty();
-						jQuery("#sale_land_Share_type").empty();
-						jQuery("#sale_province").empty();
-
-						jQuery("#sale_country").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#sale_region").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#sale_province").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#sale_land_type").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery("#sale_land_Share_type").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-
-						jQuery.each(landtype_r,
-								function(i, obj1) {
-							jQuery("#sale_land_type").append(
-									jQuery("<option></option>").attr(
-											"value", obj1.landtypeid).text(
-													obj1.landtypeEn));
-						});
-						jQuery.each(allcountry, function(i, obj) {
-							jQuery("#sale_country").append(
-									jQuery("<option></option>").attr("value",
-											obj.hierarchyid).text(obj.nameEn));
-						});
-
-						jQuery.each(region_r, function(i, obj) {
-							jQuery("#sale_region").append(
-									jQuery("<option></option>").attr("value",
-											obj.hierarchyid).text(obj.nameEn));
-						});
-						jQuery.each(province_r, function(i, obj) {
-							jQuery("#sale_province").append(
-									jQuery("<option></option>").attr("value",
-											obj.hierarchyid).text(obj.nameEn));
-						});
-
-						jQuery.each(landsharetype_r, function(i, obj) {
-							jQuery("#sale_land_Share_type").append(
-									jQuery("<option></option>").attr("value",
-											obj.landsharetypeid).text(
-													obj.landsharetypeEn));
-						});
-
-						jQuery("#sale_land_type").val(
-								laspatialunitland_R[0].landtypeid);
-						jQuery("#sale_country").val(
-								laspatialunitland_R[0].hierarchyid1);
-						jQuery("#sale_region").val(
-								laspatialunitland_R[0].hierarchyid2);
-						jQuery("#sale_province").val(
-								laspatialunitland_R[0].hierarchyid3);
-
-						jQuery("#parcel_r").val(laspatialunitland_R[0].landno);
-						jQuery("#sale_land_Share_type").val(
-								laspatialunitland_R[0].landusetypeid);
-						jQuery("#sale_area").val(laspatialunitland_R[0].area);
-						jQuery("#sale_land_use").val(
-								laspatialunitland_R[0].landusetype_en);
-
-						jQuery("#neighbor_west_sale").val(
-								laspatialunitland_R[0].neighbor_west);
-						jQuery("#neighbor_north_sale").val(
-								laspatialunitland_R[0].neighbor_north);
-						jQuery("#neighbor_south_sale").val(
-								laspatialunitland_R[0].neighbor_south);
-						jQuery("#neighbor_east_sale").val(
-								laspatialunitland_R[0].neighbor_east);
-
-						// processdetails_R
-
-						/*jQuery("#registration_process").empty();
-						jQuery("#registration_process").append(
-								jQuery("<option></option>").attr("value", 0).text(
-								"Please Select"));
-						jQuery.each(processdetails_R, function(i, obj) {
-							jQuery("#registration_process")
-							.append(
-									jQuery("<option></option>").attr(
-											"value", obj.processid).text(
-													obj.processname_en));
-						});*/
-						jQuery("#registration_process").empty();
-						jQuery("#registration_process").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));
-						jQuery.each(processdetails_R, function(i, obj) 
-						{
-							if(obj.processid != 5)
-								{
-									jQuery("#registration_process").append(jQuery("<option></option>").attr("value", obj.processid).text(obj.processname_en));
-								}
-							
-						});
-						
-
-					}
-				});
-
-				$(function() {
-
-					$("#Tab_1").hide();
-					$("#Tab_2").hide();
-					$("#Tab_3").hide();
-
-					attributeEditDialog = $("#lease-dialog-form").dialog({
-						autoOpen : false,
-						height : 600,
-						width : 1000,
-						resizable : true,
-						modal : true,
-
-						buttons : [ {
-							text : "Next",
-							"id" : "comment_Next",
-							click : function()
-							{
-								if(currentdiv == "Sale")
-								{
-									//var selectedtab = document.getElementsByClassName("aria-selected");
-									if($('#Seller_Details').css('display') == 'block')
-									{								
-										$("#Seller_Details").hide();
-										$("#Land_Details_Sale").show();
-										$("#Buyer_Details").hide();
-										$("#Upload_Document_Sale").hide();
-										$("#selectedseller").removeClass("ui-tabs-active");
-										$("#selectedseller").removeClass("ui-state-active");	
-										$("#selectedland").addClass("ui-tabs-active");
-										$("#selectedland").addClass("ui-state-active");
-										$("#comment_Save").hide();
-										$("#comment_Next").show();
-
-									}
-									else if($('#Land_Details_Sale').css('display') == 'block')
-									{								
-										$("#Buyer_Details").show();
-										$("#Seller_Details").hide();
-										$("#Land_Details_Sale").hide();
-										$("#Upload_Document_Sale").hide();
-
-										$("#selectedland").removeClass("ui-tabs-active");
-										$("#selectedland").removeClass("ui-state-active");	
-										$("#selectedbuyer").addClass("ui-tabs-active");
-										$("#selectedbuyer").addClass("ui-state-active");
-										$("#comment_Save").hide();
-										$("#comment_Next").show();
-
-									}
-									else if($('#Buyer_Details').css('display') == 'block')
-									{
-										$("#Seller_Details").hide();
-										$("#Buyer_Details").hide();
-										$("#Land_Details_Sale").hide();
-										$("#Upload_Document_Sale").show();
-										$("#selectedbuyer").removeClass("ui-tabs-active");
-										$("#selectedbuyer").removeClass("ui-state-active");	
-										$("#selecteddoc").addClass("ui-tabs-active");
-										$("#selecteddoc").addClass("ui-state-active");
-										$("#comment_Save").show();
-										$("#comment_Next").hide();
-									}	
-								}
-								else if (currentdiv == "Lease")
-								{
-									alert("Under Lease");
-								}
-								else
-								{
-									alert("Under Mortage");
-								}					
-							}
-
-						} ,
-						{
-							text : "Save",
-							"id" : "comment_Save",
-							click : function()
-							{
-								if(currentdiv == "Sale")
-								{							
-									saveattributessale();
-								}
-								else if (currentdiv == "Lease")
-								{
-									saveattributesLease();
-								}
-								else
-								{
-									saveattributesMortgage();
-								}					
-							}
-
-						},
-
-						{
-							text : "Cancel",
-							"id" : "comment_cancel",
-							click : function() {
-								setInterval(function() {
-
-								}, 4000);
-
-								attributeEditDialog.dialog("close");
-
-							}
-
-						}
-
-
-						],
-						Cancel : function() {
-
-							attributeEditDialog.dialog("close");
-
-						}
-					});
-					$("#comment_cancel").html('<span class="ui-button-text">Cancel</span>');
-					attributeEditDialog.dialog("open");
-					$("#comment_Save").hide();
-					$("#comment_Next").hide();
-
-				});
+	jQuery.ajax({
+		url : "registration/laspatialunitland/" + landid,
+		async : false,
+		success : function(data) {
+			laspatialunitland_R = data;
+			if (data.length > 0) {
 
 			}
 		}
 	});
+	
+	jQuery.ajax({
+		url : "registration/relationshiptypes/",
+		async : false,
+		success : function(data) {
+			relationtypes_R = data;
+			
+		}
+	});
 
+	// -------------------------------------------------------------------------------------------------------------------
+	// onchange of Country pass this select id for country_r_id --
+	jQuery.ajax({
+		url : "registration/allregion/" + country_r_id,
+		async : false,
+		success : function(data) {
+			region_r = data;
+			if (data.length > 0) {
+				// data.xyz.name_en for getting the data
+			}
+		}
+	});
+
+	jQuery.ajax({
+		url : "registration/allprovince/" + region_r_id,
+		async : false,
+		success : function(data) {
+			province_r = data;
+		}
+	});
+	
+	
+
+	// jAlert('This Land is not under Lease.');
+
+	var arry_Seller=[];
+	var arry_Buyer=[];
+	jQuery
+	.ajax({
+		//url : "registration/partydetails/sale/" + landid,
+		
+		url : "registration/partydetails/filldetails/" + landid + "/" + selectedprocess,
+		async : false,
+		success : function(objdata) {
+			jQuery.each(objdata, function(i, obj) 
+					{
+						if(obj.persontype == 1)  // sler
+							{
+								arry_Seller.push(obj);
+							}
+						else if(obj.persontype == 11)  //buyer
+						{
+							arry_Buyer.push(obj);	
+						}		
+						
+					});
+			
+			if(arry_Seller != null  && arry_Seller.length ==1)
+			{
+				data = arry_Seller[0];
+				fillLeaseDetails(data);
+				fillMortgageDetails(data);
+				fillSurrenderLeaseDetails(landid);					
+
+				jQuery("#firstname_r_sale").val(data.firstname);
+				jQuery("#middlename_r_sale").val(data.middlename);
+				jQuery("#lastname_r_sale").val(data.lastname);
+				jQuery("#id_r").val(data.identityno);
+				jQuery("#contact_no_sale").val(data.contactno);
+				jQuery("#address_sale").val(data.address);
+				jQuery("#date_Of_birth_sale").val(data.dob);
+
+				jQuery("#sale_martial_status").empty();
+				jQuery("#sale_gender").empty();
+				jQuery("#sale_id_type").empty();
+
+				jQuery.each(maritalStatus_R, function(i, obj) {
+					jQuery("#sale_martial_status").append(
+							jQuery("<option></option>").attr("value",
+									obj.maritalstatusid).text(
+											obj.maritalstatusEn));
+				});
+
+				jQuery("#sale_martial_status").val(data.maritalstatusid);
+
+				jQuery.each(genderStatus_R, function(i, obj1) {
+					jQuery("#sale_gender").append(
+							jQuery("<option></option>").attr("value",
+									obj1.genderId).text(obj1.gender_en));
+				});
+
+				jQuery("#sale_gender").val(data.genderid);
+
+				jQuery.each(idtype_R, function(i, obj1) {
+					jQuery("#sale_id_type").append(
+							jQuery("<option></option>").attr("value",
+									obj1.identitytypeid).text(
+											obj1.identitytypeEn));
+				});
+				jQuery("#sale_id_type").val(data.identitytypeid);
+			}
+			
+			
+			
+			
+			if(arry_Seller != null && arry_Seller.length >1)
+			{
+			
+				data = arry_Seller[0];
+				fillLeaseDetails(data);
+				fillMortgageDetails(data);
+				fillSurrenderLeaseDetails(landid);					
+
+				jQuery("#firstname_r_sale").val(data.firstname);
+				jQuery("#middlename_r_sale").val(data.middlename);
+				jQuery("#lastname_r_sale").val(data.lastname);
+				jQuery("#id_r").val(data.identityno);
+				jQuery("#contact_no_sale").val(data.contactno);
+				jQuery("#address_sale").val(data.address);
+				jQuery("#date_Of_birth_sale").val(data.dob);
+
+				jQuery("#sale_martial_status").empty();
+				jQuery("#sale_gender").empty();
+				jQuery("#sale_id_type").empty();
+
+				jQuery.each(maritalStatus_R, function(i, obj) {
+					jQuery("#sale_martial_status").append(
+							jQuery("<option></option>").attr("value",
+									obj.maritalstatusid).text(
+											obj.maritalstatusEn));
+				});
+
+				jQuery("#sale_martial_status").val(data.maritalstatusid);
+
+				jQuery.each(genderStatus_R, function(i, obj1) {
+					jQuery("#sale_gender").append(
+							jQuery("<option></option>").attr("value",
+									obj1.genderId).text(obj1.gender_en));
+				});
+
+				jQuery("#sale_gender").val(data.genderid);
+
+				jQuery.each(idtype_R, function(i, obj1) {
+					jQuery("#sale_id_type").append(
+							jQuery("<option></option>").attr("value",
+									obj1.identitytypeid).text(
+											obj1.identitytypeEn));
+				});
+				jQuery("#sale_id_type").val(data.identitytypeid);
+				
+				if(arry_Seller[1] != null)
+				{
+					data1 = arry_Seller[1];
+					jQuery("#firstname_r_sale1second").val(data1.firstname);
+					jQuery("#middlename_r_sale1second").val(data1.middlename);
+					jQuery("#lastname_r_sale1second").val(data1.lastname);
+					jQuery("#id_r1second").val(data1.identityno);
+					jQuery("#contact_no_sale1second").val(data1.contactno);
+					jQuery("#address_sale1second").val(data1.address);
+					jQuery("#date_Of_birth_sale1second").val(data1.dob);
+
+					jQuery("#sale_martial_status1second").empty();
+					jQuery("#sale_gender1second").empty();
+					jQuery("#sale_id_type1second").empty();
+
+					jQuery.each(maritalStatus_R, function(i, obj) {
+						jQuery("#sale_martial_status1second").append(
+								jQuery("<option></option>").attr("value",
+										obj.maritalstatusid).text(
+												obj.maritalstatusEn));
+					});
+
+					jQuery("#sale_martial_status1second").val(data.maritalstatusid);
+
+					jQuery.each(genderStatus_R, function(i, obj1) {
+						jQuery("#sale_gender1second").append(
+								jQuery("<option></option>").attr("value",
+										obj1.genderId).text(obj1.gender_en));
+					});
+
+					jQuery("#sale_gender1second").val(data.genderid);
+
+					jQuery.each(idtype_R, function(i, obj1) {
+						jQuery("#sale_id_type1second").append(
+								jQuery("<option></option>").attr("value",
+										obj1.identitytypeid).text(
+												obj1.identitytypeEn));
+					});
+					jQuery("#sale_id_type1second").val(data.identitytypeid);
+				
+				}
+				
+				jQuery("#Owner_Elimanated").empty();
+				jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+				
+				jQuery.each(objdata, function(i, obj1) 
+				{
+					jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value",obj1.personid).text(obj1.firstname));
+				});
+				
+				$("#SecondOwner").css("display","block");
+			}
+			
+			if(arry_Seller != null && arry_Seller.length ==1) 
+			{
+				jQuery("#Owner_Elimanated").empty();
+				jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value", "").text("Please Select"));							
+				jQuery.each(arry_Seller, function(i, obj1) 
+				{
+					jQuery("#Owner_Elimanated").append(jQuery("<option></option>").attr("value",obj1.personid).text(obj1.firstname));
+				});
+				jQuery("#Owner_Elimanated").val(objdata[0].personid);
+			}
+			
+			// Buyer
+
+			jQuery("#sale_marital_buyer").empty();
+			jQuery("#sale_gender_buyer").empty();
+			jQuery("#sale_idtype_buyer").empty();
+
+			jQuery("#doc_Type_Sale").empty();
+
+			jQuery("#sale_marital_buyer").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_gender_buyer").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_idtype_buyer").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#doc_Type_Sale").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+
+			jQuery.each(maritalStatus_R, function(i, obj1) {
+				jQuery("#sale_marital_buyer").append(
+						jQuery("<option></option>").attr("value",
+								obj1.maritalstatusid).text(
+										obj1.maritalstatusEn));
+			});
+			jQuery.each(genderStatus_R, function(i, obj1) {
+				jQuery("#sale_gender_buyer").append(
+						jQuery("<option></option>").attr("value",
+								obj1.genderId).text(obj1.gender_en));
+			});
+			jQuery.each(idtype_R, function(i, obj1) {
+				jQuery("#sale_idtype_buyer").append(
+						jQuery("<option></option>").attr("value",
+								obj1.identitytypeid).text(
+										obj1.identitytypeEn));
+			});
+
+			jQuery.each(documenttype_R, function(i, obj) {
+				jQuery("#doc_Type_Sale").append(
+						jQuery("<option></option>").attr("value",
+								obj.code).text(obj.nameOtherLang));
+			});
+			
+			if(arry_Buyer != null && arry_Buyer.length >0) 
+			{
+				databuyer = arry_Buyer[0];
+				
+               jQuery("#firstname_r_sale1").val(databuyer.firstname);
+               jQuery("#middlename_r_sale1").val(databuyer.middlename);
+               jQuery("#lastname_r_sale1").val(databuyer.lastname);
+               jQuery("#id_r1").val(databuyer.identityno);
+               jQuery("#contact_no1").val(databuyer.contactno);
+               jQuery("#address_sale1").val(databuyer.address);
+               jQuery("#date_Of_birth_sale1").val(databuyer.dob);
+
+				jQuery("#sale_gender_buyer").val(databuyer.genderid);
+				jQuery("#sale_idtype_buyer").val(databuyer.identitytypeid);
+				jQuery("#sale_marital_buyer").val(databuyer.maritalstatusid);
+
+			}
+			
+			
+
+			// Land Details landtype_r
+			jQuery("#sale_land_type").empty();
+			jQuery("#sale_country").empty();
+			jQuery("#sale_region").empty();
+			jQuery("#province_r").empty();
+			jQuery("#sale_land_Share_type").empty();
+			jQuery("#sale_province").empty();
+
+			jQuery("#sale_country").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_region").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_province").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_land_type").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#sale_land_Share_type").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+
+			jQuery.each(landtype_r,
+					function(i, obj1) {
+				jQuery("#sale_land_type").append(
+						jQuery("<option></option>").attr(
+								"value", obj1.landtypeid).text(
+										obj1.landtypeEn));
+			});
+			jQuery.each(allcountry, function(i, obj) {
+				jQuery("#sale_country").append(
+						jQuery("<option></option>").attr("value",
+								obj.hierarchyid).text(obj.nameEn));
+			});
+
+			jQuery.each(region_r, function(i, obj) {
+				jQuery("#sale_region").append(
+						jQuery("<option></option>").attr("value",
+								obj.hierarchyid).text(obj.nameEn));
+			});
+			jQuery.each(province_r, function(i, obj) {
+				jQuery("#sale_province").append(
+						jQuery("<option></option>").attr("value",
+								obj.hierarchyid).text(obj.nameEn));
+			});
+
+			jQuery.each(landsharetype_r, function(i, obj) {
+				jQuery("#sale_land_Share_type").append(
+						jQuery("<option></option>").attr("value",
+								obj.landsharetypeid).text(
+										obj.landsharetypeEn));
+			});
+
+			jQuery("#sale_land_type").val(
+					laspatialunitland_R[0].landtypeid);
+			jQuery("#sale_country").val(
+					laspatialunitland_R[0].hierarchyid1);
+			jQuery("#sale_region").val(
+					laspatialunitland_R[0].hierarchyid2);
+			jQuery("#sale_province").val(
+					laspatialunitland_R[0].hierarchyid3);
+
+			jQuery("#parcel_r").val("000000"+laspatialunitland_R[0].landid);
+			jQuery("#sale_land_Share_type").val(
+					laspatialunitland_R[0].landusetypeid);
+			jQuery("#sale_area").val(laspatialunitland_R[0].area);
+			jQuery("#sale_land_use").val(
+					laspatialunitland_R[0].landusetype_en);
+
+			jQuery("#neighbor_west_sale").val(
+					laspatialunitland_R[0].neighbor_west);
+			jQuery("#neighbor_north_sale").val(
+					laspatialunitland_R[0].neighbor_north);
+			jQuery("#neighbor_south_sale").val(
+					laspatialunitland_R[0].neighbor_south);
+			jQuery("#neighbor_east_sale").val(
+					laspatialunitland_R[0].neighbor_east);
+
+			// processdetails_R
+
+			/*jQuery("#registration_process").empty();
+			jQuery("#registration_process").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery.each(processdetails_R, function(i, obj) {
+				jQuery("#registration_process")
+				.append(
+						jQuery("<option></option>").attr(
+								"value", obj.processid).text(
+										obj.processname_en));
+			});*/
+			/*jQuery("#registration_process").empty();
+			jQuery("#registration_process").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));
+			jQuery.each(processdetails_R, function(i, obj) 
+			{
+				if(obj.processid != 5)
+					{
+						jQuery("#registration_process").append(jQuery("<option></option>").attr("value", obj.processid).text(obj.processname_en));
+					}
+				
+			});*/
+			
+
+		}
+	});
+
+	/*$(function() {
+
+		$("#Tab_1").hide();
+		$("#Tab_2").hide();
+		$("#Tab_3").hide();
+//		var isVisible = $('#buyersavebutton').is(':visible');
+		attributeEditDialog = $("#lease-dialog-form").dialog({
+			autoOpen : false,
+			height : 600,
+			width : 1000,
+			resizable : true,
+			modal : true,
+			close: function () {
+				attributeEditDialog.dialog("destroy");
+	            $("input,select,textarea").removeClass('addBg');
+	        },
+
+			buttons : [ {
+				text : "Next",
+				"id" : "comment_Next",
+				click : function()
+				{
+					 $("input,select,textarea").removeClass('addBg');
+					if(currentdiv == "Sale")
+					{
+						//var selectedtab = document.getElementsByClassName("aria-selected");
+						if($('#Seller_Details').css('display') == 'block')
+						{								
+							$("#Seller_Details").hide();
+							$("#Land_Details_Sale").show();
+							$("#Buyer_Details").hide();
+							$("#Upload_Document_Sale").hide();
+							$("#selectedseller").removeClass("ui-tabs-active");
+							$("#selectedseller").removeClass("ui-state-active");	
+							$("#selectedland").addClass("ui-tabs-active");
+							$("#selectedland").addClass("ui-state-active");
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Land_Details_Sale').css('display') == 'block')
+						{								
+							$("#Buyer_Details").show();
+							$("#Seller_Details").hide();
+							$("#Land_Details_Sale").hide();
+							$("#Upload_Document_Sale").hide();
+
+							$("#selectedland").removeClass("ui-tabs-active");
+							$("#selectedland").removeClass("ui-state-active");	
+							$("#selectedbuyer").addClass("ui-tabs-active");
+							$("#selectedbuyer").addClass("ui-state-active");
+							$("#comment_Save").hide();
+							$("#comment_Next").show();
+
+						}
+						else if($('#Buyer_Details').css('display') == 'block')
+						{
+							$("#Seller_Details").hide();
+							$("#Buyer_Details").hide();
+							$("#Land_Details_Sale").hide();
+							$("#Upload_Document_Sale").show();
+							$("#selectedbuyer").removeClass("ui-tabs-active");
+							$("#selectedbuyer").removeClass("ui-state-active");	
+							$("#selecteddoc").addClass("ui-tabs-active");
+							$("#selecteddoc").addClass("ui-state-active");
+							$("#comment_Save").show();
+							$("#comment_Next").hide();
+						}	
+					}
+					else if (currentdiv == "Lease")
+					{
+						alert("Under Lease");
+					}
+					else
+					{
+						alert("Under Mortage");
+					}					
+				}
+
+			} ,
+			{
+				text : "Save",
+				"id" : "comment_Save",
+				
+				click : function()
+				{	
+					
+//					$("#buyersavebutton").prop("disabled", false).hide();
+//					 $("input,select,textarea").removeClass('addBg');
+					if(currentdiv == "Sale")
+					{					
+						saveattributessale();
+					
+					}
+					else if (currentdiv == "Lease")
+					{
+						saveattributesLease();
+					}
+					else
+					{
+						saveattributesMortgage();
+					}					
+				}
+
+			},
+
+			{
+				text : "Cancel",
+				"id" : "comment_cancel",
+				click : function() {
+					 $("input,select,textarea").removeClass('addBg');
+					setInterval(function() {
+
+					}, 4000);
+
+					attributeEditDialog.dialog("close");
+
+				}
+
+			}
+
+
+			],
+			Cancel : function() {
+
+				attributeEditDialog.dialog("close");
+				 $("input,select,textarea").removeClass('addBg');
+
+			}
+		});
+		$("#comment_cancel").html('<span class="ui-button-text">Cancel</span>');
+		attributeEditDialog.dialog("open");
+		$("#comment_Save").hide();
+		$("#comment_Next").hide();
+
+	});*/
 	
 
 }
@@ -1397,9 +2243,21 @@ function fillSurrenderLeaseDetails(landid)
 			jQuery("#date_Of_birth_applicant").val(data.dob);
 			jQuery("#lease_Amount").val(data.hierarchyid1);
 			jQuery("#no_Of_month_Lease").val(data.hierarchyid2);
+			jQuery("#Start_date_Lease").val(data.leaseStartdate);
+			jQuery("#End_date_Lease").val(data.leaseEnddate);
 			jQuery("#martial_sts_applicant").empty();
 			jQuery("#gender_type_applicant").empty();
 			jQuery("#id_type_applicant").empty();
+			
+			jQuery("#id_type_applicant").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#gender_type_applicant").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
+			jQuery("#martial_sts_applicant").append(
+					jQuery("<option></option>").attr("value", 0).text(
+					"Please Select"));
 
 			jQuery.each(maritalStatus_R, function(i, obj) {
 				jQuery("#martial_sts_applicant").append(
@@ -1443,6 +2301,88 @@ function ShowSavebutton()
 	$("#comment_Next").hide();
 }
 
+function SellerTabClick()
+{
+	$("#comment_Save").hide();
+	$("#comment_Next").show();
+	
+	$("#Seller_Details").show();
+	$("#Upload_Document_Sale").hide();
+	$("#Land_Details_Sale").hide();
+	$("#Buyer_Details").hide();
+	$("#selectedseller").addClass("ui-tabs-active");
+	$("#selectedseller").addClass("ui-state-active");	
+	$("#selectedland").removeClass("ui-tabs-active");
+	$("#selectedland").removeClass("ui-state-active");
+	$("#selecteddoc").removeClass("ui-tabs-active");
+	$("#selecteddoc").removeClass("ui-state-active");
+	$("#selectedbuyer").removeClass("ui-tabs-active");
+	$("#selectedbuyer").removeClass("ui-state-active");
+	
+	
+}
+
+
+function LandTabClick()
+{
+	$("#comment_Save").hide();
+	$("#comment_Next").show();
+	$("#Seller_Details").hide();
+	$("#Upload_Document_Sale").hide();
+	$("#Land_Details_Sale").show();
+	$("#Buyer_Details").hide();	
+	$("#selectedseller").removeClass("ui-tabs-active");
+	$("#selectedseller").removeClass("ui-state-active");	
+	$("#selectedland").addClass("ui-tabs-active");
+	$("#selectedland").addClass("ui-state-active");
+	$("#selecteddoc").removeClass("ui-tabs-active");
+	$("#selecteddoc").removeClass("ui-state-active");
+	$("#selectedbuyer").removeClass("ui-tabs-active");
+	$("#selectedbuyer").removeClass("ui-state-active");
+	
+}
+
+function BuyerTabClick()
+{
+	$("#comment_Save").hide();
+	$("#comment_Next").show();
+	
+	$("#Seller_Details").hide();
+	$("#Upload_Document_Sale").hide();
+	$("#Land_Details_Sale").hide();
+	$("#Buyer_Details").show();	
+	$("#selectedseller").removeClass("ui-tabs-active");
+	$("#selectedseller").removeClass("ui-state-active");	
+	$("#selectedland").removeClass("ui-tabs-active");
+	$("#selectedland").removeClass("ui-state-active");
+	$("#selecteddoc").removeClass("ui-tabs-active");
+	$("#selecteddoc").removeClass("ui-state-active");
+	$("#selectedbuyer").addClass("ui-tabs-active");
+	$("#selectedbuyer").addClass("ui-state-active");
+	
+}
+
+function SaleDocTabClick()
+{
+	$("#comment_Save").show();
+	$("#comment_Next").hide();
+	
+	$("#Seller_Details").hide();
+	$("#Upload_Document_Sale").show();
+	$("#Land_Details_Sale").hide();
+	$("#Buyer_Details").hide();	
+	$("#selectedseller").removeClass("ui-tabs-active");
+	$("#selectedseller").removeClass("ui-state-active");	
+	$("#selectedland").removeClass("ui-tabs-active");
+	$("#selectedland").removeClass("ui-state-active");
+	$("#selecteddoc").addClass("ui-tabs-active");
+	$("#selecteddoc").addClass("ui-state-active");
+	$("#selectedbuyer").removeClass("ui-tabs-active");
+	$("#selectedbuyer").removeClass("ui-state-active");
+	
+	
+}
+
 function fillMortgageDetails(data) {
 
 	jQuery("#firstname_r_mortgage").val(data.firstname);
@@ -1452,6 +2392,19 @@ function fillMortgageDetails(data) {
 	jQuery("#contact_no_mortgage").val(data.contactno);
 	jQuery("#address_mortgage").val(data.address);
 	jQuery("#date_Of_birth_mortgage").val(data.dob);
+	if(laMortgage_R.mortgagefrom !=null || laMortgage_R.mortgagefrom !=""){
+	jQuery("#mortgage_from").val(formatDate_R(laMortgage_R.mortgagefrom));
+	}else{
+		jQuery("#mortgage_from").val("");
+	}
+	if(laMortgage_R.mortgageto !=null || laMortgage_R.mortgageto !=""){
+	jQuery("#mortgage_to").val(formatDate_R(laMortgage_R.mortgageto));
+	}
+	else{
+		jQuery("#mortgage_to").val("");
+	}
+	jQuery("#amount_mortgage").val(laMortgage_R.mortgageamount);
+	
 
 	jQuery("#Martial_sts_mortgage").empty();
 	jQuery("#gender_mortgage").empty();
@@ -1481,13 +2434,21 @@ function fillMortgageDetails(data) {
 				jQuery("<option></option>").attr("value",
 						obj1.financialagencyid).text(obj1.financialagency_en));
 	});
-
+	
+	if(laMortgage_R != "" && laMortgage_R != null)
+		{
+			if(laMortgage_R.laExtFinancialagency != null && laMortgage_R.laExtFinancialagency != "")
+			{
+				jQuery("#mortgage_Financial_Agencies").val(laMortgage_R.laExtFinancialagency.financialagencyid);
+			}
+		}
+	
 	jQuery.each(maritalStatus_R, function(i, obj) {
 		jQuery("#Martial_sts_mortgage").append(
 				jQuery("<option></option>").attr("value", obj.maritalstatusid)
 						.text(obj.maritalstatusEn));
 	});
-
+	
 	jQuery("#Martial_sts_mortgage").val(data.maritalstatusid);
 
 	jQuery.each(genderStatus_R, function(i, obj1) {
@@ -1555,7 +2516,7 @@ function fillMortgageDetails(data) {
 	jQuery("#Region_mortgage").val(laspatialunitland_R[0].hierarchyid2);
 	jQuery("#Provience_mortgage").val(laspatialunitland_R[0].hierarchyid3);
 	jQuery("#Land_type_mortgage").val(laspatialunitland_R[0].landtypeid);
-	jQuery("#parcel_r_mortgage").val(laspatialunitland_R[0].landno);
+	jQuery("#parcel_r_mortgage").val("000000"+laspatialunitland_R[0].landid);
 	jQuery("#Ownership_type_mortgage")
 			.val(laspatialunitland_R[0].landusetypeid);
 	jQuery("#mortgage_area").val(laspatialunitland_R[0].area);
@@ -1629,6 +2590,7 @@ function fillLeaseDetails(data) {
 						.text(obj1.identitytypeEn));
 	});
 	jQuery("#lease_id_type").val(data.identitytypeid);
+	jQuery("#identity_no").val(data.identitytype)
 
 	jQuery("#id_type_applicant").empty();
 	jQuery("#gender_type_applicant").empty();
@@ -1708,10 +2670,9 @@ function fillLeaseDetails(data) {
 	jQuery("#lease_Region").val(laspatialunitland_R[0].hierarchyid2);
 	jQuery("#lease_Provience").val(laspatialunitland_R[0].hierarchyid3);
 	jQuery("#lease_Land_Type").val(laspatialunitland_R[0].landtypeid);
-	jQuery("#parcel_r_lease").val(laspatialunitland_R[0].landno);
+	jQuery("#parcel_r_lease").val("000000"+laspatialunitland_R[0].landid);
 	jQuery("#lease_Ownership_Type").val(laspatialunitland_R[0].landusetypeid);
 	jQuery("#lease_area").val(laspatialunitland_R[0].area);
-	//jQuery("#lease_land_use").val(laspatialunitland_R[0].landusetype_en);
 
 	jQuery("#neighbor_west_lease").val(laspatialunitland_R[0].neighbor_west);
 	jQuery("#neighbor_north_lease").val(laspatialunitland_R[0].neighbor_north);
@@ -1719,7 +2680,106 @@ function fillLeaseDetails(data) {
 	jQuery("#neighbor_east_lease").val(laspatialunitland_R[0].neighbor_east);
 
 }
+
+function savebuyerdetails()
+{	
+	isVisible=true;
+	var selectedprocess = $("#registration_process").val();
+	if(selectedprocess== 7)
+	{
+		var eliminatedowner = $("#Owner_Elimanated").val();
+		if(eliminatedowner == null || eliminatedowner == "")
+			{
+				jAlert("Please select Eliminated owner ", "Alert");
+				return false;
+			}
+		
+	}
+	
+	if(selectedprocess== 6)
+	{
+		var ownerrelation = $("#sale_relation_buyer").val();
+		if(ownerrelation == 0)
+			{
+				jAlert("Please select relationship with owner ", "Alert");
+				return false;
+			}
+		
+	}
+	
+	
+	/*$("#editprocessAttributeformID").validate({
+		rules : {
+			doc_name_sale : "required",
+			doc_date_sale : "required",
+			doc_desc_sale : "required",
+			doc_Type_Sale : "required",
+			remrks_sale : "required"
+		},
+		messages : {
+			doc_name_sale : "Please Enter Document name",
+			doc_date_sale : "Please Enter Document uploded date",
+			doc_desc_sale : "Please Document description",
+			doc_Type_Sale : "Please Select Document type",
+			remrks_sale : "Please enter remrks"
+		}
+	});*/
+
+	if ($("#editprocessAttributeformID").valid()) {
+
+	
+
+			if ((firstname_r_sale1.value.length == 0)
+				|| (lastname_r_sale1.value.length == 0)
+				|| (id_r1.value.length == 0) || (contact_no1.value.length == 0)
+				|| (date_Of_birth_sale1.value.length == 0)
+				|| (address_sale1.value.length == 0)) { // ||
+														// (middlename_r_sale1.value.length
+														// == 0)
+			jAlert("Please Fill Mandatory Details", "Alert");
+			return false;
+		} else if ((sale_idtype_buyer.value == "0")
+				|| (sale_gender_buyer.value == "0")) {
+			jAlert("Please Fill Mandatory Details", "Alert");
+			return false;
+		}
+
+	
+		
+
+
+		jQuery
+				.ajax({
+					type : "POST",
+					url : "registration/savebuyerdata",
+					data : jQuery("#editprocessAttributeformID")
+							.serialize(),
+					success : function(result) {
+						if (result!=null && result != undefined) {
+							 $("input,select,textarea").removeClass('addBg');
+							 $("#buyersavebutton").prop("disabled",false).hide();
+							jAlert('Buyer saved successfully.');
+						} else {
+							jAlert('Request not completed');
+						}
+					},
+					error : function(XMLHttpRequest,
+							textStatus, errorThrown) {
+						jAlert('Request not completed');
+					}
+				});
+	
+		
+
+	} else {
+		jAlert("Please Fill Mandatory Details", "Alert");
+	}
+
+}
+
 function saveattributessale() {
+//	 var isVisible = $('#buyersavebutton').is(':visible');
+	 if(isVisible){
 	
 	var selectedprocess = $("#registration_process").val();
 	if(selectedprocess== 7)
@@ -1735,56 +2795,15 @@ function saveattributessale() {
 	
 	$("#editprocessAttributeformID").validate({
 		rules : {
-			doc_name_sale : "required",
-			doc_date_sale : "required",
-			doc_desc_sale : "required",
-			doc_Type_Sale : "required",
 			remrks_sale : "required"
 		},
 		messages : {
-			doc_name_sale : "Please Enter Document name",
-			doc_date_sale : "Please Enter Document uploded date",
-			doc_desc_sale : "Please Document description",
-			doc_Type_Sale : "Please Select Document type",
 			remrks_sale : "Please enter remrks"
 		}
 	});
 
 	if ($("#editprocessAttributeformID").valid()) {
 
-		if ((doc_name_sale.value.length == 0)
-				|| (doc_date_sale.value.length == 0)
-				|| (doc_desc_sale.value.length == 0)
-				|| (remrks_sale.value.length == 0)) {
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}
-
-		if ($("#fileUploadNewDowcumentss").val() === '') {
-			jAlert("Select File for upload.");
-			return;
-		}
-
-		var val1 = 0;
-		$.each($('#fileUploadNewDowcumentss')[0].files, function(ind2, obj2) {
-
-			$.each($('#fileUploadNewDowcumentss')[0].files[val1], function(
-					ind3, obj3) {
-				if (ind3 == "type") {
-
-					if (obj3 == "image/png" || obj3 == "image/jpeg"
-							|| obj3 == "image/gif") {
-						return false;
-
-					} else {
-						jAlert("Select File should be of type png,jpeg,gif.");
-						return false;
-					}
-				}
-
-			});
-			val1 = val1 + 1;
-		});
 		if ((firstname_r_sale1.value.length == 0)
 				|| (lastname_r_sale1.value.length == 0)
 				|| (id_r1.value.length == 0) || (contact_no1.value.length == 0)
@@ -1800,15 +2819,6 @@ function saveattributessale() {
 			return false;
 		}
 
-		if ((doc_Type_Sale.value == "0")) {
-			jAlert("Please Select Document type", "Alert");
-			return false;
-		}
-
-		/*
-		 * var flagsale = validateSale(); if(!flagsale){ jAlert("Please Fill
-		 * Mandatory Details", "Alert"); return false; }
-		 */
 		jConfirm(
 				'If he/she wants to commit data to land record would be nice',
 				'Save Confirmation',
@@ -1818,70 +2828,16 @@ function saveattributessale() {
 						jQuery
 								.ajax({
 									type : "POST",
-									url : "registration/saveprocessdata",
+									url : "registration/savefinalsaledata",
 									data : jQuery("#editprocessAttributeformID")
 											.serialize(),
 									success : function(result) {
 										if (result!=null && result != undefined) {
-
-											var formData = new FormData();
-											var file = [];
-											// var file =
-											// $('#fileUploadNewDowcumentss')[0].files[0];
-											// var file =
-											// $('#fileUploadNewDowcumentss')[0].files;
-											$
-													.each(
-															$('#fileUploadNewDowcumentss')[0].files,
-															function(ind3, obj3) {
-																formData
-																		.append(
-																				"newFile"
-																						+ ind3,
-																				obj3);
-															});
-
-											formData.append("doc_name_sale", $(
-													"#doc_name_sale").val());
-											formData.append("doc_desc_sale", $(
-													"#doc_desc_sale").val());
-											formData.append("doc_date_sale", $(
-													"#doc_date_sale").val());
-											formData.append("doc_Type_Sale", $(
-													"#doc_Type_Sale").val());
-											formData.append("selectedlandid",
-													selectedlandid);
-											
-											formData.append("transactionid",
-													result);
-											
-											jQuery
-													.ajax({
-														type : "POST",
-														url : "registration/savedocument",
-														mimeType : "multipart/form-data",
-														contentType : false,
-														cache : false,
-														processData : false,
-														data : formData,
-														success : function(data) {
-															jAlert('Attributes were successfully saved');
-
-															// $("#lease-dialog-form").hide();
-															attributeEditDialog
-																	.dialog("close");
-														},
-														error : function(
-																XMLHttpRequest,
-																textStatus,
-																errorThrown) {
-															jAlert('Failed to save document');
-														}
-													});
-
-											// jAlert('Attributes were
-											// successfully saved');
-											// editAttrDialog.dialog("destroy");
+											landRecordsInitialized_R=false;
+											displayRefreshedRegistryRecords_ABC();
+											//RegistrationRecords("registrationRecords");
+											 jAlert('Attributes were successfully saved');
+											 	attributeEditDialog.dialog("close");
 										} else {
 											jAlert('Request not completed');
 										}
@@ -1897,13 +2853,17 @@ function saveattributessale() {
 	} else {
 		jAlert("Please Fill Mandatory Details", "Alert");
 	}
+	 }
+	 else{
+		 jAlert("Save The Buyer Details First")
+	 }
 }
 function saveattributesLease()
 {
 	var selectedprocess = $("#registration_process").val();
 	if(selectedprocess == 5)
 		{
-			saveattributesSurrenderLease();
+			approveSurrenderLease();
 		}
 	else
 		{
@@ -1912,86 +2872,57 @@ function saveattributesLease()
 
 }
 
-function saveattributesLeaseData() {
-	$("#editprocessAttributeformID").validate({
-		rules : {
-			doc_name_Lease : {
-				required : true
-			},
-			doc_date_Lease : "required",
-			doc_desc_Lease : "required",
-			remrks_lease : {
-				required : true
-			},
-			// no_Of_years_Lease: "required",
-			doc_Type_Lease : "required",
-			no_Of_month_Lease : "required",
-			lease_Amount : "required"
-		},
-		messages : {
-			doc_name_Lease : "Please Enter Document name",
-			doc_date_Lease : "Please Enter Document uploded date",
-			doc_desc_Lease : "Please Document description",
-			remrks_lease : "Please enter remrks",
-			// no_Of_years_Lease: "Enter No of Years",
-			doc_Type_Lease : "Please Select Document Type",
-			no_Of_month_Lease : "Enter No of Month",
-			lease_Amount : "Please enter Lease  Amount"
+
+function saveattributesMortagage()
+{
+	var selectedprocess = $("#registration_process").val();
+	if(selectedprocess == 9)
+		{
+			approveSurrenderMortagage();
 		}
-	});
+	else
+		{
+		saveattributesMortgage();
+		}
+
+}
+
+function saveattributesLeaseData() {
+//	$("#editprocessAttributeformID").validate({
+//		rules : {
+//			doc_name_Lease : {
+//				required : true
+//			},
+//			doc_date_Lease : "required",
+//			doc_desc_Lease : "required",
+//			remrks_lease : {
+//				required : true
+//			},
+//			// no_Of_years_Lease: "required",
+//			doc_Type_Lease : "required",
+//			no_Of_month_Lease : "required",
+//			lease_Amount : "required"
+//		},
+//		messages : {
+//			doc_name_Lease : "Please Enter Document name",
+//			doc_date_Lease : "Please Enter Document uploded date",
+//			doc_desc_Lease : "Please Document description",
+//			remrks_lease : "Please enter remrks",
+//			doc_Type_Lease : "Please Select Document Type",
+//			no_Of_month_Lease : "Enter No of Month",
+//			lease_Amount : "Please enter Lease  Amount"
+//		}
+//	});
 
 	if ($("#editprocessAttributeformID").valid()) {
-
-		if ((doc_name_Lease.value.length == 0)
-				|| (doc_date_Lease.value.length == 0)
-				|| (doc_desc_Lease.value.length == 0)
-				|| (remrks_lease.value.length == 0)) {
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}
-
-		if ($("#fileUploadNewDowcumentsLease").val() === '') {
-			jAlert("Select File for upload.");
-			return;
-		}
-
-		var val1 = 0;
-		$
-				.each(
-						$('#fileUploadNewDowcumentsLease')[0].files,
-						function(ind2, obj2) {
-
-							$
-									.each(
-											$('#fileUploadNewDowcumentsLease')[0].files[val1],
-											function(ind3, obj3) {
-												if (ind3 == "type") {
-
-													if (obj3 == "image/png"
-															|| obj3 == "image/jpeg"
-															|| obj3 == "image/gif") {
-														// flag =true;
-														return false;
-
-													} else {
-														// flag =true;
-														jAlert("Select File should be of type png,jpeg,gif.");
-														return false;
-													}
-												}
-
-											});
-							val1 = val1 + 1;
-						});
 
 		if ((firstname_r_applicant.value.length == 0)
 				|| (lastname_r_applicant.value.length == 0)
 				|| (id_r_applicant.value.length == 0)
 				|| (contact_no_applicant.value.length == 0)
 				|| (date_Of_birth_applicant.value.length == 0)
-				|| (address_lease_applicant.value.length == 0)) { // ||
-																	// (middlename_r_applicant.value.length
-																	// == 0)
+				|| (address_lease_applicant.value.length == 0)) {
+					
 			jAlert("Please Fill Mandatory Details", "Alert");
 			return false;
 		} else if ((id_type_applicant.value == "0")
@@ -2005,13 +2936,6 @@ function saveattributesLeaseData() {
 				|| (lease_Amount.value.length == 0)) {// (no_Of_years_Lease.value.length
 														// == 0) ||
 			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}/*
-			 * else if((no_Of_month_Lease.value == "0")){ jAlert("Please Fill
-			 * Mandatory Details", "Alert"); return false; }
-			 */
-		if ((doc_Type_Lease.value == "0")) {
-			jAlert("Please Select Document Type", "Alert");
 			return false;
 		}
 
@@ -2027,65 +2951,11 @@ function saveattributesLeaseData() {
 									data : jQuery("#editprocessAttributeformID")
 											.serialize(),
 									success : function(result) {
-										if (result!=null && result != undefined) {
-
-											// var file =
-											// $('#fileUploadNewDowcumentsLease')[0].files[0];
-											var formData = new FormData();
-
-											$
-													.each(
-															$('#fileUploadNewDowcumentsLease')[0].files,
-															function(ind3, obj3) {
-																formData
-																		.append(
-																				"newFile"
-																						+ ind3,
-																				obj3);
-															});
-
-											// formData.append("newFileLease",
-											// file);
-											formData.append("doc_name_Lease",
-													$("#doc_name_Lease").val());
-											formData.append("doc_desc_Lease",
-													$("#doc_desc_Lease").val());
-											formData.append("doc_date_Lease",
-													$("#doc_date_Lease").val());
-											formData.append("doc_Type_Lease",
-													$("#doc_Type_Lease").val());
-											formData.append("selectedlandid",
-													selectedlandid);
-											formData.append("transactionid",
-													result);
-
-											jQuery
-													.ajax({
-														type : "POST",
-														url : "registration/savedocumentlease",
-														mimeType : "multipart/form-data",
-														contentType : false,
-														cache : false,
-														processData : false,
-														data : formData,
-														success : function(data) {
-															jAlert('Attributes were successfully saved');
-
-															// $("#lease-dialog-form").hide();
-															attributeEditDialog
-																	.dialog("close");
-														},
-														error : function(
-																XMLHttpRequest,
-																textStatus,
-																errorThrown) {
-															jAlert('Failed to save document');
-														}
-													});
-
-										} else {
-											jAlert('Request not completed');
-										}
+										jAlert('Attributes were successfully saved');
+										landRecordsInitialized_R=false;
+										displayRefreshedRegistryRecords_ABC();
+											attributeEditDialog.dialog("close");
+										//	RegistrationRecords("registrationRecords");
 									},
 									error : function(XMLHttpRequest,
 											textStatus, errorThrown) {
@@ -2101,108 +2971,60 @@ function saveattributesLeaseData() {
 }
 
 function saveattributesSurrenderLease() {
-	/*$("#editprocessAttributeformID").validate({
-		rules : {
-			doc_name_Lease : {
-				required : true
-			},
-			doc_date_Lease : "required",
-			doc_desc_Lease : "required",
-			remrks_lease : {
-				required : true
-			},
-			// no_Of_years_Lease: "required",
-			doc_Type_Lease : "required",
-			no_Of_month_Lease : "required",
-			lease_Amount : "required"
-		},
-		messages : {
-			doc_name_Lease : "Please Enter Document name",
-			doc_date_Lease : "Please Enter Document uploded date",
-			doc_desc_Lease : "Please Document description",
-			remrks_lease : "Please enter remrks",
-			// no_Of_years_Lease: "Enter No of Years",
-			doc_Type_Lease : "Please Select Document Type",
-			no_Of_month_Lease : "Enter No of Month",
-			lease_Amount : "Please enter Lease  Amount"
-		}
-	});*/
-
+	
 	if ($("#editprocessAttributeformID").valid()) {
 
-		if ((doc_name_Lease.value.length == 0)
-				|| (doc_date_Lease.value.length == 0)
-				|| (doc_desc_Lease.value.length == 0)
-				|| (remrks_lease.value.length == 0)) {
+		/*if ((remrks_lease.value.length == 0)) {
 			jAlert("Please Fill Mandatory Details", "Alert");
+			return false;
+		}*/
+
+	
+		/*jConfirm(
+				'If he/she wants to commit data to surrender lease would be nice',
+				'Save Confirmation',
+				function(response) {
+					if (response) {}
+				});*/
+		
+
+		jQuery
+				.ajax({
+					type : "POST",
+					url : "registration/savesurrenderleasedata",
+					data : jQuery("#editprocessAttributeformID")
+							.serialize(),
+					success : function(result) {
+						if (result!=null && result != undefined) {
+							$("#Lease_Details").hide();
+							$("#Upload_Documents_Lease").show();
+
+						} else {
+							jAlert('Request not completed');
+						}
+					},
+					error : function(XMLHttpRequest,
+							textStatus, errorThrown) {
+						jAlert('Request not completed');
+					}
+				});
+	
+
+	} else {
+		jAlert("Please Fill Mandatory Details", "Alert");
+	}
+}
+
+function approveSurrenderLease() {
+	
+	if ($("#editprocessAttributeformID").valid()) {
+
+		if ($("#surrender_reason").val()=="") {
+			jAlert("Please Fill Reason For Surrender", "Alert");
 			return false;
 		}
 
-		if ($("#fileUploadNewDowcumentsLease").val() === '') {
-			jAlert("Select File for upload.");
-			return;
-		}
-
-		var val1 = 0;
-		$
-				.each(
-						$('#fileUploadNewDowcumentsLease')[0].files,
-						function(ind2, obj2) {
-
-							$
-									.each(
-											$('#fileUploadNewDowcumentsLease')[0].files[val1],
-											function(ind3, obj3) {
-												if (ind3 == "type") {
-
-													if (obj3 == "image/png"
-															|| obj3 == "image/jpeg"
-															|| obj3 == "image/gif") {
-														// flag =true;
-														return false;
-
-													} else {
-														// flag =true;
-														jAlert("Select File should be of type png,jpeg,gif.");
-														return false;
-													}
-												}
-
-											});
-							val1 = val1 + 1;
-						});
-
-		/*if ((firstname_r_applicant.value.length == 0)
-				|| (lastname_r_applicant.value.length == 0)
-				|| (id_r_applicant.value.length == 0)
-				|| (contact_no_applicant.value.length == 0)
-				|| (date_Of_birth_applicant.value.length == 0)
-				|| (address_lease_applicant.value.length == 0)) { // ||
-																	// (middlename_r_applicant.value.length
-																	// == 0)
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		} else if ((id_type_applicant.value == "0")
-				|| (gender_type_applicant.value == "0")
-				|| (martial_sts_applicant.value == "0")) {
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}
-
-		if ((no_Of_month_Lease.value.length == 0)
-				|| (lease_Amount.value.length == 0)) {// (no_Of_years_Lease.value.length
-														// == 0) ||
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}*//*
-			 * else if((no_Of_month_Lease.value == "0")){ jAlert("Please Fill
-			 * Mandatory Details", "Alert"); return false; }
-			 */
-		if ((doc_Type_Lease.value == "0")) {
-			jAlert("Please Select Document Type", "Alert");
-			return false;
-		}
-
+	
 		jConfirm(
 				'If he/she wants to commit data to surrender lease would be nice',
 				'Save Confirmation',
@@ -2211,66 +3033,15 @@ function saveattributesSurrenderLease() {
 						jQuery
 								.ajax({
 									type : "POST",
-									//url : "registration/saveleasedata",
-									url : "registration/savesurrenderleasedata",
+									url : "registration/approvesurrenderleasedata",
 									data : jQuery("#editprocessAttributeformID")
 											.serialize(),
 									success : function(result) {
 										if (result!=null && result != undefined) {
-
-											// var file =
-											// $('#fileUploadNewDowcumentsLease')[0].files[0];
-											var formData = new FormData();
-
-											$
-													.each(
-															$('#fileUploadNewDowcumentsLease')[0].files,
-															function(ind3, obj3) {
-																formData
-																		.append(
-																				"newFile"
-																						+ ind3,
-																				obj3);
-															});
-
-											// formData.append("newFileLease",
-											// file);
-											formData.append("doc_name_Lease",
-													$("#doc_name_Lease").val());
-											formData.append("doc_desc_Lease",
-													$("#doc_desc_Lease").val());
-											formData.append("doc_date_Lease",
-													$("#doc_date_Lease").val());
-											formData.append("doc_Type_Lease",
-													$("#doc_Type_Lease").val());
-											formData.append("selectedlandid",
-													selectedlandid);
-											formData.append("transactionid",
-													result);
-
-											jQuery
-													.ajax({
-														type : "POST",
-														url : "registration/savedocumentsurrenderlease",
-														mimeType : "multipart/form-data",
-														contentType : false,
-														cache : false,
-														processData : false,
-														data : formData,
-														success : function(data) {
-															jAlert('Attributes were successfully saved');
-
-															// $("#lease-dialog-form").hide();
-															attributeEditDialog
-																	.dialog("close");
-														},
-														error : function(
-																XMLHttpRequest,
-																textStatus,
-																errorThrown) {
-															jAlert('Failed to save document');
-														}
-													});
+											landRecordsInitialized_R=false;
+											displayRefreshedRegistryRecords_ABC();
+                                               attributeEditDialog.dialog("close");
+                                             //  RegistrationRecords("registrationRecords");
 
 										} else {
 											jAlert('Request not completed');
@@ -2290,54 +3061,19 @@ function saveattributesSurrenderLease() {
 }
 
 
+
 function saveattributesMortgage() {
 
-	/*
-	 * $("#editprocessAttributeformID").validate({ rules: { doc_name_mortgage:
-	 * {required: true}, doc_date_mortgage: "required", doc_desc_mortgage:
-	 * "required", remrks_mortgage: {required: true} }, messages: {
-	 * doc_name_mortgage: "Please Enter Document name", doc_date_mortgage:
-	 * "Please Enter Document uploded date", doc_desc_mortgage: "Please Document
-	 * description", remrks_mortgage: "Please enter remrks"
-	 *  } });
-	 */
 
-	$("#editprocessAttributeformID").validate({
+/*	$("#editprocessAttributeformID").validate({
 		rules : {
-			/*
-			 * mortgage_from: "required", mortgage_to: "required",
-			 * amount_mortgage: "required",
-			 */
-			// mortgage_Financial_Agencies: {required: true},
-			doc_name_mortgage : {
-				required : true
-			},
-			doc_date_mortgage : {
-				required : true
-			},
-			doc_desc_mortgage : {
-				required : true
-			},
-			NewfilesMortgage : {
-				required : true
-			},
 			remrks_mortgage : "required"
 		},
 		messages : {
-			/*
-			 * mortgage_from: "Please Enter mortgage from", mortgage_to: "Please
-			 * enter mortgage to", amount_mortgage: "Please enter amount of
-			 * mortgage",
-			 */
-			// mortgage_Financial_Agencies: "Enter First name",
-			doc_name_mortgage : "Please Enter Document name",
-			doc_date_mortgage : "Please Enter Document date",
-			doc_desc_mortgage : "Please Enter Document Descreption",
-			NewfilesMortgage : "Please select Files",
 			remrks_mortgage : "Please enter remarks"
 		}
 	});
-
+*/
 	if ($("#editprocessAttributeformID").valid()) {
 		if ((mortgage_from.value.length == 0)
 				|| (mortgage_to.value.length == 0)
@@ -2379,75 +3115,9 @@ function saveattributesMortgage() {
 				});
 			}, 500);
 		}
-	}/*
-		 * else{
-		 * 
-		 * setTimeout( function() { $("#Tab_3" ).tabs( { active: 2 } ); //do
-		 * something special }, 500);
-		 * 
-		 * return false;
-		 *  }
-		 */
+	}
 
 	if ($("#editprocessAttributeformID").valid()) {
-
-		if ((doc_name_mortgage.value.length == 0)
-				|| (doc_date_mortgage.value.length == 0)
-				|| (doc_desc_mortgage.value.length == 0)
-				|| (remrks_mortgage.value.length == 0)) {
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}
-		if ($("#fileUploadNewDowcumentsMortgage").val() === '') {
-			jAlert("Select file for upload.");
-			return;
-		}
-		var val1 = 0;
-		$
-				.each(
-						$('#fileUploadNewDowcumentsMortgage')[0].files,
-						function(ind2, obj2) {
-
-							$
-									.each(
-											$('#fileUploadNewDowcumentsMortgage')[0].files[val1],
-											function(ind3, obj3) {
-												if (ind3 == "type") {
-
-													if (obj3 == "image/png"
-															|| obj3 == "image/jpeg"
-															|| obj3 == "image/gif") {
-														// flag =true;
-														return false;
-
-													} else {
-														// flag =true;
-														jAlert("Select File should be of type png,jpeg,gif.");
-														return false;
-													}
-												}
-
-											});
-							val1 = val1 + 1;
-						});
-
-		if ((mortgage_from.value.length == 0)
-				|| (mortgage_to.value.length == 0)
-				|| (amount_mortgage.value.length == 0)) {
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		} else if ((mortgage_Financial_Agencies.value == "0")) {
-			jAlert("Please Fill Mandatory Details", "Alert");
-			return false;
-		}
-		/*
-		 * var flagmortgage = validateMortgage(); if(!flagmortgage){
-		 * jAlert("Please Fill Mandatory Details", "Alert"); return false; }
-		 */
-		if ((doc_Type_Mortgage.value == "0")) {
-			jAlert("Please Select Document Type", "Alert");
-			return false;
-		}
 
 		jConfirm(
 				'If he/she wants to commit data to land record would be nice',
@@ -2457,71 +3127,16 @@ function saveattributesMortgage() {
 						jQuery
 								.ajax({
 									type : "POST",
-									url : "registration/savemortgagedata",
+									url : "registration/updateMortgageData",
 									data : jQuery("#editprocessAttributeformID")
 											.serialize(),
 									success : function(result) {
 										if (result!=null && result != undefined) {
-											// var file =
-											// $('#fileUploadNewDowcumentsMortgage')[0].files[0];
-											var formData = new FormData();
-											$
-													.each(
-															$('#fileUploadNewDowcumentsMortgage')[0].files,
-															function(ind3, obj3) {
-																formData
-																		.append(
-																				"newFile"
-																						+ ind3,
-																				obj3);
-															});
-
-											// formData.append("newFileMortgage",
-											// file);
-											formData.append(
-													"doc_name_mortgage",
-													$("#doc_name_mortgage")
-															.val());
-											formData.append(
-													"doc_desc_mortgage",
-													$("#doc_desc_mortgage")
-															.val());
-											formData.append(
-													"doc_date_mortgage",
-													$("#doc_date_mortgage")
-															.val());
-											formData.append(
-													"doc_Type_Mortgage",
-													$("#doc_Type_Mortgage")
-															.val());
-											formData.append("selectedlandid",
-													selectedlandid);
+											landRecordsInitialized_R=false;
+											displayRefreshedRegistryRecords_ABC();
+											//RegistrationRecords("registrationRecords");
+											attributeEditDialog.dialog("close");
 											
-											formData.append("transactionid",
-													result);
-
-											jQuery
-													.ajax({
-														type : "POST",
-														url : "registration/savedocumentmortgage",
-														mimeType : "multipart/form-data",
-														contentType : false,
-														cache : false,
-														processData : false,
-														data : formData,
-														success : function(data) {
-															jAlert('Attributes were successfully saved');
-															// $("#lease-dialog-form").hide();
-															attributeEditDialog
-																	.dialog("close");
-														},
-														error : function(
-																XMLHttpRequest,
-																textStatus,
-																errorThrown) {
-															jAlert('Failed to save document');
-														}
-													});
 										} else {
 											jAlert('Request not completed');
 										}
@@ -2562,130 +3177,210 @@ function getRegionOnChangeCountry(id) {
 }
 
 function getprocessvalue(id) {
-
+	
+	FillDataforRegistration(selectedlandid);
 	var lease = document.getElementById("Tab_1");
 	var sale = document.getElementById("Tab_2");
 	var mortgage = document.getElementById("Tab_3");
+	var split = document.getElementById("Tab_4");
 	lease.style.isplay = "none"; // lease.style.display = "block";
 	sale.style.display = "none";
 	mortgage.style.display = "none";
 	$("#RelationWithOwner").css("display","none");
 	$("#comment_Next").show();
+	$("#comment_Save").hide();
+	
+	
 	if (id == 1) // Lease
 	{
-
+		$("#doc_name_Lease").val('');
+		$("#doc_date_Lease").val('');
+		$("#doc_desc_Lease").val('');
+		$("#tabs_registry").tabs({ active: 0 });
+		$("#Owner_Details").show();
+		$("#Land_Details_lease").hide();
+		$("#Applicant_Details").hide();
+		$("#Lease_Details").hide();
+		$("#Upload_Documents_Lease").hide();
+		$("#selectedowner").addClass("ui-tabs-active");
+		$("#selectedowner").addClass("ui-state-active");	
+		$("#selectedLanddetails").removeClass("ui-tabs-active");
+		$("#selectedLanddetails").removeClass("ui-state-active");
+		$("#selectedApplicant").removeClass("ui-tabs-active");
+		$("#selectedApplicant").removeClass("ui-state-active");	
+		$("#selectedsleasedetails").removeClass("ui-tabs-active");
+		$("#selectedsleasedetails").removeClass("ui-state-active");
+		$("#selecteddocs").removeClass("ui-tabs-active");
+		$("#selecteddocs").removeClass("ui-state-active");
+		$('.trhideclass1').hide();
+		$("#surrender_reason").val('');
+		jQuery("#lease_land_use").val(
+				laspatialunitland_R[0].landusetype_en);
+		processid=id;
+		isVisible =true;
 		lease.style.display = "block";
 		sale.style.display = "none";
 		mortgage.style.display = "none";
+		split.style.display = "none";
 		clearBuyerDetails_sale();
-		clear_Lease();
+//		clear_Lease();
 		currentdiv = "Lease";
+		$("#salesDocRowData").empty();
+		$("#LeaseDocRowData").empty();
+		fetchDocument(selectedlandid,1,id);
 		
-		jQuery("#doc_Type_Lease").empty();
-		jQuery("#doc_Type_Lease").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		jQuery.each(documenttype_R, function(i, obj) 
-		{
-			if(obj.processid==1)
-			{
-				jQuery("#doc_Type_Lease").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
-			}
-		});
+	
 	} 
 	else if (id == 5) // "Surrender of Lease"
 	{
-
+		$("#doc_name_Lease").val('');
+		$("#doc_date_Lease").val('');
+		$("#doc_desc_Lease").val('');
+	
+		$("#tabs_registry").tabs({ active: 0 });
+		$("#Owner_Details").show();
+		$("#Land_Details_lease").hide();
+		$("#Applicant_Details").hide();
+		$("#Lease_Details").hide();
+		$("#Upload_Documents_Lease").hide();
+		$("#selectedowner").addClass("ui-tabs-active");
+		$("#selectedowner").addClass("ui-state-active");	
+		$("#selectedLanddetails").removeClass("ui-tabs-active");
+		$("#selectedLanddetails").removeClass("ui-state-active");
+		$("#selectedApplicant").removeClass("ui-tabs-active");
+		$("#selectedApplicant").removeClass("ui-state-active");	
+		$("#selectedsleasedetails").removeClass("ui-tabs-active");
+		$("#selectedsleasedetails").removeClass("ui-state-active");
+		$("#selecteddocs").removeClass("ui-tabs-active");
+		$("#selecteddocs").removeClass("ui-state-active");
+		$('.trhideclass1').show();
+		$("#surrender_reason").val('');
+		jQuery("#lease_land_use").val(
+				laspatialunitland_R[0].landusetype_en);
+		processid=id;
+		$("#buyersavebutton").prop("disabled",false).hide();
 		lease.style.display = "block";
 		sale.style.display = "none";
 		mortgage.style.display = "none";
+		split.style.display = "none";
 		clearBuyerDetails_sale();
-		// clear_Lease();
 		currentdiv = "Lease";
+		$("#salesDocRowData").empty();
+		$("#LeaseDocRowData").empty();
+		fetchDocument(selectedlandid,1,id);
 		
-		jQuery("#doc_Type_Lease").empty();
-		jQuery("#doc_Type_Lease").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		jQuery.each(documenttype_R, function(i, obj) 
-		{
-			if(obj.processid==5)
-			{
-				jQuery("#doc_Type_Lease").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
-			}
-		});
+		
 	}		
 	else if (id == 2) // "Sale"
 	{
+		
+		$("#tabs_registry1").tabs({ active: 0 });
+		$("#Seller_Details").show();
+		$("#Land_Details_Sale").hide();
+		$("#Buyer_Details").hide();
+		$("#Upload_Document_Sale").hide();
+		$("#selectedseller").addClass("ui-tabs-active");
+		$("#selectedseller").addClass("ui-state-active");	
+		$("#selectedland").removeClass("ui-tabs-active");
+		$("#selectedland").removeClass("ui-state-active");
+		$("#selectedbuyer").removeClass("ui-tabs-active");
+		$("#selectedbuyer").removeClass("ui-state-active");
+		$("#selecteddoc").removeClass("ui-tabs-active");
+		$("#selecteddoc").removeClass("ui-state-active");
+		
+		processid=id;
+		persontypeid=11;
+		$("#buyersavebutton").prop("disabled",false).hide();
 		lease.style.display = "none";
 		sale.style.display = "block";
 		mortgage.style.display = "none";
-		clearBuyerDetails_sale();
-		clear_Lease();
+		split.style.display = "none";
+		$("#salesDocRowData").empty();
 		currentdiv = "Sale";
+		$("#salesDocRowData").empty();
+		fetchDocument(selectedlandid,11,id);
+		$("#EliminatedOwner").css("display","none");
 		
 		$("#selectedselleranchor").text("Seller Details");
 		$("#selectedbuyeranchor").text("Buyer Details");
 		$("#selectedsellerlabel").text("Seller Details");
 		$("#selectedbuyerlabel").text("Buyer Details");
 		
-		jQuery("#doc_Type_Sale").empty();
-		jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		jQuery.each(documenttype_R, function(i, obj) 
-		{
-			if(obj.processid==2)
-			{
-				jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
-			}
-		});
+		
 	} 
 	else if (id == 4) // "Change of Ownership"
 	{
+		
+		$("#tabs_registry1").tabs({ active: 0 });
+		
+		$("#Seller_Details").show();
+		$("#Land_Details_Sale").hide();
+		$("#Buyer_Details").hide();
+		$("#Upload_Document_Sale").hide();
+		$("#selectedseller").addClass("ui-tabs-active");
+		$("#selectedseller").addClass("ui-state-active");	
+		$("#selectedland").removeClass("ui-tabs-active");
+		$("#selectedland").removeClass("ui-state-active");
+		$("#selectedbuyer").removeClass("ui-tabs-active");
+		$("#selectedbuyer").removeClass("ui-state-active");
+		$("#selecteddoc").removeClass("ui-tabs-active");
+		$("#selecteddoc").removeClass("ui-state-active");
+		
+		processid=id;
+		persontypeid=11;
+		$("#buyersavebutton").prop("disabled",false).hide();
 		lease.style.display = "none";
 		sale.style.display = "block";
 		mortgage.style.display = "none";
-		clearBuyerDetails_sale();
-		clear_Lease();
+		split.style.display = "none";
 		currentdiv = "Sale";
+		$("#salesDocRowData").empty();
+		fetchDocument(selectedlandid,11,id);
+		$("#EliminatedOwner").css("display","none");
 		
 		$("#selectedselleranchor").text("Owner Details");
 		$("#selectedbuyeranchor").text("New Owner Details");
 		$("#selectedsellerlabel").text("Owner Details");
 		$("#selectedbuyerlabel").text("New Owner Details");	
 		
-		jQuery("#doc_Type_Sale").empty();
-		jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		jQuery.each(documenttype_R, function(i, obj) 
-		{
-			if(obj.processid==4)
-			{
-				jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
-			}
-		});
+		
 		
 	} 
 	
 	else if (id == 6) // "Gift/Inheritance"
 	{
+		
+		$("#tabs_registry1").tabs({ active: 0 });
+		
+		$("#Seller_Details").show();
+		$("#Land_Details_Sale").hide();
+		$("#Buyer_Details").hide();
+		$("#Upload_Document_Sale").hide();
+		$("#selectedseller").addClass("ui-tabs-active");
+		$("#selectedseller").addClass("ui-state-active");	
+		$("#selectedland").removeClass("ui-tabs-active");
+		$("#selectedland").removeClass("ui-state-active");
+		$("#selectedbuyer").removeClass("ui-tabs-active");
+		$("#selectedbuyer").removeClass("ui-state-active");
+		$("#selecteddoc").removeClass("ui-tabs-active");
+		$("#selecteddoc").removeClass("ui-state-active");
+		
+		processid=id;
+		persontypeid=11;
+		$("#buyersavebutton").prop("disabled",false).hide();
 		lease.style.display = "none";
 		sale.style.display = "block";
 		mortgage.style.display = "none";
-		clearBuyerDetails_sale();
-		clear_Lease();
+		split.style.display = "none";
 		currentdiv = "Sale";
+		$("#salesDocRowData").empty();
+		fetchDocument(selectedlandid,11,id);
 		
 		$("#selectedselleranchor").text("Owner Details");
 		$("#selectedbuyeranchor").text("New Owner Details");
 		$("#selectedsellerlabel").text("Owner Details");
 		$("#selectedbuyerlabel").text("New Owner Details");	
-		
-		jQuery("#doc_Type_Sale").empty();
-		jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		
-		jQuery.each(documenttype_R, function(i, obj) 
-				{
-					if(obj.processid==6)
-					{
-						jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
-					}
-				});
-		
+		$("#EliminatedOwner").css("display","none");
 		$("#RelationWithOwner").css("display","block");
 		
 		jQuery("#sale_relation_buyer").empty();
@@ -2698,12 +3393,32 @@ function getprocessvalue(id) {
 	
 	else if (id == 7) // "Change of Joint Owner"
 	{
+		
+		$("#tabs_registry1").tabs({ active: 0 });
+		
+		$("#Seller_Details").show();
+		$("#Land_Details_Sale").hide();
+		$("#Buyer_Details").hide();
+		$("#Upload_Document_Sale").hide();
+		$("#selectedseller").addClass("ui-tabs-active");
+		$("#selectedseller").addClass("ui-state-active");	
+		$("#selectedland").removeClass("ui-tabs-active");
+		$("#selectedland").removeClass("ui-state-active");
+		$("#selectedbuyer").removeClass("ui-tabs-active");
+		$("#selectedbuyer").removeClass("ui-state-active");
+		$("#selecteddoc").removeClass("ui-tabs-active");
+		$("#selecteddoc").removeClass("ui-state-active");
+		
+		processid=id;
+		persontypeid=11;
+		$("#buyersavebutton").prop("disabled",false).hide();
 		lease.style.display = "none";
 		sale.style.display = "block";
 		mortgage.style.display = "none";
-		clearBuyerDetails_sale();
-		clear_Lease();
+        split.style.display = "none";
 		currentdiv = "Sale";
+		$("#salesDocRowData").empty();
+		fetchDocument(selectedlandid,11,id);
 		
 		$("#selectedselleranchor").text("Owner Details");
 		$("#selectedbuyeranchor").text("New Owner Details");
@@ -2711,41 +3426,109 @@ function getprocessvalue(id) {
 		$("#selectedbuyerlabel").text("New Owner Details");	
 		$("#RelationWithOwner").css("display","none");
 		$("#EliminatedOwner").css("display","block");
-		
-		jQuery("#doc_Type_Sale").empty();
-		jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		
 		$("#RelationWithOwner").css("display","none");
 		
-		jQuery.each(documenttype_R, function(i, obj) 
-				{
-					if(obj.processid==7)
-					{
-						jQuery("#doc_Type_Sale").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
-					}
-				});
+	
 		
 		
 	}
 	
 	else if (id == 3) // "Mortgage"
 	{
+		
+		$("#tabs_registry2").tabs({ active: 0 });
+		
+		$("#MortgageOwner_Details").show();
+		$("#Land_Details_Mortgage").hide();
+		$("#Mortgage_Details").hide();
+		$("#Upload_Document_Mortgage").hide();
+		$("#selectedownerdetails").addClass("ui-tabs-active");
+		$("#selectedownerdetails").addClass("ui-state-active");	
+		$("#selectelandmortgage").removeClass("ui-tabs-active");
+		$("#selectelandmortgage").removeClass("ui-state-active");
+		$("#selectemortgage").removeClass("ui-tabs-active");
+		$("#selectemortgage").removeClass("ui-state-active");	
+		$("#selectemortgagedocs").removeClass("ui-tabs-active");
+		$("#selectemortgagedocs").removeClass("ui-state-active");
+		
+		$('.trhideclassmortgage2').hide();
+		
+		processid=id;
+		persontypeid=1;
+		$("#buyersavebutton").prop("disabled",false).hide();
 		lease.style.display = "none";
 		sale.style.display = "none";
 		mortgage.style.display = "block";
-		clear_Lease();
-		clearMortgage();
+		split.style.display = "none";
 		currentdiv = "Mortgage";
+		$("#salesDocRowData").empty();
+		fetchDocument(selectedlandid,1,id);
 		
-		jQuery("#doc_Type_Mortgage").empty();
-		jQuery("#doc_Type_Mortgage").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));	
-		jQuery.each(documenttype_R, function(i, obj) 
-		{
-			if(obj.processid==3)
-			{
-				jQuery("#doc_Type_Mortgage").append(jQuery("<option></option>").attr("value", obj.code).text(obj.nameOtherLang));
+	
+	}
+	else if (id == 9) // "Surrender of Mortgage"
+	{
+		
+		$("#tabs_registry2").tabs({ active: 0 });
+		
+		
+		$("#MortgageOwner_Details").show();
+		$("#Land_Details_Mortgage").hide();
+		$("#Mortgage_Details").hide();
+		$("#Upload_Document_Mortgage").hide();
+		$("#selectedownerdetails").addClass("ui-tabs-active");
+		$("#selectedownerdetails").addClass("ui-state-active");	
+		$("#selectelandmortgage").removeClass("ui-tabs-active");
+		$("#selectelandmortgage").removeClass("ui-state-active");
+		$("#selectemortgage").removeClass("ui-tabs-active");
+		$("#selectemortgage").removeClass("ui-state-active");	
+		$("#selectemortgagedocs").removeClass("ui-tabs-active");
+		$("#selectemortgagedocs").removeClass("ui-state-active");
+		$('.trhideclassmortgage2').show();
+		
+		processid=id;
+		persontypeid=1;
+		$("#buyersavebutton").prop("disabled",false).hide();
+		lease.style.display = "none";
+		sale.style.display = "none";
+		mortgage.style.display = "block";
+		split.style.display = "none";
+		currentdiv = "Mortgage";
+		$("#salesDocRowData").empty();
+		fetchDocument(selectedlandid,1,id);
+		
+		jQuery.ajax({
+			url : "registration/SurrenderMortagagedata/"+ selectedlandid+"/"+id,
+			async : false,
+			success : function(data) {
+				surrendermortagagedata = data;
+				
 			}
 		});
+		
+		$("#mortgagesurrender_reason").val(surrendermortagagedata.surrenderreason);
+		
+	
+	}
+	else if(id==8) //split
+	{
+
+		processid=id;
+		
+
+		$("#comment_Save").hide();
+
+		$("#buyersavebutton").prop("disabled",false).hide();
+		lease.style.display = "none";
+		sale.style.display = "none";
+		mortgage.style.display = "none";
+		split.style.display = "block";
+		currentdiv = "split";
+		jQuery("#doc_name_split").val("");
+		jQuery("#doc_date_split").val("");
+		jQuery("#doc_desc_split").val("");
+		fetchDocumentSplit(selectedlandid);
+		
 	}
 	
 }
@@ -3246,41 +4029,11 @@ function isDecNumberKey(evt) {
 	return true;
 }
 
-/*
- * function ViewHistory(landid) { jQuery.ajax({ type:'GET', url:
- * "landrecords/parcelhistory/"+landid, async:false, success: function (data) {
- * 
- * $('#ViewPopuupDiv').empty(); $('#ViewPopuupDiv').css("visibility",
- * "visible");
- * 
- * $('#ViewPopuupDiv').append('<div class="tableContainerDeed"><h3 class="gridTitle"><span>Parcel
- * OwnerShip History</span></h3><table width=100%" border="0" cellspacing="1"
- * cellpadding="0" class="grid01"><thead><tr><th>First Name</th></tr></thead><tbody
- * id="PropertyHistTrackingBody"></tbody></table></div></br>');
- * 
- * if(data[0] !=null) { $.each(data[0], function(index,optionData) {
- * jQuery("#PropertyHistTrackingTemplate").tmpl(optionData).appendTo("#PropertyHistTrackingBody");
- * }); }
- * 
- * $("#ViewPopuupDiv").dialog( { height: 400, width: 500, modal: true, buttons: {
- * Cancel: { //text:cancel, click: function(){ $("label.error").remove();
- * $(".error").removeClass("error"); $(this).dialog("close"); } } }, close:
- * function (ev, ui) { $(this).dialog("close"); } });
- * //jQuery('#ViewPopuupDiv').dialog('option', 'title',
- * $._('PropertyHistory_Report'));
- * 
- *  }
- * 
- * 
- * });
- * 
- * 
- * 
- * 
- *  }
- */
+
 
 function ViewHistory(landid) {
+	$(".signin_menu").hide();
+		TransLandId = landid;
 	jQuery('#PropertyHistTrackingBody').empty();
 	jQuery('#PropertyLeaseHistTrackingBody').empty();
 	jQuery('#PropertyMortageHistTrackingBody').empty();
@@ -3300,23 +4053,7 @@ function ViewHistory(landid) {
 					});
 				}
 
-				/*if (data[1] != null) {
-					jQuery("#commentsTablePopLease").show();
-					$.each(data[1], function(index, optionData) {
-						jQuery("#PropertyLeaseTrackingTemplate").tmpl(
-								optionData).appendTo(
-								"#PropertyLeaseHistTrackingBody");
-					});
-				}
-
-				if (data[2] != null) {
-					jQuery("#commentsTablePopMortage").show();
-					$.each(data[2], function(index, optionData) {
-						jQuery("#PropertyMortageTrackingTemplate").tmpl(
-								optionData).appendTo(
-								"#PropertyMortageHistTrackingBody");
-					});
-				}*/
+				
 				
 				if (data[3] != null) {
 					jQuery("#commentsTablePopTransactionHist").show();
@@ -3391,14 +4128,21 @@ function viewleasedetail(transactionid,landid)
 				//To show person Property Changes
 				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Lease Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Lease Date"+'</th><th>'+"Lease Month"+'</th><th>'+"Lease Amount"+'</th></tr></thead><tbody id="popupBody"></tbody></table></div></br>');				
 				
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Document Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Document Name"+'</th><th>'+"Document Date"+'</th><th>'+"Document Description"+'</th><th>'+"View Document"+'</th></tr></thead><tbody id="popupBodydocument"></tbody></table></div></br>');				
+				
 				if(contactObj[0] != null && contactObj[0].length > 0)
 				{
 					jQuery("#PropertyLeaseTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupBody");
 				}
 				
+				if(contactObj[1] != null && contactObj[1].length > 0)
+				{
+					jQuery("#DocumentTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupBodydocument");
+				}
+				
 				$("#ViewPopuupDiv").dialog(
 						{									
-							height: 220,
+							height: 400,
 							width: 700,
 							modal: true,	
 							buttons: 
@@ -3435,6 +4179,276 @@ function viewleasedetail(transactionid,landid)
 	});
 }
 
+
+function viewOwnerDetails(transactionid)
+{
+	jQuery.ajax({
+		type: 'GET',
+		//url:'viewArchivalChangesDetail/'+requestid,
+		url : 'landrecords/findsaledetailbytransid/' + transactionid,
+		async:false,
+		success:function(contactObj){
+
+			if(contactObj != null && contactObj.length>0)
+			{
+				$('#ViewPopuupDiv').empty();
+				$('#ViewPopuupDiv').css("visibility", "visible");					
+
+				//To show person Property Changes
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Current Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupCurrentBody"></tbody></table></div></br>');				
+
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Old Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupoldBody"></tbody></table></div></br>');				
+				
+				
+				if(contactObj[0] != null)
+				{
+					jQuery("#PropertyOldSaleTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupoldBody");
+				}
+				
+				if(contactObj[1] != null)
+				{
+					jQuery("#PropertyCurrentSaleTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupCurrentBody");
+				}
+				
+				$("#ViewPopuupDiv").dialog(
+						{									
+							height: 400,
+							width: 700,
+							modal: true,	
+							buttons: 
+							{								
+								"Cancel": {
+									text : "Cancel",
+									"id" : "comment_Trans_cancel",
+									click : function() {
+										setInterval(function() {
+
+										}, 4000);
+										$(this).dialog("close");
+
+									}
+								}
+							},
+							close: function (ev, ui) 
+							{
+								$(this).dialog("close");
+							}
+						});
+				jQuery('#ViewPopuupDiv').dialog('option', 'title', "Change of Owner");
+				
+			}
+			else
+			{
+				alertMsg=$._('No_Contact_Associated_Property_MSG');
+				jAlert('info', alertMsg, alertInfoHeader);
+			}
+		},
+		error:function(){
+
+		}
+	});
+}
+function viewSaleDetails(transactionid)
+{
+	jQuery.ajax({
+		type: 'GET',
+		//url:'viewArchivalChangesDetail/'+requestid,
+		url : 'landrecords/findsaledetailbytransid/' + transactionid,
+		async:false,
+		success:function(contactObj){
+
+			if(contactObj != null && contactObj.length>0)
+			{
+				$('#ViewPopuupDiv').empty();
+				$('#ViewPopuupDiv').css("visibility", "visible");					
+
+				//To show person Property Changes
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Current Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupCurrentBody"></tbody></table></div></br>');				
+
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Old Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupoldBody"></tbody></table></div></br>');				
+				
+				if(contactObj[0] != null)
+				{
+					jQuery("#PropertyOldSaleTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupoldBody");
+				}
+				
+				if(contactObj[1] != null)
+				{
+					jQuery("#PropertyCurrentSaleTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupCurrentBody");
+				}
+				
+				$("#ViewPopuupDiv").dialog(
+						{									
+							height: 400,
+							width: 700,
+							modal: true,	
+							buttons: 
+							{								
+								"Cancel": {
+									text : "Cancel",
+									"id" : "comment_Trans_cancel",
+									click : function() {
+										setInterval(function() {
+
+										}, 4000);
+										$(this).dialog("close");
+
+									}
+								}
+							},
+							close: function (ev, ui) 
+							{
+								$(this).dialog("close");
+							}
+						});
+				jQuery('#ViewPopuupDiv').dialog('option', 'title', "sale");
+				
+			}
+			else
+			{
+				alertMsg=$._('No_Contact_Associated_Property_MSG');
+				jAlert('info', alertMsg, alertInfoHeader);
+			}
+		},
+		error:function(){
+
+		}
+	});
+}
+function viewGiftDetails(transactionid)
+{
+	jQuery.ajax({
+		type: 'GET',
+		//url:'viewArchivalChangesDetail/'+requestid,
+		url : 'landrecords/findsaledetailbytransid/' + transactionid,
+		async:false,
+		success:function(contactObj){
+
+			if(contactObj != null && contactObj.length>0)
+			{
+				$('#ViewPopuupDiv').empty();
+				$('#ViewPopuupDiv').css("visibility", "visible");					
+
+				//To show person Property Changes
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Current Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupCurrentBody"></tbody></table></div></br>');				
+
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Old Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupoldBody"></tbody></table></div></br>');				
+				
+				if(contactObj[0] != null)
+				{
+					jQuery("#PropertyOldSaleTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupoldBody");
+				}
+				
+				if(contactObj[1] != null)
+				{
+					jQuery("#PropertyCurrentSaleTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupCurrentBody");
+				}
+				
+				$("#ViewPopuupDiv").dialog(
+						{									
+							height: 400,
+							width: 700,
+							modal: true,	
+							buttons: 
+							{								
+								"Cancel": {
+									text : "Cancel",
+									"id" : "comment_Trans_cancel",
+									click : function() {
+										setInterval(function() {
+
+										}, 4000);
+										$(this).dialog("close");
+
+									}
+								}
+							},
+							close: function (ev, ui) 
+							{
+								$(this).dialog("close");
+							}
+						});
+				jQuery('#ViewPopuupDiv').dialog('option', 'title', "Gift/Inheritance");
+				
+			}
+			else
+			{
+				alertMsg=$._('No_Contact_Associated_Property_MSG');
+				jAlert('info', alertMsg, alertInfoHeader);
+			}
+		},
+		error:function(){
+
+		}
+	});
+}
+function viewJointDetails(transactionid)
+{
+	jQuery.ajax({
+		type: 'GET',
+		//url:'viewArchivalChangesDetail/'+requestid,
+		url : 'landrecords/findsaledetailbytransid/' + transactionid,
+		async:false,
+		success:function(contactObj){
+
+			if(contactObj != null && contactObj.length>0)
+			{
+				$('#ViewPopuupDiv').empty();
+				$('#ViewPopuupDiv').css("visibility", "visible");					
+
+				//To show person Property Changes
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Current Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupCurrentBody"></tbody></table></div></br>');				
+
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Old Owner"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Gender"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Created Date"+'</th></tr></thead><tbody id="popupoldBody"></tbody></table></div></br>');				
+				
+				if(contactObj[0] != null)
+				{
+					jQuery("#PropertyOldSaleTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupoldBody");
+				}
+				
+				if(contactObj[1] != null)
+				{
+					jQuery("#PropertyCurrentSaleTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupCurrentBody");
+				}
+				
+				$("#ViewPopuupDiv").dialog(
+						{									
+							height: 400,
+							width: 700,
+							modal: true,	
+							buttons: 
+							{								
+								"Cancel": {
+									text : "Cancel",
+									"id" : "comment_Trans_cancel",
+									click : function() {
+										setInterval(function() {
+
+										}, 4000);
+										$(this).dialog("close");
+
+									}
+								}
+							},
+							close: function (ev, ui) 
+							{
+								$(this).dialog("close");
+							}
+						});
+				jQuery('#ViewPopuupDiv').dialog('option', 'title', "Change of Joint Owner");
+				
+			}
+			else
+			{
+				alertMsg=$._('No_Contact_Associated_Property_MSG');
+				jAlert('info', alertMsg, alertInfoHeader);
+			}
+		},
+		error:function(){
+
+		}
+	});
+}
 function viewsurrenderleasedetail(transactionid,landid)
 {
 	jQuery.ajax({
@@ -3451,15 +4465,21 @@ function viewsurrenderleasedetail(transactionid,landid)
 
 				//To show person Property Changes
 				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Lease Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Name"+'</th><th>'+"Address"+'</th><th>'+"Id No"+'</th><th>'+"Lease Date"+'</th><th>'+"Lease Month"+'</th><th>'+"Lease Amount"+'</th></tr></thead><tbody id="popupBody"></tbody></table></div></br>');				
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Document Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Document Name"+'</th><th>'+"Document Date"+'</th><th>'+"Document Description"+'</th><th>'+"View Document"+'</th></tr></thead><tbody id="popupBodydocument"></tbody></table></div></br>');
 				
 				if(contactObj[0] != null && contactObj[0].length > 0)
 				{
 					jQuery("#PropertyLeaseTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupBody");
 				}
 				
+				if(contactObj[1] != null && contactObj[1].length > 0)
+				{
+					jQuery("#DocumentTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupBodydocument");
+				}
+				
 				$("#ViewPopuupDiv").dialog(
 						{									
-							height: 220,
+							height: 400,
 							width: 700,
 							modal: true,	
 							buttons: 
@@ -3512,15 +4532,20 @@ function viewMortagagedetail(transactionid,landid)
 
 				//To show person Property Changes
 				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Mortgage Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Financial Agency"+'</th><th>'+"Mortgage From"+'</th><th>'+"Mortgage to"+'</th><th>'+"Mortgage Amount"+'</th></tr></thead><tbody id="popupBody"></tbody></table></div></br>');				
-				
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Document Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Document Name"+'</th><th>'+"Document Date"+'</th><th>'+"Document Description"+'</th><th>'+"View Document"+'</th></tr></thead><tbody id="popupBodydocument"></tbody></table></div></br>');
 				if(contactObj[0] != null && contactObj[0].length > 0)
 				{
 					jQuery("#PropertyMortageTrackingTemplate").tmpl(contactObj[0]).appendTo("#popupBody");
 				}
 				
+				if(contactObj[1] != null && contactObj[1].length > 0)
+				{
+					jQuery("#DocumentTrackingTemplate").tmpl(contactObj[1]).appendTo("#popupBodydocument");
+				}
+				
 				$("#ViewPopuupDiv").dialog(
 						{									
-							height: 220,
+							height: 400,
 							width: 700,
 							modal: true,	
 							buttons: 
@@ -3577,7 +4602,7 @@ function viewdocumentdetail(transactionid)
 				$('#ViewPopuupDiv').css("visibility", "visible");					
 
 				//To show person Property Changes
-				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Document Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Document Name"+'</th><th>'+"Document Date"+'</th><th>'+"Document Description"+'</th><th>'+"Document Type"+'</th><th>'+"View Document"+'</th></tr></thead><tbody id="popupBody"></tbody></table></div></br>');				
+				$('#ViewPopuupDiv').append('<div class="amendbeforeAfterTable"><h3 class="gridTitle"><span>'+"Document Detail"+'</span></h3><table width=100%" border="0" cellspacing="1" cellpadding="0" class="grid01"><thead><tr id="LandownerPersonTR" ><th>'+"Document Name"+'</th><th>'+"Document Date"+'</th><th>'+"Document Description"+'</th><th>'+"View Document"+'</th></tr></thead><tbody id="popupBody"></tbody></table></div></br>');				
 				
 				if(docObj[0] != null && docObj[0].length > 0)
 				{
@@ -3640,19 +4665,7 @@ function makeFileListLease() {
 }
 function makeFileList() {
 
-	/*
-	 * var fi = document.getElementById('fileUploadNewDowcumentss');
-	 * 
-	 * if (fi.files.length > 0) {
-	 * 
-	 * for (var i = 0; i <= fi.files.length - 1; i++) { var fname =
-	 * fi.files.item(i).name; // THE NAME OF THE FILE. //var fsize =
-	 * fi.files.item(i).size; // THE SIZE OF THE FILE.
-	 * 
-	 * document.getElementById('fp').innerHTML =
-	 * document.getElementById('fp').innerHTML + fname + '<br /> '; } }
-	 */
-
+	
 	$('#landRegistration_docs').empty();
 
 	var jsonObjItems = [];
@@ -3699,7 +4712,7 @@ function ActionfillRegistration(landid, workflowId, transactionid,parcelno,regno
 	jQuery("#parcelnovalue").text(parcelnumwithpadding);
 	jQuery("#regnovalue").text(regno);
 	
-	var appid = '#' + landid + "";
+	var appid = '#' + landid + "_registration";
 	$("" + appid + "").empty();
 	$(".containerDiv").empty();
 
@@ -3707,15 +4720,14 @@ function ActionfillRegistration(landid, workflowId, transactionid,parcelno,regno
 	html += "<li> <a title='View Land Record' id='' name=''  href='#' onclick='viewLandAttribute("
 			+ landid + ")'>View Land Record</a></li>";
 
-	html += "<li> <a title=' Review spatial data' id='' name=''  href='#' onclick='showOnMap("
-			+ landid + ", " + workflowId + ")'>View Spatial</a></li>";
+	html += "<li> <a title=' Review spatial data' id='' name=''  href='#' onclick='showOnMap("+ landid + ", " + workflowId + ")'>View Spatial</a></li>";
 
-	html += "<li> <a title='initiate Registration Transaction' id='' name=''  href='#' onclick='leaseAttribute("
+	html += "<li> <a title='Initiate Registration Transaction' id='' name=''  href='#' onclick='leaseAttribute("
 			+ landid + ")'>Initiate Registration Transaction</a></li>";
 
 	html += "<li> <a title='View transaction history' id='' name=''  href='#' onclick='ViewHistory("+ landid + ")'>View transaction history</a></li>";
-	html += "<li> <a title='Print land certificate' id='' name=''  href='#' onclick='generateCcro("
-			+ transactionid + ")'>Print land certificate</a></li>";
+	/*html += "<li> <a title='Print land certificate' id='' name=''  href='#' onclick='generateCcro("+ transactionid + ")'>Print land certificate</a></li>";*/
+	html += "<li> <a title='Print land certificate' id='' name=''  href='#' onclick='_generateFinalLandForm("+ transactionid + ", " + landid + ")'>Print land certificate</a></li>";
 			
 			
 
@@ -3739,7 +4751,11 @@ function ActionfillRegistration(landid, workflowId, transactionid,parcelno,regno
 var land_RV = null;
 
 function viewLandAttribute(landid) {
+	$(".signin_menu").hide();
 	selectedlandid = landid;
+	FillRegistrationPersonDataNew();
+	FillResourceNonNaturalPersonDataNew();
+	loadPOIEditing();
 	$("#landidhide").val(landid);
 	province_r = null;
 	region_r = null;
@@ -3777,6 +4793,14 @@ function viewLandAttribute(landid) {
             landUserList = data;
         }
     });
+  
+  jQuery.ajax({
+		url : "landrecords/claimtypes/",
+		async : false,
+		success : function(data) {
+			claimTypes_R = data;
+		}
+	});
 
 	// Land Details landtype_r
 	jQuery("#Land_Type_l_record").empty();
@@ -3784,6 +4808,7 @@ function viewLandAttribute(landid) {
 	jQuery("#region_l_record").empty();
 	jQuery("#province_r").empty();
 	jQuery("#Ownership_Type_l_record").empty();
+	jQuery("#Claim_Type_l_record").empty();
 	jQuery("#provience_l_record").empty();
 	jQuery("#existing_use_LR").empty();
 	jQuery("#proposed_use_LR").empty();
@@ -3799,7 +4824,8 @@ function viewLandAttribute(landid) {
 			jQuery("<option></option>").attr("value", 0).text("Please Select"));
 	jQuery("#Ownership_Type_l_record").append(
 			jQuery("<option></option>").attr("value", 0).text("Please Select"));
-
+	jQuery("#Claim_Type_l_record").append(
+			jQuery("<option></option>").attr("value", 0).text("Please Select"));
 	jQuery.each(landtype_r, function(i, obj1) {
 		jQuery("#Land_Type_l_record").append(
 				jQuery("<option></option>").attr("value", obj1.landtypeid)
@@ -3827,23 +4853,56 @@ function viewLandAttribute(landid) {
 				jQuery("<option></option>").attr("value", obj.landsharetypeid)
 						.text(obj.landsharetypeEn));
 	});
-
-	jQuery("#Land_Type_l_record").val(land_RV[0].landtypeid);
-	jQuery("#country_l_record").val(land_RV[0].hierarchyid1);
-	jQuery("#region_l_record").val(land_RV[0].hierarchyid2);
-	jQuery("#provience_l_record").val(land_RV[0].hierarchyid3);
-
-	jQuery("#parcel_l_record").val(land_RV[0].landno);
-	jQuery("#Ownership_Type_l_record").val(land_RV[0].landsharetypeid);// landsharetypeid
-	jQuery("#area_LR").val(land_RV[0].area);
-	jQuery("#land_use_LR").val(land_RV[0].landusetype_en);
-
-	jQuery("#neighbor_west_LR").val(land_RV[0].neighbor_west);
-	jQuery("#neighbor_north_LR").val(land_RV[0].neighbor_north);
-	jQuery("#neighbor_south_LR").val(land_RV[0].neighbor_south);
-	jQuery("#neighbor_east_LR").val(land_RV[0].neighbor_east);
 	
-		jQuery("#existing_use_LR").empty();
+	jQuery.each(claimTypes_R, function(i, obj) {
+		jQuery("#Claim_Type_l_record").append(
+				jQuery("<option></option>").attr("value", obj.code)
+						.text(obj.name));
+	});
+
+	if(land_RV!=null && land_RV[0]!=null)
+		{
+			jQuery("#Land_Type_l_record").val(land_RV[0].landtypeid);
+			jQuery("#Claim_Type_l_record").val(land_RV[0].claimtypeid);
+			jQuery("#country_l_record").val(land_RV[0].hierarchyid1);
+			jQuery("#region_l_record").val(land_RV[0].hierarchyid2);
+			jQuery("#provience_l_record").val(land_RV[0].hierarchyid3);
+	
+			jQuery("#parcel_l_record").val("000000"+land_RV[0].landid);
+			jQuery("#Ownership_Type_l_record").val(land_RV[0].landsharetypeid);// landsharetypeid
+			jQuery("#area_LR").val(land_RV[0].area);
+			
+			jQuery("#lease_area_View").val(land_RV[0].area);
+	
+			jQuery("#neighbor_west_LR").val(land_RV[0].neighbor_west);
+			jQuery("#neighbor_north_LR").val(land_RV[0].neighbor_north);
+			jQuery("#neighbor_south_LR").val(land_RV[0].neighbor_south);
+			jQuery("#neighbor_east_LR").val(land_RV[0].neighbor_east);
+			
+			
+			jQuery("#existing_use_LR").empty();
+			jQuery("#existing_use_LR").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));
+			jQuery.each(landUserList, function (i, landuseobj) {
+					if(landuseobj.landusetypeid!='9999')
+				     jQuery("#existing_use_LR").append(jQuery("<option></option>").attr("value", landuseobj.landusetypeid).text(landuseobj.landusetypeEn)); 
+
+			});
+			jQuery("#existing_use_LR").val(land_RV[0].landusetypeid);
+
+			jQuery("#proposed_use_LR").empty();
+			jQuery("#proposed_use_LR").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));
+			jQuery.each(landUserList, function (i, landuseobj) {
+				if(landuseobj.landusetypeid!='9999')
+				jQuery("#proposed_use_LR").append(jQuery("<option></option>").attr("value", landuseobj.landusetypeid).text(landuseobj.landusetypeEn)); 
+
+			});
+			jQuery("#proposed_use_LR").val(land_RV[0].proposedused);
+			
+		}
+	
+	
+	
+		/*jQuery("#existing_use_LR").empty();
 			jQuery("#existing_use_LR").append(jQuery("<option></option>").attr("value", 0).text("Please Select"));
 			jQuery.each(landUserList, function (i, landuseobj) {
 					if(landuseobj.landusetypeid!='9999')
@@ -3858,12 +4917,16 @@ function viewLandAttribute(landid) {
 				jQuery("#proposed_use_LR").append(jQuery("<option></option>").attr("value", landuseobj.landusetypeid).text(landuseobj.landusetypeEn)); 
 
 			});
-			jQuery("#existing_use_LR").val(land_RV[0].landusetypeid);
-			jQuery("#proposed_use_LR").val(land_RV[0].proposedused);
+			
+			if(laspatialunitland_R!=null && laspatialunitland_R[0]!=null)
+			{
+				jQuery("#proposed_use_LR").val(laspatialunitland_R[0].proposedused);
+			}
+			*/
 
 	commentviewLandDialogPop = $("#landrecordsview").dialog({
 		autoOpen : false,
-		height : 450,
+		height : 700,
 		width : 1200,
 		resizable : true,
 		modal : true,
@@ -3886,3 +4949,1007 @@ function viewLandAttribute(landid) {
 	$("#comment_cancel").html('<span class="ui-button-text">cancel</span>');
 	commentviewLandDialogPop.dialog("open");
 }
+
+
+function saveattributesLeasePersonData() {
+
+
+	if ($("#editprocessAttributeformID").valid()) {
+
+
+
+		if ((firstname_r_applicant.value.length == 0)
+				|| (lastname_r_applicant.value.length == 0)
+				|| (id_r_applicant.value.length == 0)
+				|| (contact_no_applicant.value.length == 0)
+				|| (date_Of_birth_applicant.value.length == 0)
+				|| (address_lease_applicant.value.length == 0)) { // ||
+																	// (middlename_r_applicant.value.length
+																	// == 0)
+			jAlert("Please Fill Mandatory Details", "Alert");
+			return false;
+		} else if ((id_type_applicant.value == "0")
+				|| (gender_type_applicant.value == "0")
+				|| (martial_sts_applicant.value == "0")) {
+			jAlert("Please Fill Mandatory Details", "Alert");
+			return false;
+		}
+		
+				
+						jQuery
+								.ajax({
+									type : "POST",
+									url : "registration/saveLeaseeDetails",
+									data : jQuery("#editprocessAttributeformID")
+											.serialize(),
+									success : function(result) {
+										$("#Lease_Details").show();
+										$("#Applicant_Details").hide();
+
+
+									},
+									error : function(XMLHttpRequest,
+											textStatus, errorThrown) {
+										jAlert('Request not completed');
+									}
+								});
+					}
+				
+
+	 else {
+		jAlert("Please Fill Mandatory Details", "Alert");
+	}
+}
+
+
+function initiateTransaction(){
+	leaseAttribute(TransLandId);
+	commentHistoryDialogPop.dialog("close");
+	
+	
+}
+
+
+
+function FillRegistrationPersonDataNew()
+{
+	// Init editing grid
+    $("#registration_personsEditingGrid1").jsGrid({
+        width: "100%",
+        height: "200px",
+        inserting: false,
+        editing: false,
+        sorting: false,
+        filtering: false,
+        paging: true,
+        autoload: false,
+        controller: ResourcepersonsEditingControllerForPerson,
+        pageSize: 50,
+        pageButtonCount: 20,
+        fields: [
+            
+            {name: "firstname", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
+            {name: "middlename", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
+            {name: "lastname", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
+            {name: "address", title: "Address", type: "text", width: 120, validate: {validator: "required", message: "Enter Address"}},
+            {name: "identityno", title: "ID number", type: "text", width: 120, validate: {validator: "required", message: "Enter ID number"}},
+            
+            {name: "dateofbirth", title: "Date of birth", type: "date", width: 120, validate: {validator: "required", message: "Enter Date of birth"}},
+            {name: "contactno", title: "Mobile Number", type: "text", width: 120},
+            {name: "genderid", title: "Gender", align: "left", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}], valueField: "id", textField: "name", width: 80,editing: false, filtering: false},
+            {name: "laPartygroupIdentitytype.identitytypeid", title: "Id Type", type: "select", items: [{id: 1, name: "Voter ID"}, {id: 2, name: "Driving license"},{id: 3, name: "Passport"}, {id: 4, name: "ID card"},{id: 5, name: "Other"}, {id: 6, name: "None"}],valueField: "id", textField: "name", width: 80,editing: false, filtering: false},
+            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Single"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: false, filtering: false},
+			{name: "laPartygroupEducationlevel.educationlevelid", title: "Education Level", type: "select", items: [{id: 1, name: "None"}, {id: 2, name: "Primary"},{id: 3, name: "Secondary"}, {id: 4, name: "University"}], valueField: "id", textField: "name", width: 80,editing: false, filtering: false},
+			
+ 
+
+        ]
+    });
+
+    $("#registration_personsEditingGrid1 .jsgrid-table th:first-child :button").click();
+   
+    $("#registration_personsEditingGrid1").jsGrid("loadData");
+   
+    
+    
+    
+}
+
+
+
+
+var ResourcepersonsEditingControllerForPerson = {
+	    loadData: function (filter) {
+	        return $.ajax({
+	            type: "GET",
+	            url: "landrecords/personsDataNew/" + selectedlandid,
+	            data: filter,
+	            success: function(data)
+	            {
+	            	 		  
+	 }
+	        });
+	    },
+	    insertItem: function (item) {
+	    	
+	    	
+	    },
+	    updateItem: function (item) {
+	    	var dob = null;
+	    	if(item!=null)
+	    	{
+	    		if(item.dateofbirth!=null && item.dateofbirth!='')
+	    		{
+	    			var d = new Date(item.dateofbirth);
+	    			dob = d.getFullYear()+ '-' + d.getMonth() + '-' + d.getDate();
+	    		}
+	    	}
+	    	
+			
+	    	var ajaxdata = {
+	    			"personid": item.partyid,
+	    			"firstname": item.firstname,
+	    			"middlename": item.middlename,
+	    			"lastname": item.lastname,
+	    			"address": item.address,
+	    			"identityno": item.identityno,
+	    			"dateofbirth": dob,
+	    			"mobileno": item.mobileno,
+	    			"genderid": item.genderid,
+	    			"identitytypeid": item.laPartygroupIdentitytype.identitytypeid,
+	    			"maritalstatusid": item.laPartygroupMaritalstatus.maritalstatusid,
+					"educationlevel": item.laPartygroupEducationlevel.educationlevelid,
+					"transactionid": _transactionid,
+					"landid": Personusin,
+					"contactno": item.contactno
+					}
+	    	
+	    	return $.ajax({
+	            type: "POST",
+	            //contentType: "application/json; charset=utf-8",
+	            traditional: true,
+	            url: "landrecords/updateNaturalPersonDataForEdit",
+	            //data: JSON.stringify(item),
+	            data: ajaxdata,
+	            success:function(){
+	            	FillPersonDataNew();
+//	            	 
+				},
+	            error: function (request, textStatus, errorThrown) {
+	                jAlert(request.responseText);
+	            }
+	        });
+	    },
+	    deleteItem: function (item) {
+	    	alert("removed");
+	        return false;
+	    }
+	};
+
+
+
+
+function loadPOIEditing() {
+	 $("#registration_personsEditingGrid").jsGrid({
+	        width: "100%",
+	        height: "200px",
+	        inserting: false,
+	        editing: false,
+	        sorting: false,
+	        filtering: false,
+	        paging: true,
+	        autoload: false,
+	        controller: ResourcepersonsEditingController,
+	        pageSize: 50,
+	        pageButtonCount: 20,
+	        fields: [
+	           
+	           // {name: "landid", title: "LandID", type: "number", width: 70, align: "left", editing: false, filtering: true},
+	            {name: "firstName", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
+	            {name: "middleName", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
+	            {name: "lastName", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
+	            {name: "gender", title: "Gender", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}, {id: 3, name: "Other"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
+	            {name: "dob", title: "Date of birth", type: "date", width: 120 ,validate: {validator: "required", message: "Enter first name"}},
+	            {name: "relation", title: "Relation", type: "select", items: [{id: 1, name: "Father"}, {id: 2, name: "Mother"}, {id: 3, name: "Sister"}, {id: 4, name: "Brother"}, {id: 5, name: "Son"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
+	          
+	        ]
+	    });
+	 $("#registration_personsEditingGrid .jsgrid-table th:first-child :button").click();
+	$("#registration_personsEditingGrid").jsGrid("loadData");
+}
+
+var ResourcepersonsEditingController = {
+   loadData: function (filter) {
+       $("#btnLoadPersons").val("Reload");
+       return $.ajax({
+           type: "GET",
+           url: "landrecords/personwithinterest/" + selectedlandid,
+           data: filter
+       });
+   },
+   insertItem: function (item) {
+       return false;
+   },
+   updateItem: function (item) {
+       return $.ajax({
+           type: "POST",
+           contentType: "application/json; charset=utf-8",
+           traditional: true,
+           url: "landrecords/savePersonOfInterestForEditing",
+           data: JSON.stringify(item),
+           error: function (request, textStatus, errorThrown) {
+               jAlert(request.responseText);
+           }
+       });
+   },
+   deleteItem: function (item) {
+       return false;
+   }
+};
+
+
+
+function FillResourceNonNaturalPersonDataNew()
+{
+	// Init editing grid
+    $("#registration_personsEditingGrid2").jsGrid({
+        width: "100%",
+        height: "200px",
+        inserting: false,
+        editing: false,
+        sorting: false,
+        filtering: false,
+        paging: true,
+        autoload: false,
+        controller: RegistrationNonNaturalPerson,
+        pageSize: 50,
+        pageButtonCount: 20,
+        fields: [
+            
+            {name: "organizationname", title: "organization Name", type: "text", width: 120, validate: {validator: "required", message: "Enter organization Name"}},
+            {name: "groupType.grouptypeid", title: "GroupType", type: "select", items: [{id: 1, name: "Civic"}, {id: 2, name: "Mosque"},{id: 3, name: "Association"}, {id: 4, name: "Cooperative"},{id: 5, name: "Informal"}], valueField: "id", textField: "name", width: 80,editing: false, filtering: false},
+            {name: "contactno", title: "Mobile Number", type: "text", width: 120},
+ 
+
+        ]
+    });
+
+    $("#registration_personsEditingGrid2 .jsgrid-table th:first-child :button").click();
+   
+    $("#registration_personsEditingGrid2").jsGrid("loadData");
+    
+    
+}
+
+
+
+
+var RegistrationNonNaturalPerson = {
+		 loadData: function (filter) {
+		        $("#btnLoadPersons").val("Reload");
+		        return $.ajax({
+		            type: "GET",
+		            url: "landrecords/NonNaturalpersonsDataNew/" + selectedlandid,
+		            data: filter
+		        });
+		    },
+	    
+	    insertItem: function (item) {
+	        return false;
+	    },
+	    updateItem: function (item) {
+	        return $.ajax({
+	            type: "POST",
+	            contentType: "application/json; charset=utf-8",
+	            traditional: true,
+	            url: "landrecords/saveNonNaturalPersonForEditing",
+	            data: JSON.stringify(item),
+	            error: function (request, textStatus, errorThrown) {
+	                jAlert(request.responseText);
+	            }
+	        });
+	    },
+	    deleteItem: function (item) {
+	        return false;
+	    }
+	};
+	
+	$(window).resize(function() {
+
+		 
+		});
+
+		
+	
+function  AddDocInfoSplit(){
+	
+	$("#split_selectedlandid").val(selectedlandid);
+	jQuery.ajax({ 
+		type:'POST',
+		url: "registration/savedocumentInfo/split",
+		data: jQuery("#editprocessAttributeformID").serialize(),
+		async:false,							
+		success: function (data) {
+			if(data){
+				jAlert("Document added scuccessfully","info");
+				jQuery("#doc_name_split").val("");
+				jQuery("#doc_date_split").val("");
+				jQuery("#doc_desc_split").val("");
+				fetchDocumentSplit(selectedlandid);
+			}
+			
+		}
+
+
+	});
+	
+}
+
+
+
+	
+function AddDocInfoRegistration(){
+	$("#landidhide").val(selectedlandid);
+	$("#processidhide").val(processid);
+	$("#editprocessAttributeformID").valid();
+		if(processid == 1 || processid == 5){
+	if ((doc_name_Lease.value.length == 0)
+			|| (doc_date_Lease.value.length == 0)
+			|| (doc_desc_Lease.value.length == 0)) {
+		jAlert("Please Fill Mandatory Details", "Alert");
+		return false;
+	}
+	else{
+	jQuery.ajax({ 
+		type:'POST',
+		url: "registration/savedocumentInfo/Registration",
+		data: jQuery("#editprocessAttributeformID").serialize(),
+		async:false,							
+		success: function (data) {
+			if(data){
+				jAlert("Document added scuccessfully","info");
+				fetchDocument(selectedlandid,data,processid);
+				clearDocuments();
+
+
+			}
+
+		}
+
+
+	});
+	}
+		}
+		else if(processid == 2 || processid == 4 || processid == 6 || processid == 7){
+			if ((doc_name_sale.value.length == 0)
+					|| (doc_date_sale.value.length == 0)
+					|| (doc_desc_sale.value.length == 0)) {
+				jAlert("Please Fill Mandatory Details", "Alert");
+				return false;
+			}
+			else{
+			jQuery.ajax({ 
+				type:'POST',
+				url: "registration/savedocumentInfo/Registration",
+				data: jQuery("#editprocessAttributeformID").serialize(),
+				async:false,							
+				success: function (data) {
+					if(data){
+						jAlert("Document added scuccessfully","info");
+						fetchDocument(selectedlandid,data,processid);
+						clearDocuments();
+
+
+					}
+
+				}
+
+
+			});
+			}
+				}
+		 else if(processid == 3 || processid == 9){
+			if ((doc_name_mortgage.value.length == 0)
+					|| (doc_date_mortgage.value.length == 0)
+					|| (doc_desc_mortgage.value.length == 0)) {
+				jAlert("Please Fill Mandatory Details", "Alert");
+				return false;
+			}
+			else{
+			jQuery.ajax({ 
+				type:'POST',
+				url: "registration/savedocumentInfo/Registration",
+				data: jQuery("#editprocessAttributeformID").serialize(),
+				async:false,							
+				success: function (data) {
+					if(data){
+						jAlert("Document added scuccessfully","info");
+						fetchDocument(selectedlandid,data,processid);
+						clearDocuments();
+
+
+					}
+
+				}
+
+
+			});
+			}
+				}
+	
+	
+
+}
+
+
+function clearDocuments() 
+{
+	$("#doc_name_sale").val('');
+	$("#doc_date_sale").val('');
+	$("#doc_desc_sale").val('');
+	$("#doc_name_Lease").val('');
+	$("#doc_date_Lease").val('');
+	$("#doc_desc_Lease").val('');
+	$("#doc_name_mortgage").val('');
+	$("#doc_date_mortgage").val('');
+	$("#doc_desc_mortgage").val('');
+
+}
+
+		
+function fetchDocument(landId,TypeId,processId)
+{	
+	jQuery.ajax({ 
+			type:'GET',
+			url: "registryrecords/getprocessDocument/"+landId +"/"+TypeId+"/"+processId,
+			async:false,							
+			success: function (data) {
+				if(data!=null && data !="")
+				{
+					if(processId == 1 || processId == 5)
+					{
+						$("#LeaseDocRowData").empty();
+						$("#salesdocumentTemplate_add").tmpl(data).appendTo("#LeaseDocRowData");
+					}
+
+					if(processId == 2 || processId == 4 || processId == 6 || processId == 7)
+					{
+						$("#salesDocRowData").empty();
+						$("#salesdocumentTemplate_add").tmpl(data).appendTo("#salesDocRowData");
+					}
+
+					if(processId == 3 || processId == 9)
+					{
+						$("#MortagageDocRowData").empty();
+						$("#salesdocumentTemplate_add").tmpl(data).appendTo("#MortagageDocRowData");
+					}				
+					
+				}
+				
+			}
+		});
+	}
+	
+	
+	
+function fetchDocumentSplit(landId)
+{	
+	jQuery.ajax({ 
+			type:'GET',
+			url: "registryrecords/getsplitDocument/"+landId,
+			async:false,							
+			success: function (data) {
+				if(data!=null){
+				$("#splitDocRowData").empty();
+				$("#salesdocumentTemplate_add").tmpl(data).appendTo("#splitDocRowData");		  
+				}
+			}
+		});
+	}
+	
+	
+	function ApplicantTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#Owner_Details").hide();
+		$("#Land_Details_lease").hide();
+		$("#Applicant_Details").show();
+		$("#Lease_Details").hide();
+		$("#Upload_Documents_Lease").hide();
+		
+		$("#selectedApplicant").addClass("ui-tabs-active");
+		$("#selectedApplicant").addClass("ui-state-active");
+		$("#selectedowner").removeClass("ui-tabs-active");
+		$("#selectedowner").removeClass("ui-state-active");
+		$("#selecteddocs").removeClass("ui-tabs-active");
+		$("#selecteddocs").removeClass("ui-state-active");	
+		$("#selectedsleasedetails").removeClass("ui-tabs-active");
+		$("#selectedsleasedetails").removeClass("ui-state-active");
+		$("#selectedLanddetails").removeClass("ui-tabs-active");
+		$("#selectedLanddetails").removeClass("ui-state-active");
+		
+	}
+	
+	function LeaseeDetailsTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#Owner_Details").hide();
+		$("#Land_Details_lease").hide();
+		$("#Applicant_Details").hide();
+		$("#Lease_Details").show();
+		$("#Upload_Documents_Lease").hide();
+		
+		$("#selectedApplicant").removeClass("ui-tabs-active");
+		$("#selectedApplicant").removeClass("ui-state-active");
+		$("#selectedowner").removeClass("ui-tabs-active");
+		$("#selectedowner").removeClass("ui-state-active");
+		$("#selecteddocs").removeClass("ui-tabs-active");
+		$("#selecteddocs").removeClass("ui-state-active");	
+		$("#selectedsleasedetails").addClass("ui-tabs-active");
+		$("#selectedsleasedetails").addClass("ui-state-active");
+		$("#selectedLanddetails").removeClass("ui-tabs-active");
+		$("#selectedLanddetails").removeClass("ui-state-active");
+	}
+	
+	function landdetailsTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#Owner_Details").hide();
+		$("#Land_Details_lease").show();
+		$("#Applicant_Details").hide();
+		$("#Lease_Details").hide();
+		$("#Upload_Documents_Lease").hide();
+		
+		$("#selectedApplicant").removeClass("ui-tabs-active");
+		$("#selectedApplicant").removeClass("ui-state-active");
+		$("#selectedowner").removeClass("ui-tabs-active");
+		$("#selectedowner").removeClass("ui-state-active");
+		$("#selecteddocs").removeClass("ui-tabs-active");
+		$("#selecteddocs").removeClass("ui-state-active");	
+		$("#selectedsleasedetails").removeClass("ui-tabs-active");
+		$("#selectedsleasedetails").removeClass("ui-state-active");
+		$("#selectedLanddetails").addClass("ui-tabs-active");
+		$("#selectedLanddetails").addClass("ui-state-active");
+	}
+	
+	function OwnerTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#Owner_Details").show();
+		$("#Land_Details_lease").hide();
+		$("#Applicant_Details").hide();
+		$("#Lease_Details").hide();
+		$("#Upload_Documents_Lease").hide();
+		
+		$("#selectedApplicant").removeClass("ui-tabs-active");
+		$("#selectedApplicant").removeClass("ui-state-active");
+		$("#selectedowner").addClass("ui-tabs-active");
+		$("#selectedowner").addClass("ui-state-active");
+		$("#selecteddocs").removeClass("ui-tabs-active");
+		$("#selecteddocs").removeClass("ui-state-active");	
+		$("#selectedsleasedetails").removeClass("ui-tabs-active");
+		$("#selectedsleasedetails").removeClass("ui-state-active");
+		$("#selectedLanddetails").removeClass("ui-tabs-active");
+		$("#selectedLanddetails").removeClass("ui-state-active");
+	}
+	
+	function DocsTabClick()
+	{
+		$("#comment_Save").show();
+		$("#comment_Next").hide();
+		
+		$("#Owner_Details").hide();
+		$("#Land_Details_lease").hide();
+		$("#Applicant_Details").hide();
+		$("#Lease_Details").hide();
+		$("#Upload_Documents_Lease").show();
+		
+		$("#selectedApplicant").removeClass("ui-tabs-active");
+		$("#selectedApplicant").removeClass("ui-state-active");
+		$("#selectedowner").removeClass("ui-tabs-active");
+		$("#selectedowner").removeClass("ui-state-active");
+		$("#selecteddocs").addClass("ui-tabs-active");
+		$("#selecteddocs").addClass("ui-state-active");	
+		$("#selectedsleasedetails").removeClass("ui-tabs-active");
+		$("#selectedsleasedetails").removeClass("ui-state-active");
+		$("#selectedLanddetails").removeClass("ui-tabs-active");
+		$("#selectedLanddetails").removeClass("ui-state-active");
+	}
+
+	
+	function saveattributesLeaseDetails() {
+
+
+		if ($("#editprocessAttributeformID").valid()) {
+
+
+
+			if ((no_Of_month_Lease.value.length == 0)
+					|| (lease_Amount.value.length == 0)) {
+				jAlert("Please Fill Mandatory Details", "Alert");
+				return false;
+			}
+			
+
+			
+							jQuery
+									.ajax({
+										type : "POST",
+										url : "registration/updateLeaseeDetails",
+										data : jQuery("#editprocessAttributeformID")
+												.serialize(),
+										success : function(result) {
+											
+											$("#Lease_Details").hide();
+											$("#Upload_Documents_Lease").show();
+
+										},
+										error : function(XMLHttpRequest,
+												textStatus, errorThrown) {
+											jAlert('Request not completed');
+										}
+									});
+					
+
+		} else {
+			jAlert("Please Fill Mandatory Details", "Alert");
+		}
+	}
+	
+	
+	
+	
+	function saveMortgage() {
+
+		if ($("#editprocessAttributeformID").valid()) {
+
+		if ((mortgage_from.value.length == 0)
+					|| (mortgage_to.value.length == 0)
+					|| (amount_mortgage.value.length == 0)) {
+				jAlert("Please Fill Mandatory Details", "Alert");
+				return false;
+			} else if ((mortgage_Financial_Agencies.value == "0")) {
+				jAlert("Please Fill Mandatory Details", "Alert");
+				return false;
+			}
+							jQuery
+									.ajax({
+										type : "POST",
+										url : "registration/savemortgagedata",
+										data : jQuery("#editprocessAttributeformID")
+												.serialize(),
+										success : function(result) {
+											if (result!=null && result != undefined) {
+//											
+											} else {
+												jAlert('Request not completed');
+											}
+										},
+										error : function(XMLHttpRequest,
+												textStatus, errorThrown) {
+											jAlert('Request not completed');
+										}
+									});
+				
+
+		} else {
+			jAlert("Please Fill Mandatory Details", "Alert");
+		}
+	}
+
+	
+	function MortgageTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#MortgageOwner_Details").hide();
+		$("#Land_Details_Mortgage").hide();
+		$("#Mortgage_Details").show();
+		$("#Upload_Document_Mortgage").hide();
+		
+		$("#selectemortgage").addClass("ui-tabs-active");
+		$("#selectemortgage").addClass("ui-state-active");
+		$("#selectedownerdetails").removeClass("ui-tabs-active");
+		$("#selectedownerdetails").removeClass("ui-state-active");	
+		$("#selectelandmortgage").removeClass("ui-tabs-active");
+		$("#selectelandmortgage").removeClass("ui-state-active");
+		$("#selectemortgagedocs").removeClass("ui-tabs-active");
+		$("#selectemortgagedocs").removeClass("ui-state-active");
+	}
+	
+	
+	
+	function MortgagelanddetailsTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#MortgageOwner_Details").hide();
+		$("#Land_Details_Mortgage").show();
+		$("#Mortgage_Details").hide();
+		$("#Upload_Document_Mortgage").hide();
+		
+		$("#selectemortgage").removeClass("ui-tabs-active");
+		$("#selectemortgage").removeClass("ui-state-active");
+		$("#selectedownerdetails").removeClass("ui-tabs-active");
+		$("#selectedownerdetails").removeClass("ui-state-active");	
+		$("#selectelandmortgage").addClass("ui-tabs-active");
+		$("#selectelandmortgage").addClass("ui-state-active");
+		$("#selectemortgagedocs").removeClass("ui-tabs-active");
+		$("#selectemortgagedocs").removeClass("ui-state-active");
+	}
+	
+	function MortgageOwnerTabClick()
+	{
+		$("#comment_Save").hide();
+		$("#comment_Next").show();
+		
+		$("#MortgageOwner_Details").show();
+		$("#Land_Details_Mortgage").hide();
+		$("#Mortgage_Details").hide();
+		$("#Upload_Document_Mortgage").hide();
+		
+		$("#selectemortgage").removeClass("ui-tabs-active");
+		$("#selectemortgage").removeClass("ui-state-active");
+		$("#selectedownerdetails").addClass("ui-tabs-active");
+		$("#selectedownerdetails").addClass("ui-state-active");	
+		$("#selectelandmortgage").removeClass("ui-tabs-active");
+		$("#selectelandmortgage").removeClass("ui-state-active");
+		$("#selectemortgagedocs").removeClass("ui-tabs-active");
+		$("#selectemortgagedocs").removeClass("ui-state-active");
+	}
+	
+	function MortgageDocsTabClick()
+	{
+		$("#comment_Save").show();
+		$("#comment_Next").hide();
+		
+		$("#MortgageOwner_Details").hide();
+		$("#Land_Details_Mortgage").hide();
+		$("#Mortgage_Details").hide();
+		$("#Upload_Document_Mortgage").show();
+		
+		$("#selectemortgage").removeClass("ui-tabs-active");
+		$("#selectemortgage").removeClass("ui-state-active");
+		$("#selectedownerdetails").removeClass("ui-tabs-active");
+		$("#selectedownerdetails").removeClass("ui-state-active");	
+		$("#selectelandmortgage").removeClass("ui-tabs-active");
+		$("#selectelandmortgage").removeClass("ui-state-active");
+		$("#selectemortgagedocs").addClass("ui-tabs-active");
+		$("#selectemortgagedocs").addClass("ui-state-active");
+	}
+
+	
+	
+	function uploadMediaFile_sales(id)
+	{
+
+
+		var flag=false;
+		var val1 = 0;
+		var formData = new FormData();
+		var appid='#'+"mediafileUpload"+id;
+		var file = $(""+appid+"")[0].files[0];
+
+		var alias=$("#alias").val();
+
+		 if(typeof(file)==="undefined")
+		{
+		
+			jAlert('Please Select file to upload','upload');
+		}
+
+		
+
+		else
+		{
+			
+			$.each($(""+appid+"")[0].files,
+					function(ind2, obj2) {
+                    		$.each(	$(""+appid+"")[0].files[val1],
+										function(ind3, obj3) {
+											if (ind3 == "type") {
+												if (obj3 == "application/x-msdownload") {
+													 flag =false;
+													 jAlert("Select File should be of type .exe");
+												} else {
+													 flag =true;
+													
+													
+												}
+											}
+
+										});
+						val1 = val1 + 1;
+					});
+			
+			if(flag){
+			formData.append("spatialdata",file);
+			formData.append("documentId", id);
+			$.ajax({
+				url: 'upload/media_sale/',
+				type: 'POST',
+				data:  formData,
+				mimeType:"multipart/form-data",
+				contentType: false,
+				cache: false,
+				processData:false,
+				success: function(data, textStatus, jqXHR)
+				{	
+					
+					
+					fetchDocument(parseInt(data),persontypeid,processid);
+					jAlert('File uploaded','upload');
+					$('#fileUploadSpatial').val('');
+					$('#alias').val('');
+					
+
+				}
+				
+			});
+			}
+			
+		}
+	}
+	
+	
+	function viewMultimediaByTransid_sales(id) {
+		
+		var flag=false;
+	    jQuery.ajax({
+	        type: 'GET',
+	        async:false,
+	        url: "registration/mediaavail/" + id,
+	        success: function (result) {
+	            if (result == true) {
+	            	flag=true; 
+	            }
+	        },
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	            jAlert('Request not completed');
+	        }
+	    });
+	    
+	    if(flag){
+	        window.open("registration/download/" + id , 'popUp', 'height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
+	        }else{
+
+	        	 jAlert('File not Found',"Info");
+	        }
+}
+	
+	
+	
+	function deleteMediaFile_sales(id){
+		
+		var formData = new FormData();
+		formData.append("documentId", id);
+		
+		$.ajax({
+			url: 'delete/media_sale/',
+			type: 'POST',
+			data:  formData,
+			mimeType:"multipart/form-data",
+			contentType: false,
+			cache: false,
+			processData:false,
+			success: function(data, textStatus, jqXHR)
+			{	
+				
+				fetchDocument(parseInt(data),persontypeid,processid);
+				jAlert('File Deleted Successfull');
+				
+
+			}
+			
+		});
+	}
+	
+	
+	
+	
+	function saveattributesSurrenderMortagage() {
+		
+		if ($("#editprocessAttributeformID").valid()) {
+
+			/*if ((remrks_lease.value.length == 0)) {
+				jAlert("Please Fill Mandatory Details", "Alert");
+				return false;
+			}*/
+
+		
+			/*jConfirm(
+					'If he/she wants to commit data to surrender lease would be nice',
+					'Save Confirmation',
+					function(response) {
+						if (response) {}
+					});*/
+			
+
+			jQuery
+					.ajax({
+						type : "POST",
+						url : "registration/savesurrenderMortgagedata",
+						data : jQuery("#editprocessAttributeformID")
+								.serialize(),
+						success : function(result) {
+							if (result!=null && result != undefined) {
+								$("#Lease_Details").hide();
+								$("#Upload_Documents_Lease").show();
+
+							} else {
+								jAlert('Request not completed');
+							}
+						},
+						error : function(XMLHttpRequest,
+								textStatus, errorThrown) {
+							jAlert('Request not completed');
+						}
+					});
+		
+
+		} else {
+			jAlert("Please Fill Mandatory Details", "Alert");
+		}
+	}
+	
+	
+	
+	
+	function approveSurrenderMortagage() {
+
+
+	
+		
+			if ($("#editprocessAttributeformID").valid()) {
+				
+				if ($("#mortgagesurrender_reason").val()=="") {
+					jAlert("Please Fill Reason For Surrender", "Alert");
+					return false;
+				}
+
+				jConfirm(
+						'If he/she wants to commit data to land record would be nice',
+						'Save Confirmation',
+						function(response) {
+							if (response) {
+								jQuery
+										.ajax({
+											type : "POST",
+											url : "registration/approveSurenderMortgageData",
+											data : jQuery("#editprocessAttributeformID")
+													.serialize(),
+											success : function(result) {
+												if (result!=null && result != undefined) {
+													landRecordsInitialized_R=false;
+													displayRefreshedRegistryRecords_ABC();
+													//RegistrationRecords("registrationRecords");
+													attributeEditDialog.dialog("close");
+													
+												} else {
+													jAlert('Request not completed');
+												}
+											},
+											error : function(XMLHttpRequest,
+													textStatus, errorThrown) {
+												jAlert('Request not completed');
+											}
+										});
+							}
+
+						});
+
+			} else {
+				jAlert("Please Fill Mandatory Details", "Alert");
+			}
+		}
+	

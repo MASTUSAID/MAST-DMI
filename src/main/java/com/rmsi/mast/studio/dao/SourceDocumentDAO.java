@@ -21,4 +21,9 @@ public interface SourceDocumentDAO extends GenericDAO<SourceDocument, Integer> {
     boolean deleteNaturalPersonImage(Long id);
 
     boolean checkPersonImage(Long id);
+    SourceDocument findDocumentByDocumentId(Long documentId);
+    
+    List<SourceDocument> findSourceDocumentByLandIdandTransactionid(Long id,Integer transactionid);
+    List<SourceDocument> findSourceDocumentByLandIdAndProessId(Long id,Long processId);
+    
 }

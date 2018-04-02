@@ -28,7 +28,7 @@ public class UploadedDocumentDetailsForFetch implements Serializable {
 	private String documenttype;
 	private Long transactionid;
 	private Long partyid;
-		
+	private Long documentid;	
 	
 	
 	public Long getRnum() {
@@ -85,6 +85,14 @@ public class UploadedDocumentDetailsForFetch implements Serializable {
 
 	public void setPartyid(Long partyid) {
 		this.partyid = partyid;
+	}
+
+	public Long getDocumentid() {
+		return documentid;
+	}
+
+	public void setDocumentid(Long documentid) {
+		this.documentid = documentid;
 	}
 
 	

@@ -73,11 +73,14 @@ import com.rmsi.mast.studio.domain.Unit;
 import com.rmsi.mast.studio.domain.fetch.AttributeValuesFetch;
 import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
+import com.rmsi.mast.studio.domain.fetch.DataCorrectionReport;
 import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.OwnerHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
 import com.rmsi.mast.studio.domain.fetch.PersonForEditing;
+import com.rmsi.mast.studio.domain.fetch.PersonsReport;
+import com.rmsi.mast.studio.domain.fetch.PoiReport;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.RegistryBook;
 import com.rmsi.mast.studio.domain.fetch.ReportCertificateFetch;
@@ -1447,6 +1450,24 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 			return null;
 		}
     }
+
+	@Override
+	public List<DataCorrectionReport> getDataCorrectionReport(Long transactionid, Long landId) {
+		
+		return landRecordsDao.getDataCorrectionReport(transactionid, landId);
+	}
+
+	@Override
+	public List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId) {
+	
+		return landRecordsDao.getDataCorrectionReportPOI(transactionid, landId);
+	}
+
+	@Override
+	public List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid, Long landId) {
+		return landRecordsDao.getDataCorrectionPersonsReport(transactionid, landId);
+	}
+    
     
     
 }

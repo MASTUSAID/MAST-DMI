@@ -235,6 +235,6 @@ div#users-contain table td, div#users-contain table th {
 
 	</div>
 	<div id="footer">
-		<span class="footer-s">© RMSI 2015. All rights reserved.</span></div>
+		<span class="footer-s">© 2018 All rights reserved.</span></div>
 </body>
 </html>

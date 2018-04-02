@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,7 @@ import com.rmsi.mast.studio.domain.Savedquery;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserProject;
 import com.rmsi.mast.studio.domain.UserRole;
+import com.rmsi.mast.studio.domain.fetch.ProjectData;
 import com.rmsi.mast.studio.service.BaselayerService;
 import com.rmsi.mast.studio.service.BookmarkService;
 import com.rmsi.mast.studio.service.LaSpatialunitgroupService;
@@ -168,20 +170,20 @@ public class ProjectController {
     
     
    
-    
-
     @RequestMapping(value = "/studio/project/create", method = RequestMethod.POST)
     @ResponseBody
-    public String createProject(HttpServletRequest request, HttpServletResponse response,Principal principal) {
+    public String createProject(HttpServletRequest request, HttpServletResponse response,Principal principal) throws ServletRequestBindingException {
 
         String projectName;
         Project project;
+        String extention;
         
         String username = principal.getName();
 		User userObj = userService.findByUniqueName(username);
 		
 		Long user_id = userObj.getId();
-		
+		extention = ServletRequestUtils.getRequiredStringParameter(request, "extention");
+		String ar[] = extention.split("/");
        
         try {
             projectName = ServletRequestUtils.getRequiredStringParameter(request, "name");
@@ -205,13 +207,13 @@ public class ProjectController {
 
             project.setName(projectName);
             project.setActive(true);
-            project.setActivelayer(ServletRequestUtils.getRequiredStringParameter(request, "activelayer"));
+            //project.setActivelayer(ServletRequestUtils.getRequiredStringParameter(request, "activelayer"));
             project.setDescription(ServletRequestUtils.getRequiredStringParameter(request, "description"));
             project.setDisclaimer(ServletRequestUtils.getRequiredStringParameter(request, "disclaimer"));
             project.setMinextent(ServletRequestUtils.getRequiredStringParameter(request, "minextent"));
             project.setMaxextent(ServletRequestUtils.getRequiredStringParameter(request, "maxextent"));
             project.setZoomlevelextent(Integer.parseInt(ServletRequestUtils.getRequiredStringParameter(request, "numzoomlevels")));
-            project.setOverlaymap(ServletRequestUtils.getRequiredStringParameter(request, "overlaymap"));
+            //project.setOverlaymap(ServletRequestUtils.getRequiredStringParameter(request, "overlaymap"));
             //project.setRestrictedextent(ServletRequestUtils.getRequiredStringParameter(request, "restrictedextent"));
             project.setUnit(unitService.findUnitById(Integer.parseInt(ServletRequestUtils.getRequiredStringParameter(request, "project_unit"))));
          //  project.setDisplayProjection(projectionService.findProjectionByName(ServletRequestUtils.getRequiredStringParameter(request, "displayProjection.code")));
@@ -362,9 +364,9 @@ public class ProjectController {
                   projectArea.setLandofficer(districtOfficer);
                   projectArea.setCertificatenumber(certificationNumber);
                   projectArea.setPostalcode(postalcode);
-                  projectArea.setAuthorizedmembersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageChairman", ""));
-                  projectArea.setExecutiveofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageExecutive", ""));
-                  projectArea.setLandofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureDistrictOfficer", ""));
+                  projectArea.setAuthorizedmembersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageChairman", "")+"."+ar[1]);
+                  projectArea.setExecutiveofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageExecutive", "")+"."+ar[1]);
+                  projectArea.setLandofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureDistrictOfficer", "")+"."+ar[1]);
                   projectArea.setProject(project);
 
                 if (StringUtils.isEmpty(vcmeetingdate)) {
@@ -574,6 +576,7 @@ public class ProjectController {
                 signature = mpFile.getBytes();
                 String fileName = mpFile.getOriginalFilename();
                 String uid = UUID.randomUUID().toString();
+               
                 fileName = uid + "." + fileName.substring(fileName.indexOf(".") + 1, fileName.length()).toLowerCase();
 
                 String outDirPath = FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures";
@@ -603,7 +606,7 @@ public class ProjectController {
     public boolean checkSignatureExists(@PathVariable String fileName, HttpServletRequest request) {
         File signature = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
         File signature2 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
-        File signature3 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpeg");
+        File signature3 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpg");
         if(signature.exists() ||signature2.exists() ||signature3.exists() ){
         	
         	return true;
@@ -741,5 +744,15 @@ public class ProjectController {
     public List<UserProject> getAllUserProject(@PathVariable String id) {
         return userProjectService.findAllUserProjectByUserID(Long.parseLong(id));
     }
+    
+    
+    @RequestMapping(value = "/studio/project/info", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ProjectData>  gatAllProjectInfo() {
+        return  projectService.getAllProjectInfo();
+    }
+    
+    
+   
     
 }

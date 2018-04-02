@@ -12,4 +12,10 @@ import com.rmsi.mast.studio.domain.LaMortgage;
 public interface LaMortgageDao extends GenericDAO<LaMortgage, Integer>{
 
 	LaMortgage saveMortgage(LaMortgage laMortgage);
+	
+	LaMortgage getMortgageByLandId(Long landId);
+	
+	LaMortgage getMortgageByLandIdandprocessId(Long landId, Long processId);
+	
+	boolean disablelease(Long personid, Long landid);
 }

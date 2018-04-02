@@ -18,9 +18,9 @@ public class ResourceAttributeValuesServiceImpl implements ResourceAttributeValu
 	ResourceAttributeValuesDAO  resourceAttributeValuesDAO;
 
 	@Override
-	public List<ResourceAttributeValues> getResourceAttributeValuesBylandId(Integer Id) {
+	public List<ResourceAttributeValues> getResourceAttributeValuesBylandId(Integer projectId, Integer Id) {
 		
-		return resourceAttributeValuesDAO.getResourceAttributeValuesBylandId(Id);
+		return resourceAttributeValuesDAO.getResourceAttributeValuesBylandId(projectId, Id);
 	}
 
 	@Override
@@ -43,9 +43,9 @@ public class ResourceAttributeValuesServiceImpl implements ResourceAttributeValu
 	}
 
 	@Override
-	public List<Object[]> getResourceAttributeValuesAndDatatypeBylandId(
+	public List<Object[]> getResourceAttributeValuesAndDatatypeBylandId(Integer projectId,
 			Integer Id) {
-		return resourceAttributeValuesDAO.getResourceAttributeValuesAndDatatypeBylandId(Id);
+		return resourceAttributeValuesDAO.getResourceAttributeValuesAndDatatypeBylandId(projectId, Id);
 	}
 	
 }

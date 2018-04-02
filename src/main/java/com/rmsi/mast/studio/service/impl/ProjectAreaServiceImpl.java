@@ -20,4 +20,10 @@ public class ProjectAreaServiceImpl implements ProjectAreaService{
 		return projectAreaDAO.findProjectAreaById(id);
 	}
 
+	@Override
+	public ProjectArea findProjectAreaByProjectId(Integer id) {
+
+		return projectAreaDAO.findProjectAreaByProjectId(id);
+	}
+	
 }

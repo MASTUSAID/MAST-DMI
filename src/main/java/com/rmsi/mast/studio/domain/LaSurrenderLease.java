@@ -58,8 +58,14 @@ public class LaSurrenderLease implements Serializable{
 	
 	private Long personid;
 	private Long ownerid;
-	
+	private String surrenderreason;
 	private Long landid;
+	
+	@Temporal(TemporalType.DATE)
+	private Date leasestartdate;
+	
+	@Temporal(TemporalType.DATE)
+	private Date leaseenddate;
 	
 	public Integer getLeaseid() {
 		return leaseid;
@@ -141,4 +147,23 @@ public class LaSurrenderLease implements Serializable{
 	public void setOwnerid(Long ownerid) {
 		this.ownerid = ownerid;
 	}
+	public Date getLeasestartdate() {
+		return leasestartdate;
+	}
+	public void setLeasestartdate(Date leasestartdate) {
+		this.leasestartdate = leasestartdate;
+	}
+	public Date getLeaseenddate() {
+		return leaseenddate;
+	}
+	public void setLeaseenddate(Date leaseenddate) {
+		this.leaseenddate = leaseenddate;
+	}
+	public String getSurrenderreason() {
+		return surrenderreason;
+	}
+	public void setSurrenderreason(String surrenderreason) {
+		this.surrenderreason = surrenderreason;
+	}
+	
 }

@@ -358,6 +358,7 @@ public class ReportsServiceImpl implements ReportsSerivce {
         	objReportCertificateFetch.setMiddlename(report.get(0).getMiddlename());
         	objReportCertificateFetch.setLastname(report.get(0).getLastname());
         	objReportCertificateFetch.setAddress(report.get(0).getAddress());
+        	objReportCertificateFetch.setUdparcelno(report.get(0).getUdparcelno());
         	objReportCertificateFetch.setLandofficersignature(report.get(0).getLandofficersignature());
         	objReportCertificateFetch.setPartyid(report.get(0).getPartyid());
         	
@@ -382,6 +383,7 @@ public class ReportsServiceImpl implements ReportsSerivce {
             params.put("SOUTH", objReportCertificateFetch.getNeighbor_south());
             params.put("sharepercentage", objReportCertificateFetch.getSharepercentage());
             params.put("partyid", objReportCertificateFetch.getPartyid());
+            params.put("udparcelno", objReportCertificateFetch.getUdparcelno());  
             params.put("LAND_OFFICER_SIGNATURE", (StringUtils.isEmpty(objReportCertificateFetch.getLandofficersignature()) ? "0" : objReportCertificateFetch.getLandofficersignature()));
             
           

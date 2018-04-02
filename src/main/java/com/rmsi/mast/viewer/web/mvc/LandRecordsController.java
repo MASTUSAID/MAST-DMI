@@ -62,6 +62,7 @@ import com.rmsi.mast.studio.dao.ProjectAreaDAO;
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.dao.ShareTypeDAO;
 import com.rmsi.mast.studio.dao.SocialTenureRelationshipDAO;
+import com.rmsi.mast.studio.dao.SourceDocumentDAO;
 import com.rmsi.mast.studio.dao.UserRoleDAO;
 import com.rmsi.mast.studio.domain.AcquisitionType;
 import com.rmsi.mast.studio.domain.AttributeCategory;
@@ -78,6 +79,7 @@ import com.rmsi.mast.studio.domain.GroupType;
 import com.rmsi.mast.studio.domain.IdType;
 import com.rmsi.mast.studio.domain.LaExtDispute;
 import com.rmsi.mast.studio.domain.LaExtDisputelandmapping;
+import com.rmsi.mast.studio.domain.LaExtTransactionHistory;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaParty;
 import com.rmsi.mast.studio.domain.LaPartyPerson;
@@ -123,6 +125,7 @@ import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonadministrator;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
 import com.rmsi.mast.studio.mobile.dao.EducationLevelDao;
+import com.rmsi.mast.studio.mobile.dao.GenderDao;
 import com.rmsi.mast.studio.mobile.dao.GroupTypeDao;
 import com.rmsi.mast.studio.mobile.dao.NaturalPersonDao;
 import com.rmsi.mast.studio.mobile.dao.NonNaturalPersonDao;
@@ -137,6 +140,7 @@ import com.rmsi.mast.studio.util.DateUtils;
 import com.rmsi.mast.studio.util.FileUtils;
 import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.dao.AllocateUserDao;
+import com.rmsi.mast.viewer.dao.LaExtTransactionHistoryDao;
 import com.rmsi.mast.viewer.dao.LaExtTransactiondetailDao;
 import com.rmsi.mast.viewer.dao.LaPartyDao;
 import com.rmsi.mast.viewer.dao.LaPartyPersonDao;
@@ -176,6 +180,7 @@ public class LandRecordsController {
 
     @Autowired
     private SpatialUnitService spatialUnitService;
+    
 
     @Autowired
     private UserDataService userDataService;
@@ -261,6 +266,17 @@ public class LandRecordsController {
     @Autowired
 	OutputformatDAO Outputformatdao;
     
+    @Autowired
+    SocialTenureRelationshipDAO socialTenureRelationshipDAO;
+    
+    @Autowired
+    LaExtTransactionHistoryDao laExtTransactionHistorydao;
+    
+    @Autowired
+    GenderDao Genderdao;
+    @Autowired
+    SourceDocumentDAO sourcedocdao;
+    
    
     
    
@@ -312,16 +328,70 @@ public class LandRecordsController {
     }
 
     
-    @RequestMapping(value = "/viewer/landrecords/savePersonOfInterestForEditing", method = RequestMethod.POST)
+    @RequestMapping(value = "/viewer/landrecords/savePersonOfInterestForEditing/{landId}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity savePersonOfInterestForEditing(HttpServletResponse response, @RequestBody SpatialUnitPersonWithInterest pfe) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(spatialUnitPersonWithInterestService.findByObject(pfe));
+    public SpatialUnitPersonWithInterest savePersonOfInterestForEditing(HttpServletRequest request, @PathVariable Long landId, Principal principal) {
+        
+    	SpatialUnitPersonWithInterest personinterest =null;
+    	Date date1 =null;
+    	try {
+        	Integer PoiId =0;
+        	Integer genderid =0;
+        	Integer realtionid =0;
+        	String dateofbirth ="";
+        	String firstname ="";
+        	String middlename ="";
+        	String lastname ="";
+        	
+        	
+			try{firstname =  ServletRequestUtils.getRequiredStringParameter(request, "firstName");}catch(Exception e){}
+			try{middlename =ServletRequestUtils.getRequiredStringParameter(request, "middleName");}catch(Exception e){}
+			try{lastname =ServletRequestUtils.getRequiredStringParameter(request, "lastName");}catch(Exception e){}
+			try{genderid =ServletRequestUtils.getRequiredIntParameter(request, "gender");}catch(Exception e){}
+			try{realtionid= ServletRequestUtils.getRequiredIntParameter(request, "relation");}catch(Exception e){}
+			try{dateofbirth=ServletRequestUtils.getRequiredStringParameter(request, "dob");}catch(Exception e){}
+			try{PoiId=ServletRequestUtils.getRequiredIntParameter(request, "id");}catch(Exception e){}
+			
+			if(dateofbirth != ""){
+				
+				 DateFormat inputFormat = new SimpleDateFormat(
+					        "E MMM dd yyyy HH:mm:ss 'GMT'z", Locale.ENGLISH);
+					     date1 = inputFormat.parse(dateofbirth);
+    		
+    		
+//			 date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
+			}
+
+			personinterest = spatialUnitPersonWithInterestService.findSpatialUnitPersonWithInterestById(PoiId.longValue());
+        	
+			if(null ==personinterest){
+            	personinterest = new SpatialUnitPersonWithInterest();
+            	 personinterest.setFirstName(firstname);
+                 personinterest.setMiddleName(middlename);
+                 personinterest.setLastName(lastname);
+                 personinterest.setDob(date1);
+                 personinterest.setGender(genderid);
+                 personinterest.setRelation(realtionid);
+ 	           personinterest.setLandid(landId);
+ 	          personinterest.setCreatedby(1);
+ 	         personinterest.setCreateddate(new Date());
+ 	        personinterest.setIsactive(true);
+            }
+            else{
+            personinterest.setFirstName(firstname);
+            personinterest.setMiddleName(middlename);
+            personinterest.setLastName(lastname);
+            personinterest.setDob(date1);
+            personinterest.setGender(genderid);
+            personinterest.setRelation(realtionid);
+            }
+    		
+			spatialUnitPersonWithInterestService.save(personinterest);
+        	
+            return personinterest;
         } catch (Exception e) {
             logger.error(e);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Failed to save record - " + e.getMessage());
+            return null;
         }
     }
     
@@ -350,8 +420,19 @@ public class LandRecordsController {
     @RequestMapping(value = "/viewer/landrecords/tenuretype/", method = RequestMethod.GET)
     @ResponseBody
     public List<ShareType> tenureList() {
+    
+    	List<ShareType> sharetype = new ArrayList<ShareType>();
+    	List<ShareType> sharetypelist = landRecordsService.findAllTenureList();
+    	for(ShareType obj: sharetypelist){
+    		if(obj.getIsactive()){
+    			sharetype.add(obj);
+    		}
+    		
+    	}
+    	
+        return sharetype;
 
-        return landRecordsService.findAllTenureList();
+         
 
     }
 
@@ -397,6 +478,7 @@ public class LandRecordsController {
             int existingUse = ServletRequestUtils.getRequiredIntParameter(request, "existing_use");
             int proposedUse = ServletRequestUtils.getRequiredIntParameter(request, "proposed_use");
             int claimNumber = ServletRequestUtils.getRequiredIntParameter(request, "claimNumber");
+            int aquisitiontype = ServletRequestUtils.getRequiredIntParameter(request, "aquisition_id");
           //  int length_general = ServletRequestUtils.getRequiredIntParameter(request, "general_length");
         
         
@@ -408,14 +490,21 @@ public class LandRecordsController {
             int tenureType=ServletRequestUtils.getRequiredIntParameter(request, "tenure_type"); // share 
             int tenureclass_id=ServletRequestUtils.getRequiredIntParameter(request, "tenureclass_id"); //TenureClass
             int tenureDuration =ServletRequestUtils.getRequiredIntParameter(request, "tenureDuration"); 
-            
+            String Area =ServletRequestUtils.getRequiredStringParameter(request, "area"); 
             ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(Usin).get(0);
+            
+            Double area = new Double(Area);
+            
             
             if(tenureType>0){
             	ShareType objShareType=	ShareTypeDao.getShareTypeById(tenureType);
             	spatialUnit.setLaRightLandsharetype(objShareType);
             }
-            
+            if(aquisitiontype>0){
+            	AcquisitionType aquisitionobj= new AcquisitionType();
+            	aquisitionobj.setAcquisitiontypeid(aquisitiontype);
+            	spatialUnit.setLaRightAcquisitiontype(aquisitionobj);
+            }
             if(tenureclass_id>0){
             	spatialUnit.setTenureclassid(tenureclass_id);
             }
@@ -434,6 +523,7 @@ public class LandRecordsController {
             spatialUnit.setNeighborNorth(neighbour_north);
             spatialUnit.setNeighborSouth(neighbour_south);
             spatialUnit.setNeighborWest(neighbour_west);
+            spatialUnit.setArea(area);
          
 
             if (existingUse != 0) {
@@ -545,7 +635,12 @@ public class LandRecordsController {
     public List<ClaimType> getClaimTypes() {
         List<ClaimType> list = new ArrayList<>();
         try {
-            list = landRecordsService.getClaimTypes();
+        	List<ClaimType>  ClaimTypelist = landRecordsService.getClaimTypes();
+        	for(ClaimType obj: ClaimTypelist){
+        		if(obj.isActive()){
+        		list.add(obj);
+        		}
+        	}
         } catch (Exception e) {
             logger.error(e);
             return list;
@@ -1183,6 +1278,8 @@ public class LandRecordsController {
     	String username = principal.getName();
 		User userObj = userService.findByUniqueName(username);
 		Long user_id = userObj.getId();
+		boolean disputedPerson = false;
+		boolean non_disputedPerson  = false;
 		
 		
         try {
@@ -1198,6 +1295,16 @@ public class LandRecordsController {
             if(disputestatus==2){
             List<LaExtDisputelandmapping> disputelandlst = laExtDisputelandmappingService.findLaExtDisputelandmappingListByLandId(usin);
             for(LaExtDisputelandmapping obj: disputelandlst ){
+            	if(obj.getPersontypeid()== 10){
+            		disputedPerson=true;
+            	}
+            	else if(obj.getPersontypeid()== 3){
+            		non_disputedPerson= true;
+            	}
+            }
+            if(non_disputedPerson){
+            for(LaExtDisputelandmapping obj: disputelandlst ){
+            	
             	obj.setIsactive(false);
             	laExtDisputelandmappingService.saveLaExtDisputelandmapping(obj);
             	
@@ -1206,7 +1313,7 @@ public class LandRecordsController {
                 right.setLandid(usin);
                 right.setPartyid(obj.getPartyid());
                 PersonType persontype = new PersonType();
-                persontype.setPersontypeid(obj.getPersontypeid());
+                persontype.setPersontypeid(1);
                 
                 right.setLaPartygroupPersontype(persontype);
                 right.setLaExtTransactiondetail(obj.getLaExtTransactiondetail());
@@ -1217,12 +1324,18 @@ public class LandRecordsController {
                 
                 SocialTenureRelationship  socialTenurerelationship  = socialTenureRelationshipDao.saveSocialTenureRelationship(right);
                 
-                
+                NaturalPerson personobj=null;
+                personobj=(NaturalPerson) laPartyDao.getPartyIdByID(socialTenurerelationship.getPartyid());
+                PersonType persontypeobj= new PersonType();
+                persontypeobj.setPersontypeid(1);
+                personobj.setLaPartygroupPersontype(persontypeobj);
+                naturalPersonDao.addNaturalPerson(personobj);
             }
+            
             ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(usin).get(0);
             spatialUnit.setClaimtypeid(1);
             claimBasicService.saveClaimBasicDAO(spatialUnit);
-            }
+          
 
             
             if(usin>0){
@@ -1236,10 +1349,20 @@ public class LandRecordsController {
 
             
             laExtDisputeService.saveLaExtDispute(objLaExtDispute);
+            
+            return "true";
+            }
+            
+            
+                return "False";
+                
+            
+            }
+            else {
+            	return "false";
+            }
 
-
-
-            return RESPONSE_OK;
+           
 
         } catch (Exception e) {
             logger.error(e);
@@ -1571,7 +1694,19 @@ public class LandRecordsController {
     @RequestMapping(value = "/viewer/landrecords/tenureclass/", method = RequestMethod.GET)
     @ResponseBody
     public List<TenureClass> tenureclassList() {
-        return landRecordsService.findAllTenureClass();
+    	boolean flag =true;
+    	List<TenureClass> tenure = new ArrayList<TenureClass>();
+    	List<TenureClass> tenureobj = landRecordsService.findAllTenureClass();
+    	for(TenureClass obj: tenureobj){
+    		if(obj.getIsactive()== flag){
+    			tenure.add(obj);
+    		}
+    		else if(obj.getIsactive() != flag){
+    			
+    		}
+    	}
+    	
+        return tenure;
     }
 
     @RequestMapping(value = "/viewer/landrecords/doctypes/", method = RequestMethod.GET)
@@ -1806,11 +1941,19 @@ public class LandRecordsController {
     }
     
     
-    @RequestMapping(value = "/viewer/landrecords/download/{id}/{transactionid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/viewer/landrecords/download/{id}/{transactionid}/{Personusin}", method = RequestMethod.GET)
     @ResponseBody
-    public void PersonMultimediaShow(@PathVariable Long id,@PathVariable Long transactionid,  HttpServletRequest request, HttpServletResponse response) {
+    public void PersonMultimediaShow(@PathVariable Long id,@PathVariable Long transactionid,@PathVariable Long Personusin,  HttpServletRequest request, HttpServletResponse response) {
     	byte[] data =null;
-    	 SourceDocument doc =  sourceDocumentsDao.findBypartyandtransid(id, transactionid);
+    	SourceDocument doc =null;
+    	if(transactionid ==0){
+    	SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(id, Personusin);
+    	 doc =  sourceDocumentsDao.findBypartyandtransid(id, socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
+    	}
+    	else{
+    	  doc =  sourceDocumentsDao.findBypartyandtransid(id, transactionid);
+    	  
+    	}
     	 if(doc==null){
     		 response.setContentLength(data.length);
     	 }
@@ -1832,12 +1975,19 @@ public class LandRecordsController {
     }
 
     
-    @RequestMapping(value = "/viewer/landrecords/mediaavail/{id}/{transactionid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/viewer/landrecords/mediaavail/{id}/{transactionid}/{Personusin}", method = RequestMethod.GET)
     @ResponseBody
-    public boolean isPersonMultimediaexist(@PathVariable Long id,@PathVariable Long transactionid,  HttpServletRequest request, HttpServletResponse response) {
-    	
-    	 SourceDocument doc =  sourceDocumentsDao.findBypartyandtransid(id, transactionid);
-    	 if(doc==null){
+    public boolean isPersonMultimediaexist(@PathVariable Long id,@PathVariable Long transactionid,@PathVariable Long Personusin,  HttpServletRequest request, HttpServletResponse response) {
+    	SourceDocument doc = null;
+    	if(transactionid==0){
+    		SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(id, Personusin);
+    		  doc =  sourceDocumentsDao.findBypartyandtransid(id, socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
+    	}
+    	else if(transactionid !=0){
+    	  doc =  sourceDocumentsDao.findBypartyandtransid(id, transactionid);
+    	 
+    	}
+    	if(doc==null){
     		return false;
     	 }
        
@@ -1914,7 +2064,7 @@ public class LandRecordsController {
                 writeReport(reportsService.getCcroForms(claim.getProject(), usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
             }*/
         	
-        	writeReport(reportsService.getCcroFormsLadm("New Project", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
+        	writeReport(reportsService.getCcroFormsLadm("", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
         	
         } catch (Exception e) {
             logger.error(e);
@@ -1930,7 +2080,7 @@ public class LandRecordsController {
                 writeReport(reportsService.getCcroForms(claim.getProject(), usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
             }*/
         	
-        	writeReport(reportsService.getlandverificationForm("New Project", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
+        	writeReport(reportsService.getlandverificationForm("", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
         	
         } catch (Exception e) {
             logger.error(e);
@@ -4975,6 +5125,54 @@ public class LandRecordsController {
 		}
 	}
    
+   
+   
+   @RequestMapping(value = "/viewer/landrecords/findsaledetailbytransid/{transactionid}", method = RequestMethod.GET)
+ 	@ResponseBody
+ 	public List<Object>  findsaledetailbyTransid(@PathVariable Long transactionid)
+ 	{
+ 	   	List<Object> object=new ArrayList<Object>(); 
+ 	   LaExtTransactionHistory lasaleobj =null;
+ 	   	//Object objsaledetails = null;
+ 		Object newobjperson = null; 
+ 		Object oldobjperson = null;
+ 		/*Object objtransactiondetails = null;*/
+ 			
+ 	   	try 
+ 	   	{
+ 	   		
+ 	   	lasaleobj = 	laExtTransactionHistorydao.getTransactionHistoryByTransId(transactionid.intValue());
+ 			//objsaledetails= landRecordsService.getownerhistorydetails(landid);
+ 	   
+ 	 
+ 	   NaturalPerson oldpersonobj = (NaturalPerson) laPartyDao.getPartyIdByID(lasaleobj.getOldownerid());
+ 	  NaturalPerson newpersonobj = (NaturalPerson) laPartyDao.getPartyIdByID(lasaleobj.getNewownerid());
+ 	  
+ 	 Gender genderobj = Genderdao.getGenderById(oldpersonobj.getGenderid().longValue());
+ 	oldpersonobj.setGender(genderobj.getGender_en());
+ 	
+ 	 Gender newgenderobj = Genderdao.getGenderById(newpersonobj.getGenderid().longValue());
+ 	newpersonobj.setGender(newgenderobj.getGender_en());
+ 	
+ 	newobjperson =(Object) newpersonobj;
+ 	oldobjperson =(Object) oldpersonobj;
+ 			/*objmortagedetails= landRecordsService.getmortagagedetails(landid);
+ 			objtransactiondetails= landRecordsService.gettransactiondetails(landid);*/
+  			
+ 			//object.add(objsaledetails);
+ 			object.add(0, oldobjperson);
+ 			object.add(1, newobjperson); 
+ 			//object.add(objtransactiondetails);
+ 			return object;
+ 		} 
+ 	   	catch (Exception e)
+ 	   	{
+ 			// TODO Auto-generated catch block
+ 			e.printStackTrace();
+ 			return null;
+ 		}
+ 	}
+   
    @RequestMapping(value = "/viewer/landrecords/findleasedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
   	@ResponseBody
   	public List<Object>  findleasedetailbylandid(@PathVariable Long transactionid,@PathVariable Long landid)
@@ -4982,19 +5180,20 @@ public class LandRecordsController {
   	   	List<Object> object=new ArrayList<Object>(); 
   	   	//Object objsaledetails = null;
   		Object objleasedetails = null; 
-  		/*Object objmortagedetails = null;
-  		Object objtransactiondetails = null;*/
+  		Object objdocumentdetails = null;
+  		/*Object objtransactiondetails = null;*/
   			
   	   	try 
   	   	{
   			//objsaledetails= landRecordsService.getownerhistorydetails(landid);
   			objleasedetails= landRecordsService.findleasedetailbylandid(transactionid,landid);
+  			objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
   			/*objmortagedetails= landRecordsService.getmortagagedetails(landid);
   			objtransactiondetails= landRecordsService.gettransactiondetails(landid);*/
    			
   			//object.add(objsaledetails);
   			object.add(objleasedetails);
-  			//object.add(objmortagedetails); 
+  			object.add(objdocumentdetails); 
   			//object.add(objtransactiondetails);
   			return object;
   		} 
@@ -5012,11 +5211,13 @@ public class LandRecordsController {
  	{
  	   	List<Object> object=new ArrayList<Object>(); 	   
  		Object objleasedetails = null; 
- 			
+ 		Object objdocumentdetails = null;
  	   	try 
  	   	{	
  			objleasedetails= landRecordsService.findsurrenderleasedetailbylandid(transactionid,landid);
+ 			objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
  			object.add(objleasedetails);
+ 			object.add(objdocumentdetails); 
  			return object;
  		} 
  	   	catch (Exception e)
@@ -5033,14 +5234,15 @@ public class LandRecordsController {
  	{
  	   	List<Object> object=new ArrayList<Object>();  	   	
  		Object objmortagedetails = null; 
- 		
+ 		Object objdocumentdetails = null;
  			
  	   	try 
  	   	{
  		
  	   	objmortagedetails= landRecordsService.findmortagagedetailbylandid(transactionid,landid);
- 			
+ 	   objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
  			object.add(objmortagedetails);
+ 			object.add(objdocumentdetails); 
  			//object.add(objmortagedetails); 
  			//object.add(objtransactiondetails);
  			return object;
@@ -5156,7 +5358,11 @@ public class LandRecordsController {
   	 {
   		for(LaExtDisputelandmapping obj:disputelandlst){
 			 
-			 if(obj.getPersontypeid()== 1)
+			 if(obj.getPersontypeid()== 3)
+			 {
+				lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+			 }
+			 if(obj.getPersontypeid()== 10)
 			 {
 				lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
 			 }
@@ -5178,7 +5384,7 @@ public class LandRecordsController {
 	   List<NonNaturalPerson> lstdata = new ArrayList<NonNaturalPerson>();
 	   
   	 List<SocialTenureRelationship>  lst= new ArrayList<SocialTenureRelationship>();
-  	 lst= landRecordsService.findAllSocialTenureByUsin(id);;
+  	 lst= landRecordsService.findAllSocialTenureByUsin(id);
   	 if(lst.size()>0)
   	 {
   		 for(SocialTenureRelationship obj:lst){
@@ -5247,13 +5453,16 @@ public class LandRecordsController {
 			NaturalPerson editednaturalperosn = (NaturalPerson) laPartyDao.getPartyIdByID(personid);
 			
 			// add new person for all claim types
+			
 			if(editednaturalperosn== null){     
 				LaExtTransactiondetail LaExtTransactionObj =null;
 				
 				
 				//If Unclaimed
 				if(transactionid==null || transactionid==0){
-				LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+					SocialTenureRelationship socialTenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipByLandId(landid);
+					if(null == socialTenureobj){
+						LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
 				laExtTransactiondetail.setCreatedby(userid.intValue());
 				laExtTransactiondetail.setCreateddate(new Date());
 				laExtTransactiondetail.setIsactive(true);
@@ -5265,6 +5474,10 @@ public class LandRecordsController {
 				laExtTransactiondetail.setRemarks("");
 				laExtTransactiondetail.setProcessid(1l);
 				LaExtTransactionObj =laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
+					}
+					else{
+						LaExtTransactionObj = socialTenureobj.getLaExtTransactiondetail();
+					}
 				}
 				
 				
@@ -5368,6 +5581,12 @@ public class LandRecordsController {
 	        MaritalStatus maritalstatus = new MaritalStatus();
 	        maritalstatus.setMaritalstatusid(maritalstatusid);
 	        try{editednaturalperosn.setLaPartygroupMaritalstatus(maritalstatus);}catch(Exception e){}
+	        
+	        PersonType laPartygroupPersontype = new PersonType();
+	        if(persontypeid !=0){
+			laPartygroupPersontype.setPersontypeid(persontypeid);
+			try{editednaturalperosn.setLaPartygroupPersontype(laPartygroupPersontype);}catch(Exception e){}
+	        }
 	        
 	        
 			return landRecordsService.updateNaturalPersonDataForEdit(editednaturalperosn);
@@ -5516,6 +5735,11 @@ public class LandRecordsController {
 				        objDocument.setLaSpatialunitLand(landid);
 				        objDocument.setLaParty(laPartyDao.getPartyListIdByID(partyid.longValue()).get(0));       
 				        objDocument.setLaExtTransactiondetail( laExtTransactiondetailDao.getLaExtTransactiondetail(transid));
+				        if(transid==0){
+				        	SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(partyid.longValue(), landid);
+					        objDocument.setLaExtTransactiondetail(socialtenureobj.getLaExtTransactiondetail());
+
+				        }
 				        objDocument.setDocumentname(originalFileName);
 				        sourceDocumentsDao.saveUploadedDocuments(objDocument);
 						
@@ -5576,7 +5800,7 @@ public class LandRecordsController {
 				Long created_by = userObj.getId();
 				Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
 
-				
+				SourceDocument doc = null;
 				
 				
 				Integer partyid =null;
@@ -5587,8 +5811,13 @@ public class LandRecordsController {
 				
 				Long landid = 0L;
 				landid= ServletRequestUtils.getRequiredLongParameter(request, "landid");
-				
-				SourceDocument doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), transid.longValue());
+				if(transid==0){
+					SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(partyid.longValue(), landid);
+					doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
+				}
+				else{
+				 doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), transid.longValue());
+				}
 				doc.setIsactive(false);
 				
 				sourceDocumentsDao.saveUploadedDocuments(doc);
@@ -5707,5 +5936,132 @@ public class LandRecordsController {
 			
 	   }
 	   
+	   @RequestMapping(value = "/viewer/landrecords/checkShareType/{id}", method = RequestMethod.GET)
+	    @ResponseBody
+	    public String landsharetype(@PathVariable Long id) {
+		  
+		   String data ="true";
+		  List<ClaimBasic> claimBasicobj =  spatialUnitService.getClaimsBasicByLandId(id);
+		 List<SocialTenureRelationship> socialtenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipBylandID(claimBasicobj.get(0).getLandid());
+		  if(socialtenureobj.size() <= 1 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==6){
+			  data = "You cant't add more than 1-person for Single Tenancy";
+			  return "You cant't add more than 1-person for single Tenancy";
+		  }
+		  else  if(socialtenureobj.size() >= 2 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==7){
+			  data = "You cant't add more than 2-person for Joint Tenancy";
+			  return "You cant't add more than 2-person for Joint Tenancy";
+		  }
+		  else  if(socialtenureobj.size() >= 0 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==8){
+			  return "true";
+		  }
+		  else  if(socialtenureobj.size() >= 0 && socialtenureobj.size() < 1 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==9){
+			  return "true";
+		  }
+		  else{ 
+	        return  data;
+		  }
+	    }
+	   
+	   
+	   @RequestMapping(value = "/viewer/landrecords/aquisitiontype/", method = RequestMethod.GET)
+	    @ResponseBody
+	    public List<AcquisitionType> getAquisitionList(Principal principal) {
+	        return  spatialUnitService.getAcquisitionTypes();
+
+	    }
+	  
+	   
+	    @RequestMapping(value = "/viewer/landrecords/landcorrectionreport/{transid}/{usin}", method = RequestMethod.GET)
+	    @ResponseBody
+	    public List<Object> getDataCorrectionRep(@PathVariable Long transid,@PathVariable Long usin,  HttpServletRequest request, HttpServletResponse response, Principal principal ) {
+
+
+	    	List<Object> object=new ArrayList<Object>(); 
+	    	Object objlanddetails = null;
+	    	Object objpersondetails = null; 
+	    	Object objpoidetails = null;
+	    	Object objnonnaturalpersondetails = null;
+	    	Object objdocs = null;
+	    	Object signdocs = null;
+
+	    	try 
+	    	{
+	    		objlanddetails= landRecordsService.getDataCorrectionReport(transid, usin);
+	    		object.add(objlanddetails);
+
+	    	}catch(Exception e){
+	    		e.printStackTrace(); 
+	    	}
+	    	try 
+	    	{
+	    		objpoidetails= landRecordsService.getDataCorrectionReportPOI(transid, usin);
+	    		object.add(objpoidetails);
+
+	    	}catch(Exception e){
+	    		e.printStackTrace(); 
+	    	}
+	    	
+	    	try 
+	    	{
+	    		objpersondetails= landRecordsService.getDataCorrectionPersonsReport(transid, usin);
+	    		object.add(objpersondetails);
+
+	    	}catch(Exception e){
+	    		e.printStackTrace(); 
+	    	}
+	    	
+	    	try 
+	    	{
+	    		List<SourceDocument> doc =   sourcedocdao.findSourceDocumentByLandIdandTransactionid(usin, transid.intValue());
+	    		
+		    	objdocs = (Object) doc;
+		    	object.add(objdocs);
+
+	    	}catch(Exception e){
+	    		e.printStackTrace(); 
+	    	}
+	    	
+	    	try 
+	    	{
+	    		 String username = principal.getName();
+			        User user = userService.findByUniqueName(username);
+			        Long userid = user.getId();
+			        String projectName = userDataService.getDefaultProjectByUserId(userid.intValue());
+			        Project project= projectDAO.findByName(projectName);
+	                
+			        ProjectArea projectArea = projectService.getProjectArea(project.getName()).get(0);
+	    		
+			        signdocs = (Object) projectArea;
+		    	object.add(signdocs);
+
+	    	}catch(Exception e){
+	    		e.printStackTrace(); 
+	    	}
+
+	 	   try {
+			List<NonNaturalPerson> lstdata = new ArrayList<>();
+			   
+			 List<SocialTenureRelationship>  lst= new ArrayList<SocialTenureRelationship>();
+				 lst= landRecordsService.findAllSocialTenureByUsin(usin);
+			  	 if(lst.size()>0)
+			  	 {
+			  		 for(SocialTenureRelationship obj:lst){
+			  			 
+			  			 if(obj.getLaPartygroupPersontype().getPersontypeid()== 2)
+			  			 {
+			  				lstdata.add((NonNaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+			  			 }
+			  			  			 
+			  		 }
+			  	 }
+			  	objnonnaturalpersondetails =(Object) lstdata;
+			  	object.add(objnonnaturalpersondetails);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    	
+	    	return object;
+	    }
    
 }

@@ -9,6 +9,7 @@ import com.rmsi.mast.studio.domain.IdType;
 import com.rmsi.mast.studio.domain.LaExtFinancialagency;
 import com.rmsi.mast.studio.domain.LaExtPersonLandMapping;
 import com.rmsi.mast.studio.domain.LaExtProcess;
+import com.rmsi.mast.studio.domain.LaExtTransactionHistory;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaLease;
 import com.rmsi.mast.studio.domain.LaMortgage;
@@ -17,6 +18,7 @@ import com.rmsi.mast.studio.domain.LaPartyPerson;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.LaSpatialunitgroup;
 import com.rmsi.mast.studio.domain.LaSurrenderLease;
+import com.rmsi.mast.studio.domain.LaSurrenderMortgage;
 import com.rmsi.mast.studio.domain.La_Month;
 import com.rmsi.mast.studio.domain.LandType;
 import com.rmsi.mast.studio.domain.MaritalStatus;
@@ -39,6 +41,7 @@ public interface RegistrationRecordsService {
 	
 	LaPartyPerson getPartyPersonDetails(Integer landid);
 	List<LaPartyPerson> getAllPartyPersonDetails(Integer landid);
+	List<LaPartyPerson> fillAllPartyPersonDetails(Integer landid,Integer processid);
 	LaPartyPerson getPartyPersonDetailssurrenderlease(Integer landid);
 	List<MaritalStatus> getMaritalStatusDetails();
 	List<Gender> getGenderDetails();
@@ -88,9 +91,12 @@ public interface RegistrationRecordsService {
 	@Transactional
 	SocialTenureRelationship saveSocialTenureRelationship(SocialTenureRelationship socialTenureRelationship);
 	
-	 @Transactional
+	@Transactional
 	boolean updateSocialTenureRelationshipByPartyId(Long partyId,Long landid);
 	
+	@Transactional
+	boolean updateSocialTenureRelationshipByPartytypeId(Long partyId,Long landid);
+	 
 	public LaSpatialunitgroup findLaSpatialunitgroupById(Integer id) ;
 	
 	ProjectRegion findProjectRegionById(Integer id);
@@ -115,6 +121,9 @@ public interface RegistrationRecordsService {
 	 @Transactional
 	 LaMortgage saveMortgage(LaMortgage laMortgage);
 	 
+	 @Transactional
+	 LaSurrenderMortgage saveSurrenderMortgage(LaSurrenderMortgage laMortgage);
+	 
 	 List<La_Month> getmonthofleaseDetails();
 	 
 	 La_Month getLaMonthById(int no_Of_month_Lease);
@@ -129,7 +138,19 @@ public interface RegistrationRecordsService {
 	 Integer searchCount( Long transactionid,Integer startfrom,String project,String communeId,String parcelId);
 
 	 boolean disablelease(Long personid, Long landid);
+	 
+	 boolean disableMortagage(Long personid, Long landid);
+	 
 	 boolean islandunderlease(Long landid);
+
+	SocialTenureRelationship getSocialTenureRelationshipByLandIdForBuyer(Long landId,Long processid);
+
+	SocialTenureRelationship getSocialTenureRelationshipForSellerByLandId(Long landId);
+	
+	@Transactional
+	LaExtTransactionHistory saveTransactionHistory(LaExtTransactionHistory latranshist);
+	
+	SocialTenureRelationship getSocialTenureRelationshipByLandIdandTypeId(Long landId,Long processid,Integer persontype);
 	
 }
 

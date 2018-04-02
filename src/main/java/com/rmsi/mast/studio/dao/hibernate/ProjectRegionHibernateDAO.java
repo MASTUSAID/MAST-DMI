@@ -118,6 +118,25 @@ public class ProjectRegionHibernateDAO extends GenericHibernateDAO<Project, Long
 			}
 			return null;
 
+		}
+
+
+		@Override
+		public List<ProjectRegion> findAllProjectRegion() {
+		
+			List<ProjectRegion> project =new ArrayList<ProjectRegion>();
+
+			try {
+				project =getEntityManager().createQuery("Select p from ProjectRegion p where p.isactive=true").getResultList();
+				if(project.size()>0)
+					return project;
+				else
+					return null;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+			
 		} 
 		
 		

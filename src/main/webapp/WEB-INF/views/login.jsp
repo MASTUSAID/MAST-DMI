@@ -77,14 +77,21 @@
                 <div class="home_background">
                     <div class="homebox" id="homebox_whatismast">
                         <div class="homebox_title">What is MAST?</div>
-                        <p>Around the world, millions of people lack documented land rights. This may be the result of weak land governance systems or
-                            limited capacity to provide accessible and accountable land administration services. These institutional challenges are widespread
-                            and drive costly and systemic problems on the ground. USAID is addressing these problems through an innovative pilot called the
-                            Mobile Applications to Secure Tenure (MAST) project, an easy-to-use, open-source smartphone application that can capture the
-                            information needed to issue formal documentation of land rights. Coupled with a cloud-based data management system to store
-                            geospatial and demographic information, the project is designed to lower costs and time involved in registering land rights and,
-                            importantly, to make the process more transparent and accessible to local people.</p>
-                        <p>Learn more about this project at <a target="_new" href="http://www.google.com/url?q=http%3A%2F%2Fwww.usaidlandtenure.net%2Fproject%2Fmobile-applications-secure-tenure-tanzania&sa=D&sntz=1&usg=AFQjCNFWVKqfDObjPCu_W4K--WQ3nPnNVw">USAID's Land Tenure Portal</a>.</p>
+                        <p>
+	                        MAST is a suite of innovative technology tools and inclusive methods that use mobile phones and tablets to efficiently, transparently, 
+	                        and affordably map and document land and resource rights.  MAST helps people and communities define, record, and register local land boundaries 
+	                        and important information, such as uses, how the land is occupied, as well as the names and photos of people who live there. MAST combines 
+	                        an easy-to-use mobile phone application with training and a participatory approach that empowers citizens in the process of understanding, 
+	                        mapping, and registering their own rights and resources.
+                        </p>
+                        <p>
+	                        MAST has been used by stakeholders to solve a myriad of challenges that impede tenure security by making the technology more accessible 
+	                        to more people. MAST provides transparent and effective mechanisms that improve land governance, build institutional capacities, engage 
+	                        citizens and help them understand their rights, responsibilities in either formal or informal tenure systems or in areas where these two 
+	                        systems operate simultaneously.
+	                        </p>
+	                        <p> Learn more about this project at <a target="_new" href="https://www.land-links.org/tool-resource/mobile-applications-to-secure-tenure-mast/"> Learn more about this project at USAID's Land Tenure Portal. </a>.</p>
+                     
                         
                         
                         
@@ -128,8 +135,13 @@
                 </div>
 				
 				
-				<div class="footer"> <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');"></div>
-                    <div id="android_logo"></div><span class="copyright-text">&copy; 2017. All Rights Reserved.</span></div>
+				<div class="footer"> 
+					<!-- <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');">
+					</div>
+               		 <div id="android_logo">
+                	</div> -->
+               	 <span class="copyright-text">&copy; 2018. All Rights Reserved.</span>
+                </div>
            
                 <script language="javascript">
                     var auth_status = "<%=auth_fail_status%>";

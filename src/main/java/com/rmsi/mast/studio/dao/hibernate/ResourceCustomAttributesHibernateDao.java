@@ -41,4 +41,34 @@ ResourceCustomAttributesDAO{
          	}
 	}
 
+	@Override
+	public List<Object[]> getResourceCustomAttributeValuesAndDatatypeBylandId(
+			Integer projectId, Integer Id) {
+		try{
+			
+		
+
+		String query = "Select AM.fieldname, RA.customattributeid "+
+						"from la_ext_resource_custom_attributevalue RA,la_ext_resource_custom_attribute AM,la_ext_attributecategory AC "+
+						"Where RA.customattributeid=AM.customattributeid And AM.AttributeCategoryID=AC.AttributeCategoryID "+
+						"and RA.projectid =" +projectId +" And RA.LandID="+Id+" order by AM.listing";
+		
+		
+		
+		List<Object[]> arrObject = getEntityManager().createNativeQuery(query).getResultList();
+		if(arrObject.size()>0){
+			
+			return arrObject;
+		}
+		
+		return null;
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+		return null;
+	}
+	}
+
+	
+
 }

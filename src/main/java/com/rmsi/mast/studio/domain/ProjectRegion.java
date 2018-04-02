@@ -46,6 +46,11 @@ public class ProjectRegion implements Serializable
 	@JoinColumn(name="spatialunitgroupid")
 	private LaSpatialunitgroup laSpatialunitgroup;
 	
+	
+	@Column(name="code")
+	private String areaCode;
+	
+		
 	public ProjectRegion(){
 		
 	}
@@ -97,6 +102,14 @@ public class ProjectRegion implements Serializable
 
 	public void setUperhierarchyid(Integer uperhierarchyid) {
 		this.uperhierarchyid = uperhierarchyid;
+	}
+
+	public String getAreaCode() {
+		return areaCode;
+	}
+
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
 	}
 	
 	

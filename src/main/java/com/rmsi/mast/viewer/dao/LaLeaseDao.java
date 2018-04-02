@@ -1,5 +1,7 @@
 package com.rmsi.mast.viewer.dao;
 
+import java.util.List;
+
 import com.rmsi.mast.studio.dao.GenericDAO;
 import com.rmsi.mast.studio.domain.LaLease;
 import com.rmsi.mast.studio.domain.LaSurrenderLease;
@@ -17,4 +19,6 @@ public interface LaLeaseDao extends GenericDAO<LaLease, Integer>{
 	boolean disablelease(Long personid, Long landid);
 	boolean islandunderlease(Long landid);
 	LaSurrenderLease getSurrenderLeaseById(Integer leaseId);
+	List<LaLease> getleaseeListByLandId(Long landId);
+	LaLease getleaseobjbylandandprocessid(Long landId, Long processId);
 }

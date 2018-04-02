@@ -18,6 +18,7 @@ public class SpatialunitPersonwithinterestServiceImpl implements SpatialunitPers
 
 
 	@Override
+	@Transactional
 	public SpatialUnitPersonWithInterest save(SpatialUnitPersonWithInterest objSpatialunitPersonwithinterest) {
 		try{
 			
@@ -43,9 +44,9 @@ public class SpatialunitPersonwithinterestServiceImpl implements SpatialunitPers
 	@Override
 	@Transactional
 	public SpatialUnitPersonWithInterest findByObject(
-			SpatialUnitPersonWithInterest objSpatialunitPersonwithinterest) {
+			SpatialUnitPersonWithInterest objSpatialunitPersonwithinterest, Long landId) {
 		// TODO Auto-generated method stub
-		return	spatialUnitPersonWithInterestDao.findSpatialUnitPersonWithInterestByObj(objSpatialunitPersonwithinterest);
+		return	spatialUnitPersonWithInterestDao.findSpatialUnitPersonWithInterestByObj(objSpatialunitPersonwithinterest, landId);
 		
 		  
 	}

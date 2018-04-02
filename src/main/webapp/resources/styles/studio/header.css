@@ -23,18 +23,18 @@ html,body{font: normal 14px 'titilliumregular', sans-serif!important;}
     box-shadow: 0 3px 3px rgba(0,0,0,.5);
 	 
 }
-
 #usaid_logo {
-    width: 70px;
-    background: url(../../images/usaid_logo_300.png) no-repeat;
-    height: 70px;
-    float: left;
-    margin-top: 10px;
-    margin-left: 15px;
-    display: inline-block;
-    position: absolute;
-    left: 15px;
+width: 128px;
+background: url(../../images/usaid_logo_300.png) no-repeat;
+height: 51px;
+float: left;
+margin-top: 20px;
+margin-left: 15px;
+display: inline-block;
+position: absolute;
+left: 15px;
 }
+
 
 .header_title {
  

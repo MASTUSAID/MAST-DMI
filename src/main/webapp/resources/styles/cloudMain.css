@@ -29,7 +29,7 @@ body {
 
    width:100%;
 
-   background-image:url(../images/homebg.png) ;/*your background image*/  
+   background-image:url(../images/homebg.jpg) ;/*your background image*/  
    background-repeat:no-repeat;/*we want to have one single image not a repeated one*/  
    background-size:cover;/*this sets the image to fullscreen covering the whole screen*/  
    /*css hack for ie*/     
@@ -1144,24 +1144,29 @@ padding:0;
 
 .dashboard-item{
 	background: url('../images/ds_item_bg.png') no-repeat;
-	height: 91px;
+	height: 99px;
 	width: 439px;
 	margin-bottom: 15px;
 	cursor:pointer;
-	transition: 1s all ease;
+	/*transition: 1s all ease;
     -moz-transition: 1s all ease;
     -webkit-transition: 1s all ease;
     -o-transition: 1s all ease;
-    -ms-transition: 1s all ease;
+    -ms-transition: 1s all ease;*/
 	
 }
 
 .dashboard-item:hover{
     background: url('../images/ds_item_bg_active.png') no-repeat;
-	height: 91px;
+	height: 99px;
 	width: 439px;
+	text-decoration: none;
+
 	
 	
+}
+.dashboard-content:hover {
+  text-decoration: none;
 }
 .icon-img {
     margin-left: 25px;
@@ -1242,15 +1247,16 @@ float: left;
 }
 
 #usaid_logo {
-width: 70px;
+width: 128px;
 background: url(../images/usaid_logo_300.png) no-repeat;
-height: 70px;
+height: 51px;
 float: left;
-margin-top: 10px;
+margin-top: 20px;
 margin-left: 15px;
 display: inline-block;
 position: absolute;
-left: 15px;}
+left: 15px;
+}
 
 .header_title {
  

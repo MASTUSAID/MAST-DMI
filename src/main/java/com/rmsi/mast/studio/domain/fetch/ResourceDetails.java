@@ -26,6 +26,7 @@ public class ResourceDetails implements Serializable {
 	private String  geometryName;
 	private String  projectName;
 	private String  personName;
+	private Integer projectId;
 	
 	public Integer getLandid() {
 		return landid;
@@ -68,6 +69,12 @@ public class ResourceDetails implements Serializable {
 	}
 	public void setPersonName(String personName) {
 		this.personName = personName;
+	}
+	public Integer getProjectId() {
+		return projectId;
+	}
+	public void setProjectId(Integer projectId) {
+		this.projectId = projectId;
 	}
 	
 	

@@ -3703,5 +3703,23 @@ body.loading .modal {
     background: #362d59;
 }
 
+.jsgrid-grid-body {
+    max-height: 50%;
+}
+.borderedBottom {
+    border-bottom: 1px solid #00b7bd;
+	height:1px;
+}
+.no-margin-bottom{
+  margin-top:22px !important;
+ 
+}
 
+#addPersonbutton, #addPoi {
+    background: rgba( 255, 255, 255, .8 ) url(../../images/viewer/add-Icon.png) no-repeat left -1px;
+    border: none;
+    outline: none;
+    padding-left: 20px;
+    margin: 0 10px;
+}
 

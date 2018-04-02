@@ -36,8 +36,8 @@ implements LaPartyPersonDao{
 			int persontypeId =  Integer.parseInt(arrObj[1].toString());
 			if(persontypeId == 1){
 				strQuery = "select LP.firstname, LP.middlename, LP.lastname, LG.gender, LM.maritalstatus, LP.identityno, LI.identitytypeid, dateofbirth, LP.contactno, LP.address, LM.maritalstatusid, LG.genderid "+ 
-						"from la_party_person LP inner join la_partygroup_gender LG on LP.genderid = LG.genderid inner join la_partygroup_maritalstatus LM on " + 
-						"LP.maritalstatusid = LM.maritalstatusid inner join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid " +
+						"from la_party_person LP left join la_partygroup_gender LG on LP.genderid = LG.genderid left join la_partygroup_maritalstatus LM on " + 
+						"LP.maritalstatusid = LM.maritalstatusid left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid " +
 						"where LP.personid = " + partyId;
 				
 				List<Object[]> lstParty = getEntityManager().createNativeQuery(strQuery).getResultList();
@@ -66,8 +66,30 @@ implements LaPartyPersonDao{
 						laPartyPerson.setAddress(obj[9] + "");
 					else
 						laPartyPerson.setAddress("");
-					laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
-					laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+					//laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+					try
+					{
+						if(null != obj[10] && !obj[10].toString().isEmpty())
+						{
+							laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+						}
+					} 
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+					}
+					
+					try
+					{
+						if(null != obj[11] && !obj[11].toString().isEmpty())
+						{
+							laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+						}
+					} 
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+					}
 					
 					if(null != obj[7] && !obj[7].toString().isEmpty()){
 						laPartyPerson.setDob(obj[7].toString());
@@ -97,10 +119,11 @@ implements LaPartyPersonDao{
 					//Object[] arrObj = lst.get(0);
 					int partyId = Integer.parseInt(arrObj[0].toString());
 					int persontypeId =  Integer.parseInt(arrObj[1].toString());
-					if(persontypeId == 1){
-						strQuery = "select LP.firstname, LP.middlename, LP.lastname, LG.gender, LM.maritalstatus, LP.identityno, LI.identitytypeid, dateofbirth, LP.contactno, LP.address, LM.maritalstatusid, LG.genderid,LP.personid "+ 
-								"from la_party_person LP inner join la_partygroup_gender LG on LP.genderid = LG.genderid inner join la_partygroup_maritalstatus LM on " + 
-								"LP.maritalstatusid = LM.maritalstatusid inner join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid " +
+					if(persontypeId == 1 || persontypeId == 11){
+						strQuery = "select LP.firstname, LP.middlename, LP.lastname, LG.gender, LM.maritalstatus, LP.identityno, LI.identitytypeid, dateofbirth, LP.contactno, "
+								+ " LP.address, LM.maritalstatusid, LG.genderid,LP.personid "+ 
+								"from la_party_person LP left join la_partygroup_gender LG on LP.genderid = LG.genderid left join la_partygroup_maritalstatus LM on " + 
+								"LP.maritalstatusid = LM.maritalstatusid  left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid " +
 								"where LP.personid = " + partyId;
 						
 						List<Object[]> lstParty = getEntityManager().createNativeQuery(strQuery).getResultList();
@@ -127,13 +150,39 @@ implements LaPartyPersonDao{
 								laPartyPerson.setAddress(obj[9] + "");
 							else
 								laPartyPerson.setAddress("");
-							laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
-							laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+							//laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+							try
+							{
+								if(null != obj[10] && !obj[10].toString().isEmpty())
+								{
+									laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+								}
+							} 
+							catch (Exception e) 
+							{
+								e.printStackTrace();
+							}
+							//laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+							try
+							{
+								if(null != obj[11] && !obj[11].toString().isEmpty())
+								{
+									laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+								}
+							} 
+							catch (Exception e) 
+							{
+								e.printStackTrace();
+							}
+							
 							laPartyPerson.setPersonid(Long.parseLong(obj[12].toString()));
+							
 							
 							if(null != obj[7] && !obj[7].toString().isEmpty()){
 								laPartyPerson.setDob(obj[7].toString());
 							}
+							
+							laPartyPerson.setPersontype(persontypeId+"");
 							
 							lstpartyperson.add(laPartyPerson);
 							
@@ -156,6 +205,105 @@ implements LaPartyPersonDao{
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<LaPartyPerson> fillAllPartyPersonDetails(Integer landid,Integer processid) {
+		
+		List<LaPartyPerson> lstpartyperson = new ArrayList<LaPartyPerson>();
+		try {
+//			String strQuery= "select LP.partyid,LP.persontypeid from la_ext_personlandmapping LP where landid = " + landid +" and isactive = true";
+			String strQuery= "select plm.partyid,plm.persontypeid from la_ext_personlandmapping plm left join la_ext_transactiondetails td on td.transactionid=plm.transactionid"
+					+ " where plm.landid = " + landid +" and plm.isactive = true and plm.persontypeid=11 and td.processid=" +processid;
+			List<Object[]> lst = getEntityManager().createNativeQuery(strQuery).getResultList();
+			if(lst.size()>0)
+			{			
+				for(Object[] arrObj : lst)
+				{
+					//Object[] arrObj = lst.get(0);
+					int partyId = Integer.parseInt(arrObj[0].toString());
+					int persontypeId =  Integer.parseInt(arrObj[1].toString());
+					if(persontypeId == 1 || persontypeId == 11){
+						strQuery = "select LP.firstname, LP.middlename, LP.lastname, LG.gender, LM.maritalstatus, LP.identityno, LI.identitytypeid, dateofbirth, LP.contactno, LP.address, LM.maritalstatusid, LG.genderid,LP.personid "+ 
+								"from la_party_person LP left join la_partygroup_gender LG on LP.genderid = LG.genderid left join la_partygroup_maritalstatus LM on " + 
+								"LP.maritalstatusid = LM.maritalstatusid left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid " +
+								"where LP.personid = " + partyId;
+						
+						List<Object[]> lstParty = getEntityManager().createNativeQuery(strQuery).getResultList();
+						for(Object[] obj : lstParty){
+							LaPartyPerson laPartyPerson = new LaPartyPerson();
+							laPartyPerson.setFirstname(obj[0] + "");
+							laPartyPerson.setMiddlename(obj[1] + "");
+							laPartyPerson.setLastname(obj[2] + "");
+							laPartyPerson.setGendername(obj[3] + "");					
+							laPartyPerson.setIdentityno(obj[5] + "");
+							laPartyPerson.setIdentitytypeid(Integer.parseInt(obj[6].toString()));					
+							DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+							try {
+								if(null != obj[7] && !obj[7].toString().isEmpty()){
+									Date dateofbirth = dateformat.parse(obj[7].toString());
+									laPartyPerson.setDateofbirth(dateofbirth);
+								}
+							} catch (ParseException e) {
+								e.printStackTrace();
+							} 
+							
+							laPartyPerson.setContactno(obj[8] + "");
+							if(null != obj[9] && !obj[9].toString().isEmpty())
+								laPartyPerson.setAddress(obj[9] + "");
+							else
+								laPartyPerson.setAddress("");
+							//laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+							try
+							{
+								if(null != obj[10] && !obj[10].toString().isEmpty())
+								{
+									laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+								}
+							} 
+							catch (Exception e) 
+							{
+								e.printStackTrace();
+							}
+							//laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+							try
+							{
+								if(null != obj[11] && !obj[11].toString().isEmpty())
+								{
+									laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+								}
+							} 
+							catch (Exception e) 
+							{
+								e.printStackTrace();
+							}
+							
+							laPartyPerson.setPersonid(Long.parseLong(obj[12].toString()));
+							
+							
+							if(null != obj[7] && !obj[7].toString().isEmpty()){
+								laPartyPerson.setDob(obj[7].toString());
+							}
+							
+							laPartyPerson.setPersontype(persontypeId+"");
+							
+							lstpartyperson.add(laPartyPerson);
+							
+						}
+					}
+					
+				}
+				return lstpartyperson;
+				
+			}
+		} catch (NumberFormatException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return lstpartyperson;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public LaPartyPerson getPartyPersonDetailssurrenderlease(Integer landid) {
 		
 		
@@ -173,11 +321,12 @@ implements LaPartyPersonDao{
 							"where LP.personid = " + partyId;*/
 					
 					strQuery = "select LP.firstname, LP.middlename, LP.lastname, LG.gender, LM.maritalstatus, LP.identityno, LI.identitytypeid, dateofbirth, LP.contactno, LP.address, LM.maritalstatusid, LG.genderid ,"
-							+ " lea.leaseamount,lea.leaseyear,lea.monthid from la_party_person LP"
-							+ " inner join la_partygroup_gender LG on LP.genderid = LG.genderid"
-							+ " inner join la_partygroup_maritalstatus LM on  LP.maritalstatusid = LM.maritalstatusid"
-							+ " inner join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid"
+							+ " lea.leaseamount,lea.leaseyear,lam.month,lea.leasestartdate,lea.leaseenddate  from la_party_person LP"
+							+ " left join la_partygroup_gender LG on LP.genderid = LG.genderid"
+							+ " left join la_partygroup_maritalstatus LM on  LP.maritalstatusid = LM.maritalstatusid"
+							+ " left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid"
 							+ " left join la_lease lea on  LP.personid=lea.personid"
+							+ " left join la_ext_month lam on lam.monthid = lea.monthid"
 							+ " where LP.personid =  " + partyId +" and lea.landid= "+ landid;
 					
 					
@@ -193,22 +342,43 @@ implements LaPartyPersonDao{
 						laPartyPerson.setIdentitytypeid(Integer.parseInt(obj[6].toString()));	
 						laPartyPerson.setPersonid(Long.parseLong(arrObj[0].toString()));
 						
-						Double d = (Double) obj[12];
-						Integer intvalue = d.intValue();						
+						Integer intvalue;
+						try 
+						{
+							Double d = (Double) obj[12];
+							intvalue = d.intValue();
+							laPartyPerson.setHierarchyid1(Integer.parseInt(intvalue.toString()));	// Lease Amount	
+							Integer yearvalue = (Integer) obj[13];
+							Integer monthvalue = Integer.parseInt(obj[14].toString());
+							Integer totalmonthvalue =  ((yearvalue)*12) + monthvalue;
+							laPartyPerson.setHierarchyid2(Integer.parseInt(totalmonthvalue.toString()));
+						} catch (Exception e1) 
+						{
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}						
 						
-						laPartyPerson.setHierarchyid1(Integer.parseInt(intvalue.toString()));	// Lease Amount	
-						Integer yearvalue = (Integer) obj[13];
-						Integer monthvalue = (Integer) obj[14];
-						Integer totalmonthvalue =  ((yearvalue)*12) + monthvalue;
+
 						
-						laPartyPerson.setHierarchyid2(Integer.parseInt(totalmonthvalue.toString()));	// Lease Year					
+						
+							// Lease Year					
 						DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 						try {
 							if(null != obj[7] && !obj[7].toString().isEmpty()){
-								Date dateofbirth = dateformat.parse(obj[7].toString());
-								laPartyPerson.setDateofbirth(dateofbirth);
+								//Date dateofbirth = dateformat.parse(obj[7].toString());
+								laPartyPerson.setDateofbirth((Date)obj[7]);
 							}
-						} catch (ParseException e) {
+							
+							if(null != obj[15] && !obj[15].toString().isEmpty()){
+								//Date leasestartdate = dateformat.parse(obj[15].toString());
+								laPartyPerson.setLeaseStartdate((Date)obj[15]);
+							}
+							
+							if(null != obj[16] && !obj[16].toString().isEmpty()){
+								//Date dateofbirth = dateformat.parse(obj[16].toString());
+								laPartyPerson.setLeaseEnddate((Date)obj[16]);
+							}
+						} catch (Exception e) {
 							e.printStackTrace();
 						} 
 						
@@ -217,8 +387,32 @@ implements LaPartyPersonDao{
 							laPartyPerson.setAddress(obj[9] + "");
 						else
 							laPartyPerson.setAddress("");
-						laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
-						laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+						
+						
+						try
+						{
+							if(null != obj[10] && !obj[10].toString().isEmpty())
+							{
+								laPartyPerson.setMaritalstatusid(Integer.parseInt(obj[10].toString()));
+							}
+						} 
+						catch (Exception e) 
+						{
+							e.printStackTrace();
+						}
+						
+						//laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+						try
+						{
+							if(null != obj[11] && !obj[11].toString().isEmpty())
+							{
+								laPartyPerson.setGenderid(Integer.parseInt(obj[11].toString()));
+							}
+						} 
+						catch (Exception e) 
+						{
+							e.printStackTrace();
+						}
 						
 						if(null != obj[7] && !obj[7].toString().isEmpty()){
 							laPartyPerson.setDob(obj[7].toString());

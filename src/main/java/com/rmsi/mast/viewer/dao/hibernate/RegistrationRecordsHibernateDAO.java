@@ -33,13 +33,13 @@ implements RegistrationRecordsDao{
 					"inner Join la_ext_applicationstatus la on la.applicationstatusid = LD.applicationstatusid " +
 					"inner Join la_party_person LP on PL.partyid = LP.personid "+	
 					"inner join la_spatialunitgroup_hierarchy LH on LH.hierarchyid = LD.hierarchyid4 "+					
-					"where workflowstatusid=6 and LD.projectnameid = " + defaultProject + " and LD.isactive = true and PL.isactive = true order by LD.landid ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
+					"where PL.persontypeid=1 and workflowstatusid=6 and LD.projectnameid = " + defaultProject + " and LD.isactive = true and PL.isactive = true order by LD.landid ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
 			/*String hql = "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,TR.transactionid from la_spatialunit_land LD Inner join la_ext_personlandmapping PL on "+
 							"LD.landid = PL.landid inner join la_ext_transactiondetails TR " +
 							"on PL.transactionid = TR.transactionid inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid " +
 							"inner Join la_ext_applicationstatus la on la.applicationstatusid = TR.applicationstatusid " +
 							"where workflowstatusid=6 and LD.isactive = true and PL.isactive = true order by LD.landid ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
-*/			List<Object[]> arrObject = getEntityManager().createNativeQuery(hql).getResultList();
+*/			List<Object[]> arrObject = getEntityManager().createNativeQuery(hql).setFirstResult(startfrom).setMaxResults(10).getResultList();
             
            
             for(Object [] object : arrObject){
@@ -237,7 +237,7 @@ implements RegistrationRecordsDao{
 					"LD.landid = PL.landid inner join la_ext_transactiondetails TR " +
 					"on PL.transactionid = TR.transactionid inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid " +
 					"inner Join la_ext_applicationstatus la on la.applicationstatusid = LD.applicationstatusid " +
-					"where workflowstatusid=6 and LD.projectnameid = " + project + " and LD.isactive = true and PL.isactive = true  ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
+					"where PL.persontypeid=1 and workflowstatusid=6 and LD.projectnameid = " + project + " and LD.isactive = true and PL.isactive = true  ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
 				List<BigInteger> arrObject = getEntityManager().createNativeQuery(hql).getResultList();
 			
 			if(arrObject.size()>0)

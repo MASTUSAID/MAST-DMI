@@ -110,7 +110,7 @@
 						
 						<div class="single-drop-down">   
 						<div class="topnav"> <a href="#" onclick="ActionfillResource(${landid},'${geometryName}');" class="signin">
-						<span key="Action" class="langchange">Action</span></a><div class="containerDiv" id="${landid}">
+						<span key="Action" class="langchange">Action</span></a><div class="containerDiv" id="${landid}_resource">
 						</div>
 						</div>
 						</div>
@@ -126,10 +126,25 @@
 
 
 
-			<div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;">
-				 <div>Person(Owner)</div>
-				 <div id="personsEditingGrid0"></div>
+			<!-- <div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;"> -->
+				 <div id="attributeDialog" title="Attribute Resource" style="display: none;">
+				<!--  <div><lable>Resource Attributes</lable></div> -->
+				  <div >
+								<table style="width: 100%; margin-bottom: 23px;">
+								<tr>
+								<td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">Resource Attributes</label></h3></td></tr>
+								</table></div>
+				 <div id="ResourcepersonsEditingGrid0"></div>
+				 <div  id ="CustomAttributes">
+								<table style="width: 100%; margin-bottom: 23px;">
+								<tr>
+								<td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">Custom Attributes</label></h3></td></tr>
+								</table></div>
+				 <!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
+				  <div id="CustomAttributeEditingGrid0"></div>
 			</div>
+			
+			
 	
 	
 	<script id="attributetemplate" type="text/x-jquery-tmpl">

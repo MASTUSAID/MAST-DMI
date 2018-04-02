@@ -32,6 +32,7 @@ import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
 import com.rmsi.mast.studio.domain.fetch.ClaimantAgeStat;
 import com.rmsi.mast.studio.domain.fetch.ClaimsStat;
+import com.rmsi.mast.studio.domain.fetch.DataCorrectionReport;
 import com.rmsi.mast.studio.domain.fetch.DisputeStat;
 import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
@@ -39,6 +40,8 @@ import com.rmsi.mast.studio.domain.fetch.NaturalPersonBasic;
 import com.rmsi.mast.studio.domain.fetch.OwnerHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.OwnershipTypeStat;
 import com.rmsi.mast.studio.domain.fetch.PersonForEditing;
+import com.rmsi.mast.studio.domain.fetch.PersonsReport;
+import com.rmsi.mast.studio.domain.fetch.PoiReport;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.RegistryBook;
 import com.rmsi.mast.studio.domain.fetch.ReportCertificateFetch;
@@ -810,7 +813,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					"inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+ 
 					"inner Join  la_party_organization LP on PL.partyid = LP.organizationid "+ 
 	                "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+  
-			        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +	" order by landid" ;
+			        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +	" order by landid DESC" ;
 
 			
 			
@@ -1026,7 +1029,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " ld.neighbor_south,plm.sharepercentage,ps.firstname,ps.middlename,ps.lastname,ps.address, parea.landofficersignature, ps.personid as partyid,	ld.createddate as capture_date, "
 					+ " lst.landsharetype_en as landsharetype,g.gender,EXTRACT(YEAR from AGE(CURRENT_DATE, ps.dateofbirth)) as age,ms.maritalstatus,"
 					+ " id.identitytype,ps.identityno,CURRENT_DATE as dateofregistration, 0 as duration,ps.contactno,lt.landtype,hie1.name as country,"
-					+ " hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place"
+					+ " hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place,ld.udparcelno"
 					+ " from la_ext_transactiondetails td"
 					+ " inner join la_ext_personlandmapping plm on plm.transactionid=td.transactionid"
 					+ " inner join la_spatialunit_land ld on ld.landid=plm.landid"
@@ -1088,7 +1091,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " ld.neighbor_south,plm.sharepercentage,ps.firstname,ps.middlename,ps.lastname,ps.address, parea.landofficersignature, ps.personid as partyid,	ld.createddate as capture_date, "
 					+ " lst.landsharetype_en as landsharetype,g.gender,EXTRACT(YEAR from AGE(CURRENT_DATE, ps.dateofbirth)) as age,ms.maritalstatus,"
 					+ " id.identitytype,ps.identityno,CURRENT_DATE as dateofregistration, 0 as duration,ps.contactno,lt.landtype,hie1.name as country,"
-					+ " hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place"
+					+ " hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place,ld.udparcelno"
 					+ " from la_ext_transactiondetails td"
 					+ " inner join la_ext_personlandmapping plm on plm.transactionid=td.transactionid"
 					+ " inner join la_spatialunit_land ld on ld.landid=plm.landid"
@@ -1824,7 +1827,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,plm.createddate,plm.transactionid "
 					+ " from la_spatialunit_land ld inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " inner join la_Party_person ps on ps.personid=plm.partyid "
-					+ " where ld.landid="+ landid + "order by plm.personlandid desc";
+					+ " where plm.persontypeid=1 and plm.isactive=true and ld.landid="+ landid + "order by plm.personlandid desc";
 			
 			
 			Query query = getEntityManager().createNativeQuery(sql, OwnerHistoryForFetch.class);
@@ -2035,7 +2038,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 	
 		try 
 		{
-			sql = " select row_number() OVER () as rnum,doc.documentname, doc.recordationdate as docdate,doc.remarks as description,doctype.documenttype,doc.transactionid,doc.partyid "
+			sql = " select row_number() OVER () as rnum,doc.documentname, doc.recordationdate as docdate,doc.remarks as description,doctype.documenttype,doc.transactionid,doc.partyid,doc.documentid "
 					+ " from la_ext_documentdetails doc "
 					+ " left join la_ext_documenttype doctype on doctype.documenttypeid=doc.documenttypeid"
 					+ " where doc.transactionid="+ transactionid ;
@@ -2085,7 +2088,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " left join la_Party_person ps2 on ps2.personid=lea.ownerid"
 					+ " where ld.landid="+ landid + " and td.processid=1"
 					+ "	Union"
-					+ "	select 'Mortage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
+					+ "	select 'Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
 					+ "	from la_mortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
@@ -2093,26 +2096,38 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"
 					+ " left join la_Party_person ps2 on ps2.personid=mor.ownerid "
 					+ "	where ld.landid="+ landid + " and td.processid=3"
-					+ " Union"
-					+ " select 'Change of Owner' as transactiontype, ld.landid,ps.firstname||' '||ps.middlename||' '||ps.lastname as applicantname, null as ownename, "
-					+ " plm.createddate,plm.transactionid,ps.personid "
-					+ " from la_spatialunit_land ld inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
-					+ " inner join la_Party_person ps on ps.personid=plm.partyid "
-					+ " left join la_ext_transactiondetails td on td.transactionid=plm.transactionid"
-					+ " where ld.landid="+ landid + " and td.processid=4"
-					+ " Union"
-					+ " select 'Change of Joint Owner' as transactiontype, ld.landid,ps.firstname||' '||ps.middlename||' '||ps.lastname as applicantname, null as ownename, "
-					+ " plm.createddate,plm.transactionid,ps.personid "
-					+ " from la_spatialunit_land ld inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
-					+ " inner join la_Party_person ps on ps.personid=plm.partyid "
-					+ " left join la_ext_transactiondetails td on td.transactionid=plm.transactionid"
-					+ " where ld.landid="+ landid + " and td.processid=7"
-					+ " union"					
-					+ " select 'Gift/Inhertance' as transactiontype, ld.landid,ps.firstname||' '||ps.middlename||' '||ps.lastname as applicantname, null as ownename, plm.createddate,plm.transactionid,ps.personid"
-					+ " from la_spatialunit_land ld inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
-					+ " inner join la_Party_person ps on ps.personid=plm.partyid"
-					+ " left join la_ext_transactiondetails td on td.transactionid=plm.transactionid"
-					+ " where ld.landid="+ landid + " and td.processid=6"
+					+ " Union"					
+					+ " select 'Sale' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=2"
+					+ " Union"					
+					+ " select 'Change of Owner' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=4"					
+					+ " Union"					
+					+ " select 'Change of Joint Owner' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=7"
+					+ " Union"					
+					+ " select 'Gift/Inheritance' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=6"
 					+ " union"
 					+ " Select 'Surrender Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
 					+ " lea.createddate,td.transactionid,lea.personid 	from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
@@ -2120,7 +2135,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
 					+ " left join la_Party_person ps2 on ps2.personid=lea.ownerid"
-					+ " where ld.landid="+ landid + " and td.processid=5)t order by createddate;";
+					+ " where ld.landid="+ landid + " and td.processid=5)t order by transactionid desc;";
 			
 			
 			Query query = getEntityManager().createNativeQuery(sql, TransactionHistoryForFetch.class);
@@ -2214,7 +2229,134 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				return communityID+"- "+str+""+landNo;
 				
 			}
+
+		public 	List<DataCorrectionReport> getDataCorrectionReport(Long transactionid,Long landId) {
 		
+			String sql = null;
+			
+			try 
+			{
+				sql = " Select LD.landid, LD.landno, TR.transactionid ,ST.landsharetype as landsharetype , LC.claimtype_en as claimtype, LT.landusetype_en as landusetype ,PU.landusetype_en as proposedused, LU.landtype_en as landtype, "
+						+ "TC.tenureclass_en as tenureclasstype ,LD.area,LD.neighbor_east,LD.neighbor_west,LD.neighbor_north,LD.neighbor_south,LD.occupancylength, LD.claimno, PR.projectname,LD.createddate as claimdate,"
+						+ " hie1.name as  county , hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place, PL.partyid from la_spatialunit_land LD"
+						+ " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid"
+						+ " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "
+						+ " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "
+						+ " inner join la_baunit_landusetype LT on LD.landusetypeid=LT.landusetypeid"
+						+ " inner join la_baunit_landusetype PU on LD.proposedused=PU.landusetypeid"
+						+ " inner join la_baunit_landtype LU on LD.landtypeid=LU.landtypeid"
+						+ " inner join la_right_tenureclass TC on LD.tenureclassid=TC.tenureclassid"
+						+ " inner join la_spatialsource_projectname PR on  LD.projectnameid= PR.projectnameid"
+						+ " left join la_spatialunitgroup_hierarchy hie1 on hie1.hierarchyid=ld.hierarchyid1 and LD.spatialunitgroupid1=1"
+						+ " left join la_spatialunitgroup_hierarchy hie2 on hie2.hierarchyid=ld.hierarchyid2 and LD.spatialunitgroupid2=2 "
+						+ " left join la_spatialunitgroup_hierarchy hie3 on hie3.hierarchyid=ld.hierarchyid3 and LD.spatialunitgroupid3=3"
+						+ " left join la_spatialunitgroup_hierarchy hie4 on hie4.hierarchyid=ld.hierarchyid4 and LD.spatialunitgroupid4=4"
+						+ " left join la_spatialunitgroup_hierarchy hie5 on hie5.hierarchyid=ld.hierarchyid5 and LD.spatialunitgroupid5=5"
+						+ " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  where TR.transactionid="+ transactionid + "  order by landid";
+
+				
+				
+				Query query = getEntityManager().createNativeQuery(sql, DataCorrectionReport.class);
+				List<DataCorrectionReport> datacorrectionlst = query.getResultList();
+
+				if (datacorrectionlst.size() > 0) 
+				{
+					 return datacorrectionlst;
+				}
+				else
+				{
+	                return null;
+	            }
+			}
+			catch (Exception e) 
+			{	
+				e.printStackTrace();
+				logger.error(e);
+				return null;
+			}
+		
+		
+         }
+
+		@Override
+		public List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId) {
+		
+			String sql = null;
+			try 
+			{
+				
+
+				sql = " select SP.id as Id,SP.first_name as firstName , SP.middle_name as middleName ,SP.last_name as lastName , GN.gender_en as gender ,RL.relationshiptype_en as relationship from la_ext_spatialunit_personwithinterest SP "   
+						+" inner join la_partygroup_gender GN on SP.gender= GN.genderid "
+						+" inner join la_partygroup_relationshiptype RL on  SP.relation=RL.relationshiptypeid where   SP.landid="+ landId ;
+ 
+ 
+				
+				Query query = getEntityManager().createNativeQuery(sql, PoiReport.class);
+				List<PoiReport> PoiReportlst = query.getResultList();
+
+				if (PoiReportlst.size() > 0) 
+				{
+					 return PoiReportlst;
+				}
+				else
+				{
+	                return null;
+	            }
+			}
+			catch (Exception e) 
+			{	
+				e.printStackTrace();
+				logger.error(e);
+				return null;
+			}
+			
+			
+		}
+
+		@Override
+		public List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid, Long landId) {
+			
+			String sql = null;
+			try 
+			{
+				
+				sql = "  select ps.personid as id,  ps.firstname as firstname ,ps.middlename as middlename ,ps.lastname as lastname ,ps.address as address ,ps.dateofbirth as dateofbirth, g.gender as gender ,ms.maritalstatus as maritalstatus ,id.identitytype as identitytype ,ps.identityno as identityno , "
+						+" ps.contactno as contact ,oc.occupation_en as occupation,eu.educationlevel_en as educationlevel "
+						+" from la_ext_transactiondetails td "
+						+" inner join la_ext_personlandmapping plm on plm.transactionid=td.transactionid "
+						+" inner join la_spatialunit_land ld on ld.landid=plm.landid "
+						+" inner join la_Party_person ps on ps.personid=plm.partyid "
+						+" left join la_partygroup_gender g on g.genderid=ps.genderid "
+						+" left join la_partygroup_maritalstatus ms on ms.maritalstatusid=ps.maritalstatusid "
+						+" left join la_partygroup_identitytype id on id.identitytypeid=ps.identitytypeid "
+						+" left join la_partygroup_occupation oc on ps.occupationid=oc.occupationid "
+						+" left join la_partygroup_educationlevel eu on ps.educationlevelid=eu.educationlevelid "
+						+" where td.transactionid="+ transactionid ;
+
+									 
+				
+				Query query = getEntityManager().createNativeQuery(sql, PersonsReport.class);
+				List<PersonsReport> PersonsReportlst = query.getResultList();
+
+				if (PersonsReportlst.size() > 0) 
+				{
+					 return PersonsReportlst;
+				}
+				else
+				{
+	                return null;
+	            }
+			}
+			catch (Exception e) 
+			{	
+				e.printStackTrace();
+				logger.error(e);
+				return null;
+			}
+			
+			
+			
+		}
+
 }
-
-

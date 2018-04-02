@@ -24,7 +24,7 @@ public interface ProjectRegionDAO extends GenericDAO<Project, Long> {
 	
 	ProjectRegion findProjectRegionById(Integer id);   
 	
-	
+	 List<ProjectRegion> findAllProjectRegion();
 	
 	
 	

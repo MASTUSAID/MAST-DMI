@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "la_party_person")
@@ -58,9 +59,17 @@ public class LaPartyPerson implements Serializable{
 	private Integer modifiedby;
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date modifieddate;
-	
+	private String persontype;
 	
 	private String gendername;
+	
+	@javax.persistence.Transient
+	@Temporal(TemporalType.DATE)
+	private Date leaseStartdate;
+	
+	@javax.persistence.Transient
+	@Temporal(TemporalType.DATE)
+	private Date leaseEnddate;
 	
 	@javax.persistence.Transient
 	private String dob;
@@ -295,5 +304,25 @@ public class LaPartyPerson implements Serializable{
 	public void setDob(String dob) {
 		this.dob = dob;
 	}
+	public String getPersontype() {
+		return persontype;
+	}
+	public void setPersontype(String persontype) {
+		this.persontype = persontype;
+	}
+	public Date getLeaseStartdate() {
+		return leaseStartdate;
+	}
+	public void setLeaseStartdate(Date leaseStartdate) {
+		this.leaseStartdate = leaseStartdate;
+	}
+	public Date getLeaseEnddate() {
+		return leaseEnddate;
+	}
+	public void setLeaseEnddate(Date leaseEnddate) {
+		this.leaseEnddate = leaseEnddate;
+	}
+	
+	
 
 }

@@ -1,0 +1,245 @@
+
+<div class="PrintWrapperLandScape" id="printdiv2">
+
+  <div class="personalDetails alt"  >
+    <div class="personalDetails-inner">
+   
+
+<p class="type" ><img src="./resources/images/TypeMark_RGB_294.png" /></p>
+<p class="type-16">MOBILE APPLICATION TO SECURE TENURE </p>
+
+<p class="type">LAND CERTIFICATE </p>
+
+     <p class="text-right">Registration Number: : <span id="reg_no">[0000000]</span>
+
+</p>
+     <p class="text-right">
+Parcel Number: <span id="parcel_no">[00000000]</span>  
+</p>
+<p>The <span id="date">[00] day of [month], [year]</span>.</p> 
+
+<p>This is to certify that <span id="owner">[name of primary holder]</span> occupies the land in the <span id="comp_address">[Community name, district, country]</span>. </p>
+
+<p>This document does not convey a right or a provisional right to occupy the land and is not legally binding in and over the land described in the Schedule here to (hereinafter called the land).</p> 
+
+<p>It outlines occupancy and provisional uses as documented as part of the MAST <span id="project">(project name)</span>. </p>
+
+</div>
+<div class="container-fluid">
+<div class="row-fluid">
+<div class="schedule">
+<div class="span6">
+<div class="schedule-separator">
+
+<p class="type"><strong>SCHEDULE</strong></p>
+<p>This parcel of land with an area of <span id="area_report">[area]</span> Acres is located at <span id="Community">[community name]</span>. </p>
+<p>This parcel of land with an area of [Acres] is located at <span id="provence">[Hamlet]</span></p>
+<p><strong>Boundaries:</strong></p>
+<p>North boundary: <span id="North_boundary">[North boundary]</span></p>
+<p>South boundary: <span id="South_boundary">[South boundary]</span></p>
+<p>East boundary:<span id="East_boundary">[East boundary]</span></p>
+<p>West boundary: <span id="West_boundary">[West boundary]</span></p>
+as shown in the sketch 
+<p ><strong>Land Use: </strong></p>
+<p>Land Use:<span id="cert_existing_use">[existing use]</span></p>
+<p>Proposed Use:<span id="cert_proposed_use">[proposed use]</span></p>
+</div>
+
+</div>
+<div class="span6"  >
+<div id="mapImageId01" class="mapImaivgeId"></div>
+<p class="type top-gap-6"></p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+    </div>
+    
+    <table class="amendbeforeAfterTable space-top-10" >
+    <thead>
+    <tr>
+    <th>Name of Occupant</th>
+    <th>Address</th>
+    <th>gender</th>
+    <th>Contact</th>
+   <!--  <th>[Mobile]</th> -->
+    
+    </tr>  
+    </thead>
+    
+    <tbody id="OwnerRecordsRowData1">
+						</tbody>  
+						
+						
+						</table>
+						
+						
+						
+						<script id="OwnerRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+                        <td>
+						${firstname} ${middlename} ${lastname}
+                        </td> 
+                        <td>
+                      ${address}
+                        </td>
+                        <td>
+                       ${gender}
+                        </td> 
+ 						<td>
+                       ${contact}
+                        </td> 
+                           
+             
+                        </tr>
+                    </script>
+    
+    
+    <table class="amendbeforeAfterTable space-top-10" >
+    <thead>
+    <tr>
+    <th>Name of POI</th>
+    <th>Relationship</th>
+    <th>gender</th>
+   <!--  <th>[Mobile]</th> -->
+    
+    </tr>  
+    </thead>
+    
+    <tbody id="POIRecordsRowData1">
+						</tbody>  
+						
+						
+						</table>
+						
+						
+						
+						<script id="POIRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+                        <td>
+						${firstName} ${middleName} ${lastName}
+                        </td> 
+                        <td>
+                      ${relationship}
+                        </td>
+                        <td>
+                       ${gender}
+                        </td> 
+                           
+             
+                        </tr>
+                    </script>
+   <!--  <tr>
+    <td id="name1">POI 1</td>
+    <td id="relation1">[Relationship]</td>
+    <td id="gender1">[gender]</td>
+    <td>[Mobile]</td>
+    </tr>
+    <tr>
+   <td id="name2">POI 2</td>
+    <td id="relation2">[Relationship]</td>
+    <td id="gender2">[gender]</td>
+    <td>[Mobile]</td>
+    </tr>
+    <tr>
+   <td id="name3">POI 3</td>
+    <td id="relation3">[Relationship]</td>
+    <td id="gender3">[gender]</td>
+    <td>[Mobile]</td>
+    </tr>
+    <tr>
+   <td id="name4">POI 4</td>
+    <td id="relation4">[Relationship]</td>
+    <td id="gender4">[gender]</td>
+    <td>[Mobile]</td>
+    </tr>        
+    </table> -->
+    
+    <h4 class="space-top-10">Land Occupants </h4>
+    <table class="amendbeforeAfterTable space-top-10" >
+    <tr>
+    <th>Name of the occupier        </th>
+    <th>Signature/Thumb Print </th>
+    <th>Picture </th>
+   
+    
+    </tr>   
+    <tr >
+    <td id="Owner_name">[name]</td>
+    <td ></td>
+    <td id=imagePersonId></td>
+    </tr>
+    
+   
+      
+    </table>
+    
+     <h4 class="space-top-10"></h4>
+    <table id="jointownertable" class="amendbeforeAfterTable space-top-10" >
+     <tr>
+    <th>Name of the JointOccupier</th>
+    <th>Signature/Thumb Print </th>
+    <th>Picture </th>
+   
+    
+    </tr>   
+    <tr >
+    <td id="jointOwner_name">[name]</td>
+    <td ></td>
+    <td id=imagejontPersonId></td>
+    </tr>
+    </table>
+    
+     <h4 class="space-top-10"></h4>
+    <table id="jointownertable_2" class="amendbeforeAfterTable space-top-10" >
+     <tr>
+    <th>Name of the JointOccupier_2</th>
+    <th>Signature/Thumb Print </th>
+    <th>Picture </th>
+   
+    
+    </tr>   
+    <tr >
+    <td id="jointOwner_name2">[name]</td>
+    <td ></td>
+    <td id=imagejontPersonId_2></td>
+    </tr>
+    </table>
+    
+        <h4 class="space-top-10">Authorization </h4>
+    <table class="amendbeforeAfterTable space-top-10" >
+    <tr>
+    <th>Authorizing Persons        </th>
+    <th>Signature</th>
+    <th>Date </th>
+   
+    
+    </tr>   
+    <tr>
+    <td>[Community Leader] </td>
+    <td id="imageSignature"></td>
+    <td>[Date]</td>
+    </tr>
+    <tr>
+    <td>[Land Authority] </td>
+    <td>[Relationship]</td>
+    <td>[Date]</td>
+    </tr>      
+    </table>
+    
+<div class="buttons btn-holder-float">
+	
+	<span class="lesserbtn">
+		<input class="btn1 margin-ten" id="btnPrintDC" type="button" value="Print" onclick="javascript:printDataCorrection();" /> 
+		</span>
+	</div>
+
+</div>
+
+

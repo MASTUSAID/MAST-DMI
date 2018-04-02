@@ -276,40 +276,8 @@ var printMapDetails=function(){
 
 
 }
+	function printDataCorrection(){
+			
+				window.print();
+		}
 
-/*function createSquareBounds1(inBounds) {
-
-	//get centroid of bounds
-	var newLeft;
-	var newRight;
-	var newBottom;
-	var newTop;
-	var outBounds;
-	var centroidLatLong = inBounds.getCenterLonLat();
-
-	//get the larger side of the bound(Rectangle)
-	if (inBounds.getWidth() > inBounds.getHeight()){
-		//calculate square bounds
-		newLeft = inBounds.toArray()[0];
-		newBottom = centroidLatLong.lat - inBounds.getWidth()/2;
-		newRight = inBounds.toArray()[2];
-		newTop = centroidLatLong.lat + inBounds.getWidth()/2;
-		outBounds = new OpenLayers.Bounds(String(newLeft), String(newBottom), String(newRight), String(newTop));
-		return outBounds;
-
-	}else if (inBounds.getWidth() < inBounds.getHeight()){
-		//calculate square bounds
-		newLeft =  centroidLatLong.lon - inBounds.getHeight()/2;
-		newBottom = inBounds.toArray()[1];
-		newRight = centroidLatLong.lon + inBounds.getHeight()/2;
-		newTop = inBounds.toArray()[3];
-		outBounds =new OpenLayers.Bounds(String(newLeft), String(newBottom), String(newRight), String(newTop));
-		return outBounds;
-
-	} else{
-		outBounds = inBounds;
-		return outBounds;
-	}
-
-
-}*/

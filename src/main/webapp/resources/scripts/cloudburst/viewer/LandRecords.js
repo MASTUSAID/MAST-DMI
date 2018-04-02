@@ -1,3 +1,4 @@
+
 var selectedItem = null;
 var dataList = null;
 var projList = null;
@@ -19,6 +20,7 @@ var sourceDocList = null;
 var usinId = null;
 var read = null;
 var soilQualityList = null;
+var aquisitiontype=null;
 var typeofLandList = null;
 var slopeList = null;
 var groupTypeList = null;
@@ -391,6 +393,15 @@ function editAttribute(id) {
             slopeList = data;
         }
     });
+    
+    jQuery.ajax({
+        url: "landrecords/aquisitiontype/",
+        async: false,
+        success: function (data) {
+        	aquisitiontype = data;
+        }
+    });
+
 
     $("#primary").val(id);
     $('#liNonNatural').hide();
@@ -434,9 +445,18 @@ function editAttribute(id) {
             jQuery("#neighbor_south").val(data[0].neighborSouth);
             jQuery("#neighbor_east").val(data[0].neighborEast);
             jQuery("#neighbor_west").val(data[0].neighborWest);
+            
+            jQuery("#area").val(data[0].area);
+            
+            jQuery("#aquisition_id").empty();
+			jQuery("#aquisition_id").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+			jQuery.each(aquisitiontype, function (i, aquisitiontypeobj) {
+					jQuery("#aquisition_id").append(jQuery("<option></option>").attr("value", aquisitiontypeobj.acquisitiontypeid).text(aquisitiontypeobj.acquisitiontypeEn));
+			});
+			if(null != data[0].laRightAcquisitiontype){
+			jQuery("#aquisition_id").val(data[0].laRightAcquisitiontype.acquisitiontypeid);
 			
-			
-
+			}
 			   jQuery("#claimStatus").empty();
 				jQuery("#claimStatus").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
 				jQuery.each(claimTypes, function (i, claimType) {
@@ -1012,7 +1032,7 @@ function viewMultimediaByTransid(id) {
     jQuery.ajax({
         type: 'GET',
         async:false,
-        url: "landrecords/mediaavail/" + id+"/" + _transactionid,
+        url: "landrecords/mediaavail/" + id+"/" + _transactionid+"/" + Personusin,
         success: function (result) {
             if (result == true) {
             	flag=true; 
@@ -1024,7 +1044,7 @@ function viewMultimediaByTransid(id) {
     });
     
     if(flag){
-    window.open("landrecords/download/" + id +"/" + _transactionid, 'popUp', 'height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
+    window.open("landrecords/download/" + id +"/" + _transactionid+"/" + Personusin, 'popUp', 'height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
     }else{
 
     	 jAlert('File not Found',"Info");
@@ -1042,7 +1062,25 @@ function showOnMap(usin, statusId) {
 }
 function zoomToLayerFeature(relLayerName, fieldName, fieldVal) {
  
-var _featureNS= window.location.protocol+'//'+window.location.host+'/';
+var _featureNS ;
+//Get the Layer object
+        var layerName = "spatialUnitLand";
+		objLayer=getLayerByAliesName(layerName);
+	
+    	 var _wfsurl=objLayer.values_.url;
+        var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+        //Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+        $.ajax({
+            url: PROXY_PATH + _wfsSchema,
+            async: false,
+            success: function (data) {
+				 _featureNS=data.targetNamespace;
+                 
+	        }
+        });
+
+		
 var _featureTypes= [];
  _featureTypes.push("la_spatialunit_land");
 var _featurePrefix="Mast";
@@ -1098,13 +1136,27 @@ function zoomToAnyFeature(geom) {
 		featureOverlay.set('aname', "featureWorkflow");	
 		featureOverlay.getSource().addFeature(geom[0]);
 		map.addLayer(featureOverlay)
-		map.getView().fit(featureOverlay.getSource().getExtent(), map.getSize());
-		map.getView().setZoom(9);
+		//map.getView().fit(featureOverlay.getSource().getExtent(), map.getSize());
+		//map.getView().setZoom(9);
+		
+		var projection = new ol.proj.Projection({
+          code: 'EPSG:4326',
+          units: 'degrees',
+          axisOrientation: 'neu',
+          global: true
+      })
+	  
+		var ext=featureOverlay.getSource().getExtent();
+		var center=ol.extent.getCenter(ext);
+		map.setView( new ol.View({
+			projection: projection,//or any projection you are using
+			center: [center[0] , center[1]],//zoom to the center of your feature
+			zoom: 18 //here you define the levelof zoom
+		}));
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#map-tab"]').parent().index());
         $('#sidebar').show();
         $('#collapse').show();
-		
-		
+		initEditing();
 		
 	 }else{
 		 
@@ -1242,7 +1294,7 @@ function nextRecords() {
     records_from = parseInt(records_from);
     records_from = records_from + 14;
 
-    if (records_from <= totalRecords - 1) {
+    if (records_from < totalRecords - 1) {
         if (searchRecords != null) {
             if (records_from <= searchRecords - 1)
                 spatialSearch(records_from);
@@ -1464,6 +1516,25 @@ function generateDataCorrectionReport(usin) {
         jAlert(result, 'Error');
     }
 }
+
+function generateDataCorrectionReportnew(usin) {
+	
+	if(usin == null)
+		{
+			usin = $("#ccroStartTransid").val();
+		}
+	
+	result = RESPONSE_OK;
+    if (result === RESPONSE_OK) {
+        var w = window.open("landrecords/landverification/" + usin, 'CcroForm', 'left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=true');
+        if (window.focus) {
+            w.focus();
+        }
+    } else {
+        jAlert(result, 'Error');
+    }
+}
+
 
 function generateCcro(usin) {
 	
@@ -1754,7 +1825,7 @@ function checkIntNumber(data) {
         return false;
 }
 
-function Actionfill(usin,workflowId,transactionid,parcelnum ){
+function Actionfill(usin,workflowId,transactionid,parcelnum ,claimtypeid){
     _transactionid=0;
     _parcelNumber=0;
    _parcelNumber=parcelnum;
@@ -1783,7 +1854,7 @@ function Actionfill(usin,workflowId,transactionid,parcelnum ){
 	else{
 		
 		for(var i=0;i<actionList.length;i++){
-			html+="<li> <a title='"+(actionList[i].action)+"' id="+workflowId+" name="+usin+"  href='#' onclick='CustomAction(this,"+usin+","+workflowId+" ,"+transactionid+","+parcelnum+")'>"+actionList[i].actionnameEn+"</a></li>";
+			html+="<li> <a title='"+(actionList[i].action)+"' id="+workflowId+" name="+usin+"  href='#' onclick='CustomAction(this,"+usin+","+workflowId+" ,"+transactionid+","+parcelnum+" ,"+claimtypeid+")'>"+actionList[i].actionnameEn+"</a></li>";
 		}
 		html =html+="<li> <a title='View Comment' id="+workflowId+"  name="+usin+"  href='#' onclick='commentsDialog("+usin+")'>Comments</a></li>";
 		$(""+appid+"").append('<div class="signin_menu"><div class="signin"><ul>'+html+'</ul></div></div>');
@@ -1805,26 +1876,33 @@ function Actionfill(usin,workflowId,transactionid,parcelnum ){
 	}
 }
 
-function CustomAction(refrence,landid,workflowid,transactionid,parcelnum){
+function CustomAction(refrence,landid,workflowid,transactionid,parcelnum,claimtypeid){
+	
+	if(claimtypeid ==3){
+		$("#liDisputes").show();
+	}else{
+		$("#liDisputes").hide();
+
+	}
 _transactionid =transactionid;
 $('#commentsStatusWorkflow').val("");
 
 if((refrence.title).trim() == "approve")
 {
-   dialogueAction(landid,workflowid,(refrence.title).trim())
+   dialogueAction(landid,workflowid,(refrence.title).trim(),claimtypeid)
 		
 }else if((refrence.title).trim()  == "reject"){
-	dialogueAction(landid,workflowid,(refrence.title).trim())
+	dialogueAction(landid,workflowid,(refrence.title).trim(),claimtypeid)
 
 }else if((refrence.title).trim()  == "edit"){
-     editAttributeNew(landid,workflowid);
+	editAttributeNew(landid,workflowid);	
 }else if((refrence.title).trim()  == "view"){
      editAttributeNew(landid,workflowid);
 }else if((refrence.title).trim()  == "verification"){
-	dialogueAction(landid,workflowid,(refrence.title).trim())
+	dialogueAction(landid,workflowid,(refrence.title).trim(),claimtypeid)
 
 }else if((refrence.title).trim() == "print"){
-	_printReport(workflowid,transactionid);
+	_printReport(workflowid,transactionid,landid);
 }else if((refrence.title).trim() == "register"){
 	registerParcel(landid,workflowid,parcelnum)
 
@@ -1834,6 +1912,9 @@ if((refrence.title).trim() == "approve")
 }else if((refrence.title).trim() == "edit  spatial"){
 	showOnMap(landid,workflowid)
 
+}else if((refrence.title).trim() == "edit  parcel"){
+	edituserDefineParcel(landid,workflowid);
+
 }
 		
  
@@ -1841,16 +1922,16 @@ if((refrence.title).trim() == "approve")
 }
 
 
-function _printReport(workflowid,transactionid){
+function _printReport(workflowid,transactionid,landid){
 	
 	if(workflowid==1){
-		generateDataCorrectionReport(transactionid);
+		FetchdataCorrectionReport(transactionid,landid,workflowid);
 	}else if(workflowid==2){
-		_generateLandForm(transactionid);
+		FetchdataCorrectionReport(transactionid,landid,workflowid);
 	}else if(workflowid==3){
-		_generateLandForm(transactionid);
+		FetchdataCorrectionReport(transactionid,landid,workflowid);
 	}else if(workflowid==4){
-		generateCcro(transactionid);
+		_generateFinalLandForm(transactionid,landid);
 	}else if(workflowid==5){
 		generateDataCorrectionReport(transactionid);
 	}
@@ -1876,8 +1957,12 @@ function RefreshedLandRecordsgrid()
         alert("No records found");
     }
 }
-function dialogueAction(usin,workId,actionName){
-	
+function dialogueAction(usin,workId,actionName,claimtypeid){
+		if(claimtypeid=="3"){
+		   jAlert('Please resolve dispute first', 'Workflow');
+		   return false;
+		}
+		
 	approveInfoDialog = $( "#approveInfo-dialog-form" ).dialog({
 			autoOpen: false,
 			height: 200,
@@ -2014,6 +2099,75 @@ function  verifyParcel(usin,workId){
 	return verify;
 }
 
+function edituserDefineParcel(usin,workId){
+
+
+	jQuery.ajax({ 
+		type:'GET',
+		url: "landrecords/action/getUserParcel/"+usin,
+		async:false,							
+		success: function (data) {
+			
+			approveInfoDialog = $( "#attribute-dialog-form" ).dialog({
+				autoOpen: false,
+				height: 400,
+				width: 300,
+				resizable: false,
+				modal: true,
+
+				buttons: [{
+					text: "Ok",
+					"id": "info_ok",
+					click: function () {
+						
+							 jQuery.ajax({
+								type:'POST',
+								url: "landrecords/action/savenewparcel/"+usin,
+								data: jQuery("#addAttributeformID").serialize(),
+								success: function (result) {
+										jAlert('User Define Parcel Updated Successfully ', 'Workflow');
+										approveInfoDialog.dialog( "destroy" );
+									    RefreshedLandRecordsgrid();
+								},
+								error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+									alert('err.Message');
+								}
+							});
+					
+					},
+				},
+				{
+					text: "Cancel",
+					"id": "info_cancel",
+					click: function () {
+
+						approveInfoDialog.dialog( "destroy" );
+					}
+				}],
+				close: function() {
+
+					approveInfoDialog.dialog( "destroy" );
+
+				}
+			});
+			$("#info_ok").html('<span class="ui-button-text"> Save </span>');
+			$("#info_cancel").html('<span class="ui-button-text"> Cancel </span>');
+			approveInfoDialog.dialog( "open" );
+			
+			$("#hierarchy1").val(data.hierarchy1);
+			$("#hierarchy2").val(data.hierarchy2);
+			$("#hierarchy3").val(data.hierarchy3);
+			$("#parcelId").val(data.landid);
+			
+			
+		}
+
+
+	});
+
+}
+
 function pad (str, max) 
 {
 	  str = str.toString();
@@ -2049,7 +2203,7 @@ var parcelnumwithpadding = pad(parcelnum, 9);
 							url: "landrecords/action/register/"+usin+"/"+workId,
 							data: jQuery("#aworkflowformID").serialize(),
 							success: function (result) {
-									jAlert('Data Approved Successfully ', 'Workflow');
+									jAlert('Land record registered Successfully ', 'Workflow');
 									approveInfoDialog.dialog( "destroy" );
 								RefreshedLandRecordsgrid();
 							},
@@ -2540,7 +2694,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		        height: "200px",
 		        inserting: false,
 		        editing: true,
-		        sorting: true,
+		        sorting: false,
 		        filtering: false,
 		        paging: true,
 		        autoload: false,
@@ -2606,7 +2760,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 	        height: "200px",
 	        inserting: false,
 	        editing: true,
-	        sorting: true,
+	        sorting: false,
 	        filtering: false,
 	        paging: true,
 	        autoload: false,
@@ -2619,12 +2773,12 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 	            {name: "middlename", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
 	            {name: "lastname", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
 	            {name: "address", title: "Address", type: "text", width: 120, validate: {validator: "required", message: "Enter Address"}},
+	            {name: "laPartygroupIdentitytype.identitytypeid", title: "Id Type", type: "select", items: [{id: 1, name: "Voter ID"}, {id: 2, name: "Driving license"},{id: 3, name: "Passport"}, {id: 4, name: "ID card"},{id: 5, name: "Other"}, {id: 6, name: "None"}],valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 	            {name: "identityno", title: "ID number", type: "text", width: 120, validate: {validator: "required", message: "Enter ID number"}},
 	            
 	            {name: "dateofbirth", title: "Date of birth", type: "date", width: 120, validate: {validator: "required", message: "Enter Date of birth"}},
 	            {name: "contactno", title: "Mobile Number", type: "text", width: 120},
 	            {name: "genderid", title: "Gender", align: "left", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
-	            {name: "laPartygroupIdentitytype.identitytypeid", title: "Id Type", type: "select", items: [{id: 1, name: "Voter ID"}, {id: 2, name: "Driving license"},{id: 3, name: "Passport"}, {id: 4, name: "ID card"},{id: 5, name: "Other"}, {id: 6, name: "None"}],valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 	            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Single"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 				{name: "laPartygroupEducationlevel.educationlevelid", title: "Education Level", type: "select", items: [{id: 1, name: "None"}, {id: 2, name: "Primary"},{id: 3, name: "Secondary"}, {id: 4, name: "University"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 				
@@ -2651,6 +2805,10 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		            data: filter,
 		            success: function(data)
 		            {
+		            	if(data.length > 0){
+			            	$('#addPersonbutton').show();
+			            	console.log(data);
+			            	}
 		            	  $("#multimediaRowData").empty();
 				          $("#naturalpersonmediaTemplate_add").tmpl(data).appendTo("#multimediaRowData");		  
 		 }
@@ -2717,13 +2875,15 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 	
 	function FillNonNaturalPersonDataNew()
 	{
+		
+		
 		// Init editing grid
 	    $("#personsEditingGrid2").jsGrid({
 	        width: "100%",
 	        height: "200px",
 	        inserting: false,
 	        editing: true,
-	        sorting: true,
+	        sorting: false,
 	        filtering: false,
 	        paging: true,
 	        autoload: false,
@@ -2756,7 +2916,13 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			        return $.ajax({
 			            type: "GET",
 			            url: "landrecords/NonNaturalpersonsDataNew/" + landId,
-			            data: filter
+			            data: filter,
+			            success:function(data){
+			            	if(data.length > 0){
+			            		$('#addPersonbutton').hide();
+			            	}
+//			            	 
+						},
 			        });
 			    },
 		    
@@ -2794,7 +2960,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		        height: "200px",
 		        inserting: false,
 		        editing: true,
-		        sorting: true,
+		        sorting: false,
 		        filtering: false,
 		        paging: true,
 		        autoload: true,
@@ -2859,10 +3025,17 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			            traditional: true,
 			            url: "landrecords/updatedispute",
 			            data: ajaxdata,
-			            success:function(){
+			            async: false,
+			            success:function(data){
+			            	if(data=="true"){
 			            	$("#personsEditingGrid1").jsGrid("loadData");
 							 $("#DisputesPersonGrid").jsGrid("loadData");
 							 loadDisputeForEditing();
+			            	}
+			            	else{
+			            		 loadDisputeForEditing();
+			            		jAlert("Resolve The Dispute First", "Info");
+			            	}
 						},
 			            error: function (request, textStatus, errorThrown) {
 			                jAlert(request.responseText);
@@ -2878,13 +3051,14 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		
 		function loadDisputePersonForEditing()
 		{
+			
 			// Init editing grid
 		    $("#DisputesPersonGrid").jsGrid({
 		        width: "100%",
 		        height: "200px",
 		        inserting: false,
 		        editing: true,
-		        sorting: true,
+		        sorting: false,
 		        filtering: false,
 		        paging: true,
 		        autoload: false,
@@ -2905,7 +3079,8 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			            {name: "laPartygroupIdentitytype.identitytypeid", title: "Id Type", type: "select", items: [{id: 1, name: "Voter ID"}, {id: 2, name: "Driving license"},{id: 3, name: "Passport"}, {id: 4, name: "ID card"},{id: 5, name: "Other"}, {id: 6, name: "None"}],valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 			            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Single"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 						{name: "laPartygroupEducationlevel.educationlevelid", title: "Education Level", type: "select", items: [{id: 1, name: "None"}, {id: 2, name: "Primary"},{id: 3, name: "Secondary"}, {id: 4, name: "University"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
-						
+						{name: "laPartygroupPersontype.persontypeid", title: "Person Type", type: "select", items: [{id: 3, name: "Owner"}, {id: 10, name: "Disputed Person"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false}
+
 		     
 
 			        ]
@@ -2928,7 +3103,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 				            data: filter,
 				            success: function(data)
 				            {
-				            	console.log(data);
+				            	
 				            }
 				        })
 				    },
@@ -2956,11 +3131,12 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			    			"address": item.address,
 			    			"identityno": item.identityno,
 			    			"dateofbirth": dob,
-			    			"mobileno": item.mobileno,
+			    			"contactno": item.contactno,
 			    			"genderid": item.genderid,
 			    			"identitytypeid": item.laPartygroupIdentitytype.identitytypeid,
 			    			"maritalstatusid": item.laPartygroupMaritalstatus.maritalstatusid,
-							"educationlevel": item.laPartygroupEducationlevel.educationlevelid
+							"educationlevel": item.laPartygroupEducationlevel.educationlevelid,
+							"persontypeid": item.laPartygroupPersontype.persontypeid,
 							}
 			    	
 			    	return $.ajax({
@@ -2992,7 +3168,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			        height: "200px",
 			        inserting: false,
 			        editing: true,
-			        sorting: true,
+			        sorting: false,
 			        filtering: false,
 			        paging: true,
 			        autoload: false,
@@ -3001,14 +3177,16 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			        pageButtonCount: 20,
 			        fields: [
 			            {type: "control", deleteButton: false},
-			           // {name: "landid", title: "LandID", type: "number", width: 70, align: "left", editing: false, filtering: true},
 			            {name: "firstName", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
 			            {name: "middleName", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
 			            {name: "lastName", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
 			            {name: "gender", title: "Gender", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}, {id: 3, name: "Other"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
 			            {name: "dob", title: "Date of birth", type: "date", width: 120 ,validate: {validator: "required", message: "Enter first name"}},
 			            {name: "relation", title: "Relation", type: "select", items: [{id: 1, name: "Father"}, {id: 2, name: "Mother"}, {id: 3, name: "Sister"}, {id: 4, name: "Brother"}, {id: 5, name: "Son"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
-			          
+			            {name: "landid", title: "LandID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
+			            {name: "id", title: "ID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
+
+
 			        ]
 			    });
 			 $("#personsEditingGrid .jsgrid-table th:first-child :button").click();
@@ -3025,15 +3203,27 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		        });
 		    },
 		    insertItem: function (item) {
-		        return false;
+		       
 		    },
 		    updateItem: function (item) {
+		    	
+		    	var ajaxdata = {
+		    			"firstName": item.firstName,
+		    			"middleName": item.middleName,
+		    			"lastName": item.lastName,
+		    			"gender": item.gender,
+		    			"dob": item.dob,
+		    			"relation": item.relation,
+		    			"id": item.id
+		    			
+						}
+		    
 		        return $.ajax({
 		            type: "POST",
-		            contentType: "application/json; charset=utf-8",
+//		            contentType: "application/json; charset=utf-8",
 		            traditional: true,
-		            url: "landrecords/savePersonOfInterestForEditing",
-		            data: JSON.stringify(item),
+		            url: "landrecords/savePersonOfInterestForEditing/" + landId,
+		            data: ajaxdata,
 		            error: function (request, textStatus, errorThrown) {
 		                jAlert(request.responseText);
 		            }
@@ -3159,8 +3349,882 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		}
 		
 		
+		function CheckSharetype(){
+			var flag="";
+			jQuery.ajax({
+		        url: "landrecords/checkShareType/" + Personusin,
+		        async: false,
+		        success: function (data) {
+		        	flag = data;
+		            if (flag == "true") {
+//		            	$("#personsEditingGrid1").jsGrid("insertItem");
+		            	$("#personsEditingGrid1").jsGrid("insertItem",{});
+		            }
+		            else{
+		            	jAlert(flag, "Info");
+		            }
+		        
+		        	}   
+			});
 		
-		function addnewNaturalperson(){
-			            
-		$("#personsEditingGrid1").jsGrid("insertItem",{});
 		}
+		
+		function addPOI(){
+		            	$("#personsEditingGrid").jsGrid("insertItem",{});
+		           
+		
+		}
+		
+		
+		
+function FetchdataCorrectionReport(trans_id,land_id,workflowid )
+{
+	var extent;
+	var _workflowid=workflowid;
+	jQuery.ajax(
+			{
+			   	type: 'GET',
+				url:  'landrecords/landcorrectionreport/'+trans_id+ '/'+ land_id,
+				async:false,
+				cache: false,
+				success: function (data) 
+				{
+					jQuery.get("resources/templates/report/data-correction.html", function (template) 
+					{
+						jQuery("#printDiv").empty();
+						jQuery("#printDiv").append(template);
+						
+						if(data!=null || data!="" || data!="undefined")
+						{
+								jQuery('#reportNameId').empty();
+										if(_workflowid==1){
+											jQuery('#reportNameId').text("Data Correction Report"); 
+												}else if(_workflowid==2){
+													jQuery('#reportNameId').text("Land Record Verification Form"); 
+												}else if(_workflowid==3){
+													jQuery('#reportNameId').text("Land Record Verification Form"); 
+												}	
+	
+						 if(data[0]!=null){	
+							 if(data[0][0]!=null){
+							if(data[0][0].region!=null)
+								 $('#regionId').html(data[0][0].region);
+							 
+							if(data[0][0].commune!=null)
+								 $('#CommunityId').html(data[0][0].commune);
+							
+	                        if(data[0][0].county!=null)
+								 $('#countryId').html(data[0][0].county);
+							 
+							if(data[0][0].projectName!=null)
+								 $('#project_nameId').html(data[0][0].projectName);
+
+							  
+							if(data[0][0].claimno!=null)
+								 $('#claimNumberId').html(data[0][0].claimno);
+							 		
+                            if(data[0][0].claimtype!=null)
+								 $('#claimTypeId').html(data[0][0].claimtype);
+							 
+							if(data[0][0].transactionid!=null)
+								 $('#LandRecordNumberId').html(data[0][0].transactionid); 
+							 
+							 if(data[0][0].claimdate!=null)
+								 $('#claimDateId').html(data[0][0].claimdate); 
+							 
+							if(data[0][0].landusetype!=null)
+								 $('#ExistingUseId').html(data[0][0].landusetype); 
+
+							if(data[0][0].proposedused!=null)
+								 $('#ProposedUseId').html(data[0][0].proposedused);  
+							 
+							if(data[0][0].landtype!=null)
+								 $('#LandTypeId').html(data[0][0].landtype);  		
+							
+							if(data[0][0].neighbor_east!=null)
+								 $('#NeighborEastId').html(data[0][0].neighbor_east);  	
+							 
+							if(data[0][0].neighbor_west!=null)
+								 $('#NeighborWestId').html(data[0][0].neighbor_west);  	
+
+
+							if(data[0][0].neighbor_north!=null)
+								 $('#NeighborNorthId').html(data[0][0].neighbor_north);  	
+
+							if(data[0][0].neighbor_south!=null)
+								 $('#NeighborSouthId').html(data[0][0].neighbor_south);  	
+  	 
+							
+							if(data[0][0].landsharetype!=null)
+								 $('#TypeOftenureId').html(data[0][0].landsharetype);  
+							
+							if(data[0][0].occupancylength!=null)
+								 $('#YearsOfOccupancyId').html(data[0][0].occupancylength); 
+							 
+							if(data[0][0].tenureclasstype!=null)
+								 $('#TypeofRightId').html(data[0][0].tenureclasstype); 
+							 
+							if(data[0][0].claimtype!=null)
+								 $('#TypeOdClaimId').html(data[0][0].claimtype);   
+							
+							if(data[0][0].landno!=null)
+								 $('#plotId').html(data[0][0].landno);   
+							
+							
+						}
+						
+						}
+                        
+						if(data[1]!=null){
+							if(data[1][0]!=null){
+								var _name="";
+							    if(data[1][0].firstName!=null)
+								    _name= data[1][0].firstName ;
+
+                                if(data[1][0].middleName!=null)
+								    _name= _name +" "+ data[1][0].middleName ;					 
+							   
+							    if(data[1][0].lastName!=null)
+									_name= _name +" "+ data[1][0].lastName ;
+								
+								   $('#namepoiId').html(_name);  							 
+							   
+								if(data[1][0].gender!=null)
+								 $('#genderpoiId').html(data[1][0].gender);   
+											 
+                                if(data[1][0].relationship!=null)
+								 $('#relationpoiId').html(data[1][0].relationship);   
+							
+							}
+							
+						}
+							
+						 if(data[2]!=null){	
+							 if(data[2][0]!=null){
+								 
+								 var _name="";
+							    if(data[2][0].firstname!=null)
+								    _name= data[2][0].firstname ;
+
+                                if(data[2][0].middlename!=null)
+								    _name= _name +" "+ data[2][0].middlename ;					 
+							   
+							    if(data[2][0].lastname!=null)
+									_name= _name +" "+ data[2][0].lastname ;
+								
+								 $('#namePersonId').html(_name);  						
+								 
+								 if(data[2][0].address!=null)
+									$('#addressPersonId').html(data[2][0].address); 
+								
+								if(data[2][0].gender!=null)
+									$('#genderPersonId').html(data[2][0].gender); 
+								
+								if(data[2][0].dateofbirth!=null)
+									$('#dobPersonId').html(data[2][0].dateofbirth); 
+								
+								
+								if(data[2][0].maritalstatus!=null)
+									$('#mstatuspersonId').html(data[2][0].maritalstatus); 
+								
+								if(data[2][0].identitytype!=null)
+									$('#idtypePersonId').html(data[2][0].identitytype); 
+								
+								if(data[2][0].identityno!=null)
+									$('#idnoPersonId').html(data[2][0].identityno);
+								
+								if(data[2][0].contact!=null)
+									$('#mobilePersonId').html(data[2][0].contact);
+								
+								if(data[2][0].educationlevel!=null)
+									$('#educationpersonId').html(data[2][0].educationlevel);
+								
+								if(data[2][0].occupation!=null)
+									$('#occupationPersonId').html(data[2][0].occupation);
+								   
+							 }
+							 
+						    } 
+							 var layerName = "spatialUnitLand";
+							 var objLayer=getLayerByAliesName(layerName);
+							
+								 var _wfsurl=objLayer.values_.url;
+								var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+								//Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+								$.ajax({
+									url: PROXY_PATH + _wfsSchema,
+									async: false,
+									success: function (data) {
+										 _featureNS=data.targetNamespace;
+										 
+									}
+								});
+
+		                var relLayerName = "Mast:la_spatialunit_land";
+						var fieldName = "landid";
+						var fieldVal = land_id;
+		
+						var _featureTypes= [];
+						_featureTypes.push("la_spatialunit_land");
+						var _featurePrefix="Mast";
+						var featureRequest1 = new ol.format.WFS().writeGetFeature({
+												srsName: 'EPSG:4326',
+												featureNS: _featureNS,
+												featurePrefix: _featurePrefix,
+												featureTypes: _featureTypes,
+												outputFormat: 'application/json',
+												filter: ol.format.filter.equalTo(fieldName, fieldVal)
+											  });
+											  
+											  
+							  var _url= window.location.protocol+'//'+window.location.host+'/geoserver/wfs';
+										  fetch(_url, {
+											method: 'POST',
+											body: new XMLSerializer().serializeToString(featureRequest1)
+										  }).then(function(response) {
+											return response.json();
+										  }).then(function(json) {
+										   var features = new ol.format.GeoJSON().readFeatures(json);
+
+										         var vectorSource = new ol.source.Vector();
+												 vectorSource.addFeatures(features);
+												 extent=vectorSource.getExtent();
+												 var cqlFilter = 'landid='+fieldVal ;  				  				
+												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER={{CQLFILTER}}";
+			                                     var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
+												 
+												jQuery('#mapImageId').empty();
+												jQuery('#mapImageId').append('<img  src='+url2+'>');
+
+												jQuery('#mapImageId1').empty();
+                                                jQuery('#mapImageId1').append('<img  src='+url2+'>');
+
+											    var _html="";
+												var _th="<tr><th>Latitude</th><th>Longitude </th></tr>"
+												 for (i = 0; i < features[0].geometryChangeKey_.target.flatCoordinates.length/2; i++) {
+													 var j=i;
+													_html =_html+ "<tr><td>"+features[0].geometryChangeKey_.target.flatCoordinates[i] +"</td><td>"+features[0].geometryChangeKey_.target.flatCoordinates[j++] + "</td><tr>";
+												} 
+												jQuery('#latLongId').empty();
+												var _table=_th+_html;
+                                                jQuery('#latLongId').append(_table);	
+												
+											
+                            
+                       							var html = $("#printDiv").html();
+												var printWindow=window.open('','popUpWindow', 'height=900,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+														printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
+														'<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
+														+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+
+														'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'+
+														 +'</head><body>'+html+'</body></html>');	
+														
+														printWindow.document.close();
+								
+								
+										   });
+										   
+								
+						}
+						else
+						{
+							jAlert('info','error in fetching details',"");
+						}
+					});
+				},
+				error : function(jqXHR, textStatus, errorThrown) {									
+					jAlert('info', "", "");
+				}
+			});
+}
+
+
+function _generateFinalLandForm(trans_id,land_id)
+{
+	
+	jQuery.ajax(
+			{
+			   	type: 'GET',
+				url:  'landrecords/landcorrectionreport/'+trans_id+ '/'+ land_id,
+				async:false,
+				cache: false,
+				success: function (data) 
+				{
+					if(data[5] != null && data[5].length != 0){
+
+						jQuery.get("resources/templates/report/land-certificatenonnaturalperson.html", function (template) 
+						{
+							jQuery("#printDiv").empty();
+							jQuery("#printDiv").append(template);
+							
+							if(data!=null || data!="" || data!="undefined")
+							{
+							
+	                           if(data[0]!=null){						
+								if(data[0][0] != null){
+								if(data[0][0].region!=null || data[0][0].commune!=null || data[0][0].province!=null)
+									 $('#comp_address').text(data[0][0].region +", "+data[0][0].commune+", "+ data[0][0].province);
+								 
+								if(data[0][0].region !=null)
+									 $('#Community').text(data[0][0].region);
+								
+								if(data[0][0].province !=null)
+									 $('#provence').text(data[0][0].province);
+								
+								 
+								if(data[0][0].projectName!=null)
+									 $('#project').text(data[0][0].projectName);
+								
+								if(data[0][0].area != null)
+									 $('#area_report').text(data[0][0].area);
+								  
+								/*if(data[0][0].claimno!=null)
+									 $('#claimNumberId').text(data[0][0].claimno);
+								 		
+	                            if(data[0][0].claimtype!=null)
+									 $('#claimTypeId').html(data[0][0].claimtype);*/
+								 
+								if(data[0][0].transactionid!=null)
+									 $('#reg_no').text(data[0][0].transactionid);
+								
+								if(data[0][0].landno != "")
+									$('#parcel_no').text("000000"+data[0][0].landno);
+								/* if(data[0][0].claimdate!=null)
+									 $('#claimDateId').html(data[0][0].claimdate); */
+								 
+								if(data[0][0].landusetype!=null)
+									 $('#cert_existing_use').text(data[0][0].landusetype); 
+
+								if(data[0][0].proposedused!=null)
+									 $('#cert_proposed_use').text(data[0][0].proposedused);  
+								 
+								/*if(data[0][0].landtype!=null)
+									 $('#LandTypeId').html(data[0][0].landtype); */ 		
+								
+								if(data[0][0].neighbor_east!=null)
+									 $('#East_boundary').text(data[0][0].neighbor_east);  	
+								 
+								if(data[0][0].neighbor_west!=null)
+									 $('#West_boundary').text(data[0][0].neighbor_west);  	
+
+								
+								if(data[0][0].neighbor_north!=null)
+									 $('#North_boundary').text(data[0][0].neighbor_north);  	
+
+								if(data[0][0].neighbor_south!=null)
+									 $('#South_boundary').text(data[0][0].neighbor_south);  
+								
+								if(data[0][0].claimdate!=null)
+									 $('#date').text(data[0][0].claimdate);
+								
+								if(data[0][0].landsharetype !=null)
+									if(data[0][0].landsharetype =="Single Tenancy"){
+										$('#jointownertable').hide();
+										$('#jointownertable_2').hide();
+										
+									}
+									else if(data[0][0].landsharetype =="Joint Tenancy"){
+										
+										$('#jointownertable').show();
+										$('#jointownertable_2').hide();
+									}
+									else{
+										$('#jointownertable_2').show();
+									}
+										
+								}
+								
+							}
+							
+	                         if(data[1]!= null){	
+	                        	 for(var i=0; i<data[1].length; i++){
+							 
+								if(data[1][i] != null){
+									
+									jQuery("#POIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#POIRecordsRowData1");
+
+									
+								}
+	                        	 }
+							}
+							 if(data[5]!= null){
+								 if(data[5].length > 2){
+									 $('#jointownertable').show();
+										$('#jointownertable_2').show();
+									 if(data[5][2] != null){
+									if(data[5][2].firstname!=null || data[5][2].middlename!=null || data[5][2].lastname!=null){
+										 $('#Owner_nameNonperson').text(data[5][2].firstname+" "+data[5][2].middlename+" "+data[5][2].lastname);
+										$('#owner_Nonperson').text(data[5][2].organizationname);
+										jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][2]).appendTo("#OwnerNonpersonRecordsRowData1");
+									}
+									 }
+									 if(data[5][1] != null){
+											if(data[5][1].firstname!=null || data[5][1].middlename!=null || data[5][1].lastname!=null){
+												 $('#jointOwner_nameNonperson').text(data[5][1].firstname+" "+data[5][1].middlename+" "+data[5][1].lastname);
+												jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][1]).appendTo("#OwnerNonpersonRecordsRowData1");
+											}
+
+									}
+									 
+									 if(data[5][0] != null){
+											if(data[5][0].firstname!=null || data[5][0].middlename!=null || data[5][0].lastname!=null){
+												 $('#jointOwner_name2Nonperson').text(data[5][0].firstname+" "+data[5][0].middlename+" "+data[5][0].lastname);
+												jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][0]).appendTo("#OwnerNonpersonRecordsRowData1");
+											}
+
+									}
+									 
+									}
+								 
+								 else if(data[5].length > 1 && data[5].length < 3){
+									 $('#jointownertable').hide();
+									
+								 if(data[5][1] != null){
+								if(data[5][1].firstname!=null || data[5][1].middlename!=null || data[5][1].lastname!=null){
+									 $('#Owner_nameNonperson').text(data[5][1].firstname+" "+data[5][1].middlename+" "+data[5][1].lastname);
+									$('#owner_Nonperson').text(data[5][1].organizationname);
+									jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][1]).appendTo("#OwnerNonpersonRecordsRowData1");
+								}
+								 }
+								 if(data[5][0] != null){
+										if(data[5][0].firstname!=null || data[5][0].middlename!=null || data[5][0].lastname!=null){
+											 $('#jointOwner_nameNonperson').text(data[5][0].firstname+" "+data[5][0].middlename+" "+data[5][0].lastname);
+											jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][0]).appendTo("#OwnerNonpersonRecordsRowData1");
+										}
+
+								}
+								 
+								}
+								else if(data[5].length == 1){
+									
+									$('#jointownertable').hide();
+									$('#jointownertable_2').hide();
+									 $('#Owner_nameNonperson').text(data[5][0].firstname+" "+data[5][0].middlename+" "+data[5][0].lastname);
+										$('#owner_Nonperson').text(data[5][0].organizationname);
+										jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][0]).appendTo("#OwnerNonpersonRecordsRowData1");
+									
+								}
+								
+							}
+							/*	if(data[0][0].landsharetype!=null)
+									 $('#TypeOftenureId').html(data[0][0].landsharetype);  
+								
+								if(data[0][0].occupancylength!=null)
+									 $('#YearsOfOccupancyId').html(data[0][0].occupancylength); 
+								 
+								if(data[0][0].tenureclasstype!=null)
+									 $('#TypeofRightId').html(data[0][0].tenureclasstype);  */
+								 
+							 
+								if(data[3]!=null){
+									
+									if(data[3].length > 2){
+										 for(var i=0; i<data[3].length; i++){
+									  if(i==2){
+										  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+									  jQuery('#imagePersonId').append('<img  src='+url1+'>');
+									  }
+									  else if(i==1){
+										  var url2 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+										  jQuery('#imagejontPersonId').append('<img  src='+url2+'>');
+										  }
+									  else if(i==0){
+										  var url2 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+										  jQuery('#imagejontPersonId_2').append('<img  src='+url2+'>');
+										  }
+									  }
+										}
+									
+									else if(data[3].length > 1 && data[3].length < 3){
+									 for(var i=0; i<data[3].length; i++){
+								  if(i==1){
+									  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+								  jQuery('#imagePersonId').append('<img  src='+url1+'>');
+								  }
+								  else if(i==0){
+									  var url2 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+									  jQuery('#imagejontPersonId').append('<img  src='+url2+'>');
+									  }
+								  }
+									}
+									else if(data[3].length == 1){
+										 var url1 = "http://"+location.host+"/mast_files"+data[3][0].documentlocation +"/" +data[3][0].documentname ;
+										  jQuery('#imagePersonId').append('<img  src='+url1+'>');
+										
+									}
+								  
+								}
+								
+								if(data[4]!=null){
+									  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
+									  jQuery('#imageSignature').append('<img  src='+url2+'>');
+									}
+									
+								
+								
+								 var layerName = "spatialUnitLand";
+								 var objLayer=getLayerByAliesName(layerName);
+								
+									 var _wfsurl=objLayer.values_.url;
+									var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+									//Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+									$.ajax({
+										url: PROXY_PATH + _wfsSchema,
+										async: false,
+										success: function (data) {
+											 _featureNS=data.targetNamespace;
+											 
+										}
+									});
+
+			                var relLayerName = "Mast:la_spatialunit_land";
+							var fieldName = "landid";
+							var fieldVal = land_id;
+			
+							var _featureTypes= [];
+							_featureTypes.push("la_spatialunit_land");
+							var _featurePrefix="Mast";
+							var featureRequest1 = new ol.format.WFS().writeGetFeature({
+													srsName: 'EPSG:4326',
+													featureNS: _featureNS,
+													featurePrefix: _featurePrefix,
+													featureTypes: _featureTypes,
+													outputFormat: 'application/json',
+													filter: ol.format.filter.equalTo(fieldName, fieldVal)
+												  });
+												  
+												  
+								  var _url= window.location.protocol+'//'+window.location.host+'/geoserver/wfs';
+											  fetch(_url, {
+												method: 'POST',
+												body: new XMLSerializer().serializeToString(featureRequest1)
+											  }).then(function(response) {
+												return response.json();
+											  }).then(function(json) {
+											   var features = new ol.format.GeoJSON().readFeatures(json);
+
+											         var vectorSource = new ol.source.Vector();
+													 vectorSource.addFeatures(features);
+													 extent=vectorSource.getExtent();
+													 var cqlFilter = 'landid='+fieldVal ;  				  				
+													 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER={{CQLFILTER}}";
+				                                     var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
+													 
+													jQuery('#mapImageId01').empty();
+													jQuery('#mapImageId01').append('<img  src='+url2+'>');
+
+												
+	                                                var html2 = $("#printdiv2").html();
+	                    							
+	                    							var printWindow=window.open('','popUpWindow',  'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+	                    								printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
+	                    					            '<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/style.css" type="text/css" />'
+	                    					            +'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style1.css" type="text/css" />'
+														+'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'
+	                    					             +'</head><body>'+html2+'</body></html>');	
+	                    								
+	                    								printWindow.document.close();
+									
+											   });
+											   
+											  
+								
+							}
+							else
+							{
+								jAlert('info','error in fetching details',"");
+							}
+						});
+						
+						
+					}
+					else{
+					jQuery.get("resources/templates/report/land-certificate.html", function (template) 
+					{
+						jQuery("#printDiv").empty();
+						jQuery("#printDiv").append(template);
+						
+						if(data!=null || data!="" || data!="undefined")
+						{
+						
+                           if(data[0]!=null){						
+							if(data[0][0] != null){
+							if(data[0][0].region!=null || data[0][0].commune!=null || data[0][0].province!=null)
+								 $('#comp_address').text(data[0][0].region +", "+data[0][0].commune+", "+ data[0][0].province);
+							 
+							if(data[0][0].region !=null)
+								 $('#Community').text(data[0][0].region);
+							
+							if(data[0][0].province !=null)
+								 $('#provence').text(data[0][0].province);
+							
+							 
+							if(data[0][0].projectName!=null)
+								 $('#project').text(data[0][0].projectName);
+							
+							if(data[0][0].area != null)
+								 $('#area_report').text(data[0][0].area);
+							  
+							/*if(data[0][0].claimno!=null)
+								 $('#claimNumberId').text(data[0][0].claimno);
+							 		
+                            if(data[0][0].claimtype!=null)
+								 $('#claimTypeId').html(data[0][0].claimtype);*/
+							 
+							if(data[0][0].transactionid!=null)
+								 $('#reg_no').text(data[0][0].transactionid);
+							
+							if(data[0][0].landno != "")
+								$('#parcel_no').text("000000"+data[0][0].landno);
+							/* if(data[0][0].claimdate!=null)
+								 $('#claimDateId').html(data[0][0].claimdate); */
+							 
+							if(data[0][0].landusetype!=null)
+								 $('#cert_existing_use').text(data[0][0].landusetype); 
+
+							if(data[0][0].proposedused!=null)
+								 $('#cert_proposed_use').text(data[0][0].proposedused);  
+							 
+							/*if(data[0][0].landtype!=null)
+								 $('#LandTypeId').html(data[0][0].landtype); */ 		
+							
+							if(data[0][0].neighbor_east!=null)
+								 $('#East_boundary').text(data[0][0].neighbor_east);  	
+							 
+							if(data[0][0].neighbor_west!=null)
+								 $('#West_boundary').text(data[0][0].neighbor_west);  	
+
+							
+							if(data[0][0].neighbor_north!=null)
+								 $('#North_boundary').text(data[0][0].neighbor_north);  	
+
+							if(data[0][0].neighbor_south!=null)
+								 $('#South_boundary').text(data[0][0].neighbor_south);  
+							
+							if(data[0][0].claimdate!=null)
+								 $('#date').text(data[0][0].claimdate);
+							
+							if(data[0][0].landsharetype !=null)
+								if(data[0][0].landsharetype =="Single Tenancy"){
+									$('#jointownertable').hide();
+									$('#jointownertable_2').hide();
+									
+								}
+								else if(data[0][0].landsharetype =="Joint Tenancy"){
+									
+									$('#jointownertable').show();
+									$('#jointownertable_2').hide();
+								}
+								else{
+									$('#jointownertable_2').show();
+								}
+									
+							}
+							
+						}
+						
+                         if(data[1]!= null){	
+                        	 for(var i=0; i<data[1].length; i++){
+						 
+							if(data[1][i] != null){
+								
+								jQuery("#POIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#POIRecordsRowData1");
+
+								
+							}
+                        	 }
+						}
+						 if(data[2]!= null){
+							 if(data[2].length > 2){
+								 if(data[2][2] != null){
+								if(data[2][2].firstname!=null || data[2][2].middlename!=null || data[2][2].lastname!=null){
+									 $('#Owner_name').text(data[2][2].firstname+" "+data[2][2].middlename+" "+data[2][2].lastname);
+									$('#owner').text(data[2][2].firstname+" "+data[2][2].middlename+" "+data[2][2].lastname);
+									jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][2]).appendTo("#OwnerRecordsRowData1");
+								}
+								 }
+								 if(data[2][1] != null){
+										if(data[2][1].firstname!=null || data[2][1].middlename!=null || data[2][1].lastname!=null){
+											 $('#jointOwner_name').text(data[2][1].firstname+" "+data[2][1].middlename+" "+data[2][1].lastname);
+											jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][1]).appendTo("#OwnerRecordsRowData1");
+										}
+
+								}
+								 
+								 if(data[2][0] != null){
+										if(data[2][0].firstname!=null || data[2][0].middlename!=null || data[2][0].lastname!=null){
+											 $('#jointOwner_name2').text(data[2][0].firstname+" "+data[2][0].middlename+" "+data[2][0].lastname);
+											jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
+										}
+
+								}
+								 
+								}
+							 
+							 else if(data[2].length > 1 && data[2].length < 3){
+							 if(data[2][1] != null){
+							if(data[2][1].firstname!=null || data[2][1].middlename!=null || data[2][1].lastname!=null){
+								 $('#Owner_name').text(data[2][1].firstname+" "+data[2][1].middlename+" "+data[2][1].lastname);
+								$('#owner').text(data[2][1].firstname+" "+data[2][1].middlename+" "+data[2][1].lastname);
+								jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][1]).appendTo("#OwnerRecordsRowData1");
+							}
+							 }
+							 if(data[2][0] != null){
+									if(data[2][0].firstname!=null || data[2][0].middlename!=null || data[2][0].lastname!=null){
+										 $('#jointOwner_name').text(data[2][0].firstname+" "+data[2][0].middlename+" "+data[2][0].lastname);
+										jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
+									}
+
+							}
+							 
+							}
+							else if(data[2].length == 1){
+								 $('#Owner_name').text(data[2][0].firstname+" "+data[2][0].middlename+" "+data[2][0].lastname);
+									$('#owner').text(data[2][0].firstname+" "+data[2][0].middlename+" "+data[2][0].lastname);
+									jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
+								
+							}
+							
+						}
+						/*	if(data[0][0].landsharetype!=null)
+								 $('#TypeOftenureId').html(data[0][0].landsharetype);  
+							
+							if(data[0][0].occupancylength!=null)
+								 $('#YearsOfOccupancyId').html(data[0][0].occupancylength); 
+							 
+							if(data[0][0].tenureclasstype!=null)
+								 $('#TypeofRightId').html(data[0][0].tenureclasstype);  */
+							 
+						 
+							if(data[3]!=null){
+								
+								if(data[3].length > 2){
+									 for(var i=0; i<data[3].length; i++){
+								  if(i==2){
+									  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+								  jQuery('#imagePersonId').append('<img  src='+url1+'>');
+								  }
+								  else if(i==1){
+									  var url2 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+									  jQuery('#imagejontPersonId').append('<img  src='+url2+'>');
+									  }
+								  else if(i==0){
+									  var url2 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+									  jQuery('#imagejontPersonId_2').append('<img  src='+url2+'>');
+									  }
+								  }
+									}
+								
+								else if(data[3].length > 1 && data[3].length < 3){
+								 for(var i=0; i<data[3].length; i++){
+							  if(i==1){
+								  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+							  jQuery('#imagePersonId').append('<img  src='+url1+'>');
+							  }
+							  else if(i==0){
+								  var url2 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+								  jQuery('#imagejontPersonId').append('<img  src='+url2+'>');
+								  }
+							  }
+								}
+								else if(data[3].length == 1){
+									 var url1 = "http://"+location.host+"/mast_files"+data[3][0].documentlocation +"/" +data[3][0].documentname ;
+									  jQuery('#imagePersonId').append('<img  src='+url1+'>');
+									
+								}
+							  
+							}
+							
+							if(data[4]!=null){
+								  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
+								  jQuery('#imageSignature').append('<img  src='+url2+'>');
+								}
+								
+							
+							
+							 var layerName = "spatialUnitLand";
+							 var objLayer=getLayerByAliesName(layerName);
+							
+								 var _wfsurl=objLayer.values_.url;
+								var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+								//Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+								$.ajax({
+									url: PROXY_PATH + _wfsSchema,
+									async: false,
+									success: function (data) {
+										 _featureNS=data.targetNamespace;
+										 
+									}
+								});
+
+		                var relLayerName = "Mast:la_spatialunit_land";
+						var fieldName = "landid";
+						var fieldVal = land_id;
+		
+						var _featureTypes= [];
+						_featureTypes.push("la_spatialunit_land");
+						var _featurePrefix="Mast";
+						var featureRequest1 = new ol.format.WFS().writeGetFeature({
+												srsName: 'EPSG:4326',
+												featureNS: _featureNS,
+												featurePrefix: _featurePrefix,
+												featureTypes: _featureTypes,
+												outputFormat: 'application/json',
+												filter: ol.format.filter.equalTo(fieldName, fieldVal)
+											  });
+											  
+											  
+							  var _url= window.location.protocol+'//'+window.location.host+'/geoserver/wfs';
+										  fetch(_url, {
+											method: 'POST',
+											body: new XMLSerializer().serializeToString(featureRequest1)
+										  }).then(function(response) {
+											return response.json();
+										  }).then(function(json) {
+										   var features = new ol.format.GeoJSON().readFeatures(json);
+
+										         var vectorSource = new ol.source.Vector();
+												 vectorSource.addFeatures(features);
+												 extent=vectorSource.getExtent();
+												 var cqlFilter = 'landid='+fieldVal ;  				  				
+												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER={{CQLFILTER}}";
+			                                     var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
+												 
+												jQuery('#mapImageId01').empty();
+												jQuery('#mapImageId01').append('<img  src='+url2+'>');
+
+											
+                                                var html2 = $("#printdiv2").html();
+                    							
+                    							var printWindow=window.open('','popUpWindow',  'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+                    								printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
+                    					            '<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/style.css" type="text/css" />'
+                    					            +'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style1.css" type="text/css" />'
+													+'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'
+                    					             +'</head><body>'+html2+'</body></html>');	
+                    								
+                    								printWindow.document.close();
+								
+										   });
+										   
+										  
+							
+						}
+						else
+						{
+							jAlert('info','error in fetching details',"");
+						}
+					});
+					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {									
+					jAlert('info', "", "");
+				}
+			});
+}
+				
+		
+	

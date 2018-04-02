@@ -80,7 +80,7 @@
             jsFiles = [
                "/cloudburst/viewer/util.js",
                "/cloudburst/viewer/jsts.min.js",
-               "/openlayers/viewer/turf.min.js",
+               "/cloudburst/viewer/turf.min.js",
                //"openlayers/OpenLayers.js",
                //"openlayers/Watermark.js",
                // "openlayers/MapQuestOSM.js",

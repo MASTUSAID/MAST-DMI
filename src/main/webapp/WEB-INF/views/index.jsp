@@ -246,8 +246,14 @@
             </div>
             <!--/toolBoxes-->
          </div>
-           <div class="footer"> <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');"></div>
-                    <div id="android_logo"></div><span class="copyright-text">&copy; 2017. All Rights Reserved.</span></div>
+           <div class="footer"> 
+           	<!-- <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');">
+           	</div>
+            <div id="android_logo">
+            </div> -->
+            <span class="copyright-text">&copy; 2018. All Rights Reserved.</span>
+            
+            </div>
       </div>
 <script type="text/javascript">
 	var qryString = "<%=request.getSession().getAttribute("lang")%>";

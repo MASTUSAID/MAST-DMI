@@ -5,7 +5,9 @@ var activeLayerURL = null;
 var nav_his = [];
 var size = -1;
 var undo_redo = false;
-
+var user_ist;
+var region_list;
+var project_list;
 
 /*var selectionSymbolizer = {
 	    'Polygon': {fillColor: '#FFFFFF', fillOpacity:0.1, stroke: true, strokeColor:'#07FCFB', strokeWidth: 2},
@@ -15,247 +17,136 @@ var undo_redo = false;
 
 
 
+
+
+var landtypeid=[
+    {"id":"1", "value":"Flat/Plain"},
+    {"id":"2", "value":"Sloping"},
+    {"id":"3", "value":"Mountainous"},
+	{"id":"4", "value":"Valley"},
+	{"id":"9999", "value":"NA"}
+]
+
+
+
+var landsoilqualityid=
+[
+   {"id":"1", "value":"Very good"},
+   {"id":"2", "value":"Moderate good"},
+   {"id":"3", "value":"Poor"},
+   {"id":"4", "value":"Very poor"}
+   ]
+
+
+
+var landusetypeid=[
+	    {"id":"1", "value":"Agriculture"},
+	    {"id":"2", "value":"Settlement"},
+	    {"id":"3", "value":"Livestock (intensive/ stationary)"},
+		{"id":"4", "value":"Livestock (pastoralism)"},
+		{"id":"5", "value":"Forest/ Woodlands"},
+		{"id":"6", "value":"Forest Reserve"},
+		{"id":"7", "value":"Grassland"},
+		{"id":"8", "value":"Facility (church/mosque/recreation)"},
+		{"id":"9", "value":"Commercial/Service"},
+		{"id":"10", "value":"Minning"},
+		{"id":"11", "value":"Wildlife (hunting)"},
+		{"id":"12", "value":"Wildlife (tourism)"},
+		{"id":"13", "value":"Industrial"},
+		{"id":"14", "value":"Conservation"},
+		{"id":"9999", "value":""}
+		
+	]
+
+
+
+
+
+var acquisitiontypeid=[
+    {"id":"1", "value":"Kupewa na Halmashauri ya Kijiji"},
+    {"id":"2", "value":"Zawadi"},
+    {"id":"3", "value":"Urithi"},
+	{"id":"4", "value":"Kununua"}
+]
+
+
+
+var claimtypeid=[
+	    {"id":"1", "value":"New claim"},
+	    {"id":"2", "value":"Existing Claim or Right"},
+	    {"id":"3", "value":"Disputed Claim"},
+		{"id":"4", "value":"No Claim"}
+	]
+
+var landsharetypeid=[
+    {"id":"1", "value":"Co-occupancy (Tenancy in Common)"},
+    {"id":"2", "value":"Single Occupant"},
+	{"id":"3", "value":"Co-occupancy (Joint tenancy)"},
+	{"id":"4", "value":"Customary(Individual)"},
+	{"id":"5", "value":"Customary(Collective)"},
+	{"id":"6", "value":"Single Tenancy"},
+	{"id":"7", "value":"Joint Tenancy"},
+	{"id":"8", "value":"Common Tenancy"},
+	{"id":"9", "value":"Collective Tenancy"},
+    {"id":"9999", "value":""},
+	
+	
+]
+
+
+
+
+var tenureclassid=	[
+	    {"id":"1", "value":"Derivative Right"},
+	    {"id":"2", "value":"Customary Right of Occupancy"},
+		{"id":"3", "value":"Right to Ownership"},
+		{"id":"4", "value":"Right of Use"},
+		{"id":"5", "value":"Formal Ownership (Free-hold)"},
+		{"id":"6", "value":"Granted Right of Occupancy"},
+		{"id":"7", "value":"Right to Manage"},
+		{"id":"9999", "value":""}
+		
+		
+		
+	]
+	
+var spatialunitgroupid=	[
+	    {"id":"1", "value":"Country"},
+	    {"id":"2", "value":"Region"},
+		{"id":"3", "value":"Province"},
+		{"id":"4", "value":"Commune"},
+		{"id":"5", "value":"Place"}
+		
+		
+	]
+
+	
+
+var unitid=[
+
+        {"id":"1", "value":"Foot"},
+	    {"id":"2", "value":"Inches"},
+		{"id":"3", "value":"Kilometer"},
+		{"id":"4", "value":"Meter"},
+		{"id":"5", "value":"Miles"},
+		{"id":"5", "value":"dd"}
+
+]
+	
+
+
+
+
 Cloudburst.Navi = function(_map) {
 
 		map.addInteraction(zIn);
         map.addInteraction(zOut);
 
-/*
-	var selection_vector = new OpenLayers.Layer.Vector("selection_vector", {
-		reportError: true,
-		projection: "EPSG:4326",
-		isBaseLayer: false,
-		visibility: true,        
-		displayInLayerSwitcher: false
-	});
-	_map.addLayers([selection_vector]);
-
-*/
-
-/*
-	mapControls = {
-
-			zoomin : new OpenLayers.Control.ZoomBox({
-				title : "Zoom in box",
-				out : false
-			}),
-			zoomout : new OpenLayers.Control.ZoomBox({
-				title : "Zoom out box",
-				out : true
-			}),
-			pan : new OpenLayers.Control.Pan({
-				title : "Pan"
-					//displayClass: "olControlDragPan"
-
-			}),
-			measurelength : new OpenLayers.Control.Measure(OpenLayers.Handler.Path,
-					{
-				persist : true,
-				displayClass:"olControlDefault",
-				eventListeners : {
-					measure : function(evt) {
-						handleFinalMeasurement(evt);
-						// getActualMeasure(evt.measure,evt.units,evt.order,'t');
-					},
-					measurepartial : function(evt) {
-						handlePartialMeasurement(evt);
-						// getActualMeasure(evt.measure,evt.units,evt.order,'p');
-					},
-					activate : function(evt) {
-						measurementToolActivated();
-
-					}
-				}
-					}),
-					measurearea : new OpenLayers.Control.Measure(
-							OpenLayers.Handler.Polygon, {
-								persist : true,
-								displayClass:"olControlDefault",
-								eventListeners : {
-									measure : function(evt) {
-										handleFinalMeasurement(evt);
-										// getActualMeasure(evt.measure,evt.units,evt.order,'t');
-									},
-									measurepartial : function(evt) {
-										handlePartialMeasurement(evt);
-										// getActualMeasure(evt.measure,evt.units,evt.order,'p');
-									},
-									activate : function(evt) {
-										measurementToolActivated();
-
-									}
-								}
-							}),
-							selectfeature:new OpenLayers.Control.DrawFeature(
-									selection_vector, OpenLayers.Handler.Point, {
-										displayClass:"olControlInfo",
-										callbacks: {
-											done: function (p) {
-												var pointFeature = new OpenLayers.Feature.Vector(p);
-
-												if(OpenLayers.Map.activelayer.selectable){
-													var objSelect = new Selection(pointFeature, OpenLayers.Map.activelayer);
-													filter = objSelect.creationSelectionCriteria(this);
-
-													objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
-													objSelect.displayResult(filter, true);
-													OpenLayers.Map.activelayer.selectFilter = filter;
-												}else{
-													jAlert('Layer is not selectable', 'Selection');
-												}
-
-											}
-										}
-									}),
-									selectbox : new OpenLayers.Control.DrawFeature(
-											selection_vector, OpenLayers.Handler.RegularPolygon, {
-												handlerOptions: {
-													sides: 4,
-													irregular:true
-												},
-												displayClass:"olControlDefault",
-												callbacks: {
-													done: function (p) {
-														var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-														if(OpenLayers.Map.activelayer.selectable){
-															var objSelect = new Selection(multipolygon, OpenLayers.Map.activelayer);
-															filter = objSelect.creationSelectionCriteria(this);
-															objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
-															objSelect.displayResult(filter, true);
-															OpenLayers.Map.activelayer.selectFilter = filter;
-														}else{
-															jAlert('Layer is not selectable', 'Selection');
-														}
-
-														//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
-													}
-												}
-											}),
-											selectpolygon : new OpenLayers.Control.DrawFeature(
-													selection_vector, OpenLayers.Handler.Polygon, {
-														displayClass:"olControlDefault",
-														callbacks: {
-															done: function (p) {
-																//var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-																var multipolygon = new OpenLayers.Feature.Vector(p);
-																var objSelect = new Selection(multipolygon, OpenLayers.Map.activelayer);
-																if(OpenLayers.Map.activelayer.selectable){
-																	filter = objSelect.creationSelectionCriteria(this);
-																	objSelect.displaySelection(filter, selectionSymbolizer, OpenLayers.Map.activelayer);
-																	objSelect.displayResult(filter);
-																	OpenLayers.Map.activelayer.selectFilter = filter;
-																}else{
-																	jAlert('Layer is not selectable', 'Selection');
-																}
-
-																//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
-															}
-														}
-													}),
-													info : new OpenLayers.Control(
-															{
-																displayClass:"olControlInfo",	
-																activate : function() {
-																	var handlerOptions = {
-																			'single' : true,
-																			'double' : false,
-																			'pixelTolerance' : 0,
-																			'stopSingle' : false,
-																			'stopDouble' : false
-																	};
-																	this.handler = new OpenLayers.Handler.Click(this, {
-																		'click' : onClick
-																	}, handlerOptions);
-																	this.protocol = new OpenLayers.Protocol.HTTP({ 
-																		url : OpenLayers.Map.activelayer.url,
-																		format : new OpenLayers.Format.WMSGetFeatureInfo()
-																	});
-																	OpenLayers.Control.prototype.activate.call(this);
-																}
-
-															}),
-
-															maptip : new OpenLayers.Control.GetFeature({
-																//protocol : OpenLayers.Protocol.WFS.fromWMSLayer(null,mapTipOptions),
-																box : false,
-																click : false,
-																clickout : false,
-																hover : true,
-																clickTolerance : 6,
-																maxFeatures : 1
-															}),
-															intersection :new OpenLayers.Control.DrawFeature(
-																	selection_vector, OpenLayers.Handler.RegularPolygon, {
-																		handlerOptions: {
-																			sides: 4,
-																			irregular:true
-																		},
-																		displayClass:"olControlDefault",
-																		callbacks: {
-																			done: function (p) {
-																				var multipolygon = new OpenLayers.Geometry.MultiPolygon([p]);
-																				if(OpenLayers.Map.activelayer.selectable){
-																					var objIntersection = new Intersection(multipolygon, OpenLayers.Map.activelayer);
-																					filter = objIntersection.creationSelectionCriteria(this);
-																					objIntersection.displayResult(filter, true);
-																					OpenLayers.Map.activelayer.selectFilter = filter;
-																				}else{
-																					jAlert('Layer is not selectable', 'Selection');
-																				}
-
-																				//selFeatureBbox=objSelect.geometry.getBounds().toBBOX();
-																			}
-																		}
-																	}),
-	};
-
 	
-*/
 
 
+$("#toolbar button").bind("click", function(e) {
 
-	//mapControls["maptip"].events.register("hoverfeature", this, hoverResponse);
-	//mapControls["maptip"].events.register("outfeature", this, hoverOutResponse);
-
-	//mapControls["measurelength"].setImmediate(true);
-	//mapControls["measurearea"].setImmediate(true);
-/*
-	var history = new OpenLayers.Control.NavigationHistory({
-		id : "history"
-	});
-	_map.addControl(history);
-	history.activate();
-
-	for ( var key in mapControls) {
-		control = mapControls[key];
-		_map.addControl(control);
-	}
-*/
-	// ******************* Set selection layer
-
-	//var selectLayers = [];
-	//selectLayers.push(map.activelayer);
-	
-	
-	//mapControls['selectbox'].setLayers(selectLayers);
-	//mapControls['selectpolygon'].setLayers(selectLayers);
-
-	//mapControls["selectbox"].events.register("selected", this, onSLDSelectResponse);
-	//mapControls["selectpolygon"].events.register("selected", this, onSLDSelectResponse);
-
-	// ***************************************
-
-	//var zoomtoxy = new Cloudburst.ZoomToXY(_map);
-
-	$("#toolbar button").bind("click", function(e) {
-
-	//map.getViewport().removeEventListener('click',myFunction);
-		//for ( var key in mapControls) {
-			//var control = mapControls[key];
-			//control.deactivate();
-
-		//}
-		
 	 map.un('singleclick', mapClickCallback);	
 	 removeDeactiveMarkupTool();
 	 $("#defaultbutton").css("visibility","hidden");
@@ -504,6 +395,34 @@ Cloudburst.Navi = function(_map) {
 
 function mapClickCallback(evt)
 {
+	jQuery.ajax({
+        url: STUDIO_URL +"user/info",
+        async: false,
+        success: function (data) {
+            user_ist = data;
+
+        }
+    });
+
+	
+	jQuery.ajax({
+        url: STUDIO_URL +"region/info",
+        async: false,
+        success: function (data) {
+            region_list = data;
+
+        }
+    });
+	
+	jQuery.ajax({
+			url: STUDIO_URL +"project/info",
+			async: false,
+			success: function (data) {
+				project_list = data;
+
+			}
+		});
+	
 	var  popupInfo="";
      $("#tabs-Tool").empty();
 				jQuery('#infoDiv').remove();
@@ -600,6 +519,172 @@ function mapClickCallback(evt)
 								attrValue ='';
 							}
 							
+						     var a_feild = dispField.layerfield;
+						    if(a_feild=="landtypeid"){
+						    	
+								$.each(landtypeid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="acquisitiontypeid"){
+						    	
+								$.each(acquisitiontypeid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="claimtypeid"){
+						    	
+								$.each(claimtypeid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="landsharetypeid"){
+						    	
+								$.each(landsharetypeid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							if(a_feild=="landusetypeid"){
+						    	
+								$.each(landusetypeid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="spatialunitgroupid1"){
+						    	
+								$.each(spatialunitgroupid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="spatialunitgroupid2"){
+						    	
+								$.each(spatialunitgroupid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							
+							if(a_feild=="spatialunitgroupid3"){
+						    	
+								$.each(spatialunitgroupid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							
+							if(a_feild=="spatialunitgroupid4"){
+						    	
+								$.each(spatialunitgroupid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="spatialunitgroupid5"){
+						    	
+								$.each(spatialunitgroupid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							if(a_feild=="unitid"){
+						    	
+								$.each(unitid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							if(a_feild=="projectnameid"){
+								
+								$.each(project_list, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.name;
+										return false; 
+									}
+								});
+
+							}
+							
+							if(a_feild=="createdby"){
+						    	
+								$.each(user_ist, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.name;
+										return false; 
+									}
+								});
+						    }
+							
+							if(a_feild=="modifiedby"){
+						    	
+								$.each(user_ist, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.name;
+										return false; 
+									}
+								});
+						    }
+							
+							if(a_feild=="tenureclassid"){
+						    	
+								$.each(tenureclassid, function(idx, obj) {
+									if(obj.id==attrValue){
+									    attrValue=obj.value;
+										return false; 
+									}
+								});
+						    }
+							
+							
+							
+
 
 							popupInfo += '<td>' + attrValue + '</td>';
 

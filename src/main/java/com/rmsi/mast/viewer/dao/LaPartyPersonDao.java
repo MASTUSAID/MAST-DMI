@@ -9,5 +9,6 @@ public interface LaPartyPersonDao extends GenericDAO<LaPartyPerson, Long>{
 
 	LaPartyPerson getPartyPersonDetails(Integer landid);
 	List<LaPartyPerson> getAllPartyPersonDetails(Integer landid);
+	List<LaPartyPerson> fillAllPartyPersonDetails(Integer landid,Integer processid);
 	LaPartyPerson getPartyPersonDetailssurrenderlease(Integer landid);
 }

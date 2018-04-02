@@ -113,9 +113,12 @@ public class ClaimBasic implements Serializable {
 	@Column(name="claimtypeid")
 	private Integer claimtypeid;
 	
-private Integer proposedused;
+     private Integer proposedused;
 	
 	private Integer claimno;
+	
+	private String udparcelno;
+	
 	
 	
 //    @ManyToOne
@@ -771,6 +774,20 @@ private Integer proposedused;
 
 	public void setOldlandid(Long oldlandid) {
 		this.oldlandid = oldlandid;
+	}
+
+
+
+
+	public String getUdparcelno() {
+		return udparcelno;
+	}
+
+
+
+
+	public void setUdparcelno(String udparcelno) {
+		this.udparcelno = udparcelno;
 	}
 
 

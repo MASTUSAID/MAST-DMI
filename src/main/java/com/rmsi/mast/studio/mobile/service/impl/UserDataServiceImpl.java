@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.util.HSSFColor.AQUA;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rmsi.mast.studio.dao.RelationshipTypeDao;
 import com.rmsi.mast.studio.dao.UserDAO;
+import com.rmsi.mast.studio.domain.AcquisitionType;
 import com.rmsi.mast.studio.domain.AttributeMaster;
 import com.rmsi.mast.studio.domain.AttributeMasterResourcePOI;
 import com.rmsi.mast.studio.domain.AttributeOptions;
@@ -496,10 +499,22 @@ public class UserDataServiceImpl implements UserDataService {
                 spatialUnit.setWorkflowstatusid(1);
                 spatialUnit.setModifiedby(userId);
                 spatialUnit.setModifieddate(new Date());
-            	spatialUnit.setNeighborEast("");
-            	spatialUnit.setNeighborWest("");
-            	spatialUnit.setNeighborNorth("");
-            	spatialUnit.setNeighborSouth("");
+            	spatialUnit.setNeighborEast("a");
+            	spatialUnit.setNeighborWest("b");
+            	spatialUnit.setNeighborNorth("c");
+            	spatialUnit.setNeighborSouth("d");
+            	AcquisitionType aqobj= new AcquisitionType();
+            	
+            	if(null != prop.getRight() && prop.getRight().getAcquisitionTypeId() != 0){
+            	aqobj.setAcquisitiontypeid(prop.getRight().getAcquisitionTypeId());
+            	spatialUnit.setLaRightAcquisitiontype(aqobj);
+            	}
+            	/*else if(null != prop.getDispute() && prop.getDispute().getDisputingPersons().size() > 0 && prop.getDispute().getDisputingPersons().get(0).getAcquisitionTypeId() != 0){
+            		aqobj.setAcquisitiontypeid(prop.getDispute().getDisputingPersons().get(0).getAcquisitionTypeId());
+                	spatialUnit.setLaRightAcquisitiontype(aqobj);
+            	}*/          	
+            	
+            
 
 //                spatialUnit.setLaRightAcquisitiontype(laRightAcquisitiontype);
 //                spatialUnit.setImei(prop.getImei());
@@ -535,7 +550,7 @@ public class UserDataServiceImpl implements UserDataService {
 //                }
               
                 
-
+                spatialUnit.setArea( Double.parseDouble(new DecimalFormat(".######").format(geomConverter.getArea(prop.getCoordinates()))));
                 serverPropId = spatialUnitDao.addSpatialUnit(spatialUnit).getLandid();
                 spatialUnitDao.clear();
 
@@ -681,11 +696,76 @@ public class UserDataServiceImpl implements UserDataService {
                         break;
                     }
                 
+                
+                
+                
+                
+//                // Save Non-natural person
+//                if (prop.getRight() != null && prop.getRight().getNonNaturalPerson() != null) {
+//                    
+//						 for (Person propPerson : prop.getRight().getNonNaturalPerson()) {
+//
+//                        // Save non natural person
+//                        NonNaturalPerson nonPerson = new NonNaturalPerson();
+//                        nonPerson.setLaSpatialunitgroup1(projectArea.getLaSpatialunitgroup1());
+//                        nonPerson.setLaSpatialunitgroup2(projectArea.getLaSpatialunitgroup2());
+//                        nonPerson.setLaSpatialunitgroup3(projectArea.getLaSpatialunitgroup3());
+//                        nonPerson.setLaSpatialunitgroupHierarchy1(projectArea.getLaSpatialunitgroupHierarchy1());
+//                        nonPerson.setLaSpatialunitgroupHierarchy2(projectArea.getLaSpatialunitgroupHierarchy2());
+//                        nonPerson.setLaSpatialunitgroupHierarchy3(projectArea.getLaSpatialunitgroupHierarchy3());
+//                        PersonType persontype= new PersonType();
+//                        persontype.setPersontypeid(prop.getRight().getNonNaturalPerson().getIsNatural());
+//                        nonPerson.setLaPartygroupPersontype(persontype);
+//                        nonPerson.setCreatedby(userId);
+//                        nonPerson.setIsactive(true);
+//                        nonPerson.setCreateddate(new Timestamp(time));
+//                        setNonNaturalPersonAttributes(nonPerson, prop.getRight().getNonNaturalPerson());
+////                        nonPerson.getLaParty().setPartyid(personId);
+////                        nonPerson.getLaParty().setPartyid(person.getPartyid());
+//                        nonPerson = nonNaturalPersonDao.addNonNaturalPerson(nonPerson);
+//                        attributes = createAttributesList(projectAttributes, prop.getRight().getNonNaturalPerson().getAttributes());
+////Vishal(10-1-2018)
+//                                                attributeValuesDao.addAttributeValues(attributes, nonPerson.getPartyid());
+//
+//                        // Save right
+//                        SocialTenureRelationship right = new SocialTenureRelationship();
+//                        right.setCreatedby(userId);
+//                        setRightAttributes(right, prop.getRight());
+////                        right.getLaSpatialunitLand().setLandid(serverPropId);
+////                        right.getLaParty().setLaPartyOrganization(nonPerson);
+//                        right.setCertIssueDate(new Date());
+//                        right.setLandid(serverPropId);
+//                        right.setPartyid(nonPerson.getPartyid());
+//                        right.setLaPartygroupPersontype(nonPerson.getLaPartygroupPersontype());
+//                        right.setIsactive(true);
+//                        
+//                      
+//                        right.setCreateddate(new Timestamp(time));
+//                        right.setModifieddate(new Timestamp(time));
+//                        right.setModifiedby(userId);
+//                        right.setLaExtTransactiondetail(LaExtTransactionObj);
+//                        
+//                        SocialTenureRelationship  socialTenurerelationship  = socialTenureDao.addSocialTenure(right);
+//                        
+//                        attributes = createAttributesList(projectAttributes, prop.getRight().getAttributes());
+////                        attributeValuesDao.addAttributeValues(attributes, rightId);
+////Vishal(10-1-2018)
+//                                                attributeValuesDao.addAttributeValues(attributes, socialTenurerelationship.getPersonlandid());
+//                        // Only 1 natural person is allowed for non-natural
+//                        break;
+//                    }
+//            }
+//                
+//                
+                
+                
+                
                 //DisputePersonCase
                 
                 if (prop.getDispute() != null &&  prop.getDispute().getDisputingPersons()!= null ) {
       			  LaExtDispute disputeobj = null;
       			  int counts=0;
+      			NaturalPerson obj =null;
                     for (Person propPerson : prop.getDispute().getDisputingPersons()) {
                   	  
                   	    NaturalPerson person = new NaturalPerson();
@@ -714,6 +794,7 @@ public class UserDataServiceImpl implements UserDataService {
 //                          fileInputStream.close();
 //                          person.setPhoto(picInBytes);
                           setNaturalPersonAttributes(person, propPerson, userId);
+                          obj= person;
                           disputePersonid = naturalPersonDao.addNaturalPerson(person).getPartyid();
                           attributes = createAttributesList(projectAttributes, propPerson.getAttributes());
                         //Vishal(10-1-2018)
@@ -739,8 +820,10 @@ public class UserDataServiceImpl implements UserDataService {
                                                   LaExtDisputelandmapping dispute = new LaExtDisputelandmapping();
                                                   dispute.setLandid(serverPropId);
 //                                                  if(prop.getRight().getNaturalPersons().get(0).getIsNatural() ==1){
-                                                  	dispute.setPersontypeid(1);
+//                                                  	dispute.setPersontypeid(1);
 //                                                  }
+                                                  	
+                                                	dispute.setPersontypeid(obj.getLaPartygroupPersontype().getPersontypeid());
                                                   dispute.setIsactive(true);
                                                   dispute.setCreatedby(userId);
                                                   Date date2 = dateformat.parse(prop.getDispute().getRegDate());
@@ -826,7 +909,6 @@ public class UserDataServiceImpl implements UserDataService {
           
             
             return result;
-
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Failed to save property: ID " + featureId.toString(), e);
@@ -1043,6 +1125,13 @@ public class UserDataServiceImpl implements UserDataService {
                 
             }
             
+            if (id == 1155) {
+            	if(! value.equalsIgnoreCase("")){
+             AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
+                naturalPerson.setLaPartygroupPersontype(personTypeDao.getPersonTypeById(attOptions.getParentid()));
+            	}
+            }
+            
             else if(id == 1134){
             	
             	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
@@ -1080,9 +1169,9 @@ public class UserDataServiceImpl implements UserDataService {
 
                 naturalPerson.setLaPartygroupIdentitytype(idTypeDao.getTypeByAttributeOptionId(attOptions.getParentid()));
             }
-            else if (id == 22 && value != null && !value.equals("")) {
+           /* else if (id == 22 && value != null && !value.equals("")) {
                 naturalPerson.setDateofbirth(new SimpleDateFormat("yyyy-MM-dd").parse(value));
-            }
+            }*/
             
            
         }
@@ -1122,6 +1211,7 @@ public class UserDataServiceImpl implements UserDataService {
             return;
         }
 
+ try{       
         // Set proposed land use from right
         if (prop.getRight() != null) {
             for (Attribute attribute : prop.getRight().getAttributes()) {
@@ -1266,6 +1356,9 @@ public class UserDataServiceImpl implements UserDataService {
 //               }
            }
     	
+ }catch(Exception e){
+	 e.printStackTrace();
+ }
        }
 
     private void setReourcePolygonPropAttibutes(SpatialUnitResourcePolygon parcel, Property prop) {

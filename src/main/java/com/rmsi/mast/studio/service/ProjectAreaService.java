@@ -5,4 +5,5 @@ import com.rmsi.mast.studio.domain.ProjectArea;
 public interface ProjectAreaService {
 	
 	ProjectArea findProjectAreaById(Long id);
+	ProjectArea findProjectAreaByProjectId(Integer id);
 }

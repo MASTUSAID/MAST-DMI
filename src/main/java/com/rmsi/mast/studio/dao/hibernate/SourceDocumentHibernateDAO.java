@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.rmsi.mast.studio.dao.SourceDocumentDAO;
+import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SourceDocument;
 
 @Repository
@@ -196,6 +197,62 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
             return false;
         }
 
+    }
+
+	@Override
+	public List<SourceDocument> findSourceDocumentByLandIdandTransactionid(
+			Long id, Integer transactionid) {
+		
+		  try {
+	        	
+	            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.laExtTransactiondetail.transactionid = :transactionid and sd.laSpatialunitLand= :landId  and sd.isactive= true");
+	            List<SourceDocument> documentlist = query.setParameter("transactionid", transactionid).setParameter("landId", id).getResultList();
+	           return    documentlist;
+	           
+	        } catch (Exception e) {
+
+	            logger.error(e);
+	            return null;
+	        }
+
+	}
+
+	@Override
+	public List<SourceDocument> findSourceDocumentByLandIdAndProessId(Long id,Long processId) {
+	
+
+		try {
+	            
+	            String strQuery = " select * from la_ext_documentdetails plm left join la_ext_transactiondetails td on td.transactionid=plm.transactionid"
+	            		+ "  where plm.landid= "+id +" and td.processid=" + processId +" and td.applicationstatusid=1 ";
+				
+				List<SourceDocument> lstSourceDocument = getEntityManager().createNativeQuery(strQuery,SourceDocument.class).getResultList();
+	           return lstSourceDocument;
+
+	        } catch (Exception e) {
+
+	            logger.error(e);
+	            return null;
+	        }
+			
+	}
+
+	@Override
+	public SourceDocument findDocumentByDocumentId(Long documentId) {
+        try {
+            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.documentid = :documentid and sd.isactive= true");
+            List<SourceDocument> sourcedoc = query.setParameter("documentid", documentId).getResultList();
+
+            if (sourcedoc.size() > 0) {
+                return sourcedoc.get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+
+            logger.error(e);
+            return null;
+        }
     }
 
 }

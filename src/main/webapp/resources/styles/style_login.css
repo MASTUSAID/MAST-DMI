@@ -24,7 +24,7 @@ body {
 
    width:100%;
 
-   background-image:url(../images/homebg.png) ;/*your background image*/  
+   background-image:url(../images/homebg.jpg) ;/*your background image*/  
    background-repeat:no-repeat;/*we want to have one single image not a repeated one*/  
    background-size:cover;/*this sets the image to fullscreen covering the whole screen*/  
    /*css hack for ie*/     
@@ -97,11 +97,11 @@ body {
 }
 
 #usaid_logo {
-width: 70px;
+width: 128px;
 background: url(../images/usaid_logo_300.png) no-repeat;
-height: 70px;
+height: 51px;
 float: left;
-margin-top: 14px;
+margin-top: 20px;
 margin-left: 15px;
 display: inline-block;
 position: absolute;
@@ -147,7 +147,8 @@ text-align: center;
 .homebox1_title {
   font-size: 20px;
 
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
   color: #f2b43e;
   text-align: center;
 }
@@ -159,7 +160,7 @@ text-align: center;
 }
 
 .lg-login-form-row {
-  margin-bottom: 20px;	
+  margin-bottom: 25px;	
 }
 .lg-login-form-row input[type="text"], .lg-login-form-row input[type="password"]{
 background: none;
@@ -183,6 +184,7 @@ color: #333;
 
 line-height: 20px;
 width: 100%;	
+cursor: pointer;
 }
 .homebox {
   width: 625px;
@@ -200,6 +202,7 @@ width: 100%;
   border-left: 3px solid #342b58;
   
   float: left;
+  min-height: 330px;
 }
 
 .auth { color: #eee;}
@@ -219,13 +222,14 @@ width: 100%;
   border-radius: 5px;
   
   float: left;
-  min-height: 276px;
+  min-height: 330px;
 }
 
 .homebox p {
   margin-bottom: 5px;
   margin-left: 10px;
   margin-right: 10px;
+  line-height: 16px;
 }
 
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Set;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rmsi.mast.custom.dto.ResourceAttributeValueDto;
 import com.rmsi.mast.studio.dao.ProjectDAO;
+import com.rmsi.mast.studio.dao.ResourceCustomAttributesDAO;
+import com.rmsi.mast.studio.dao.UserDAO;
 import com.rmsi.mast.studio.domain.AttributeOptions;
+import com.rmsi.mast.studio.domain.CustomAttributes;
 import com.rmsi.mast.studio.domain.NaturalPerson;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ResourceAttributeValues;
+import com.rmsi.mast.studio.domain.ResourceCustomAttributes;
+import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.fetch.ResourceDetails;
 import com.rmsi.mast.studio.mobile.dao.AttributeOptionsDao;
+import com.rmsi.mast.studio.mobile.dao.CustomAttributesDAO;
 import com.rmsi.mast.viewer.service.ResourceAttributeValuesService;
 
 
@@ -57,13 +64,22 @@ public class LandResourceController {
 	@Autowired
 	AttributeOptionsDao attributeOptionsDao;
 	
+	@Autowired
+	ResourceCustomAttributesDAO resourceCustomAttributesdao;
 	
-	@RequestMapping(value = "/viewer/resource/allAttribue/{landid}", method = RequestMethod.GET)
+	@Autowired
+	CustomAttributesDAO customAttributesdao;
+	
+	@Autowired
+	UserDAO userdao;
+	
+	
+	@RequestMapping(value = "/viewer/resource/allAttribue/{landid}/{projectId}", method = RequestMethod.GET)
     @ResponseBody
-    public  Map<Integer, List<ResourceAttributeValues>> getAllResourceAttribute(@PathVariable Integer landid) {
+    public  Map<Integer, List<ResourceAttributeValues>> getAllResourceAttribute(@PathVariable Integer projectId, @PathVariable Integer landid) {
 		ResourceAttributeValueDto objDto= new ResourceAttributeValueDto();
 		List<ResourceAttributeValues> lst = new ArrayList<ResourceAttributeValues>();
-		lst=resourceAttributeValuesService.getResourceAttributeValuesBylandId(landid);
+		lst=resourceAttributeValuesService.getResourceAttributeValuesBylandId(projectId, landid);
 		Map<Integer, List<ResourceAttributeValues>> map = new HashMap<Integer, List<ResourceAttributeValues>>();
 		int groupId=0;
 		List<ResourceAttributeValues> lstres= new ArrayList<ResourceAttributeValues>();
@@ -87,17 +103,38 @@ public class LandResourceController {
         return map;
     }
 	
-	
-	
-	
-	
-	
-	@RequestMapping(value = "/viewer/resource/allAttribtesDatatype/{landid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/resource/allCustomAttribue/{landid}/{projectId}", method = RequestMethod.GET)
     @ResponseBody
-    public List<Object[]> getAllResourceAttributesDatatype(@PathVariable Integer landid) {
+    public  List<CustomAttributes> getAllCustomResourceAttribute(@PathVariable Integer projectId, @PathVariable Integer landid) {
+		ResourceAttributeValueDto objDto= new ResourceAttributeValueDto();
+		List<CustomAttributes> lst = new ArrayList<>();
+		lst=customAttributesdao.getResourceAttributeValuesBylandId(projectId, landid);
+		
+		
+        return lst;
+    }
+	
+	
+	
+	
+	@RequestMapping(value = "/viewer/resource/allAttribtesDatatype/{landid}/{projectId}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object[]> getAllResourceAttributesDatatype(@PathVariable Integer projectId, @PathVariable Integer landid) {
 		ResourceAttributeValueDto objDto= new ResourceAttributeValueDto();
 		List<Object[]> lst = new ArrayList<>();
-		lst=resourceAttributeValuesService.getResourceAttributeValuesAndDatatypeBylandId(landid);
+		lst=resourceAttributeValuesService.getResourceAttributeValuesAndDatatypeBylandId(projectId, landid);
+		
+		
+        return lst;
+    }
+    
+    @RequestMapping(value = "/viewer/resource/allCustomAttribtesDatatype/{landid}/{projectId}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object[]> getAllResourceCustomAttributesDatatype(@PathVariable Integer projectId, @PathVariable Integer landid) {
+		
+		List<Object[]> lst = new ArrayList<>();
+		
+		lst=resourceCustomAttributesdao.getResourceCustomAttributeValuesAndDatatypeBylandId(projectId, landid);
 		
 		
         return lst;
@@ -294,7 +331,7 @@ public class LandResourceController {
 				else if(objlst.getAttributemaster().getAttributemasterid()==1022 ||
 						objlst.getAttributemaster().getAttributemasterid()==1064 ||
 						objlst.getAttributemaster().getAttributemasterid()==1116){
-					if(maritalstatusid.equalsIgnoreCase("un-married")){
+					if(maritalstatusid.equalsIgnoreCase("un-Married")){
 						AttributeOptions attroptions=attributeOptionsDao.getAttributeOptionsId(1011);
 						objlst.setAttributevalue(attroptions.getOptiontext());
 					}
@@ -432,7 +469,24 @@ public class LandResourceController {
 					em.merge(objlst);
 				}
 				else if(objlst.getAttributemaster().getAttributemasterid()==1107){
-					objlst.setAttributevalue(levelofauthority);
+					if(levelofauthority.equalsIgnoreCase("National")){
+						AttributeOptions attroptions=attributeOptionsDao.getAttributeOptionsId(1145);
+						objlst.setAttributevalue(attroptions.getOptiontext());
+					}
+					else if(levelofauthority.equalsIgnoreCase("Regional")){
+						AttributeOptions attroptions=attributeOptionsDao.getAttributeOptionsId(1146);
+						objlst.setAttributevalue(attroptions.getOptiontext());
+					}
+					else if(levelofauthority.equalsIgnoreCase("District")){
+						AttributeOptions attroptions=attributeOptionsDao.getAttributeOptionsId(1147);
+						objlst.setAttributevalue(attroptions.getOptiontext());
+					}
+					else if(levelofauthority.equalsIgnoreCase("Local ")){
+						AttributeOptions attroptions=attributeOptionsDao.getAttributeOptionsId(1148);
+						objlst.setAttributevalue(attroptions.getOptiontext());
+					}
+					
+
 					em.merge(objlst);
 				}
 				else if(objlst.getAttributemaster().getAttributemasterid()==1087){
@@ -457,6 +511,77 @@ public class LandResourceController {
 			
 	        
 			return  ResponseEntity.status(HttpStatus.CREATED).body(resobj);
+		} 
+		catch (Exception e) {
+			return null;
+		}
+	}
+   
+	
+	
+	@RequestMapping(value = "/viewer/landrecords/saveResourceCustomAttributes", method = RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+   public ResponseEntity saveResourceCustomattributes(HttpServletRequest request, HttpServletResponse response,Principal principal)
+	{
+		
+				Integer projectId=0;
+		
+		
+		try 
+		{
+			Integer landId = 0;
+			String custom1 = "";
+			String custom2 = "";
+			String custom3 = "";
+			String custom4= "";
+			
+			User userobj =userdao.findByName(principal.getName());
+			String project =userobj.getDefaultproject();
+		
+			 Project objproject=projectDAO.findByName(project);
+			 projectId= objproject.getProjectnameid();
+		    try{landId = ServletRequestUtils.getRequiredIntParameter(request, "landid");}catch(Exception e){}
+			try{custom1 =  ServletRequestUtils.getRequiredStringParameter(request, "Resource Custom Attribute");}catch(Exception e){}
+			try{custom2 =ServletRequestUtils.getRequiredStringParameter(request, "Resource Custom Attribute Sub Class 3");}catch(Exception e){}
+			try{custom3 =ServletRequestUtils.getRequiredStringParameter(request, "Resource Custom Attribute Sub Class 4");}catch(Exception e){}
+			try{custom4 =ServletRequestUtils.getRequiredStringParameter(request, "Resource Custom Attribute Sub Class 5");}catch(Exception e){}
+			List<CustomAttributes> resobj =customAttributesdao.getResourceCustomAttributeValuesBylandId( objproject.getProjectnameid(), landId);
+			for(CustomAttributes objlst :resobj){
+				
+					if(objlst.getCustomattributeid().getCustomattributeid()==2){
+					objlst.setAttributevalue(custom1);
+					em.merge(objlst);
+				}
+				else if(objlst.getCustomattributeid().getCustomattributeid()==5){
+					objlst.setAttributevalue(custom2);
+					em.merge(objlst);
+				}
+				else if(objlst.getCustomattributeid().getCustomattributeid()==6){
+					objlst.setAttributevalue(custom3);
+					em.merge(objlst);
+				}
+				else if(objlst.getCustomattributeid().getCustomattributeid()==7){
+					objlst.setAttributevalue(custom4);
+					em.merge(objlst);
+				}
+				
+//				else if(objlst.getAttributemaster().getAttributemasterid()== 1021){
+//					objlst.setAttributevalue(age.toString());
+//				}
+//				else if(objlst.getAttributemaster().getAttributemasterid()== 1022){
+//					objlst.setAttributevalue(maritalstatusid);
+//				}
+					
+				
+				
+			}
+				
+			
+		
+			return  ResponseEntity.status(HttpStatus.CREATED).body(resobj);
+	        
+			
 		} 
 		catch (Exception e) {
 			return null;

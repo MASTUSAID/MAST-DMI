@@ -13,8 +13,10 @@ public class Right implements Serializable {
     private Double juridicalArea;
     private List<Person> naturalPersons = new ArrayList<>();
     private Person nonNaturalPerson;
+    private List<Person> nonNaturalPersonList = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private int relationshipId;
+    private int acquisitionTypeId;
 
     public Right(){
 
@@ -99,4 +101,23 @@ public class Right implements Serializable {
     public void setRelationshipId(int relationshipId) {
         this.relationshipId = relationshipId;
     }
+
+	public int getAcquisitionTypeId() {
+		return acquisitionTypeId;
+	}
+
+	public void setAcquisitionTypeId(int acquisitionTypeId) {
+		this.acquisitionTypeId = acquisitionTypeId;
+	}
+
+	public List<Person> getNonNaturalPersonList() {
+		return nonNaturalPersonList;
+	}
+
+	public void setNonNaturalPersonList(List<Person> nonNaturalPersonList) {
+		this.nonNaturalPersonList = nonNaturalPersonList;
+	}
+
+	
+    
 }

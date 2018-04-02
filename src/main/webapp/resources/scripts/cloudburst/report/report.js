@@ -49,3 +49,28 @@ function displayReport(_selectedItem){
 			
    
 }
+
+
+function FetchdataCorrectionReport(land_id,trans_id)
+{
+	
+	jQuery.ajax(
+			{
+			   	type: 'GET',
+				url:  'landrecords/landcorrectionreport/'+242+ '/'+ 242,
+				async:false,
+				cache: false,
+				success: function (data) 
+				{
+					jQuery.get("resources/templates/report/data-correction.html", function (template) 
+					{
+					
+					});
+				},
+				error : function(jqXHR, textStatus, errorThrown) {									
+					alertMsg = $._('General_Date_AMsg');
+					jAlert('info', alertMsg, alertInfoHeader);
+				}
+			});
+}
+

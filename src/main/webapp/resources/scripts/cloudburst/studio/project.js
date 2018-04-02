@@ -75,7 +75,7 @@ function displayRefreshedProject() {
             });
         }
     });
-    GetActiveLayer('default', '');
+   // GetActiveLayer('default', '');
 }
 
 function displayProjectNew() {
@@ -403,7 +403,7 @@ var createEditProject = function (_name) {
 							
 						});
 					});
-                GetActiveLayer('default', '');
+               // GetActiveLayer('default', '');
 
                 //Setting activelayer and Overview layer
                 $('#activelayer').val(data.activelayer);

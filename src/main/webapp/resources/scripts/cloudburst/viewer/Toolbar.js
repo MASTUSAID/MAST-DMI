@@ -377,3 +377,40 @@ function initTaskManager(){
 											
 }
 
+
+function initEditing(){
+
+	var layer = getLayerByAliesName("spatialUnitLand");
+    $('.layerTR').removeClass("rowclick");
+    $("#AOI").addClass("rowclick");
+	$("#chk-AOI").addClass("rowclick");
+	if($('#ExportLayers').length>0){			
+		$('#ExportLayers').text(layer_id);
+	}
+	active_layerMap=layer;
+  	if (active_layerMap != null){
+  			var wfsurl = active_layerMap.get("url");
+  			$.ajax({
+  				url: PROXY_PATH + wfsurl + "&request=DescribeFeatureType&service=WFS&version=1.0.0&typeName=" + active_layerMap.values_.name,
+  				dataType: "text",
+  				async: false,
+  				success: function (text) {
+  					var editing = new Cloudburst.Editing(
+  							map, "sidebar", undefined, undefined, undefined,
+  							active_layerMap.values_.name, undefined);
+  				},
+  				error: function (xhr, status) {
+  					if (layerMap[activeLayer.name].indexOf("OSMM_") > -1) {
+  						jAlert("WFS operation on " + activeLayer.name + " layer is restricted");
+  						return;
+  					} else {
+  						jAlert('Sorry, there is a problem!');
+  					}
+  				}
+  			});
+
+  	}
+	
+}
+
+

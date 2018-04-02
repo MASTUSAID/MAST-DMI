@@ -486,8 +486,30 @@ function getLayerByAliesName(layer) {
 	
 		
 function saveEdit_t() {
-var featureNS_= window.location.protocol+'//'+window.location.host+'/';
-var featureType_="la_spatialunit_aoi";
+	
+   var featureNS_;
+   var featureType_;
+
+	  //Get the Layer object
+        var layerName = "AOI";
+		objLayer=getLayerByAliesName(layerName);
+	
+    	 var _wfsurl=objLayer.values_.url;
+        var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+        //Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+        $.ajax({
+            url: PROXY_PATH + _wfsSchema,
+            async: false,
+            success: function (data) {
+				 featureNS_=data.targetNamespace;
+                 featureType_=data.featureTypes[0].typeName;
+	        }
+        });
+
+		
+//var featureNS_= window.location.protocol+'//'+window.location.host+'/';
+//var featureType_="la_spatialunit_aoi";
 
 
    formatWFS = new ol.format.WFS();

@@ -26,9 +26,7 @@ public class GenderHibernateDao extends GenericHibernateDAO<Gender, Integer>
 
 		try {
 
-			String query = "select gn.* from gender gn inner join attribute_options ao	"
-					+ "on ao.parent_id = gn.gender_id where ao.id = "
-					+ genderId;
+			String query = "select gn.* from la_partygroup_gender gn where gn.genderid = " + genderId;
 
 			@SuppressWarnings("unchecked")
 			List<Gender> gender = getEntityManager().createNativeQuery(query,

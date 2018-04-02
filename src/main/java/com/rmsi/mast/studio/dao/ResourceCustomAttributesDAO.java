@@ -10,4 +10,5 @@ public interface ResourceCustomAttributesDAO extends GenericDAO<ResourceCustomAt
 	List<ResourceCustomAttributes> getByProjectId(Integer Id);
 	
 	ResourceCustomAttributes getByCustomattributeId(Integer Id);
+	List<Object[]> getResourceCustomAttributeValuesAndDatatypeBylandId(Integer projectId, Integer Id);
 }

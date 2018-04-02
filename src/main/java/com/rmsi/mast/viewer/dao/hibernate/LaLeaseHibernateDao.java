@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.LaLease;
 import com.rmsi.mast.studio.domain.LaSurrenderLease;
+import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.Status;
 import com.rmsi.mast.viewer.dao.LaLeaseDao;
 
@@ -103,6 +104,38 @@ public class LaLeaseHibernateDao extends GenericHibernateDAO<LaLease, Integer> i
         }
 
         return false;
+		
+	}
+
+	@Override
+	public List<LaLease> getleaseeListByLandId(Long landId) {
+		
+		try {
+			Query query = getEntityManager().createQuery("select la from LaLease la where la.landid = :landid and isactive=true");
+			@SuppressWarnings("unchecked")
+			List<LaLease> lstLaExtFinancialagency = query.setParameter("landid", landId).getResultList();
+
+			return lstLaExtFinancialagency;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public LaLease getleaseobjbylandandprocessid(Long landId, Long processId) {
+		try{
+			 String strQuery = "select * from la_lease l left join la_ext_transactiondetails trans on l.leaseid = trans.moduletransid where l.isactive= true and trans.applicationstatusid=1 and l.landid= "+landId+" and trans.processid="+processId;
+				List<LaLease> laLease = getEntityManager().createNativeQuery(strQuery,LaLease.class).getResultList();
+			if(laLease.size()>0){
+			return laLease.get(0);
+			}
+			return null;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 		
 	}
 	

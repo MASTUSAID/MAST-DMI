@@ -34,7 +34,7 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResourceAttributeValues> getResourceAttributeValuesBylandId(Integer Id) {
+	public List<ResourceAttributeValues> getResourceAttributeValuesBylandId(Integer projectId, Integer Id) {
 		try{
 			List<ResourceAttributeValues> lstResourceDetails= new ArrayList<ResourceAttributeValues>();
 		
@@ -42,7 +42,7 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 		String query = "Select Distinct RA.LandID,RA.groupID,RA.AttributeValueID,RA.AttributeValue,AM.FieldName,AC.categoryName "+
 						"from la_ext_resourceattributevalue RA,la_ext_attributemaster AM,la_ext_attributecategory AC "+
 						"Where RA.AttributeMasterID=AM.AttributeMasterID And AM.AttributeCategoryID=AC.AttributeCategoryID "+
-						"and RA.projectid =2 And RA.LandID="+Id+" order by groupid";
+						"and RA.projectid ="+projectId+" And RA.LandID="+Id+" order by groupid";
 
 		List<Object[]> arrObject = getEntityManager().createNativeQuery(query).getResultList();
 		
@@ -118,6 +118,7 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 				resourceDetails.setCategoryName(object[4].toString());
 				resourceDetails.setGeometryName(object[5].toString());
 				resourceDetails.setPersonName(object[6].toString());
+				resourceDetails.setProjectId(Integer.parseInt(project));
 				
 				lstResourceDetails.add(resourceDetails);
 			}
@@ -180,7 +181,7 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 }
 
 	@Override
-	public List<Object[]> getResourceAttributeValuesAndDatatypeBylandId(
+	public List<Object[]> getResourceAttributeValuesAndDatatypeBylandId(Integer projectId, 
 			Integer Id) {
 		try{
 			
@@ -189,7 +190,7 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 		String query = "Select AM.FieldName, RA.AttributeMasterID, RA.groupid "+
 						"from la_ext_resourceattributevalue RA,la_ext_attributemaster AM,la_ext_attributecategory AC "+
 						"Where RA.AttributeMasterID=AM.AttributeMasterID And AM.AttributeCategoryID=AC.AttributeCategoryID "+
-						"and RA.projectid =2 And RA.LandID="+Id+" order by AM.listing";
+						"and RA.projectid =" +projectId +" And RA.LandID="+Id+" order by AM.listing \\:\\: int";
 		
 		
 		

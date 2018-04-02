@@ -17,7 +17,7 @@ public interface SpatialUnitPersonWithInterestDao extends
 	SpatialUnitPersonWithInterest addNextOfKin(List<SpatialUnitPersonWithInterest> nextOfKinList, Long usin);
      List<SpatialUnitPersonWithInterest> findByUsin(Long usin);
      SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestById(Long id);
-     SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestByObj(SpatialUnitPersonWithInterest obj);
+     SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestByObj(SpatialUnitPersonWithInterest obj, Long landId);
     
      
      

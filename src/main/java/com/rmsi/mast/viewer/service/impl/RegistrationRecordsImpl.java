@@ -12,6 +12,7 @@ import com.rmsi.mast.studio.domain.IdType;
 import com.rmsi.mast.studio.domain.LaExtFinancialagency;
 import com.rmsi.mast.studio.domain.LaExtPersonLandMapping;
 import com.rmsi.mast.studio.domain.LaExtProcess;
+import com.rmsi.mast.studio.domain.LaExtTransactionHistory;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaLease;
 import com.rmsi.mast.studio.domain.LaMortgage;
@@ -20,6 +21,7 @@ import com.rmsi.mast.studio.domain.LaPartyPerson;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.LaSpatialunitgroup;
 import com.rmsi.mast.studio.domain.LaSurrenderLease;
+import com.rmsi.mast.studio.domain.LaSurrenderMortgage;
 import com.rmsi.mast.studio.domain.La_Month;
 import com.rmsi.mast.studio.domain.LandType;
 import com.rmsi.mast.studio.domain.MaritalStatus;
@@ -37,9 +39,11 @@ import com.rmsi.mast.viewer.dao.GenderLDao;
 import com.rmsi.mast.viewer.dao.IDTypeDAO;
 import com.rmsi.mast.viewer.dao.LaExtPersonLandMappingsDao;
 import com.rmsi.mast.viewer.dao.LaExtProcessDao;
+import com.rmsi.mast.viewer.dao.LaExtTransactionHistoryDao;
 import com.rmsi.mast.viewer.dao.LaExtTransactiondetailDao;
 import com.rmsi.mast.viewer.dao.LaLeaseDao;
 import com.rmsi.mast.viewer.dao.LaMortgageDao;
+import com.rmsi.mast.viewer.dao.LaMortgageSurrenderDao;
 import com.rmsi.mast.viewer.dao.LaPartyDao;
 import com.rmsi.mast.viewer.dao.LaPartyPersonDao;
 import com.rmsi.mast.viewer.dao.LaSpatialunitLandDao;
@@ -147,6 +151,13 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 	
 	@Autowired
 	LaSurrenderLeaseDao lasurrenderleaseDao;
+	
+	@Autowired
+	LaExtTransactionHistoryDao laexttransactionhistoryDao;
+	
+	@Autowired
+	LaMortgageSurrenderDao laMortgageSurrenderDao;
+	
 	/*@Autowired
 	LaExtPersonLandMappingDao laExtPersonLandMappingDao; */
 	
@@ -172,6 +183,10 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 		return laPartyPersonDao.getAllPartyPersonDetails(landid);
 	}
 	
+	@Override
+	public List<LaPartyPerson> fillAllPartyPersonDetails(Integer landid,Integer processid){
+		return laPartyPersonDao.fillAllPartyPersonDetails(landid,processid);
+	}
 	
 	@Override
 	public LaPartyPerson getPartyPersonDetailssurrenderlease(Integer landid){
@@ -337,10 +352,27 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 			Long landId) {
 		return socialTenureRelationshipDao.getSocialTenureRelationshipByLandId(landId);
 	}
+	
+	@Override
+	public SocialTenureRelationship getSocialTenureRelationshipByLandIdForBuyer(Long landId,Long processid) {
+		return socialTenureRelationshipDao.getSocialTenureRelationshipByLandIdForBuyer(landId,processid);
+	}
 
+	@Override
+	public SocialTenureRelationship getSocialTenureRelationshipForSellerByLandId(Long landId) 
+	{
+		return socialTenureRelationshipDao.getSocialTenureRelationshipForSellerByLandId(landId);
+	}
+	
+	
 	@Override
 	public boolean updateSocialTenureRelationshipByPartyId(Long partyId, Long landid) {
 		return socialTenureRelationshipDao.updateSocialTenureRelationshipByPartyId(partyId,landid);
+	}
+	
+	@Override
+	public boolean updateSocialTenureRelationshipByPartytypeId(Long partyId,Long landid) {
+		return socialTenureRelationshipDao.updateSocialTenureRelationshipByPartytypeId(partyId,landid);
 	}
 
 	@Override
@@ -369,12 +401,10 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 		return registrationRecordsDao.getFinancialagencyByID(financial_AgenciesID);
 	}
 
-	@Override
-	//@Transactional
-	public LaMortgage saveMortgage(LaMortgage laMortgage) {
-		return laMortgageDao.saveMortgage(laMortgage);
-	}
+	
 
+	
+	
 	@Override
 	public List<La_Month> getmonthofleaseDetails() {
 		return registrationRecordsDao.getmonthofleaseDetails();
@@ -396,6 +426,12 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 	public LaSurrenderLease savesurrenderLease(LaSurrenderLease laLease) {
 		return lasurrenderleaseDao.savesurrenderLease(laLease);
 	}
+	
+	@Override
+	//@Transactional
+	public LaExtTransactionHistory saveTransactionHistory(LaExtTransactionHistory latranshist) {
+		return laexttransactionhistoryDao.saveTransactionHistory(latranshist);
+	}
 
 	@Override
 	public Integer findSpatialUnitTempCount(String project, Integer startfrom) {
@@ -407,6 +443,33 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 		return registrationRecordsDao.searchCount(transactionid, startfrom, project,communeId,parcelId);
 	}
 
+	
+	
+	@Override	
+	public boolean islandunderlease(Long landid) 
+	{
+		return laLeaseDao.islandunderlease(landid);
+		
+	}
+
+	@Override
+	public SocialTenureRelationship getSocialTenureRelationshipByLandIdandTypeId(Long landId, Long processid, Integer persontype) {
+		
+	return	socialTenureRelationshipDao.getSocialTenureRelationshipByLandIdandTypeId(landId, processid, persontype);
+	}
+	
+	@Override
+	//@Transactional
+	public LaMortgage saveMortgage(LaMortgage laMortgage) {
+		return laMortgageDao.saveMortgage(laMortgage);
+	}
+
+	@Override
+	public LaSurrenderMortgage saveSurrenderMortgage(
+			LaSurrenderMortgage laMortgage) { 
+		return laMortgageSurrenderDao.saveMortgage(laMortgage);
+		}
+	
 	@Override
 	@Transactional
 	public boolean disablelease(Long personid, Long landid) 
@@ -414,11 +477,11 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 		return laLeaseDao.disablelease(personid,landid);
 		
 	}
-	
-	@Override	
-	public boolean islandunderlease(Long landid) 
-	{
-		return laLeaseDao.islandunderlease(landid);
-		
+
+	@Override
+	@Transactional
+	public boolean disableMortagage(Long personid, Long landid) {
+		// TODO Auto-generated method stub
+		return laMortgageDao.disablelease(personid, landid);
 	}
 }

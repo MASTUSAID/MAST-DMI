@@ -38,6 +38,9 @@
 	<field name="firstname" class="java.lang.String">
 		<fieldDescription><![CDATA[firstname]]></fieldDescription>
 	</field>
+	<field name="udparcelno" class="java.lang.String">
+		<fieldDescription><![CDATA[udparcelno]]></fieldDescription>
+	</field>
 	<field name="certificateno" class="java.lang.String">
 		<fieldDescription><![CDATA[certificateno]]></fieldDescription>
 	</field>
@@ -91,13 +94,13 @@
 				<text><![CDATA[MOBILE APPLICATION TO SECURE TENURE]]></text>
 			</staticText>
 			<rectangle radius="10">
-				<reportElement x="0" y="127" width="527" height="143" uuid="6b08a6d6-3f45-41a5-ab4b-e5ab70e1ce4c"/>
+				<reportElement x="0" y="120" width="527" height="150" uuid="6b08a6d6-3f45-41a5-ab4b-e5ab70e1ce4c"/>
 			</rectangle>
 			<break>
 				<reportElement x="0" y="759" width="100" height="1" uuid="bc7fc0ed-b046-408c-a924-85da2563c579"/>
 			</break>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="5" y="170" width="488" height="30" uuid="1e70a125-32c9-45b8-a8a4-0f80cf13f071"/>
+				<reportElement x="5" y="170" width="506" height="30" uuid="1e70a125-32c9-45b8-a8a4-0f80cf13f071"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement verticalAlignment="Middle" markup="styled">
 					<font size="11" isBold="true" isPdfEmbedded="false"/>
@@ -105,7 +108,7 @@
 				<textFieldExpression><![CDATA["This is to certify that <b>" + $F{firstname} + "  Occupies the land in " + $F{address} + "</b>"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="20" y="301" width="221" height="30" uuid="7d486975-cccf-44d6-95b2-db250b6e1a08"/>
+				<reportElement x="17" y="301" width="231" height="30" uuid="7d486975-cccf-44d6-95b2-db250b6e1a08"/>
 				<textElement textAlignment="Center">
 					<font size="16"/>
 				</textElement>
@@ -129,7 +132,7 @@
 				<textFieldExpression><![CDATA["The Certificate no is  " + $F{certificateno} + ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="10" y="203" width="481" height="61" uuid="bfa48209-b7a4-4432-a895-ad9a9cba4165"/>
+				<reportElement x="6" y="203" width="505" height="61" uuid="bfa48209-b7a4-4432-a895-ad9a9cba4165"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
@@ -138,43 +141,39 @@
 It outlines occupancy and provisional uses as documented as part of the (project name).]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="320" y="90" width="171" height="21" uuid="d3d6dd70-cd42-4af2-a02d-245e7515981a"/>
+				<reportElement x="319" y="81" width="174" height="21" uuid="d3d6dd70-cd42-4af2-a02d-245e7515981a"/>
 				<textFieldExpression><![CDATA["Parcel no is  " + $F{landno} + ""]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="20" y="410" width="211" height="20" uuid="7134a2f4-2035-4cec-99b3-67804cade57a"/>
+				<reportElement x="17" y="410" width="231" height="20" uuid="7134a2f4-2035-4cec-99b3-67804cade57a"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["North Boundary : " + $F{neighbor_north} + ""]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="20" y="439" width="211" height="20" uuid="8290f9a0-d7f3-402f-bce1-c89bb701dd36"/>
+				<reportElement x="17" y="439" width="231" height="20" uuid="8290f9a0-d7f3-402f-bce1-c89bb701dd36"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["South Boundary : " + $F{neighbor_south} + ""]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="22" y="470" width="211" height="20" uuid="a7b6c7e6-59d5-47f0-b0b9-ec3e0cfdd21d"/>
+				<reportElement x="17" y="470" width="231" height="20" uuid="a7b6c7e6-59d5-47f0-b0b9-ec3e0cfdd21d"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["East Boundary : " + $F{neighbor_east} + ""]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="20" y="500" width="211" height="20" uuid="ef0ef2af-7135-4096-9c1d-dc487163bc43"/>
+				<reportElement x="17" y="500" width="231" height="20" uuid="ef0ef2af-7135-4096-9c1d-dc487163bc43"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA["West Boundary : " + $F{neighbor_west} + ""]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="19" y="139" width="120" height="10" uuid="bc2c6b3d-d7c7-4d9d-bf70-3d7126623cbc"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="5" y="140" width="203" height="20" uuid="e4b6d7d6-648f-4d7b-a11f-8589fb537095"/>
+				<reportElement x="6" y="130" width="206" height="19" uuid="e4b6d7d6-648f-4d7b-a11f-8589fb537095"/>
 				<textElement>
 					<font size="11" isBold="true"/>
 				</textElement>
@@ -224,6 +223,10 @@ It outlines occupancy and provisional uses as documented as part of the (project
 					<font size="11" isBold="true" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["This parcel of land with and area of <b>" + $F{area} + " is located at "+ $F{address} +  " It is currently being used for  " + $F{landusetype} + "</b>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="6" y="152" width="240" height="15" uuid="98e806a4-41fb-45e4-81e3-db9ca6a60673"/>
+				<textFieldExpression><![CDATA["User Defined Parcel no is  " + $F{udparcelno} + ""]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="50"/>

@@ -43,6 +43,7 @@ import com.rmsi.mast.studio.domain.Savedquery;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.UserProject;
 import com.rmsi.mast.studio.domain.UserRole;
+import com.rmsi.mast.studio.domain.fetch.ProjectData;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
 import com.rmsi.mast.studio.domain.fetch.ProjectTemp;
 import com.rmsi.mast.studio.service.MaptipService;
@@ -519,6 +520,12 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		return projectAreaDAO.findByProjectName(projectName);
 	
+	}
+
+	@Override
+	public List<ProjectData> getAllProjectInfo() {
+		// TODO Auto-generated method stub
+		return projectDAO.getAllProjectInfo();
 	}
 
 

@@ -10,7 +10,7 @@ public interface SpatialunitPersonwithinterestService {
 	@Transactional
 	SpatialUnitPersonWithInterest  save(SpatialUnitPersonWithInterest objSpatialunitPersonwithinterest);
 	
-	SpatialUnitPersonWithInterest  findByObject(SpatialUnitPersonWithInterest objSpatialunitPersonwithinterest);
+	SpatialUnitPersonWithInterest  findByObject(SpatialUnitPersonWithInterest objSpatialunitPersonwithinterest, Long landId);
 	 
 	SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestById(Long id);
 	

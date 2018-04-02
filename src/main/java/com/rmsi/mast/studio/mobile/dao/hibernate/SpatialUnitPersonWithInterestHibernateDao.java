@@ -3,6 +3,7 @@
  */
 package com.rmsi.mast.studio.mobile.dao.hibernate;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -91,18 +92,32 @@ public class SpatialUnitPersonWithInterestHibernateDao extends   GenericHibernat
 	@Override
 	@Transactional
 	public SpatialUnitPersonWithInterest findSpatialUnitPersonWithInterestByObj(
-			SpatialUnitPersonWithInterest obj) {
-		
+			SpatialUnitPersonWithInterest obj, Long landId) {
+		SpatialUnitPersonWithInterest personinterest =null;
 		 try {
 	            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.id = :usin order by sp.id asc ");
-	            SpatialUnitPersonWithInterest personinterest = (SpatialUnitPersonWithInterest)query.setParameter("usin", obj.getId()).getSingleResult();
-
+	             personinterest = (SpatialUnitPersonWithInterest)query.setParameter("usin", obj.getId()).getSingleResult();
+	            if(null ==personinterest){
+	            	personinterest = new SpatialUnitPersonWithInterest();
+	            	 personinterest.setFirstName(obj.getFirstName());
+	 	            personinterest.setMiddleName(obj.getMiddleName());
+	 	            personinterest.setLastName(obj.getLastName());
+	 	            personinterest.setDob(obj.getDob());
+	 	            personinterest.setGender(obj.getGender());
+	 	            personinterest.setRelation(obj.getRelation());
+	 	           personinterest.setLandid(landId);
+	 	          personinterest.setCreatedby(1);
+	 	         personinterest.setCreateddate(new Date());
+	 	        personinterest.setIsactive(true);
+	            }
+	            else{
 	            personinterest.setFirstName(obj.getFirstName());
 	            personinterest.setMiddleName(obj.getMiddleName());
 	            personinterest.setLastName(obj.getLastName());
 	            personinterest.setDob(obj.getDob());
 	            personinterest.setGender(obj.getGender());
 	            personinterest.setRelation(obj.getRelation());
+	            }
 	    		
 	            em.merge(personinterest);
 	    		  
