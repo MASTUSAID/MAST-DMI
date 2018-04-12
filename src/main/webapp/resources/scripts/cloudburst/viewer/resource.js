@@ -256,7 +256,7 @@ var _featurePrefix="Mast";
 function zoomToResource(geom) {
 	 if (geom != undefined &&  geom!= null) {
 	  
-	  
+	   closeDialog('editingdiv')
 	   map.getLayers().forEach(function (layer) {
 			if (layer.get('aname') != undefined & layer.get('aname') === 'featureaoilayer') {
 				map.removeLayer(layer);
@@ -300,7 +300,7 @@ function zoomToResource(geom) {
 			zoom: 14 //here you define the levelof zoom
 		}));
 		
-		closeDialog('editingdiv')
+		
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#map-tab"]').parent().index());
         $('#sidebar').show();
         $('#collapse').show();
@@ -321,11 +321,40 @@ function viewAttribute(usin)
 	$(".signin_menu").hide();
 	landId = usin;
 	
+	
+	$.ajax({
+		url :"resource/landdata/" + landId,
+		 async: false,
+		success : function(data1) {
+			
+//			$("#reg_date").val(formatDate_R(data1[0]));
+			$("#reg_date").val(data1[0][0]);
+			$("#size_id").val(data1[0][1]);
+			data=data1;
+		console.log(data);
+		}
+	});
+	
+	
+	for(var i=0; i < dataList.length; i++){
+		if(dataList[i].landid == usin){
+			$("#subClassification_id").val("");
+        	$("#Classification_id").val("");
+        	$("#tenure_type_res").val("");
+        	
+			$("#Classification_id").val(dataList[i].classificationName);
+			$("#subClassification_id").val(dataList[i].subclassificationName);
+			$("#tenure_type_res").val(dataList[i].categoryName);
+
+			
+		}
+	}
+	
 	FillResourcePersonDataNew();
 	FillResourceCustoAttributes();
 
 	
-	attributeHistoryDialog = $( "#attributeDialog" ).dialog({
+	attributeHistoryDialog = $( "#editattribute-res-dialog-form" ).dialog({
 		autoOpen: false,
 		height: 500,
 		width: 1161,
@@ -333,10 +362,23 @@ function viewAttribute(usin)
 		resizable: true,
 		modal: true,
 		close: function () {
+			 $("input,select,textarea").removeClass('addBg');
 			attributeHistoryDialog.dialog("destroy");
         },
 
 		buttons: [{
+			text : "Save",
+			"id" : "comment_Save",
+			
+			click : function()
+			{	
+				
+					saveInstitute();
+					
+			}
+
+		},
+		{
 			text: "Cancel",
 			"id": "comment_cancel",
 				click: function () {
@@ -354,6 +396,7 @@ function viewAttribute(usin)
 				
 				 jQuery('#attributeHistoryTableBody').empty();
 				 jQuery("#attributeTable").hide();
+				 $("input,select,textarea").removeClass('addBg');
 			attributeHistoryDialog.dialog( "close" );
 
 
@@ -361,7 +404,8 @@ function viewAttribute(usin)
 	});
 	$("#comment_cancel").html('<span class="ui-button-text">cancel</span>');
 	attributeHistoryDialog.dialog( "open" );
-
+	$("#comment_Save").prop("disabled",false).hide();
+	$("#tabs").tabs({ active: 0 });
 }
 
 
@@ -433,7 +477,7 @@ function FillResourcePersonDataNew()
 //						val.index = 4;
 //					}
 					else if(id==1022 || id==1064 || id==1116){
-						val.items=[{id: 1, name: "un-Married"}, {id: 2, name: "married"},{id: 3, name: "divorced"}, {id: 4, name: "widow"},{id: 5, name: "widower"}];
+						val.items=[{id: 1, name: "un-married"}, {id: 2, name: "married"},{id: 3, name: "divorced"}, {id: 4, name: "widow"},{id: 5, name: "widower"}];
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -554,6 +598,19 @@ var personsEditingControllerForResourcePerson = {
 	            }
 	        }).then(function(result){
 	        	var persondataArray=[];
+	        	 $("#Institution_id").val("");
+	        	 $("#members").val("");
+//	        	 $("#reg_date").val("");
+	        	 $("#reg_no").val("");
+	        	 $("#members_tr").hide();
+	        	 $("#institute").hide();
+//	        	 $("#reg_date_td").hide();
+	        	 $("#regNo").hide();
+//	        	 $("#tenure_occupancy").hide();
+	        	 
+	        	 
+	        	
+	        	 
 	        	
 //	        	var Firstname = "";
 //	        	var Middlename = "";
@@ -576,6 +633,7 @@ var personsEditingControllerForResourcePerson = {
 						 LandId = value[0].landid;
 						 GroupId = value[0].groupid;
 						 Firstname = value[i].attributevalue;
+						 $("#landId").val(LandId);
 					 }
 					 else if(value[i].fieldname == "middlename"){
 						 Middlename = value[i].attributevalue;
@@ -623,13 +681,23 @@ var personsEditingControllerForResourcePerson = {
 						 Address = value[i].attributevalue;
 					 }
 					 else if(value[i].fieldname == "Institution Name"){
+						 $("#Institution_id").val(value[i].attributevalue);
 						 Institution_Name = value[i].attributevalue;
+			        	 $("#institute").show();
+//			        	 $("#tenure_occupancy").show();
+			        	 $("#Institution_id_id").val(value[i].attributevalueid);
+			        	
+			        	 
 					 }
 					 else if(value[i].fieldname == "Registration No"){
+						 $("#reg_no").val(value[i].attributevalue);
 						 Registration_No = value[i].attributevalue;
+						 $("#regNo").show();
+//						 $("#tenure_occupancy").show();
 					 }
 					 else if(value[i].fieldname == "Registration Date"){
-
+						 
+			        	
 						 Registration_Date = value[i].attributevalue;
 						
 					    	
@@ -638,7 +706,9 @@ var personsEditingControllerForResourcePerson = {
 					    		{
 					    			  var registartion_date_date = new Date(Registration_Date);
 					    			
-					    			
+//					    			  $("#reg_date").val(registartion_date_date);
+//					    			  $("#reg_date_td").show();
+//					    				 $("#tenure_occupancy").show();
 					    			
 //					    			dob = date.getFullYear()+ '-' + date.getMonth() + '-' + date.getDate();
 					    		}
@@ -647,7 +717,11 @@ var personsEditingControllerForResourcePerson = {
 						
 					 }
 					 else if(value[i].fieldname == "How many members?"){
+						 $("#members").val(value[i].attributevalue);
 						 No_Of_members = value[i].attributevalue;
+						 $("#members_tr").show();
+//						 $("#tenure_occupancy").show();
+						 $("#members_id").val(value[i].attributevalueid);
 					 }
 					 else if(value[i].fieldname == "Other details"){
 						 Other_details = value[i].attributevalue;
@@ -925,6 +999,24 @@ var ControllerForResourceCustomAttributes = {
 	    }
 	};
 
+function formatDate_R(date) {
+	return jQuery.datepicker.formatDate('yy-mm-dd', new Date(date));
+}
 
 
+function saveInstitute(){
+	if ($("#editAttributeformID_res").valid()) {
+
+	jQuery.ajax({
+		type : "POST",
+		url : "resource/saveattributes",
+		data : jQuery("#editAttributeformID_res")
+				.serialize(),
+		success : function(result) {
+			 $("input,select,textarea").removeClass('addBg');
+			 $("#comment_Save").prop("disabled",false).hide();
+		}
+		});
+	}
+}
 

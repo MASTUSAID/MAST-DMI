@@ -891,6 +891,16 @@ public class MobileDataController {
 					document.setLaParty(lapartydao
 							.getPartyIdByID(socialtenurerelationship.get(0)
 									.getPartyid()));
+					
+					if(null!=sourcedocument  && sourcedocument.size() >0 ){
+						for(int j=0; j< sourcedocument.size(); j++){
+						if(null!=sourcedocument.get(j) ){
+							document.setLaParty(lapartydao
+									.getPartyIdByID(socialtenurerelationship.get(j+1)
+											.getPartyid()));
+						}
+						}
+					}
 				
 					
 				}

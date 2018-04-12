@@ -93,7 +93,7 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 							",la_ext_attributemaster AM,la_ext_attributecategory AC "+
 							"Where RA.landID=RC.LandID AND RA.AttributeMasterID=AM.AttributeMasterID And AM.AttributeCategoryID=AC.AttributeCategoryID and RA.projectid ="+project ;*/
 			
-			String query = "Select Distinct RC.LandID,RC.ProjectName,RC.ClassificationName,RC.SubClassificationName,AC.CategoryName,RA.GeomType as GeometryName, " +
+			/*String query = "Select Distinct RC.LandID,RC.ProjectName,RC.ClassificationName,RC.SubClassificationName,AC.CategoryName,RA.GeomType as GeometryName, " +
 					" (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1063,1017,1035,1079,1088,1097,1108) and groupid=RA.groupid) ||' '|| "+
 					" (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1065,1018,1036,1080,1089,1109,1098) and groupid=RA.groupid) ||' '|| "+
 					" (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1066,1019,1037,1081,1090,1099,1110) and groupid=RA.groupid) as OwnerName "+
@@ -104,7 +104,23 @@ public class ResourceAttributeValuesHibernateDAO extends GenericHibernateDAO<Res
 							"Where RC.ClassificationID=RSC.ClassificationID And RSC.SubClassificationID=RLM.SubClassificationID And RLM.ProjectID=Pr.ProjectNameID "+
 							"And RSC.GeometryTypeID=GT.GeometryTypeID) RC " +
 							",la_ext_attributemaster AM,la_ext_attributecategory AC "+
-							"Where RA.landID=RC.LandID AND RA.AttributeMasterID=AM.AttributeMasterID And AM.AttributeCategoryID=AC.AttributeCategoryID and RA.projectid ="+project ;
+							"Where RA.landID=RC.LandID AND RA.AttributeMasterID=AM.AttributeMasterID And AM.AttributeCategoryID=AC.AttributeCategoryID and RA.projectid ="+project ;*/
+			
+			
+			
+			String query = "Select Distinct RA.LandID,RC.ProjectName,RC.ClassificationName,RC.SubClassificationName,AC.CategoryName,RA.GeomType as GeometryName,  "
+					+ "  (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1063,1017,1035,1079,1088,1097,1108) and groupid=RA.groupid) ||' '||"
+					+ "  (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1065,1018,1036,1080,1089,1109,1098) and groupid=RA.groupid) ||' '||"
+					+ "  (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1066,1019,1037,1081,1090,1099,1110) and groupid=RA.groupid) as OwnerName"
+					+ "  from la_ext_resourceattributevalue RA,"
+					+ " (Select RLM.LandID,Pr.ProjectName,RC.ClassificationName,RSC.SubClassificationName,GT.GeometryName"
+					+ " from la_ext_resourceclassification RC, la_ext_resourcesubclassification RSC,la_ext_resourcelandclassificationmapping RLM"
+					+ " ,la_spatialsource_projectname Pr,la_ext_GeometryType GT"
+					+ " Where RC.ClassificationID=RSC.ClassificationID And RSC.SubClassificationID=RLM.SubClassificationID And RLM.ProjectID=Pr.ProjectNameID"
+					+ " And RSC.GeometryTypeID=GT.GeometryTypeID) RC"
+					+ " ,la_ext_attributemaster AM,la_ext_attributecategory AC"
+					+ " Where RA.landID=RC.LandID And RA.GeomType=RC.GeometryName AND RA.AttributeMasterID=AM.AttributeMasterID And AM.AttributeCategoryID=AC.AttributeCategoryID and RA.projectid ="+project ;
+
 			
 			
 			List<Object[]> arrObject = getEntityManager().createNativeQuery(query).setFirstResult(startfrom).setMaxResults(10).getResultList();

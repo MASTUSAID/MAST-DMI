@@ -90,6 +90,17 @@ public class SpatialUnitResourcePolygon implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date surveydate;
 	
+	
+	/*@SequenceGenerator(name = "la_spatialunit_resource_land_id_SEQ", sequenceName = "la_spatialunit_resource_land_id_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "la_spatialunit_resource_land_id_SEQ")
+	@Column(name = "id")
+	private Integer id;*/
+
+	@Column(name="ogc_fid")
+	private Integer ogc_fid;
+
+	
+	
 
 //	@OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 //	@JoinColumn(name = "landid")
@@ -240,6 +251,7 @@ public class SpatialUnitResourcePolygon implements Serializable {
 	}
 
 	public void setGeometry(Geometry geometry) {
+		geometry.setSRID(4326);
 		this.geometry = geometry;
 	}
 
@@ -520,6 +532,24 @@ public class SpatialUnitResourcePolygon implements Serializable {
 			ProjectRegion laSpatialunitgroupHierarchy6) {
 		this.laSpatialunitgroupHierarchy6 = laSpatialunitgroupHierarchy6;
 	}
+
+	/*public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}*/
+
+	public Integer getOgc_fid() {
+		return ogc_fid;
+	}
+
+	public void setOgc_fid(Integer ogc_fid) {
+		this.ogc_fid = ogc_fid;
+	}
+	
+	
 	
 	
 

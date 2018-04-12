@@ -1302,7 +1302,7 @@ public class LandRecordsController {
             		non_disputedPerson= true;
             	}
             }
-            if(non_disputedPerson){
+            if(true){
             for(LaExtDisputelandmapping obj: disputelandlst ){
             	
             	obj.setIsactive(false);
@@ -1313,7 +1313,13 @@ public class LandRecordsController {
                 right.setLandid(usin);
                 right.setPartyid(obj.getPartyid());
                 PersonType persontype = new PersonType();
-                persontype.setPersontypeid(1);
+            	if(obj.getPersontypeid()== 10){
+            		persontype.setPersontypeid(10);
+            	}
+            	else if(obj.getPersontypeid()== 3){
+            		persontype.setPersontypeid(1);
+            	}
+                
                 
                 right.setLaPartygroupPersontype(persontype);
                 right.setLaExtTransactiondetail(obj.getLaExtTransactiondetail());
@@ -1327,7 +1333,14 @@ public class LandRecordsController {
                 NaturalPerson personobj=null;
                 personobj=(NaturalPerson) laPartyDao.getPartyIdByID(socialTenurerelationship.getPartyid());
                 PersonType persontypeobj= new PersonType();
-                persontypeobj.setPersontypeid(1);
+                if(obj.getPersontypeid()== 10){
+                	persontypeobj.setPersontypeid(10);
+            	}
+            	else if(obj.getPersontypeid()== 3){
+            		persontypeobj.setPersontypeid(1);
+            	}
+                
+                
                 personobj.setLaPartygroupPersontype(persontypeobj);
                 naturalPersonDao.addNaturalPerson(personobj);
             }

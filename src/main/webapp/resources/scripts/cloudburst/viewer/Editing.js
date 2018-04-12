@@ -120,6 +120,12 @@ Cloudburst.Editing = function (_map, _searchdiv) {
 						}
 					});
 				
+				    map.getLayers().forEach(function (layer) {
+						if (layer.get('aname') != undefined & layer.get('aname') === 'featureaoilayer') {
+							map.removeLayer(layer);
+						}
+					});
+					
 					map.addInteraction(selectInteraction_edit);
                     map.addInteraction(intraction_dragBox);
                     toggleEditControl('selectionBox');

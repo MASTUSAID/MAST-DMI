@@ -364,9 +364,24 @@ public class ProjectController {
                   projectArea.setLandofficer(districtOfficer);
                   projectArea.setCertificatenumber(certificationNumber);
                   projectArea.setPostalcode(postalcode);
-                  projectArea.setAuthorizedmembersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageChairman", "")+"."+ar[1]);
-                  projectArea.setExecutiveofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageExecutive", "")+"."+ar[1]);
-                  projectArea.setLandofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureDistrictOfficer", "")+"."+ar[1]);
+                  try {
+					projectArea.setAuthorizedmembersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageChairman", "")+"."+ar[1]);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+                  try {
+					projectArea.setExecutiveofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureVillageExecutive", "")+"."+ar[1]);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+                  try {
+					projectArea.setLandofficersignature(ServletRequestUtils.getStringParameter(request, "hSignatureDistrictOfficer", "")+"."+ar[1]);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
                   projectArea.setProject(project);
 
                 if (StringUtils.isEmpty(vcmeetingdate)) {

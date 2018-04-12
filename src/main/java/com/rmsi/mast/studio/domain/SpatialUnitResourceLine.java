@@ -34,9 +34,19 @@ public class SpatialUnitResourceLine implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="pk_la_spatialunit_resource_line",sequenceName="la_spatialunit_resource_line_landid_seq", allocationSize=1) 
+	@SequenceGenerator(name="pk_la_spatialunit_resource_line",sequenceName="la_spatialunit_resource_land_landid_seq", allocationSize=1) 
 	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_spatialunit_resource_line") 
 	private Long landid;
+
+	
+    /* @SequenceGenerator(name = "la_spatialunit_resource_line_id_SEQ", sequenceName = "la_spatialunit_resource_line_id_seq", allocationSize = 1)
+	 @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "la_spatialunit_resource_line_id_SEQ")
+	 @Column(name = "id")
+	 private Integer id;*/
+	  
+	
+	@Column(name="ogc_fid")
+	private Integer ogc_fid;
 
 	@Column(name="area")
 	private double area;
@@ -240,6 +250,7 @@ public class SpatialUnitResourceLine implements Serializable {
 	}
 
 	public void setGeometry(Geometry geometry) {
+		geometry.setSRID(4326);
 		this.geometry = geometry;
 	}
 
@@ -520,6 +531,24 @@ public class SpatialUnitResourceLine implements Serializable {
 			ProjectRegion laSpatialunitgroupHierarchy6) {
 		this.laSpatialunitgroupHierarchy6 = laSpatialunitgroupHierarchy6;
 	}
+
+	/*public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}*/
+
+	public Integer getOgc_fid() {
+		return ogc_fid;
+	}
+
+	public void setOgc_fid(Integer ogc_fid) {
+		this.ogc_fid = ogc_fid;
+	}
+	
+	
 	
 	
 

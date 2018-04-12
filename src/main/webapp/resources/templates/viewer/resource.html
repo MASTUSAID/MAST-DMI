@@ -1,4 +1,25 @@
-<div class="container-fluid">
+<script>
+    $(function () {
+        $("#tabs_res").tabs();
+    });
+    
+  
+    
+   /*  $(function() {
+		$("#reg_date").datepicker();
+	}); */
+	
+	 $(function(){
+	        $("#Institution_id,#members").on('change',function () {
+	            $(this).addClass('addBg');
+	            $("#comment_Save").prop("disabled", false).show();
+	           
+	        });
+	    })
+    </script>
+    
+    
+    <div class="container-fluid">
 
     <div id="resourceRecordsFormdiv" style="visibility: hidden">
 
@@ -125,29 +146,188 @@
 
 
 
+			<div id="editattribute-res-dialog-form" title="Edit Attribute"
+				style="display: none;">
 
-			<!-- <div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;"> -->
-				 <div id="attributeDialog" title="Attribute Resource" style="display: none;">
-				<!--  <div><lable>Resource Attributes</lable></div> -->
-				  <div >
-								<table style="width: 100%; margin-bottom: 23px;">
-								<tr>
-								<td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">Resource Attributes</label></h3></td></tr>
-								</table></div>
-				 <div id="ResourcepersonsEditingGrid0"></div>
-				 <div  id ="CustomAttributes">
-								<table style="width: 100%; margin-bottom: 23px;">
-								<tr>
-								<td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">Custom Attributes</label></h3></td></tr>
-								</table></div>
-				 <!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
-				  <div id="CustomAttributeEditingGrid0"></div>
+				<form class="cmxform" id="editAttributeformID_res" action=""
+					onsubmit="return false;">
+					<input type="hidden" name="general_length" id="general_length"
+						value="">
+						
+						<input type="hidden" name="landId" id="landId"
+												value=" ">
+
+					<div id="tabs_res">
+						<ul>
+							<li><a href="#tabGeneralInfo">General Info</a></li>
+							<li id="liPoi_res" onclick="issavedisabled();"><a
+								class="linkliPoi" href="#tabs-2c-res">Person</a></li>
+
+						</ul>
+						<div id="tabGeneralInfo">
+							<div class="tab-pane landrecords22" id="land-record">
+								<div style="margin: 0 10px;">
+									<!-- <div class="project-details in">
+										<div class="project-details-label">
+											<div class="row-fluid">
+												<div class="span3 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Parcel
+														ID: </span> <span class="deatails-label-value" id="spatialid"></span>
+													<input type="hidden" name="primary" id="primary" value="">
+												</div>
+												<div class="span3 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Transaction
+														Id : </span> <span class="deatails-label-value" id="claimUka"></span>
+												</div>
+												<div class="span3 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Claim
+														Type: </span> <span class="deatails-label-value" id="claimType"></span>
+												</div>
+											</div>
+										</div>
+									</div> -->
+
+									<table style="width: 100%" id="tableGeneralAttributes"
+										class="landrecords22 ">
+
+
+
+										<tr>
+											<td class="borderedBottom" colspan="4">
+												<h3>
+													<label class="no-margin-bottom">Land Classification</label>
+												</h3>
+											</td>
+										</tr>
+
+
+
+										<tr id="rowClaimNumber">
+
+											<td><label>Classification</label> <input type="text"
+												name="Classification_id" id="Classification_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
+											
+											<td><label>Property Size</label> <input type="text"
+												name="size_id" id="size_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
+
+										</tr>
+
+										<tr>
+											<td><label>Sub-Classification </label> <input
+												type="text" name="subClassification_id" id="subClassification_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
+
+										</tr>
+
+
+
+										<tr id="tenure_occupancy">
+											<td class="borderedBottom" colspan="4">
+												<h3>
+													<label class="no-margin-bottom">Tenure/Occupancy</label>
+												</h3>
+											</td>
+										</tr>
+
+										<tr>
+
+											<td><label>Tenure</label> <input type="text" name="tenure_type_res"
+												id="tenure_type_res" value="" 
+												class="text ui-widget-content ui-corner-all" readonly></td>
+
+										</tr>
+										<tr id="regNo">
+
+											<td><label>Registration No</label> <input
+												type="text" name="reg_no" id="reg_no"
+												class="text ui-widget-content ui-corner-all read-tenure" readonly></td>
+
+										</tr>
+
+										<tr>
+											<td id="institute"><label>Institution/OrganizationName</label> <input
+												type="text" name="Institution_id" id="Institution_id"
+												class="text ui-widget-content ui-corner-all read-tenure">
+												
+												<input type="hidden" name="Institution_id_id" id="Institution_id_id"
+												value=" ">
+											</td>
+											<td id="reg_date_td"><label>Registration Date</label> <input type="text"
+												name="reg_date" id="reg_date"
+												class="text ui-widget-content ui-corner-all"  
+												readonly>
+											</td>
+										</tr>
+
+										<tr id="members_tr">
+											<td><label>How many members? </label> <input type="text"
+												name="members" id="members"
+												class="text ui-widget-content ui-corner-all read-tenure">
+												
+												<input type="hidden" name="members_id" id="members_id"
+												value=" ">
+											</td>
+
+										</tr>
+
+
+
+
+									</table>
+
+									<div>
+										<!-- <button id="parcelsavebutton" class="btn hideNew" onclick="javascript:updateattributesGen();">
+                                          Save
+                                        </button> -->
+									</div>
+								</div>
+								<!-- Tenure info -->
+								<div style="margin: 0 10px;"></div>
+
+							</div>
+						</div>
+
+						<!-- <div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;"> -->
+						<div id="tabs-2c-res">
+							<div id="attributeDialog" title="Attribute Resource">
+								<!--  <div><lable>Resource Attributes</lable></div> -->
+								<div>
+									<table style="width: 100%; margin-bottom: 23px;">
+										<tr>
+											<td class="borderedBottom" colspan="4"><h3>
+													<label class="no-margin-bottom">Resource Attributes</label>
+												</h3></td>
+										</tr>
+									</table>
+								</div>
+								<div id="ResourcepersonsEditingGrid0"></div>
+								<div id="CustomAttributes">
+									<table style="width: 100%; margin-bottom: 23px;">
+										<tr>
+											<td class="borderedBottom" colspan="4"><h3>
+													<label class="no-margin-bottom">Custom Attributes</label>
+												</h3></td>
+										</tr>
+									</table>
+								</div>
+								<!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
+								<div id="CustomAttributeEditingGrid0"></div>
+							</div>
+						</div>
+					</div>
+				</form>
 			</div>
-			
-			
-	
-	
-	<script id="attributetemplate" type="text/x-jquery-tmpl">
+
+
+
+
+
+			<script id="attributetemplate" type="text/x-jquery-tmpl">
  <tr> 
 <td>
 	${attributemaster.fieldname}

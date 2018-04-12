@@ -2779,7 +2779,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 	            {name: "dateofbirth", title: "Date of birth", type: "date", width: 120, validate: {validator: "required", message: "Enter Date of birth"}},
 	            {name: "contactno", title: "Mobile Number", type: "text", width: 120},
 	            {name: "genderid", title: "Gender", align: "left", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
-	            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Single"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
+	            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Un-Married"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 				{name: "laPartygroupEducationlevel.educationlevelid", title: "Education Level", type: "select", items: [{id: 1, name: "None"}, {id: 2, name: "Primary"},{id: 3, name: "Secondary"}, {id: 4, name: "University"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 				
      
@@ -2893,7 +2893,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 	        fields: [
 	            {type: "control", deleteButton: false},
 	            {name: "organizationname", title: "organization Name", type: "text", width: 120, validate: {validator: "required", message: "Enter organization Name"}},
-                {name: "groupType.grouptypeid", title: "GroupType", type: "select", items: [{id: 1, name: "Civic"}, {id: 2, name: "Mosque"},{id: 3, name: "Association"}, {id: 4, name: "Cooperative"},{id: 5, name: "Informal"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
+                {name: "groupType.grouptypeid", title: "GroupType", type: "select", items: [{id: 1, name: "Civic"}, {id: 2, name: "Mosque"},{id: 3, name: "Association  (legal)"}, {id: 4, name: "Cooperative"},{id: 5, name: "Informal Association (non-legal)"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 	            {name: "contactno", title: "Mobile Number", type: "text", width: 120},
      
 
@@ -3077,7 +3077,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			            {name: "contactno", title: "Mobile Number", type: "text", width: 120},
 			            {name: "genderid", title: "Gender", align: "left", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 			            {name: "laPartygroupIdentitytype.identitytypeid", title: "Id Type", type: "select", items: [{id: 1, name: "Voter ID"}, {id: 2, name: "Driving license"},{id: 3, name: "Passport"}, {id: 4, name: "ID card"},{id: 5, name: "Other"}, {id: 6, name: "None"}],valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
-			            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Single"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
+			            {name: "laPartygroupMaritalstatus.maritalstatusid", title: "Marital status", type: "select", items: [{id: 1, name: "Un-Married"}, {id: 2, name: "Married"},{id: 3, name: "Divorced"}, {id: 4, name: "Widow"},{id: 5, name: "Widower"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 						{name: "laPartygroupEducationlevel.educationlevelid", title: "Education Level", type: "select", items: [{id: 1, name: "None"}, {id: 2, name: "Primary"},{id: 3, name: "Secondary"}, {id: 4, name: "University"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false},
 						{name: "laPartygroupPersontype.persontypeid", title: "Person Type", type: "select", items: [{id: 3, name: "Owner"}, {id: 10, name: "Disputed Person"}], valueField: "id", textField: "name", width: 80,editing: true, filtering: false}
 
@@ -3182,7 +3182,10 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 			            {name: "lastName", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
 			            {name: "gender", title: "Gender", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}, {id: 3, name: "Other"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
 			            {name: "dob", title: "Date of birth", type: "date", width: 120 ,validate: {validator: "required", message: "Enter first name"}},
-			            {name: "relation", title: "Relation", type: "select", items: [{id: 1, name: "Father"}, {id: 2, name: "Mother"}, {id: 3, name: "Sister"}, {id: 4, name: "Brother"}, {id: 5, name: "Son"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
+			            {name: "relation", title: "Relation", type: "select", items: [{id: 1, name: "Spouse"}, {id: 2, name: "Son"}, {id: 3, name: "Daughter"}, {id: 4, name: "Grandson"}, {id: 5, name: "Granddaughter"}, {id: 6, name: "Brother"},
+			                                                                          {id: 7, name: "Sister"}, {id: 8, name: "Father"}, {id: 9, name: "Mother"}, {id: 10, name: "Grandmother"}, {id: 11, name: "Grandfather"}, {id: 12, name: "Aunt"},
+			                                                                          {id: 13, name: "Uncle"}, {id: 14, name: "Niece"}, {id: 15, name: "Nephew"}, {id: 16, name: "Other"}, {id: 17, name: "Other relatives"}, {id: 18, name: "Associate"},
+			                                                                          {id: 19, name: "Parents and children"}, {id: 20, name: "Siblings"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
 			            {name: "landid", title: "LandID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
 			            {name: "id", title: "ID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
 
@@ -3389,6 +3392,246 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 				cache: false,
 				success: function (data) 
 				{
+					
+					if(data[5] != null && data[5].length != 0){
+
+						jQuery.get("resources/templates/report/data-correctionnonnaturalperson.html", function (template) 
+						{
+							jQuery("#printDiv").empty();
+							jQuery("#printDiv").append(template);
+							
+							if(data!=null || data!="" || data!="undefined")
+							{
+									jQuery('#reportNameId').empty();
+											if(_workflowid==1){
+												jQuery('#reportNameId').text("Data Correction Report"); 
+													}else if(_workflowid==2){
+														jQuery('#reportNameId').text("Land Record Verification Form"); 
+													}else if(_workflowid==3){
+														jQuery('#reportNameId').text("Land Record Verification Form"); 
+													}	
+		
+							 if(data[0]!=null){	
+								 if(data[0][0]!=null){
+								if(data[0][0].region!=null)
+									 $('#regionId').html(data[0][0].region);
+								 
+								if(data[0][0].commune!=null)
+									 $('#CommunityId').html(data[0][0].commune);
+								
+		                        if(data[0][0].county!=null)
+									 $('#countryId').html(data[0][0].county);
+								 
+								if(data[0][0].projectName!=null)
+									 $('#project_nameId').html(data[0][0].projectName);
+
+								  
+								if(data[0][0].claimno!=null)
+									 $('#claimNumberId').html(data[0][0].claimno);
+								 		
+	                            if(data[0][0].claimtype!=null)
+									 $('#claimTypeId').html(data[0][0].claimtype);
+								 
+								if(data[0][0].transactionid!=null)
+									 $('#LandRecordNumberId').html(data[0][0].transactionid); 
+								 
+								 if(data[0][0].claimdate!=null)
+									 $('#claimDateId').html(data[0][0].claimdate); 
+								 
+								if(data[0][0].landusetype!=null)
+									 $('#ExistingUseId').html(data[0][0].landusetype); 
+
+								if(data[0][0].proposedused!=null)
+									 $('#ProposedUseId').html(data[0][0].proposedused);  
+								 
+								if(data[0][0].landtype!=null)
+									 $('#LandTypeId').html(data[0][0].landtype);  		
+								
+								if(data[0][0].neighbor_east!=null)
+									 $('#NeighborEastId').html(data[0][0].neighbor_east);  	
+								 
+								if(data[0][0].neighbor_west!=null)
+									 $('#NeighborWestId').html(data[0][0].neighbor_west);  	
+
+
+								if(data[0][0].neighbor_north!=null)
+									 $('#NeighborNorthId').html(data[0][0].neighbor_north);  	
+
+								if(data[0][0].neighbor_south!=null)
+									 $('#NeighborSouthId').html(data[0][0].neighbor_south);  	
+	  	 
+								
+								if(data[0][0].landsharetype!=null)
+									 $('#TypeOftenureId').html(data[0][0].landsharetype);  
+								
+								if(data[0][0].occupancylength!=null)
+									 $('#YearsOfOccupancyId').html(data[0][0].occupancylength); 
+								 
+								if(data[0][0].tenureclasstype!=null)
+									 $('#TypeofRightId').html(data[0][0].tenureclasstype); 
+								 
+								if(data[0][0].claimtype!=null)
+									 $('#TypeOdClaimId').html(data[0][0].claimtype);   
+								
+								if(data[0][0].landno!=null)
+									 $('#plotId').html(data[0][0].landno);   
+								
+								
+							}
+							
+							}
+	                        
+							 if(data[1]!= null){	
+	                        	 for(var i=0; i<data[1].length; i++){
+							 
+								if(data[1][i] != null){
+									
+									jQuery("#POIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#POIRecordsRowData1");
+
+									
+								}
+	                        	 }
+							}
+								
+							 if(data[5]!= null){
+								 if(data[5].length > 2){
+									
+									 if(data[5][2] != null){
+									if(data[5][2].firstname!=null || data[5][2].middlename!=null || data[5][2].lastname!=null){
+										
+										jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][2]).appendTo("#OwnerNonpersonRecordsRowData1");
+									}
+									 }
+									 if(data[5][1] != null){
+											if(data[5][1].firstname!=null || data[5][1].middlename!=null || data[5][1].lastname!=null){
+												jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][1]).appendTo("#OwnerNonpersonRecordsRowData1");
+											}
+
+									}
+									 
+									 if(data[5][0] != null){
+											if(data[5][0].firstname!=null || data[5][0].middlename!=null || data[5][0].lastname!=null){
+												jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][0]).appendTo("#OwnerNonpersonRecordsRowData1");
+											}
+
+									}
+									 
+									}
+								 
+								 else if(data[5].length > 1 && data[5].length < 3){
+									
+								 if(data[5][1] != null){
+								if(data[5][1].firstname!=null || data[5][1].middlename!=null || data[5][1].lastname!=null){
+									jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][1]).appendTo("#OwnerNonpersonRecordsRowData1");
+								}
+								 }
+								 if(data[5][0] != null){
+										if(data[5][0].firstname!=null || data[5][0].middlename!=null || data[5][0].lastname!=null){
+											jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][0]).appendTo("#OwnerNonpersonRecordsRowData1");
+										}
+
+								}
+								 
+								}
+								else if(data[5].length == 1){
+									
+										jQuery("#OwnerNonpersonRecordsAttrTemplate1").tmpl(data[5][0]).appendTo("#OwnerNonpersonRecordsRowData1");
+									
+								}
+								
+							}
+								 var layerName = "spatialUnitLand";
+								 var objLayer=getLayerByAliesName(layerName);
+								
+									 var _wfsurl=objLayer.values_.url;
+									var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+									//Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+									$.ajax({
+										url: PROXY_PATH + _wfsSchema,
+										async: false,
+										success: function (data) {
+											 _featureNS=data.targetNamespace;
+											 
+										}
+									});
+
+			                var relLayerName = "Mast:la_spatialunit_land";
+							var fieldName = "landid";
+							var fieldVal = land_id;
+			
+							var _featureTypes= [];
+							_featureTypes.push("la_spatialunit_land");
+							var _featurePrefix="Mast";
+							var featureRequest1 = new ol.format.WFS().writeGetFeature({
+													srsName: 'EPSG:4326',
+													featureNS: _featureNS,
+													featurePrefix: _featurePrefix,
+													featureTypes: _featureTypes,
+													outputFormat: 'application/json',
+													filter: ol.format.filter.equalTo(fieldName, fieldVal)
+												  });
+												  
+												  
+								  var _url= window.location.protocol+'//'+window.location.host+'/geoserver/wfs';
+											  fetch(_url, {
+												method: 'POST',
+												body: new XMLSerializer().serializeToString(featureRequest1)
+											  }).then(function(response) {
+												return response.json();
+											  }).then(function(json) {
+											   var features = new ol.format.GeoJSON().readFeatures(json);
+
+											         var vectorSource = new ol.source.Vector();
+													 vectorSource.addFeatures(features);
+													 extent=vectorSource.getExtent();
+													 var cqlFilter = 'landid='+fieldVal ;  				  				
+     												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
+
+				                                     var url2 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&landid="+fieldVal+";";
+													 
+													jQuery('#mapImageId').empty();
+													jQuery('#mapImageId').append('<img  src='+url1+'>');
+
+													jQuery('#mapImageId1').empty();
+	                                                jQuery('#mapImageId1').append('<img  src='+url2+'>');
+
+												    var _html="";
+													var _th="<tr><th>Latitude</th><th>Longitude </th></tr>"
+													 for (i = 0; i < features[0].geometryChangeKey_.target.flatCoordinates.length/2; i++) {
+														 var j=i;
+														_html =_html+ "<tr><td>"+features[0].geometryChangeKey_.target.flatCoordinates[i] +"</td><td>"+features[0].geometryChangeKey_.target.flatCoordinates[j++] + "</td><tr>";
+													} 
+													jQuery('#latLongId').empty();
+													var _table=_th+_html;
+	                                                jQuery('#latLongId').append(_table);	
+													
+												
+	                            
+	                       							var html = $("#printDiv").html();
+													var printWindow=window.open('','popUpWindow', 'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+															printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
+															'<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
+															+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+
+															'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'+
+															 +'</head><body>'+html+'</body></html>');	
+															
+															printWindow.document.close();
+									
+									
+											   });
+											   
+									
+							}
+							else
+							{
+								jAlert('info','error in fetching details',"");
+							}
+						});
+						
+						
+					}
+					else{
 					jQuery.get("resources/templates/report/data-correction.html", function (template) 
 					{
 						jQuery("#printDiv").empty();
@@ -3475,76 +3718,61 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 						
 						}
                         
-						if(data[1]!=null){
-							if(data[1][0]!=null){
-								var _name="";
-							    if(data[1][0].firstName!=null)
-								    _name= data[1][0].firstName ;
-
-                                if(data[1][0].middleName!=null)
-								    _name= _name +" "+ data[1][0].middleName ;					 
-							   
-							    if(data[1][0].lastName!=null)
-									_name= _name +" "+ data[1][0].lastName ;
+						 if(data[1]!= null){	
+                        	 for(var i=0; i<data[1].length; i++){
+						 
+							if(data[1][i] != null){
 								
-								   $('#namepoiId').html(_name);  							 
-							   
-								if(data[1][0].gender!=null)
-								 $('#genderpoiId').html(data[1][0].gender);   
-											 
-                                if(data[1][0].relationship!=null)
-								 $('#relationpoiId').html(data[1][0].relationship);   
+								jQuery("#POIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#POIRecordsRowData1");
+
+								
+							}
+                        	 }
+						}
 							
+						 if(data[2]!= null){
+							 if(data[2].length > 2){
+								 if(data[2][2] != null){
+								if(data[2][2].firstname!=null || data[2][2].middlename!=null || data[2][2].lastname!=null){
+									jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][2]).appendTo("#OwnerRecordsRowData1");
+								}
+								 }
+								 if(data[2][1] != null){
+										if(data[2][1].firstname!=null || data[2][1].middlename!=null || data[2][1].lastname!=null){
+											jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][1]).appendTo("#OwnerRecordsRowData1");
+										}
+
+								}
+								 
+								 if(data[2][0] != null){
+										if(data[2][0].firstname!=null || data[2][0].middlename!=null || data[2][0].lastname!=null){
+											jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
+										}
+
+								}
+								 
+								}
+							 
+							 else if(data[2].length > 1 && data[2].length < 3){
+							 if(data[2][1] != null){
+							if(data[2][1].firstname!=null || data[2][1].middlename!=null || data[2][1].lastname!=null){
+								jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][1]).appendTo("#OwnerRecordsRowData1");
+							}
+							 }
+							 if(data[2][0] != null){
+									if(data[2][0].firstname!=null || data[2][0].middlename!=null || data[2][0].lastname!=null){
+										jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
+									}
+
+							}
+							 
+							}
+							else if(data[2].length == 1){
+									jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
+								
 							}
 							
 						}
-							
-						 if(data[2]!=null){	
-							 if(data[2][0]!=null){
-								 
-								 var _name="";
-							    if(data[2][0].firstname!=null)
-								    _name= data[2][0].firstname ;
-
-                                if(data[2][0].middlename!=null)
-								    _name= _name +" "+ data[2][0].middlename ;					 
-							   
-							    if(data[2][0].lastname!=null)
-									_name= _name +" "+ data[2][0].lastname ;
-								
-								 $('#namePersonId').html(_name);  						
-								 
-								 if(data[2][0].address!=null)
-									$('#addressPersonId').html(data[2][0].address); 
-								
-								if(data[2][0].gender!=null)
-									$('#genderPersonId').html(data[2][0].gender); 
-								
-								if(data[2][0].dateofbirth!=null)
-									$('#dobPersonId').html(data[2][0].dateofbirth); 
-								
-								
-								if(data[2][0].maritalstatus!=null)
-									$('#mstatuspersonId').html(data[2][0].maritalstatus); 
-								
-								if(data[2][0].identitytype!=null)
-									$('#idtypePersonId').html(data[2][0].identitytype); 
-								
-								if(data[2][0].identityno!=null)
-									$('#idnoPersonId').html(data[2][0].identityno);
-								
-								if(data[2][0].contact!=null)
-									$('#mobilePersonId').html(data[2][0].contact);
-								
-								if(data[2][0].educationlevel!=null)
-									$('#educationpersonId').html(data[2][0].educationlevel);
-								
-								if(data[2][0].occupation!=null)
-									$('#occupationPersonId').html(data[2][0].occupation);
-								   
-							 }
-							 
-						    } 
 							 var layerName = "spatialUnitLand";
 							 var objLayer=getLayerByAliesName(layerName);
 							
@@ -3591,11 +3819,12 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 												 vectorSource.addFeatures(features);
 												 extent=vectorSource.getExtent();
 												 var cqlFilter = 'landid='+fieldVal ;  				  				
-												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER={{CQLFILTER}}";
-			                                     var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
+												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
+			                                     var url2 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&landid="+fieldVal+";";
+
 												 
 												jQuery('#mapImageId').empty();
-												jQuery('#mapImageId').append('<img  src='+url2+'>');
+												jQuery('#mapImageId').append('<img  src='+url1+'>');
 
 												jQuery('#mapImageId1').empty();
                                                 jQuery('#mapImageId1').append('<img  src='+url2+'>');
@@ -3613,7 +3842,7 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 											
                             
                        							var html = $("#printDiv").html();
-												var printWindow=window.open('','popUpWindow', 'height=900,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+												var printWindow=window.open('','popUpWindow', 'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
 														printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
 														'<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
 														+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+
@@ -3632,6 +3861,7 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 							jAlert('info','error in fetching details',"");
 						}
 					});
+					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {									
 					jAlert('info', "", "");
@@ -3909,11 +4139,11 @@ function _generateFinalLandForm(trans_id,land_id)
 													 vectorSource.addFeatures(features);
 													 extent=vectorSource.getExtent();
 													 var cqlFilter = 'landid='+fieldVal ;  				  				
-													 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER={{CQLFILTER}}";
-				                                     var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
+    												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
+    			                                     //var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
 													 
 													jQuery('#mapImageId01').empty();
-													jQuery('#mapImageId01').append('<img  src='+url2+'>');
+													jQuery('#mapImageId01').append('<img  src='+url1+'>');
 
 												
 	                                                var html2 = $("#printdiv2").html();
@@ -4190,11 +4420,10 @@ function _generateFinalLandForm(trans_id,land_id)
 												 vectorSource.addFeatures(features);
 												 extent=vectorSource.getExtent();
 												 var cqlFilter = 'landid='+fieldVal ;  				  				
-												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER={{CQLFILTER}}";
-			                                     var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
-												 
+												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
+			                                    // var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
 												jQuery('#mapImageId01').empty();
-												jQuery('#mapImageId01').append('<img  src='+url2+'>');
+												jQuery('#mapImageId01').append('<img  src='+url1+'>');
 
 											
                                                 var html2 = $("#printdiv2").html();

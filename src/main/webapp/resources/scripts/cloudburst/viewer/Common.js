@@ -475,6 +475,8 @@ function clearSelection(clearResultGrid, _lyr){
 			}
 			if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
 				map.removeLayer(layer);
+			}if (layer.get('aname') != undefined & layer.get('aname') === 'featureaoilayer') {
+				map.removeLayer(layer);
 			}
 		});
 		
@@ -617,6 +619,8 @@ function removeDeactiveMarkupTool(){
 			if (layer.get('aname') != undefined & layer.get('aname') === 'pan_icon') {
 				map.removeLayer(layer);
 			}if (layer.get('aname') != undefined & layer.get('aname') === 'featureWorkflow') {
+				map.removeLayer(layer);
+			}if (layer.get('aname') != undefined & layer.get('aname') === 'featureaoilayer') {
 				map.removeLayer(layer);
 			}
 		});

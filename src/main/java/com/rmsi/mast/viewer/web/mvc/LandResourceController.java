@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,7 @@ import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.fetch.ResourceDetails;
 import com.rmsi.mast.studio.mobile.dao.AttributeOptionsDao;
 import com.rmsi.mast.studio.mobile.dao.CustomAttributesDAO;
+import com.rmsi.mast.studio.mobile.dao.SpatialUnitResourceLineDao;
 import com.rmsi.mast.viewer.service.ResourceAttributeValuesService;
 
 
@@ -72,6 +74,9 @@ public class LandResourceController {
 	
 	@Autowired
 	UserDAO userdao;
+	
+	@Autowired
+	SpatialUnitResourceLineDao lineDao;
 	
 	
 	@RequestMapping(value = "/viewer/resource/allAttribue/{landid}/{projectId}", method = RequestMethod.GET)
@@ -588,7 +593,69 @@ public class LandResourceController {
 		}
 	}
    
-   
+	
+	
+	
+	@RequestMapping(value = "/viewer/resource/landdata/{landId}", method = RequestMethod.GET)
+	@ResponseBody
+   public Object getLanddataBylandId(@PathVariable Long landId)
+	{
+		try {
+			Object obj =null;
+			
+			obj = lineDao.getLandObject(landId);
+			if(null != obj){
+					return obj;
+			}
+			else{
+				return null;
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+
+	@RequestMapping(value = "/viewer/resource/saveattributes", method = RequestMethod.POST)
+	@ResponseBody
+	@Transactional
+	public String savefinalsaledata(HttpServletRequest request, HttpServletResponse response) 
+	{
+		
+		
+		
+		
+			try {
+				Long landId = ServletRequestUtils.getRequiredLongParameter(request, "landId");
+				String institutionValue = ServletRequestUtils.getRequiredStringParameter(request, "Institution_id");
+				String institutionId = ServletRequestUtils.getRequiredStringParameter(request, "Institution_id_id");
+				
+				String membersId = ServletRequestUtils.getRequiredStringParameter(request,"members_id");
+				String membersValue = ServletRequestUtils.getRequiredStringParameter(request,"members");
+				List<ResourceAttributeValues> resobj  = resourceAttributeValuesService.getResourceAttributeValuesByMasterlandid(landId.intValue());
+				for(ResourceAttributeValues obj: resobj){
+					
+					if(obj.getAttributevalueid() ==Integer.parseInt(institutionId)){
+						obj.setAttributevalue(institutionValue);
+						em.merge(obj);
+					}
+					if(obj.getAttributevalueid() == Integer.parseInt(membersId)){
+						obj.setAttributevalue(membersValue);
+						em.merge(obj);
+					}
+				}
+				
+				
+			} catch (ServletRequestBindingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "Success";
+	}
 	
 	
 

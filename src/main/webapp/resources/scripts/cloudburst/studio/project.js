@@ -962,8 +962,8 @@ function getCommuneOnProvinceChange(id) {
 	}
 	function getHamletOnVillageChange(id) {
 		
-	$("#villageId").empty();
-	jQuery("#villageId").append(jQuery("<option></option>").attr("value", "").text("Select"));
+	$("#placeId").empty();
+	jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text("Select"));
 		
     if (id != '') {
 		
@@ -973,7 +973,7 @@ function getCommuneOnProvinceChange(id) {
             success: function (regiondata) {
                 var proj_coomune = regiondata;
                 jQuery.each(proj_coomune, function (i, value) {
-                    jQuery("#villageId").append(jQuery("<option></option>").attr("value", value.hierarchyid).text(value.name));
+                    jQuery("#placeId").append(jQuery("<option></option>").attr("value", value.hierarchyid).text(value.name));
                 });
             }
         });

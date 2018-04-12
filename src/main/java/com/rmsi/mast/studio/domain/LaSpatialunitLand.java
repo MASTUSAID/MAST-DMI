@@ -290,6 +290,7 @@ public class LaSpatialunitLand implements Serializable {
 		return geometrytype;
 	}
 	public void setGeometrytype(String geometrytype) {
+		geometry.setSRID(4326);
 		this.geometrytype = geometrytype;
 	}
 	public Geometry getGeometry() {

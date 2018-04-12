@@ -114,29 +114,25 @@
     <td id="TypeofRightId"></td>
     </tr>            
     </table>
-            <h4 class="space-top-10">Persons</h4>
+            <h4 class="space-top-10">Non-Natural Persons</h4>
             
             
              <table class="amendbeforeAfterTable space-top-10" >
     <thead>
     <tr>
+    <th>Institution Type</th>
+    <th>Institution Name </th>
     <th>Name</th>
     <th>Address</th>
-    <th>Gender</th>
-    <th>Date of Birth</th>
-    <th>Marital Status</th>
-    <th>Id Type</th>
-    <th>Id No.</th>
     <th>Mobile No.</th>
-    <th>Education Level</th>
-    <th>Occupation</th>
+   
     
    <!--  <th>[Mobile]</th> -->
     
     </tr>  
     </thead>
     
-    <tbody id="OwnerRecordsRowData1">
+    <tbody id="OwnerNonpersonRecordsRowData1">
 						</tbody>  
 						
 						
@@ -144,38 +140,24 @@
 
 
 
-			<script id="OwnerRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+			<script id="OwnerNonpersonRecordsAttrTemplate1" type="text/x-jquery-tmpl">
                         <tr>
+						<td>
+                      ${groupType.grouptypeEn}
+                        </td>
+ 						<td>
+                      ${organizationname}
+                        </td>
                         <td>
 						${firstname} ${middlename} ${lastname}
                         </td> 
                         <td>
                       ${address}
                         </td>
-                        <td>
-                       ${gender}
-                        </td> 
 						<td>
-                       ${dateofbirth}
+                       ${contactno}
                         </td>
-						<td>
-                       ${maritalstatus}
-                        </td>
-						<td>
-                       ${identitytype}
-                        </td>
-						<td>
-                       ${identityno}
-                        </td>
-						<td>
-                       ${contact}
-                        </td>
-						<td>
-                       ${educationlevel}
-                        </td>
-						<td>
-                       ${occupation}
-                        </td>
+						
  						 
                            
              
@@ -428,8 +410,8 @@
     <div class="span6"> 
       <div style="border: 1px solid #888;" class="space-top-10">
 	    Parcel Location
-        <div id="mapImageId1" class="mapImaivgeId"></div>
-      </div>
+ <div id="mapImageId1" class="mapImaivgeId"></div>
+       </div>
     
     </div>
     </div>
@@ -441,7 +423,9 @@
     <div class="span6"> 
       <div style="border: 1px solid #888;" class="space-top-10">
 	   Parcel
-        <div id="mapImageId" class="mapImaivgeId"></div>
+	    <div id="mapImageId" class="mapImaivgeId"></div>
+	   
+    
 
       </div>
       

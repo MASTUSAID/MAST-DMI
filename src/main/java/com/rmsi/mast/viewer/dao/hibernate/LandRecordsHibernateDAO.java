@@ -786,7 +786,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					"inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+ 
 					"inner Join  la_party_person LP on PL.partyid = LP.personid " +
 	                "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+ 
-			        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +" Union "+
+			        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1  and LD.projectnameid = " +defaultProject +" Union "+
 					"Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+
 					"LP.firstname, LP.lastname, LP.address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
 					"Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+
@@ -930,7 +930,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				 "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+ 
 				 "inner Join  la_party_person LP on PL.partyid = LP.personid " +
 				 "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+ 
-				 "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid = " +project +"  and " + strWhereClause   +" Union "+
+				 "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and  LD.projectnameid = " +project +"  and " + strWhereClause   +" Union "+
 				 "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+
 				 "'' as firstname, '' as lastname, '' as address,  la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid , ST.landsharetype "+ 
 				 "from la_spatialunit_land LD "+ 
@@ -1368,7 +1368,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					"inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+
 					"inner Join  la_party_person LP on PL.partyid = LP.personid " +
 	                "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+ 
-			        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  LD.projectnameid = " +project +" Union "+
+			        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and  LD.projectnameid = " +project +" Union "+
 			        "Select count(LD.landid) as landid  from la_spatialunit_land LD  "+ 
 					"Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+
 					"inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+
@@ -1478,7 +1478,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					 "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+
 					 "inner Join  la_party_person LP on PL.partyid = LP.personid " +
 	                 "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+ 
-			         "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  LD.projectnameid = " +project +" and " + strWhereClause +" Union "+
+			         "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and  LD.projectnameid = " +project +" and " + strWhereClause +" Union "+
 					 "Select count(LD.landid) as landid  from la_spatialunit_land LD  "+ 
 					 "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+
 					 "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+
@@ -1613,7 +1613,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					"inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+
 					"inner Join  la_party_person LP on PL.partyid = LP.personid " +
 	                "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+ 
-	                "where  Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
+	                "where  Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and  LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
 	                "Select count(DISTINCT LD.landid) as landid "+
 	                "from la_spatialunit_land LD "+ 
 	                "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+ 
@@ -1749,7 +1749,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 						"inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+ 
 						"inner Join  la_party_person LP on PL.partyid = LP.personid " +
 		                "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+ 
-				        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
+				        "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
 				        "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address, "+
 				        "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype "+ 
 				        "from la_spatialunit_land LD "+  

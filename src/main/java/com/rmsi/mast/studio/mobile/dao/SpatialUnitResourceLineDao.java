@@ -29,6 +29,13 @@ public interface SpatialUnitResourceLineDao extends GenericDAO<SpatialUnitResour
 	 */
 	SpatialUnitResourceLine addSpatialUnitResourceLine(SpatialUnitResourceLine spatialUnit);
 
+	
+	
+	Object getLandObject(Long  landId);
+	
+	
+	
+	
 	/**
 	 * Can be used to get the list of Spatial Unit By ProjectID
 	 * 

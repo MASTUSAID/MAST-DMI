@@ -1075,7 +1075,7 @@ public class UserDataServiceImpl implements UserDataService {
             	
 //                naturalPerson.getLaPartygroupOccupation().setOccupationEn(value);
             } else if (id == 20) {
-                naturalPerson.setLaPartygroupEducationlevel(educationLevelDao.getEducationLevelById(Integer.parseInt(value)));
+                naturalPerson.setLaPartygroupEducationlevel(educationLevelDao.getEducationLevelBypk(Integer.parseInt(value)));
             } else if (id == 25) {
                 naturalPerson.getLaRightTenureclass().setTenureclass(value);
             }
@@ -1087,7 +1087,7 @@ public class UserDataServiceImpl implements UserDataService {
             else if (id == 22) {
             	
             	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
-        		naturalPerson.setLaPartygroupMaritalstatus(maritalStatusDao.getMaritalStatusById(attOptions.getParentid()));
+        		naturalPerson.setLaPartygroupMaritalstatus(maritalStatusDao.getMaritalStatusById(attOptions.getAttributeoptionsid()));
 //        		
 //            	if(Integer.parseInt(value)==7){
 //            		
@@ -1135,7 +1135,7 @@ public class UserDataServiceImpl implements UserDataService {
             else if(id == 1134){
             	
             	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
-        		naturalPerson.setLaPartygroupEducationlevel(educationLevelDao.getEducationLevelById(attOptions.getParentid()));
+        		naturalPerson.setLaPartygroupEducationlevel(educationLevelDao.getEducationLevelBypk(attOptions.getParentid()));
 //        		
 
 //                if(attribute.getValue().equalsIgnoreCase("1115")){
@@ -1278,7 +1278,7 @@ public class UserDataServiceImpl implements UserDataService {
                else if (attribute.getId() == 16) {
             	   AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
 
-            	   parcel.setLaBaunitLandusetype(landUseTypeDao.getLandUseTypeById(attOptions.getParentid()));
+            	   parcel.setLaBaunitLandusetype(landUseTypeDao.getLandUseTypeBylandusetypeId(attOptions.getParentid()));
 //            	   if(Integer.parseInt(attribute.getValue()) == 16){
 //                   parcel.setLaBaunitLandusetype(landUseTypeDao.getLandUseTypeById(1));
 //            	   }
@@ -1324,7 +1324,7 @@ public class UserDataServiceImpl implements UserDataService {
         	   
         	   AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
 
-        	   parcel.setLaBaunitLandtype(landTypeDao.getLandTypeById(attOptions.getParentid()));
+        	   parcel.setLaBaunitLandtype(landTypeDao.getLandTypeBylandtypeId(attOptions.getParentid()));
         	   
 //        	   if(Integer.parseInt(attribute.getValue()) == 35){
 //                   parcel.setLaBaunitLandtype(landTypeDao.getLandTypeById(1));
@@ -2342,6 +2342,12 @@ public class UserDataServiceImpl implements UserDataService {
 //                spatialUnit.setImei(prop.getImei());
                 
                 setReourcePolygonPropAttibutes(spatialUnit, prop);
+                try {
+					spatialUnit.setArea( Double.parseDouble(new DecimalFormat(".######").format(geomConverter.getArea(prop.getCoordinates()))));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
                 serverPropId = spatialUnitResourcePolygondao.addSpatialUnitResourcePolygon(spatialUnit).getLandid();
                 spatialUnitDao.clear();
