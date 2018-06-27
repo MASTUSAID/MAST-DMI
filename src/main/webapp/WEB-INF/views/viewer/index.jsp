@@ -156,6 +156,10 @@
                                                     type="text/css" media="screen, projection" />
                                   <![endif]-->
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+
+
 <script language="javascript">
                         var roles = "<%=s%>";
                         var token = "<%=token%>";
@@ -664,43 +668,44 @@
 						<div class="sh5"></div>
 						<div class="sh6"></div>
 					</div>
-
-					<table cellspacing="0" cellpadding="0" width="100%">
-						<tr>
-							<td valign="top">
-								<div id="sidebar">
-									<ul>
-										<li><a href="#tabs-LayerManager"> <span id="layermgr">Layer
-													Manager</span>
-										</a></li>
-									</ul>
-									<div id="tabs-LayerManager"></div>
-									<div id="tabs-Tool"></div>
-								</div>
-							</td>
-							<td valign="top" style="width: 100%">
-								<div id="map">
-									<span id="collapse" class="collapse_left"></span> <input
-										type="text" class="markuptexttooltip" id="MarkupTextTooltip"
-										title="" style="display: none" />
-									<div id="baselayer"
-										class="baselayer-b mapbl-buttonset mapbl-buttonset-single"></div>
-									<div id="maptips" class="maptips-s"></div>
-									<span id="bottomcollapse" class="bottom_collapse"></span>
-									<!-- ------------- Vertical Shadow  -->
-									<div id="shadowVer">
-										<div class="sv1"></div>
-										<div class="sv2"></div>
-										<div class="sv3"></div>
-										<div class="sv4"></div>
-										<div class="sv5"></div>
-										<div class="sv6"></div>
+					<div id="map-print">
+						<table cellspacing="0" cellpadding="0" width="100%">
+							<tr>
+								<td valign="top">
+									<div id="sidebar">
+										<ul>
+											<li><a href="#tabs-LayerManager"> <span
+													id="layermgr">Layer Manager</span>
+											</a></li>
+										</ul>
+										<div id="tabs-LayerManager"></div>
+										<div id="tabs-Tool"></div>
 									</div>
-									<div id="bottombar"></div>
-								</div>
-							</td>
-						</tr>
-					</table>
+								</td>
+								<td valign="top" style="width: 100%">
+									<div id="map">
+										<span id="collapse" class="collapse_left"></span> <input
+											type="text" class="markuptexttooltip" id="MarkupTextTooltip"
+											title="" style="display: none" />
+										<div id="baselayer"
+											class="baselayer-b mapbl-buttonset mapbl-buttonset-single"></div>
+										<div id="maptips" class="maptips-s"></div>
+										<span id="bottomcollapse" class="bottom_collapse"></span>
+										<!-- ------------- Vertical Shadow  -->
+										<div id="shadowVer">
+											<div class="sv1"></div>
+											<div class="sv2"></div>
+											<div class="sv3"></div>
+											<div class="sv4"></div>
+											<div class="sv5"></div>
+											<div class="sv6"></div>
+										</div>
+										<div id="bottombar"></div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
 
 				<div id="landresource-div"></div>
@@ -937,6 +942,16 @@
 									onclick="javascript:generateProjectTenureTypesLandUnitsSummaryReport();" />
 								<br />
 							</div>
+							
+							<h3>Liberia Farm Status Report</h3>
+							<div>
+								<br /> <label>Project:</label> <select
+									id="selectProjectsForLiberaFarmSummary"></select> &nbsp;&nbsp; <input
+									type="button" value="Generate" class="btn1"
+									onclick="javascript:generateProjectsForLiberaFarmSummaryReport();" />
+								<br />
+							</div>
+							
 							<h3>Data Correction Report</h3>
 							<div class="filter-details">
 								<form id="formAdjudicationForms" action=""

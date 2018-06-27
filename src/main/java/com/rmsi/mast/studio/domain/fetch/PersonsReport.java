@@ -35,6 +35,8 @@ public class PersonsReport implements Serializable {
 	 
 	 private String educationlevel;
 	 
+	 private String ownertype;
+	 
 
 	public Long getId() {
 		return id;
@@ -118,6 +120,14 @@ public class PersonsReport implements Serializable {
 
 	public String getContact() {
 		return contact;
+	}
+
+	public String getOwnertype() {
+		return ownertype;
+	}
+
+	public void setOwnertype(String ownertype) {
+		this.ownertype = ownertype;
 	}
 
 	public void setContact(String contact) {

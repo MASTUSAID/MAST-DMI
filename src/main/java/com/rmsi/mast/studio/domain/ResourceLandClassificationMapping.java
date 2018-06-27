@@ -43,6 +43,16 @@ public class ResourceLandClassificationMapping implements Serializable {
 	
 	private String geomtype;
 	
+	private Integer categoryid;
+	
+	public Integer getCategoryid() {
+		return categoryid;
+	}
+
+	public void setCategoryid(Integer categoryid) {
+		this.categoryid = categoryid;
+	}
+
 	public ResourceLandClassificationMapping(){
 		
 	}

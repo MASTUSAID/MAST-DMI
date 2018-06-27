@@ -93,4 +93,39 @@ public class LaMortgageHibernatedDao extends GenericHibernateDAO<LaMortgage, Int
 		
 	}
 
+	@Override
+	public LaMortgage getMortgageByLandandTransactionId(Long landId, Integer transactionid) {
+		try{
+			 String strQuery = "select * from la_mortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where  lm.landid= "+landId+" and trans.transactionid="+transactionid+" and trans.processid=3";
+				List<LaMortgage> laMortgage = getEntityManager().createNativeQuery(strQuery,LaMortgage.class).getResultList();
+			if(laMortgage.size()>0){
+			return laMortgage.get(0);
+			}
+			return null;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	@Override
+	public LaMortgage getMortgageByMotgageId(Integer motgageId) {
+        try {
+            Query query = getEntityManager().createQuery("Select lm from LaMortgage lm where lm.mortgageid = :landid");
+            @SuppressWarnings("unchecked")
+            List<LaMortgage> LaMortgageList = query.setParameter("landid", motgageId).getResultList();
+
+            if (LaMortgageList.size() > 0) {
+                return LaMortgageList.get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
+    }
+
 }

@@ -24,6 +24,9 @@ public interface SourceDocumentDAO extends GenericDAO<SourceDocument, Integer> {
     SourceDocument findDocumentByDocumentId(Long documentId);
     
     List<SourceDocument> findSourceDocumentByLandIdandTransactionid(Long id,Integer transactionid);
+    
+    List<SourceDocument> findBatchSourceDocumentByLandIdandTransactionid(Long transactionid);
+
     List<SourceDocument> findSourceDocumentByLandIdAndProessId(Long id,Long processId);
     
 }

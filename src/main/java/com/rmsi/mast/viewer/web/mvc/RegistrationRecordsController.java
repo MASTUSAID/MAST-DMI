@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +42,7 @@ import com.rmsi.mast.studio.domain.IdType;
 import com.rmsi.mast.studio.domain.LaExtFinancialagency;
 import com.rmsi.mast.studio.domain.LaExtPersonLandMapping;
 import com.rmsi.mast.studio.domain.LaExtProcess;
+import com.rmsi.mast.studio.domain.LaExtRegistrationLandShareType;
 import com.rmsi.mast.studio.domain.LaExtTransactionHistory;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaLease;
@@ -63,12 +65,17 @@ import com.rmsi.mast.studio.domain.RelationshipType;
 import com.rmsi.mast.studio.domain.ShareType;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.studio.domain.SourceDocument;
+import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.domain.Status;
 import com.rmsi.mast.studio.domain.User;
+import com.rmsi.mast.studio.domain.fetch.PoiReport;
+import com.rmsi.mast.studio.domain.fetch.SpatialunitPersonwithinterest;
 import com.rmsi.mast.studio.mobile.dao.LandUseTypeDao;
 import com.rmsi.mast.studio.mobile.dao.NaturalPersonDao;
+import com.rmsi.mast.studio.mobile.dao.SpatialUnitPersonWithInterestDao;
 import com.rmsi.mast.studio.service.UserService;
 import com.rmsi.mast.studio.util.FileUtils;
+import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.dao.LaExtTransactiondetailDao;
 import com.rmsi.mast.viewer.dao.LaLeaseDao;
 import com.rmsi.mast.viewer.dao.LaMortgageDao;
@@ -76,6 +83,7 @@ import com.rmsi.mast.viewer.dao.LaMortgageSurrenderDao;
 import com.rmsi.mast.viewer.dao.LaPartyDao;
 import com.rmsi.mast.viewer.dao.LaSurrenderLeaseDao;
 import com.rmsi.mast.viewer.dao.SourceDocumentsDao;
+import com.rmsi.mast.viewer.service.LaExtRegistrationLandShareTypeService;
 import com.rmsi.mast.viewer.service.LandRecordsService;
 import com.rmsi.mast.viewer.service.RegistrationRecordsService;
 
@@ -135,6 +143,12 @@ public class RegistrationRecordsController {
 	
 	@Autowired
 	LaMortgageSurrenderDao laMortgageSurrenderDao;
+	
+	 @Autowired
+	 SpatialUnitPersonWithInterestDao spatialUnitPersonWithInterestDao;
+	 
+	 @Autowired
+	 LaExtRegistrationLandShareTypeService laExtRegistrationLandShareTypeservice;
 	
 
 	@RequestMapping(value = "/viewer/registryrecords/spatialunit/{project}/{startfrom}", method = RequestMethod.GET)
@@ -200,6 +214,15 @@ public class RegistrationRecordsController {
 		return registrationRecordsService.getAllPartyPersonDetails(landid);
 	}
 	
+	
+	@RequestMapping(value = "/viewer/registration/editpartydetails/{transid}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<LaPartyPerson> getAllPartyPersonDetailsByTransactionId(@PathVariable Integer transid) {
+
+		return registrationRecordsService.getAllPartyPersonDetailsByTransactionId(transid);
+	}
+	
+	
 	@RequestMapping(value = "/viewer/registration/partydetails/filldetails/{landid}/{processid}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<LaPartyPerson> fillAllPartyPersonDetails(@PathVariable Integer landid,@PathVariable Integer processid) {
@@ -215,13 +238,29 @@ public class RegistrationRecordsController {
 		
 	}
 	
-	@RequestMapping(value = "/viewer/registration/partydetailssurrenderlease/{landid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewer/registration/partypersondetailssurrenderlease/{landid}", method = RequestMethod.GET)
 	@ResponseBody
 	public LaPartyPerson getPartyPersonDetailssurrenderlease(@PathVariable Integer landid) {
 
 		return registrationRecordsService.getPartyPersonDetailssurrenderlease(landid);
 	}
+	
+	@RequestMapping(value = "/viewer/registration/partydetailssurrenderlease/{landid}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<LaPartyPerson> getPersonDetailssurrenderlease(@PathVariable Integer landid) {
 
+		return registrationRecordsService.getPartyPersonDetailssurrenderleaseList(landid);
+	}
+
+	
+	@RequestMapping(value = "/viewer/registration/editpartydetailssurrenderlease/{landid}/{transid}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<LaPartyPerson> editPartyPersonDetailssurrenderlease(@PathVariable Integer landid, @PathVariable Integer transid) {
+
+		return registrationRecordsService.editPartyPersonDetailssurrenderlease(landid, transid);
+	}
+	
+	
 	// MaritalStatusDao
 
 	@RequestMapping(value = "/viewer/registration/maritalstatus/", method = RequestMethod.GET)
@@ -269,13 +308,19 @@ public class RegistrationRecordsController {
 	
 	@RequestMapping(value = "/viewer/registration/laMortgage/{landid}", method = RequestMethod.GET)
 	@ResponseBody
-	public LaMortgage getLaMortgage(
-			@PathVariable Long landid) {
+	public LaMortgage getLaMortgage(@PathVariable Long landid) {
 
 		return laMortgagedao.getMortgageByLandId(landid);
 	}
 	
 	
+	
+	@RequestMapping(value = "/viewer/registration/editlaMortgage/{landid}/{transid}", method = RequestMethod.GET)
+	@ResponseBody
+	public LaMortgage editLaMortgage(@PathVariable Long landid,@PathVariable Long transid) {
+
+		return laMortgagedao.getMortgageByLandandTransactionId(landid, transid.intValue());
+	}
 	
 	 @RequestMapping(value = "/viewer/registration/relationshiptypes/", method = RequestMethod.GET)
 	 @ResponseBody
@@ -380,33 +425,115 @@ public class RegistrationRecordsController {
 		User userObj = userService.findByUniqueName(username);
 		
 		Long user_id = userObj.getId();
+		String sellerpartyids="";
+		String buyerpartyids="";
 		
 		try {
 			Long processid = ServletRequestUtils.getRequiredLongParameter(request, "registration_process");			
 			landId = ServletRequestUtils.getRequiredLongParameter(request,"landidhide");
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+
 			Long partyId = 0l;
-			SocialTenureRelationship socialTenureRelationshipSellerDetails = registrationRecordsService.getSocialTenureRelationshipForSellerByLandId(landId);
+			List<SocialTenureRelationship> socialTenureRelationshipSellerDetails = registrationRecordsService.getSocialTenureRelationshipListForSellerByLandId(landId);
 			Long sellerPartyId = 0L;
 			Long sellertransid = 0L;
 			Long buyertransid = 0L;
-			if (socialTenureRelationshipSellerDetails != null)
-				sellerPartyId = socialTenureRelationshipSellerDetails.getPartyid();
-				sellertransid = socialTenureRelationshipSellerDetails.getLaExtTransactiondetail().getTransactionid().longValue();
-				
-			SocialTenureRelationship socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdForBuyer(landId,processid);
-				Long buyerPartyId = 0L;
-				if (socialTenureRelationshipBuyerDetails != null)
+			 List<SpatialUnitPersonWithInterest> pois = new ArrayList<>();
+			 List<SpatialUnitPersonWithInterest> obj = spatialUnitPersonWithInterestDao.findByUsin(landId);
+			 
+			 if(socialTenureRelationshipSellerDetails.size()>0 && processid == 7)
 				{
-					buyerPartyId = socialTenureRelationshipBuyerDetails.getPartyid();
-					buyertransid = socialTenureRelationshipBuyerDetails.getLaExtTransactiondetail().getTransactionid().longValue();
+					sellerPartyId = ServletRequestUtils.getRequiredLongParameter(request, "Owner_Elimanated");
+					
+					for(SocialTenureRelationship lmpobj: socialTenureRelationshipSellerDetails){
+						Long sellerPartyIdfromList = lmpobj.getPartyid();
+						Long sellertransidfromList = lmpobj.getLaExtTransactiondetail().getTransactionid().longValue();
+						for(SpatialUnitPersonWithInterest poiobj: obj){
+							if(poiobj.getTransactionid().intValue()==sellertransidfromList.intValue())
+							{
+								poiobj.setIsactive(false);
+								 pois.add(poiobj);
+								 if(editflag==0){
+									spatialUnitPersonWithInterestDao.addNextOfKin(pois, landId);
+								 }
+							}
+						}
+						if(sellerPartyId==sellerPartyIdfromList){
+						if(sellerpartyids.equalsIgnoreCase("")){
+							sellerpartyids= sellerPartyId.toString();
+						}
+						else{
+							sellerpartyids= sellerpartyids+","+sellerPartyId.toString();
+						}
+						if(editflag==0){
+						registrationRecordsService.updateSocialTenureRelationshipByPartyId(sellerPartyId,landId);
+						}
+						}
+						else{
+							
+							if(buyerpartyids.equalsIgnoreCase("")){
+								buyerpartyids= sellerPartyId.toString();
+							}
+							else{
+								buyerpartyids= buyerpartyids+","+sellerPartyId.toString();
+							}
+							
+						}
+					}
+				}
+			 
+			 
+			 if (socialTenureRelationshipSellerDetails.size()>0 && (processid == 2 || processid == 4 || processid == 6)){
+			for(SocialTenureRelationship lmpobj: socialTenureRelationshipSellerDetails){
+				sellerPartyId = lmpobj.getPartyid();
+				sellertransid = lmpobj.getLaExtTransactiondetail().getTransactionid().longValue();
+				for(SpatialUnitPersonWithInterest poiobj: obj){
+					if(poiobj.getTransactionid()==sellertransid.intValue())
+					{
+						poiobj.setIsactive(false);
+						 pois.add(poiobj);
+						 if(editflag==0){
+							spatialUnitPersonWithInterestDao.addNextOfKin(pois, landId);
+						 }
+					}
+				}
+				
+				if(sellerpartyids.equalsIgnoreCase("")){
+					sellerpartyids= sellerPartyId.toString();
+				}
+				else{
+					sellerpartyids= sellerpartyids+","+sellerPartyId.toString();
+				}
+				if(editflag==0){
+				registrationRecordsService.updateSocialTenureRelationshipByPartyId(sellerPartyId,landId);
+				}
+			}
+			 }
+				
+			
+			List<SocialTenureRelationship> socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipListByLandIdForBuyer(landId,processid);
+				Long buyerPartyId = 0L;
+				if (null !=socialTenureRelationshipBuyerDetails && socialTenureRelationshipBuyerDetails.size()>0)
+				{
+					for(SocialTenureRelationship lmpobjbuyer: socialTenureRelationshipBuyerDetails){
+					buyerPartyId = lmpobjbuyer.getPartyid();
+					buyertransid = lmpobjbuyer.getLaExtTransactiondetail().getTransactionid().longValue();
+					
+					if(buyerpartyids.equalsIgnoreCase("")){
+						buyerpartyids= buyerPartyId.toString();
+					}
+					else{
+						buyerpartyids= buyerpartyids+","+buyerPartyId.toString();
+					}
+					if(editflag==0){
+					registrationRecordsService.updateSocialTenureRelationshipByPartytypeId(buyerPartyId,landId);
+					}
+					}
 				}		
 			
 			try
 			{
-				if(processid == 7)
-				{
-					sellerPartyId = ServletRequestUtils.getRequiredLongParameter(request, "Owner_Elimanated");
-				}
+				
 			} 
 			catch (Exception e) 
 			{
@@ -416,15 +543,17 @@ public class RegistrationRecordsController {
 			
 			try 
 			{
+				if(null !=socialTenureRelationshipBuyerDetails && editflag==0){
 				LaExtTransactionHistory latranshist = new LaExtTransactionHistory();		
-				latranshist.setOldownerid(sellerPartyId);
-				latranshist.setNewownerid(buyerPartyId);
+				latranshist.setOldownerid(sellerpartyids);
+				latranshist.setNewownerid(buyerpartyids);
 				latranshist.setLandid(landId);
 				latranshist.setIsactive(true);		
-				latranshist.setTransactionid(socialTenureRelationshipBuyerDetails.getLaExtTransactiondetail().getTransactionid());
+				latranshist.setTransactionid(socialTenureRelationshipBuyerDetails.get(0).getLaExtTransactiondetail().getTransactionid());
 				latranshist.setCreatedby(user_id.intValue());
 				latranshist.setCreateddate(new Date());
 				latranshist = registrationRecordsService.saveTransactionHistory(latranshist);
+				}
 			} 
 			catch (Exception e) 
 			{
@@ -433,11 +562,34 @@ public class RegistrationRecordsController {
 			}
 			
 			
+			try {
+				List<SocialTenureRelationship> socialTenureRelationshipSize = registrationRecordsService.getSocialTenureRelationshipListForSellerByLandId(landId);
+				
+
+				if(null!=socialTenureRelationshipSize){
+					if(socialTenureRelationshipSize.size()==1){
+						laExtRegistrationLandShareTypeservice.updateRegistrationSharetype(6L, landId);
+						
+					
+					}else if(socialTenureRelationshipSize.size()==2){
+						laExtRegistrationLandShareTypeservice.updateRegistrationSharetype(7L, landId);
+						
+					}else if(socialTenureRelationshipSize.size()>2){
+						laExtRegistrationLandShareTypeservice.updateRegistrationSharetype(8L, landId);
+						
+					}
+					
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			
-			registrationRecordsService.updateSocialTenureRelationshipByPartyId(sellerPartyId,landId);
-			registrationRecordsService.updateSocialTenureRelationshipByPartytypeId(buyerPartyId,landId);
 			
-			return socialTenureRelationshipBuyerDetails.getLaExtTransactiondetail().getTransactionid()+"";
+			
+			
+			return "Success";
 		} catch (ServletRequestBindingException e) {
 			e.printStackTrace();
 		}
@@ -645,6 +797,18 @@ public class RegistrationRecordsController {
 			String buyerFirstName = ServletRequestUtils.getRequiredStringParameter(request, "firstname_r_sale1");
 			String buyerMiddleName = ServletRequestUtils.getRequiredStringParameter(request, "middlename_r_sale1");
 			String buyerLastName = ServletRequestUtils.getRequiredStringParameter(request, "lastname_r_sale1");
+			
+			/*String poiFirstName = ServletRequestUtils.getRequiredStringParameter(request, "poi_firstname_r_sale1");
+			String poiMiddleName = ServletRequestUtils.getRequiredStringParameter(request, "poi_middlename_r_sale1");
+			String poiLastName = ServletRequestUtils.getRequiredStringParameter(request, "poi_lastname_r_sale1");
+			int poiGenderId = ServletRequestUtils.getRequiredIntParameter(request, "poi_sale_gender_buyer");
+			int poiRelationid = ServletRequestUtils.getRequiredIntParameter(request, "poi_relation_sale1");
+			String poiDOB = ServletRequestUtils.getRequiredStringParameter(request, "poi_date_Of_birth_sale1");
+			
+			*/
+			
+
+			int personid = ServletRequestUtils.getRequiredIntParameter(request, "personid");
 			int buyerIdTypeid = ServletRequestUtils.getRequiredIntParameter(request, "sale_idtype_buyer");
 			String buyerId = ServletRequestUtils.getRequiredStringParameter(request, "id_r1");
 			String buyerContact_No = ServletRequestUtils.getRequiredStringParameter(request, "contact_no1");
@@ -653,11 +817,12 @@ public class RegistrationRecordsController {
 			String buyerDOBstr = ServletRequestUtils.getRequiredStringParameter(request, "date_Of_birth_sale1");
 			int buyerMaritalStatusId = ServletRequestUtils.getRequiredIntParameter(request, "sale_marital_buyer");
 			String buyerRemarks = ServletRequestUtils.getRequiredStringParameter(request, "remrks_sale");
-			
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
 			Long processid = ServletRequestUtils.getRequiredLongParameter(request, "registration_process");
 			
-			if(processid == 6)
+			if(processid == 6 && editflag==0)
 			{
+				
 				buyerRelationShipId = ServletRequestUtils.getRequiredLongParameter(request, "sale_relation_buyer");
 			}		
 
@@ -682,11 +847,11 @@ public class RegistrationRecordsController {
 			IdType idType = registrationRecordsService.getIDTypeDetailsByID(buyerIdTypeid);
 			
 			SocialTenureRelationship socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdForBuyer(landId,processid);
-			Long buyerPartyId = 0L;
-			if (socialTenureRelationshipBuyerDetails != null)
+			Long buyerPartyId =((Integer) personid).longValue();
+			/*if (socialTenureRelationshipBuyerDetails != null)
 			{
 				buyerPartyId = socialTenureRelationshipBuyerDetails.getPartyid();
-			}
+			}*/
 				
 			if(buyerPartyId ==  0L)
 			{
@@ -704,12 +869,20 @@ public class RegistrationRecordsController {
 				naturalPerson.setAddress(buyerAddress);
 				naturalPerson.setLaPartygroupIdentitytype(idType);
 				naturalPerson.setIdentityno(buyerId);
+				naturalPerson.setOwnertype(2);
+				if(null != socialTenureRelationshipBuyerDetails && (processid==4 || processid==2)){
+					naturalPerson.setOwnertype(2);
+					
+				}else{
+					naturalPerson.setOwnertype(1);
+				}
 				
-				if(processid == 6)
+				if(processid == 6 && editflag==0)
 				{
 					RelationshipType obj = new RelationshipType();
 					obj.setRelationshiptypeid(buyerRelationShipId);
 					naturalPerson.setLaPartygroupRelationshiptype(obj);
+					naturalPerson.setOwnertype(2);
 				}
 				
 				naturalPerson.setLaSpatialunitgroup1(registrationRecordsService.findLaSpatialunitgroupById(1));
@@ -734,9 +907,10 @@ public class RegistrationRecordsController {
 				
 				try
 				{
-					if(processid == 7)
+					if(processid == 7 && editflag==0)
 					{
 						sellerPartyId = ServletRequestUtils.getRequiredLongParameter(request, "Owner_Elimanated");
+						naturalPerson.setOwnertype(2);
 					}
 				} 
 				catch (Exception e) 
@@ -762,22 +936,73 @@ public class RegistrationRecordsController {
 				socialTenureRelationship.setIsactive(true);
 				socialTenureRelationship.setLandid(landId);
 				
+					if(null!=socialTenureRelationshipBuyerDetails){
+							LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+	
+								laExtTransactiondetail.setTransactionid(socialTenureRelationshipBuyerDetails.getLaExtTransactiondetail().getTransactionid());
+								laExtTransactiondetail.setCreatedby(user_id.intValue());
+								laExtTransactiondetail.setCreateddate(new Date());
+								laExtTransactiondetail.setIsactive(true);
+								laExtTransactiondetail.setLaExtApplicationstatus(status);
+								laExtTransactiondetail.setModuletransid(partyId.intValue());
+								laExtTransactiondetail.setRemarks(buyerRemarks);			
+								laExtTransactiondetail.setProcessid(processid);
+									socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
 
-				LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
-				laExtTransactiondetail.setCreatedby(user_id.intValue());
-				laExtTransactiondetail.setCreateddate(new Date());
-				laExtTransactiondetail.setIsactive(true);
-				laExtTransactiondetail.setLaExtApplicationstatus(status);
-				laExtTransactiondetail.setModuletransid(partyId.intValue());
-				laExtTransactiondetail.setRemarks(buyerRemarks);			
-				laExtTransactiondetail.setProcessid(processid);
-
-				socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
+							}else{
+								LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+								laExtTransactiondetail.setCreatedby(user_id.intValue());
+								laExtTransactiondetail.setCreateddate(new Date());
+								laExtTransactiondetail.setIsactive(true);
+								laExtTransactiondetail.setLaExtApplicationstatus(status);
+								laExtTransactiondetail.setModuletransid(partyId.intValue());
+								laExtTransactiondetail.setRemarks(buyerRemarks);			
+								laExtTransactiondetail.setProcessid(processid);
+				
+								socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
+}
 
 				try {
 					
 					socialTenureRelationship = registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
 				// 	registrationRecordsService.updateSocialTenureRelationshipByPartyId(sellerPartyId,landId);
+					
+					 /*List<SpatialUnitPersonWithInterest> pois = new ArrayList<>();
+					 SpatialUnitPersonWithInterest poi = new SpatialUnitPersonWithInterest();
+	                   
+	                        poi.setDob(dateformat.parse(poiDOB));
+	                    
+	                 
+	                        poi.setRelation(poiRelationid);
+	                    
+	                   
+	                        poi.setGender(poiGenderId);
+	                    
+	                  
+	                    
+	                   
+	                    poi.setFirstName(poiFirstName);
+	                    
+	                   
+	                    poi.setMiddleName(poiMiddleName);
+	                    
+	                  
+	                    poi.setLastName(poiLastName);
+	                    poi.setTransactionid(socialTenureRelationship.getLaExtTransactiondetail().getTransactionid());
+	                    
+	                    poi.setCreatedby(user_id.intValue());
+	                    poi.setCreateddate(new Date());
+	                    poi.setLandid(landId);
+//	                    poi.setId(propPoi.getId());
+	                    poi.setIsactive(true);
+	                    pois.add(poi);
+	                
+
+	                if (pois.size() > 0) {
+	                    spatialUnitPersonWithInterestDao.addNextOfKin(pois, landId);
+	                }*/
+					
+					
 					
 				} catch (Exception er) {
 					er.printStackTrace();
@@ -803,7 +1028,7 @@ public class RegistrationRecordsController {
 				naturalPerson.setLaPartygroupIdentitytype(idType);
 				naturalPerson.setIdentityno(buyerId);
 				
-				if(processid == 6)
+				if(processid == 6 && editflag==0)
 				{
 					RelationshipType obj = new RelationshipType();
 					obj.setRelationshiptypeid(buyerRelationShipId);
@@ -832,7 +1057,7 @@ public class RegistrationRecordsController {
 				
 				try
 				{
-					if(processid == 7)
+					if(processid == 7 && editflag==0)
 					{
 						sellerPartyId = ServletRequestUtils.getRequiredLongParameter(request, "Owner_Elimanated");
 					}
@@ -847,6 +1072,36 @@ public class RegistrationRecordsController {
 					
 					naturalPerson.setLaPartygroupPersontype(personType);
 					NaturalPerson naturalPerson2 = registrationRecordsService.saveNaturalPerson(naturalPerson);
+					
+//					Integer buyertransid = socialTenureRelationshipBuyerDetails.getLaExtTransactiondetail().getTransactionid();
+			/*		 List<SpatialUnitPersonWithInterest> pois = new ArrayList<>(); 
+					List<SpatialUnitPersonWithInterest>  poiobj = spatialUnitPersonWithInterestDao.findByUsinandTransid(landId.longValue(), buyertransid.longValue());
+					 if(poiobj.size() != 0){
+						 for (SpatialUnitPersonWithInterest obj: poiobj){
+						 obj.setDob(dateformat.parse(poiDOB));
+		                    
+		                 
+						 obj.setRelation(poiRelationid);
+	                    
+	                   
+						 obj.setGender(poiGenderId);
+	                    
+	                  
+	                    
+	                   
+						 obj.setFirstName(poiFirstName);
+	                    
+	                   
+						 obj.setMiddleName(poiMiddleName);
+	                    
+	                  
+						 obj.setLastName(poiLastName);
+						 pois.add(obj);
+						 if (pois.size() > 0) {
+			                    spatialUnitPersonWithInterestDao.addNextOfKin(pois, landId);
+			                }
+						 }
+					 }*/
 					partyId = naturalPerson2.getPartyid();
 				} catch (Exception er) {
 					er.printStackTrace();
@@ -872,6 +1127,10 @@ public class RegistrationRecordsController {
 			Long landId = 0L;
 			LaLease leaseeobj = null;
 			NaturalPerson naturalPerson = null;
+			Integer transactionId=0;
+			Integer leaseepersonid=0;
+			
+			List<LaLease> leaseeobjList=null;
 			LaExtTransactiondetail laExtTransactiondetail  = null;
 			String firstName = ServletRequestUtils.getRequiredStringParameter(request, "firstname_r_applicant");
 			String middlename = ServletRequestUtils.getRequiredStringParameter(request, "middlename_r_applicant");
@@ -883,8 +1142,17 @@ public class RegistrationRecordsController {
 			String address = ServletRequestUtils.getRequiredStringParameter(request, "address_lease_applicant");
 			String date_Of_birth = ServletRequestUtils.getRequiredStringParameter(request,"date_Of_birth_applicant");
 			int martialId = ServletRequestUtils.getRequiredIntParameter(request, "martial_sts_applicant");
+			Integer personId = ServletRequestUtils.getRequiredIntParameter(request, "leaseeperson");
 
 			String remrks_lease = ServletRequestUtils.getRequiredStringParameter(request,"remrks_lease");
+			
+			
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+			if(editflag==1){
+				 leaseepersonid = ServletRequestUtils.getRequiredIntParameter(request, "leaseeperson");
+				 transactionId = ServletRequestUtils.getRequiredIntParameter(request, "transactionId");
+				}
+
 			
 //			int no_Of_month_Lease = ServletRequestUtils.getRequiredIntParameter(request,"no_Of_month_Lease");
 //			Double lease_Amount = ServletRequestUtils.getRequiredDoubleParameter(request,"lease_Amount");
@@ -917,12 +1185,53 @@ public class RegistrationRecordsController {
 				
 			MaritalStatus maritalStatus = registrationRecordsService.getMaritalStatusByID(martialId);
 			IdType idType = registrationRecordsService.getIDTypeDetailsByID(id_type);
+			if(editflag==1){
+			 leaseeobjList = laLeaseDao.getleaseeListByLandandPersonId(landId,leaseepersonid.longValue());
+			}
+			else if(editflag==0 && personId==0){
+				 leaseeobjList = laLeaseDao.getleaseeListByLandId(landId);
+			}
+			 
+			if(personId!=0){
+				 leaseeobjList = laLeaseDao.getleaseeListByLandandPersonId(landId,personId.longValue());
+			}
+//			
 			
-			
-			List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landId);
-				if(leaseeobjList.size() > 0){
+				if(leaseeobjList.size() > 0 && leaseepersonid != 0){
 					leaseeobj= leaseeobjList.get(0);
-					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseeobj.getPersonid());
+//					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseeobj.getPersonid());
+					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseepersonid.longValue());
+
+					 
+					 
+					    naturalPerson.setContactno(contact_no);
+						naturalPerson.setDateofbirth(dateOfBirth);
+						naturalPerson.setFirstname(firstName);
+						naturalPerson.setMiddlename(middlename);
+						naturalPerson.setLastname(lastname);
+						naturalPerson.setGenderid(genderId);
+						naturalPerson.setLaPartygroupMaritalstatus(maritalStatus);
+						naturalPerson.setAddress(address);
+						naturalPerson.setLaPartygroupIdentitytype(idType);
+						naturalPerson.setIdentityno(id);
+						
+						try {
+							
+							naturalPerson = registrationRecordsService.saveNaturalPerson(naturalPerson);
+//							NaturalPerson naturalPerson2 = registrationRecordsService.saveNaturalPerson(naturalPerson);
+//							partyId = naturalPerson2.getPartyid();
+						} catch (Exception er) {
+							er.printStackTrace();
+							return null;
+						}
+					
+						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
+				}
+				else if(leaseeobjList.size() > 0 && personId != 0){
+					leaseeobj= leaseeobjList.get(0);
+//					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseeobj.getPersonid());
+					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(personId.longValue());
+
 					 
 					 
 					    naturalPerson.setContactno(contact_no);
@@ -949,7 +1258,7 @@ public class RegistrationRecordsController {
 						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
 				}
 			
-				else if(leaseeobjList.size() == 0){
+				else if(leaseeobjList.size() >= 0 && personId==0){
 			
 			 naturalPerson = new NaturalPerson();
 			naturalPerson.setContactno(contact_no);
@@ -1043,9 +1352,13 @@ public class RegistrationRecordsController {
 			laExtTransactiondetail.setModuletransid(leaseeobj.getLeaseid());
 			
 			laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+		
 				}
-
+if(null!=laExtTransactiondetail){
 			return laExtTransactiondetail.getTransactionid().toString();
+}else{
+	return "sucess";
+}
 		} catch (Exception e) {
 			logger.error(e);
 		}
@@ -1058,6 +1371,7 @@ public class RegistrationRecordsController {
 	public String saveSurrenderLeasedata(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 		LaExtTransactiondetail laExtTransactiondetail =null;
 		LaSurrenderLease laLease =null;
+		Integer transactionId=0;
 		try {
 			Long landId = 0L;
 			/*String firstName = ServletRequestUtils.getRequiredStringParameter(request, "firstname_r_applicant");
@@ -1080,7 +1394,11 @@ public class RegistrationRecordsController {
 			String Start_date_Lease = ServletRequestUtils.getRequiredStringParameter(request, "Start_date_Lease");
 			String End_date_Lease = ServletRequestUtils.getRequiredStringParameter(request, "End_date_Lease");
 			String surrenderreason = ServletRequestUtils.getRequiredStringParameter(request, "surrender_reason");
-			
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+			if(editflag==1){
+			 transactionId = ServletRequestUtils.getRequiredIntParameter(request, "transactionId");
+			}
+
 			DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 			Date startDate = null;
 			try 
@@ -1124,7 +1442,13 @@ public class RegistrationRecordsController {
 			Long user_id = userObj.getId();
 			
 				try{
+					if(editflag==0){
 			 laLease = laSurrenderLeaseDao.getSurrenderleaseByLandandProcessId(landId, 5L);
+					}
+					else if(editflag==1){
+			 
+			 laLease = laSurrenderLeaseDao.getSurrenderleaseByLandandTransId(landId,transactionId);
+					}
 				}
 				catch (Exception e){
 					e.printStackTrace();
@@ -1141,6 +1465,7 @@ public class RegistrationRecordsController {
 			laLease.setLeaseenddate(endDate);
 			laLease.setSurrenderreason(surrenderreason);
 			laLease = registrationRecordsService.savesurrenderLease(laLease);
+			laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(laLease.getLeaseid().longValue());
 		}else{
 			
 			Long ownerid = 0L;
@@ -1211,7 +1536,7 @@ public class RegistrationRecordsController {
 			LaExtTransactiondetail laExtTransactiondetail = null;
 			String username = principal.getName();
 			User userObj = userService.findByUniqueName(username);
-			
+			Integer transactionId=0;
 			Long user_id = userObj.getId();
 			
 			int financial_AgenciesID = ServletRequestUtils.getRequiredIntParameter(request, "mortgage_Financial_Agencies");
@@ -1219,7 +1544,12 @@ public class RegistrationRecordsController {
 			String mortgage_to = ServletRequestUtils.getRequiredStringParameter(request, "mortgage_to");
 			Double amount_mortgage = ServletRequestUtils.getRequiredDoubleParameter(request, "amount_mortgage");
 			String remrks_mortgage = ServletRequestUtils.getRequiredStringParameter(request, "remrks_mortgage");
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+			if(editflag==1){
+			 transactionId = ServletRequestUtils.getRequiredIntParameter(request, "transactionId");
+			}
 
+			
 			landId = ServletRequestUtils.getRequiredLongParameter(request,"landidhide");
 			
 			Status status = registrationRecordsService.getStatusById(1);
@@ -1241,10 +1571,16 @@ public class RegistrationRecordsController {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			
+			if(editflag==0){
 			 laMortgage= laMortgagedao.getMortgageByLandId(landId);
+			}
+			else if(editflag==1){
+				laMortgage= laMortgagedao.getMortgageByLandandTransactionId(landId,transactionId);
+				 
+			}
 			 
-			 if(null != laMortgage){
+			 
+			 if(null != laMortgage && editflag==0){
 				 laMortgage.setMortgagefrom(mortgage_fromDate);
 				 laMortgage.setMortgageto(mortgage_toDate);
 				 laMortgage.setMortgageamount(amount_mortgage);
@@ -1254,6 +1590,21 @@ public class RegistrationRecordsController {
 				 laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(laMortgage.getMortgageid().longValue());
 				 laExtTransactiondetail.setLaExtApplicationstatus(status);
 				 laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+				 
+			 }
+			 else if(null != laMortgage && editflag==1){
+
+				 laMortgage.setMortgagefrom(mortgage_fromDate);
+				 laMortgage.setMortgageto(mortgage_toDate);
+				 laMortgage.setMortgageamount(amount_mortgage);
+				  laExtFinancialagency = registrationRecordsService.getFinancialagencyByID(financial_AgenciesID);
+				 laMortgage.setLaExtFinancialagency(laExtFinancialagency);
+				 laMortgage = registrationRecordsService.saveMortgage(laMortgage);
+				 /*laExtTransactiondetail = transactionDao.getpoiByLeaseeid(laMortgage.getMortgageid().longValue());
+				 laExtTransactiondetail.setLaExtApplicationstatus(status);
+				 laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);*/
+				 
+			 
 				 
 			 }
 			 else if(null == laMortgage){
@@ -1304,8 +1655,13 @@ public class RegistrationRecordsController {
 			
 			laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
 			 }
+			 if(null!=laExtTransactiondetail){
 
 			return laExtTransactiondetail.getTransactionid().toString();
+			 }
+			 else{
+				 return "Success";
+			 }
 		} catch (Exception e) {
 			logger.error(e);
 		}
@@ -1708,7 +2064,7 @@ public class RegistrationRecordsController {
 		Integer projectId=0;
 		Integer communeId =0;
 		String parce_id="";
-		   
+		long _transactionid =0l;
 		
 		 try {
       	   communeId = ServletRequestUtils.getRequiredIntParameter(request, "community_id_R");
@@ -1736,10 +2092,14 @@ public class RegistrationRecordsController {
 			e.printStackTrace();
 		}
 
-		 
+		 if(!transactionid.equals("")){
+			 _transactionid = Long.parseLong(transactionid.trim());
+		 }else{
+			 _transactionid =0l;
+		 }
 		 
 		try {
-			return registrationRecordsService.search( Long.parseLong(transactionid.trim()),startfrom,projectId+"",communeId+"",parce_id);
+			return registrationRecordsService.search( _transactionid,startfrom,projectId+"",communeId+"",parce_id);
 		} catch (Exception e) {
 			logger.error(e);
 			return null;
@@ -1756,7 +2116,7 @@ public class RegistrationRecordsController {
 		Integer projectId=0;
 		Integer communeId =0;
 		String parce_id="";
-		
+		long _transactionid =0l;
 		 try {
 			 transactionid = ServletRequestUtils.getRequiredStringParameter(request, "usinstr_id_R");
          } catch (Exception e) {
@@ -1783,8 +2143,14 @@ public class RegistrationRecordsController {
 			e.printStackTrace();
 		}
 		
+		 if(!transactionid.equals("")){
+			 _transactionid = Long.parseLong(transactionid.trim());
+		 }else{
+			 _transactionid =0l;
+		 }
+		 
 		try {
-			return registrationRecordsService.searchCount( Long.parseLong(transactionid.trim()),startfrom,projectId+"",communeId+"",parce_id);
+			return registrationRecordsService.searchCount( _transactionid,startfrom,projectId+"",communeId+"",parce_id);
 		} catch (Exception e) {
 			logger.error(e);
 			return null;
@@ -1960,7 +2326,7 @@ public class RegistrationRecordsController {
 		 LaMortgage laMortgage=null;
 		 LaSurrenderMortgage lasurrenderMortgage=null;
 		 LaSurrenderLease lasurenderleaseobj = null;
-
+		 Integer transactionId = 0;
 		Integer persontypeId =0;
 
 		try {
@@ -1976,13 +2342,24 @@ public class RegistrationRecordsController {
 			Long user_id = userObj.getId();
 			landId = ServletRequestUtils.getRequiredStringParameter(request, "landidhide");
 			processid = ServletRequestUtils.getRequiredIntParameter(request, "processidhide");
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+			if(editflag==1){
+			transactionId = ServletRequestUtils.getRequiredIntParameter(request, "transactionId");
+			}
+
 			
 			if(processid == 1){
 				persontypeId=1;
 			 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_Lease");
 			 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_Lease");
 			 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_Lease");
+			 if(editflag==0){
 			  leaseeobjList = laLeaseDao.getleaseeListByLandId(Long.parseLong(landId));
+			 }
+			 else if (editflag==1){
+				 laExtTransactiondetail = transactionDao.getLaExtTransactiondetail(transactionId);
+				 leaseeobjList.add(laLeaseDao.getLeaseById(laExtTransactiondetail.getModuletransid()));
+			 }
 				
 			}
 			else if(processid == 2){
@@ -1990,52 +2367,89 @@ public class RegistrationRecordsController {
 				 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_sale");
 				 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_sale");
 				 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_sale");
+				 if(editflag==0){
 				 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
+				 }
+				 else if(editflag==1){
+					 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByTransactionId(transactionId.longValue());
+				 }
 				}
 			else if(processid == 3){
 				persontypeId=1;
 				 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_mortgage");
 				 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_mortgage");
 				 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_mortgage");
-				 laMortgage= laMortgagedao.getMortgageByLandId(Long.parseLong(landId));
+				 if(editflag==0){
+					 laMortgage= laMortgagedao.getMortgageByLandId(Long.parseLong(landId));
+					 }
+					 else if (editflag==1){
+						 laExtTransactiondetail = transactionDao.getLaExtTransactiondetail(transactionId);
+						 laMortgage= laMortgagedao.getMortgageByMotgageId(laExtTransactiondetail.getModuletransid());
+					 }
+				 
 				}
 			else if(processid == 4){
 				persontypeId=11;
 				 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_sale");
 				 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_sale");
 				 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_sale");
-				 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
-
+				 if(editflag==0){
+					 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
+					 }
+					 else if(editflag==1){
+						 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByTransactionId(transactionId.longValue());
+					 }
 				}
 			else if(processid == 5){
 				persontypeId=1;
 				 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_Lease");
 				 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_Lease");
 				 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_Lease");
+				 if(editflag==0){
 				 lasurenderleaseobj= laSurrenderLeaseDao.getSurrenderleaseByLandandProcessId(Long.parseLong(landId), processid.longValue());
-				}
+				 		}
+				 else if(editflag==1){
+					 laExtTransactiondetail = transactionDao.getLaExtTransactiondetail(transactionId);
+					 lasurenderleaseobj= laSurrenderLeaseDao.getObjbySurrenderLeaseeId(laExtTransactiondetail.getModuletransid());
+				 }
+					}
 			else if(processid == 6){
 				persontypeId=11;
 				 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_sale");
 				 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_sale");
 				 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_sale");
-				 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
-
+				 if(editflag==0){
+					 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
+					 }
+					 else if(editflag==1){
+						 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByTransactionId(transactionId.longValue());
+					 }
 				}
 			else if(processid == 7){
 				persontypeId=11;
 				 doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_sale");
 				 doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_sale");
 				 doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_sale");
-				 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
-
+				 if(editflag==0){
+					 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(Long.parseLong(landId),processid.longValue(),persontypeId);
+					 }
+					 else if(editflag==1){
+						 socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByTransactionId(transactionId.longValue());
+					 }
 				}
 			else if(processid == 9){
 				persontypeId=1;
 				doc_name = ServletRequestUtils.getRequiredStringParameter(request, "doc_name_mortgage");
 				doc_desc = ServletRequestUtils.getRequiredStringParameter(request, "doc_desc_mortgage");
 				doc_date = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_mortgage");
-				lasurrenderMortgage= lasurrenderMortgagedao.getMortgageByLandIdandprocessId(Long.parseLong(landId),processid.longValue());
+				if(editflag==0){
+					lasurrenderMortgage= lasurrenderMortgagedao.getMortgageByLandIdandprocessId(Long.parseLong(landId),processid.longValue());
+				}
+				else if (editflag==1){
+					 laExtTransactiondetail = transactionDao.getLaExtTransactiondetail(transactionId);
+						lasurrenderMortgage= lasurrenderMortgagedao.getMortgageBysurMortgageId(laExtTransactiondetail.getModuletransid());
+
+				}
 			}
 			
 			
@@ -2097,6 +2511,7 @@ public class RegistrationRecordsController {
 				}
 				else if(null!= lasurenderleaseobj){
 					laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeidForSurrenderLease(lasurenderleaseobj.getLeaseid().longValue());
+					
 					laParty = registrationRecordsService.getLaPartyById(lasurenderleaseobj.getOwnerid());
 					sourceDocument.setLaParty(laParty);
 					sourceDocument.setLaExtTransactiondetail(laExtTransactiondetail);
@@ -2217,7 +2632,7 @@ public class RegistrationRecordsController {
 		try{
 
 			SocialTenureRelationship socialTenureRelationshipBuyerDetails = registrationRecordsService.getSocialTenureRelationshipByLandIdandTypeId(landid,processId,persontypeId); //landid,2l,11
-			 LaLease leaseeobjList = laLeaseDao.getleaseobjbylandandprocessid(landid,processId);
+			 List<LaLease> leaseeobjList = laLeaseDao.getleaseobjbylandandprocessidList(landid,processId);
 			 LaMortgage laMortgageobj = laMortgagedao.getMortgageByLandIdandprocessId(landid,processId);
 			 LaSurrenderMortgage lasurrenderMortgageobj = lasurrenderMortgagedao.getMortgageByLandIdandprocessId(landid,processId);
 			LaSurrenderLease lasurenderleaseobj= laSurrenderLeaseDao.getSurrenderleaseByLandandProcessId(landid, processId);
@@ -2236,10 +2651,20 @@ public class RegistrationRecordsController {
 			if(processId == 1)
 			{
 				if(null != leaseeobjList){
-					LaExtTransactiondetail laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobjList.getLeaseid().longValue());
-					transId = laExtTransactiondetail.getTransactionid();
+					for(LaLease obj:leaseeobjList){
+					LaExtTransactiondetail laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(obj.getLeaseid().longValue());
+					if(null!=laExtTransactiondetail){
+						transId = laExtTransactiondetail.getTransactionid();
 					lstSourceDocument=	sourceDocumentDAO.findSourceDocumentByLandIdandTransactionid(landid, transId);
-					return lstSourceDocument;
+					if(lstSourceDocument.size()>0){
+						return lstSourceDocument;
+					}
+					             }
+					}
+					if(lstSourceDocument.size()==0){
+						return null;
+					}
+					
 				}
 			}
 			
@@ -2274,6 +2699,37 @@ public class RegistrationRecordsController {
 			}
 			
 			return null;
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		
+	}
+	
+	
+	
+	
+	@RequestMapping(value = "/viewer/registryrecords/editDocuments/{landid}/{transid}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<SourceDocument> editDocument(@PathVariable Long landid,@PathVariable Integer transid) {
+		List<SourceDocument>lstSourceDocument = new ArrayList<SourceDocument>();
+		
+		try{
+					
+					lstSourceDocument=	sourceDocumentDAO.findSourceDocumentByLandIdandTransactionid(landid, transid);
+			
+			
+			if(lstSourceDocument.size()>0){
+				
+				return lstSourceDocument;
+			}
+			else{
+				
+				return null;
+			}
 			
 			
 		}catch(Exception e){
@@ -2319,13 +2775,22 @@ public class RegistrationRecordsController {
 			Long landId = 0L;
 			LaLease leaseeobj = null;
 			LaExtTransactiondetail laExtTransactiondetail  = null;
-		
+			List<LaLease> leaseeobjList =null;
+			Integer transactionId=0;
+			Integer leaseepersonid=0;
 			
 			int no_Of_month_Lease = ServletRequestUtils.getRequiredIntParameter(request,"no_Of_month_Lease");
 			Double lease_Amount = ServletRequestUtils.getRequiredDoubleParameter(request,"lease_Amount");
 			landId = ServletRequestUtils.getRequiredLongParameter(request,"landidhide");
 			String Start_date_Lease = ServletRequestUtils.getRequiredStringParameter(request, "Start_date_Lease");
 			String End_date_Lease = ServletRequestUtils.getRequiredStringParameter(request, "End_date_Lease");
+			Integer personId = ServletRequestUtils.getRequiredIntParameter(request, "leaseeperson");
+			
+			Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+			if(editflag==1){
+				 leaseepersonid = ServletRequestUtils.getRequiredIntParameter(request, "leaseeperson");
+				transactionId = ServletRequestUtils.getRequiredIntParameter(request, "transactionId");
+			}
 
 			DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 			Date startDate = null;
@@ -2352,8 +2817,16 @@ public class RegistrationRecordsController {
 			
 			
 			La_Month laMonth = registrationRecordsService.getLaMonthById(no_Of_month_Lease);
-			List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landId);
-				if(leaseeobjList.size() > 0){
+			if(editflag==1){
+			 leaseeobjList = laLeaseDao.getleaseeListByLandandPersonId(landId,leaseepersonid.longValue());
+			}
+			else if(personId !=0){
+				leaseeobjList = laLeaseDao.getleaseeListByLandandPersonId(landId,personId.longValue());
+			}
+			else if(editflag==0 && personId==0 && leaseepersonid==0){
+			 leaseeobjList = laLeaseDao.getleaseeListByLandId(landId);
+			}
+				if(leaseeobjList.size() > 0  && leaseepersonid!=0){
 					leaseeobj= leaseeobjList.get(0);
 					leaseeobj.setLa_Month(laMonth);
 					leaseeobj.setLeaseamount(lease_Amount);
@@ -2364,11 +2837,39 @@ public class RegistrationRecordsController {
 					
 						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
 				}
-				else{
+				else if(leaseeobjList.size() > 0  && personId!=0){
+					leaseeobj= leaseeobjList.get(0);
+					leaseeobj.setLa_Month(laMonth);
+					leaseeobj.setLeaseamount(lease_Amount);
+					leaseeobj.setLeaseyear(year);//no_Of_years_Lease
+					leaseeobj.setLeasestartdate(startDate);
+					leaseeobj.setLeaseenddate(endDate);
+					leaseeobj = registrationRecordsService.saveLease(leaseeobj);
 					
+						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
 				}
-
+				else if(leaseeobjList.size() > 0 && personId==0 && leaseepersonid==0)
+				{
+					for(LaLease leaseeobjall:leaseeobjList){
+					leaseeobjall.setLa_Month(laMonth);
+					leaseeobjall.setLeaseamount(lease_Amount);
+					leaseeobjall.setLeaseyear(year);//no_Of_years_Lease
+					leaseeobjall.setLeasestartdate(startDate);
+					leaseeobjall.setLeaseenddate(endDate);
+					leaseeobjall = registrationRecordsService.saveLease(leaseeobjall);
+					}
+					
+						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobjList.get(0).getLeaseid().longValue());
+					
+				}else{
+					
+					return "success";
+				}
+				if(null != laExtTransactiondetail){
 			return laExtTransactiondetail.getTransactionid().toString();
+				}else{
+					return "Success";
+				}
 		} catch (Exception e) {
 			logger.error(e);
 		}
@@ -2383,7 +2884,7 @@ public class RegistrationRecordsController {
 
 		try {
 			Long landId = 0L;
-			LaLease leaseeobj = null;
+			
 			LaExtTransactiondetail laExtTransactiondetail  = null;
 		
 			
@@ -2401,12 +2902,14 @@ public class RegistrationRecordsController {
 //			La_Month laMonth = registrationRecordsService.getLaMonthById(no_Of_month_Lease);
 			List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landId);
 				if(leaseeobjList.size() > 0){
-					leaseeobj = leaseeobjList.get(0);
+					
+					for(LaLease leaseeobj:leaseeobjList){
 					
 						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
 						Status status = registrationRecordsService.getStatusById(2);
 						laExtTransactiondetail.setLaExtApplicationstatus(status);
 						laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+					}
 				}
 				else{
 					
@@ -2714,7 +3217,17 @@ public class RegistrationRecordsController {
 					Status status = registrationRecordsService.getStatusById(2);
 					laExtTransactiondetail.setLaExtApplicationstatus(status);
 					laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
-					registrationRecordsService.disablelease(lapartydetail.getPersonid(),landId);
+					List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landId);
+					if(leaseeobjList.size() > 0){
+						
+						for(LaLease leaseeobj:leaseeobjList){
+						
+							laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
+							registrationRecordsService.disablelease(leaseeobj.getPersonid(),landId);
+						}
+					}
+					
+					
 			}
 			
 				return laExtTransactiondetail.getTransactionid().toString();
@@ -2733,12 +3246,13 @@ public class RegistrationRecordsController {
 
 			try {
 				Long landId = 0L;
+				LaMortgage mortgageobj =null;
 				LaSurrenderMortgage laMortgage = null;
 				LaExtFinancialagency laExtFinancialagency = null;
 				LaExtTransactiondetail laExtTransactiondetail = null;
 				String username = principal.getName();
 				User userObj = userService.findByUniqueName(username);
-				
+				Integer transactionId=0;
 				Long user_id = userObj.getId();
 				
 				int financial_AgenciesID = ServletRequestUtils.getRequiredIntParameter(request, "mortgage_Financial_Agencies");
@@ -2746,7 +3260,11 @@ public class RegistrationRecordsController {
 				String mortgage_to = ServletRequestUtils.getRequiredStringParameter(request, "mortgage_to");
 				Double amount_mortgage = ServletRequestUtils.getRequiredDoubleParameter(request, "amount_mortgage");
 				String mortgagesurrender_reason = ServletRequestUtils.getRequiredStringParameter(request, "mortgagesurrender_reason");
-
+				Integer editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+				if(editflag==1){
+				 transactionId = ServletRequestUtils.getRequiredIntParameter(request, "transactionId");
+				}
+				
 				landId = ServletRequestUtils.getRequiredLongParameter(request,"landidhide");
 				
 				Status status = registrationRecordsService.getStatusById(1);
@@ -2773,8 +3291,15 @@ public class RegistrationRecordsController {
 				
 				
 				
-				 LaMortgage mortgageobj= laMortgagedao.getMortgageByLandId(landId);
-				 laMortgage = laMortgageSurrenderDao.getMortgageByLandIdandprocessId(landId, 9L);
+				
+				 if(editflag==1){
+					 laMortgage = laMortgageSurrenderDao.getMortgageByLandIdandTransId(landId,transactionId);
+				 }
+				 else if(editflag==0){
+					  mortgageobj= laMortgagedao.getMortgageByLandId(landId);
+					 laMortgage = laMortgageSurrenderDao.getMortgageByLandIdandprocessId(landId, 9L);
+					 
+				 }
 				 
 				 if(null != laMortgage){
 					 laMortgage.setMortgagefrom(mortgage_fromDate);
@@ -2940,5 +3465,326 @@ public class RegistrationRecordsController {
 	  }
 	  
 	  
+	  
+	  @RequestMapping(value = "/viewer/registrion/addLeaseePoi/{landid}", method = RequestMethod.GET)
+		@ResponseBody
+		public String getLeaseeObject(@PathVariable Long landid) {
+			
+	  
+		  List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landid);
+	  if(null  != leaseeobjList){
+	  return "true";
+	  }
+	  else {
+		  return "Save the leasee details first to add Poi's";
+	  }
+	  }
+	  
+	  
+	  
+	  @RequestMapping(value = "/viewer/landrecords/landPOILeasee/{landid}", method = RequestMethod.GET)
+	  @ResponseBody
+	  public List<SpatialUnitPersonWithInterest> getLeaseeObjectJsGrid(@PathVariable Long landid) {
+				
+		  
+		  LaExtTransactiondetail laExtTransactiondetail = null;
+		  List<SpatialUnitPersonWithInterest> poiObject = null;
+		  
+			  List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landid);
+			  if(leaseeobjList.size()>0){
+				  	laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobjList.get(0).getLeaseid().longValue());
+				  	
+				  	if(null != laExtTransactiondetail && laExtTransactiondetail.getLaExtApplicationstatus().getWorkflowStatusId()==1){
+				  		
+				  		poiObject = spatialUnitPersonWithInterestDao.findByUsinandTransid(landid, laExtTransactiondetail.getTransactionid().longValue());
+				  		
+				  		return poiObject;
+				  	}
 
+			  }
+			  
+			  return null;
+		 
+		  }
+	  
+	  @RequestMapping(value = "/viewer/registration/saveRegPersonOfInterestForLeasee/{landId}", method = RequestMethod.POST)
+	    @ResponseBody
+	    public SpatialUnitPersonWithInterest saveRegPersonOfInterestForEditing(HttpServletRequest request, @PathVariable Long landId, Principal principal) {
+	        
+	    	SpatialUnitPersonWithInterest personinterest =null;
+	    	Date date1 =null;
+	    	try {
+	        	Integer PoiId =0;
+	        	Integer genderid =0;
+	        	Integer realtionid =0;
+	        	String dateofbirth ="";
+	        	String firstname ="";
+	        	String middlename ="";
+	        	String lastname ="";
+	        	Integer genderidlease =0;
+	        	Integer realtionidlease =0;
+	        	String dateofbirthlease ="";
+	        	String firstnamelease ="";
+	        	String middlenamelease ="";
+	        	String lastnamelease ="";
+	        	Integer transactionId=0;
+	        	Integer editflag=0;
+	        	
+	        	
+	        	
+				try{firstnamelease =  ServletRequestUtils.getRequiredStringParameter(request, "firstname_r_poi");}catch(Exception e){}
+				try{middlenamelease =ServletRequestUtils.getRequiredStringParameter(request, "middlename_r_poi");}catch(Exception e){}
+				try{lastnamelease =ServletRequestUtils.getRequiredStringParameter(request, "lastname_r_poi");}catch(Exception e){}
+				try{genderidlease =ServletRequestUtils.getRequiredIntParameter(request, "gender_type_POI");}catch(Exception e){}
+				try{realtionidlease= ServletRequestUtils.getRequiredIntParameter(request, "Relationship_POI");}catch(Exception e){}
+				try{dateofbirthlease=ServletRequestUtils.getRequiredStringParameter(request, "date_Of_birthPOI");}catch(Exception e){}
+				try{firstname =  ServletRequestUtils.getRequiredStringParameter(request, "firstname_sale_poi");}catch(Exception e){}
+				try{middlename =ServletRequestUtils.getRequiredStringParameter(request, "middlename_sale_poi");}catch(Exception e){}
+				try{lastname =ServletRequestUtils.getRequiredStringParameter(request, "lastname_sale_poi");}catch(Exception e){}
+				try{genderid =ServletRequestUtils.getRequiredIntParameter(request, "gender_sale_POI");}catch(Exception e){}
+				try{realtionid= ServletRequestUtils.getRequiredIntParameter(request, "Relationship_POI_sale");}catch(Exception e){}
+				try{dateofbirth=ServletRequestUtils.getRequiredStringParameter(request, "date_Of_birthPOI_sale");}catch(Exception e){}
+				try{PoiId=ServletRequestUtils.getRequiredIntParameter(request, "leaseepoiid");}catch(Exception e){}
+				 editflag = ServletRequestUtils.getRequiredIntParameter(request, "editflag");
+				if(dateofbirth != ""){
+					
+					
+						     date1 = new SimpleDateFormat("YYYY-MM-DD").parse(dateofbirth);
+	    		
+	    		
+//				 date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
+				}
+				
+				if(dateofbirthlease != ""){
+					
+					
+						     date1 = new SimpleDateFormat("YYYY-MM-DD").parse(dateofbirthlease);
+	    		
+	    		
+//				 date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
+				}
+				List<SpatialUnitPersonWithInterest> poiList = new ArrayList<SpatialUnitPersonWithInterest>();
+				 LaExtTransactiondetail laExtTransactiondetail = null;
+				  List<SpatialUnitPersonWithInterest> poiObject = null;
+				  if(editflag==0){
+					  LaLease leaseeobjList = laLeaseDao.getleaseeListByLandId(landId).get(0);
+					  if(null != leaseeobjList){
+						  	laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobjList.getLeaseid().longValue());
+						  	
+						  
+
+					  }
+				  }
+					  
+					  if(editflag==1){
+						  transactionId=landId.intValue();
+					  }
+					
+				personinterest = spatialUnitPersonWithInterestDao.findSpatialUnitPersonWithInterestById(PoiId.longValue());
+	        	
+				if(null ==personinterest){
+	            	personinterest = new SpatialUnitPersonWithInterest();
+	            	 if(! firstname.equalsIgnoreCase("")){
+	     	            personinterest.setFirstName(firstname);
+	     	            	  }
+	     	            	  if(! middlename.equalsIgnoreCase("")){
+	     	            personinterest.setMiddleName(middlename);
+	     	            	  }
+	     	            	  if(! lastname.equalsIgnoreCase("")){
+	     	            personinterest.setLastName(lastname);
+	     	            	  }
+	     	            	  if(null!=date1){
+	     	            personinterest.setDob(date1);
+	     	            	  }
+	     	            	  if(genderid !=0){
+	     	            personinterest.setGender(genderid);
+	     	            	  }if(realtionid !=0){
+	     	            personinterest.setRelation(realtionid);
+	     	            	  }
+	                 
+	                 if(! firstnamelease.equalsIgnoreCase("")){
+	                	 personinterest.setFirstName(firstnamelease);
+	                 }
+	                 if(! middlenamelease.equalsIgnoreCase("")){
+	                	 personinterest.setMiddleName(middlenamelease);
+	                 }
+	                 if(! lastnamelease.equalsIgnoreCase("")){
+	                	 personinterest.setLastName(lastnamelease);
+	                 }
+	                 if(genderidlease !=0){
+	                	 personinterest.setGender(genderidlease);
+	                 }
+	                 if(realtionidlease !=0){
+	                	 personinterest.setRelation(realtionidlease);
+	                 }
+	                 if(null!=date1){
+	                 personinterest.setDob(date1);
+	                 }
+	                 
+	 	           personinterest.setLandid(landId);
+	 	          personinterest.setCreatedby(1);
+	 	         personinterest.setCreateddate(new Date());
+	 	        personinterest.setIsactive(true);
+	 	       if(editflag==1){
+               	
+   		 	    personinterest.setTransactionid(transactionId);
+
+               }
+               else{
+		 	    personinterest.setTransactionid(laExtTransactiondetail.getTransactionid());
+               }
+	            }
+	            else{
+	            	  if(! firstname.equalsIgnoreCase("")){
+	            personinterest.setFirstName(firstname);
+	            	  }
+	            	  if(! middlename.equalsIgnoreCase("")){
+	            personinterest.setMiddleName(middlename);
+	            	  }
+	            	  if(! lastname.equalsIgnoreCase("")){
+	            personinterest.setLastName(lastname);
+	            	  }
+	            	  if(null!=date1){
+	            personinterest.setDob(date1);
+	            	  }
+	            	  if(genderid !=0){
+	            personinterest.setGender(genderid);
+	            	  }if(realtionid !=0){
+	            personinterest.setRelation(realtionid);
+	            	  }
+	            	  
+	            	  
+	            if(! firstnamelease.equalsIgnoreCase("")){
+               	 personinterest.setFirstName(firstnamelease);
+                }
+                if(! middlenamelease.equalsIgnoreCase("")){
+               	 personinterest.setMiddleName(middlenamelease);
+                }
+                if(! lastnamelease.equalsIgnoreCase("")){
+               	 personinterest.setLastName(lastnamelease);
+                }
+                if(genderidlease !=0){
+               	 personinterest.setGender(genderidlease);
+                }
+                if(realtionidlease !=0){
+               	 personinterest.setRelation(realtionidlease);
+                }
+                if(null!=date1){
+                personinterest.setDob(date1);
+                }
+                if(editflag==1){
+                	
+    		 	    personinterest.setTransactionid(transactionId);
+
+                }
+                else{
+		 	    personinterest.setTransactionid(laExtTransactiondetail.getTransactionid());
+                }
+
+	            }
+				poiList.add(personinterest);
+				spatialUnitPersonWithInterestDao.addNextOfKin(poiList,landId);
+				
+					
+	        	
+	            return personinterest;
+	        } catch (Exception e) {
+	            logger.error(e);
+	            return null;
+	        }
+	    }
+	 
+	  
+	  @RequestMapping(value = "/viewer/registration/landLeaseePOI/{landid}", method = RequestMethod.GET)
+	  @ResponseBody
+	  public List<PoiReport>  getLeaseePoi(@PathVariable Long landid) {
+				
+		  
+		  LaExtTransactiondetail laExtTransactiondetail = null;
+		  List<PoiReport> poiObject = null;
+		  
+			  List<LaLease> leaseeobjList = laLeaseDao.getleaseeListByLandId(landid);
+			  if(leaseeobjList.size()>0){
+				  for(LaLease Obj:leaseeobjList){
+				  
+				  	laExtTransactiondetail = transactionDao.getpoiByLeaseeid(Obj.getLeaseid().longValue());
+				  	
+				  	if(null != laExtTransactiondetail && laExtTransactiondetail.getLaExtApplicationstatus().getWorkflowStatusId()==2){
+				  		
+				  		poiObject = landRecordsService.getDataCorrectionReportPOI(laExtTransactiondetail.getTransactionid().longValue(), landid);
+				  		if(null!= poiObject){
+				  		return poiObject;
+				  		}
+				  		
+				  	}
+				  }
+
+			  }
+			  
+			  return null;
+		 
+		  }
+	  
+	  
+	  @RequestMapping(value = "/viewer/registration/processid/{transid}", method = RequestMethod.GET)
+	  @ResponseBody
+	  public LaExtTransactiondetail getTransactiondetails(@PathVariable Long transid) {
+				
+		  
+		  LaExtTransactiondetail laExtTransactiondetail = null;
+		  List<SpatialUnitPersonWithInterest> poiObject = null;
+		  
+		  
+		  
+		  laExtTransactiondetail =  transactionDao.getLaExtTransactiondetail(transid.intValue());
+		  
+			
+			  
+			  return laExtTransactiondetail;
+		 
+		  }
+	  
+	  
+	  
+	  @RequestMapping(value = "/viewer/registration/getPOIbyId/{Id}", method = RequestMethod.GET)
+	    @ResponseBody
+	    public SpatialUnitPersonWithInterest getPOIbyId(HttpServletRequest request, @PathVariable Long Id, Principal principal) {
+	        
+	    	SpatialUnitPersonWithInterest personinterest =null;
+	    	
+				personinterest = spatialUnitPersonWithInterestDao.findSpatialUnitPersonWithInterestById(Id.longValue());
+				
+				if(null!=personinterest){
+					return personinterest;
+				}else{
+					return null;
+				}
+	  }
+	        	
+	  
+	  @RequestMapping(value = "/viewer/registration/salebuyerdetails/{personid}/{landid}", method = RequestMethod.GET)
+	    @ResponseBody
+	    public Long getBuyerbyPersonId(HttpServletRequest request, @PathVariable Long personid,@PathVariable Long landid, Principal principal) {
+	        
+		  SocialTenureRelationship plmobj =null;
+	    	
+		  plmobj = socialTenureRelationshipDAO.getSocialTenureObj(personid, landid);
+		  
+				
+				if(null!=plmobj){
+					LaExtTransactiondetail transobj = 	transactionDao.getLaExtTransactiondetail(plmobj.getLaExtTransactiondetail().getTransactionid());
+					if(null!=transobj){
+						return transobj.getProcessid();
+					}
+					else{
+						return  null;
+					}
+				}else{
+					return null;
+				}
+	  }
+	  
+	 
+	  
+	  
 }

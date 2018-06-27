@@ -1319,6 +1319,7 @@ function uploadSignature(name) {
 																	   
 																	   if(obj3=="image/png"  || obj3=="image/jpeg"  || obj3=="image/gif"){
 																	     flag =true;
+																	     $("#extention").val(obj3);
 																		 return false;
 																		 
 																	   }else{

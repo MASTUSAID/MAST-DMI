@@ -10,6 +10,20 @@ public class ResourceCustomAttributes implements Serializable {
 	
 	private String Subclassificationid;
 	
+	private Integer resID;
+	
+	public Integer getResID() {
+		return resID;
+	}
+
+
+
+	public void setResID(Integer resID) {
+		this.resID = resID;
+	}
+
+
+
 	public ResourceCustomAttributes(){
 		
 	}

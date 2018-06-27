@@ -86,7 +86,7 @@ Cloudburst.loadMap = function(mapdiv, options, callback) {
                             if (baseLayerName == "Google_Streets") {
 								var Google_Streets=	 new ol.layer.Tile({
 												source: new ol.source.TileImage({
-												url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0',
+												url: 'http://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
 												  projection :"EPSG:3857",
 												  crossOrigin:'null',
 												
@@ -100,7 +100,7 @@ Cloudburst.loadMap = function(mapdiv, options, callback) {
                             
 							Google_Streets=	 new ol.layer.Tile({
 												source: new ol.source.TileImage({
-												url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0',
+												url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
 												 projection :"EPSG:3857",
 												 crossOrigin:'null',
 												
@@ -113,7 +113,7 @@ Cloudburst.loadMap = function(mapdiv, options, callback) {
                            
 						   Google_Streets=	 new ol.layer.Tile({
 												source: new ol.source.TileImage({
-												url: 'http://khm{0-3}.googleapis.com/kh?v=742&hl=pl&&x={x}&y={y}&z={z}',
+												url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
 												 projection :"EPSG:3857",
 												 crossOrigin:'null',
 												
@@ -126,7 +126,7 @@ Cloudburst.loadMap = function(mapdiv, options, callback) {
                            
 						    Google_Streets=	 new ol.layer.Tile({
 												source: new ol.source.TileImage({
-												url:  'http://khm{0-3}.googleapis.com/kh?v=742&hl=pl&&x={x}&y={y}&z={z}',
+												url:  'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
 												 projection :"EPSG:3857",
 												 crossOrigin:'null',
 												
@@ -434,7 +434,14 @@ Cloudburst.loadMap = function(mapdiv, options, callback) {
 						new ol.control.Attribution(),
 						//Define some new controls
 						new ol.control.ZoomSlider(),
-						new ol.control.MousePosition(),
+						new ol.control.MousePosition({
+						    projection: 'EPSG:4326',
+						    coordinateFormat: function(coordinate) {
+						      return ol.coordinate.format(coordinate, '{y}, {x}', 6);
+						    }, 
+						    undefinedHTML: 'outside',
+		                    projection: 'EPSG:4326'
+						  }),
 						new ol.control.ScaleLine(),
 						new ol.control.OverviewMap()
 					],
@@ -1074,6 +1081,8 @@ function ScaleRangeView() {
 */
 
 jQuery(document).ready(function () {
+	$("#bottomcollapse").hide();
+	$('#bottomstatusbar').hide()
     $("#mainTabs").tabs();
     $.ajaxSetup({cache: false});
 
@@ -1101,6 +1110,8 @@ jQuery(document).ready(function () {
                 $("#selectProjectsForAppTypeSummary").empty();
                 $("#selectProjectsForWorkFlowSummary").empty();
                 $("#selectProjectsForTenureTypesLandUnitsSummary").empty();
+                $("#selectProjectsForLiberaFarmSummary").empty();
+                
 
                 $("#selectProjectsForSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForDetailSummary").append($("<option></option>").attr("value", "").text("Select Project"));
@@ -1109,6 +1120,7 @@ jQuery(document).ready(function () {
                 $("#selectProjectsForAppTypeSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForWorkFlowSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForTenureTypesLandUnitsSummary").append($("<option></option>").attr("value", "").text("Select Project"));
+                $("#selectProjectsForLiberaFarmSummary").append($("<option></option>").attr("value", "").text("Select Project"));
 
                 $.each(data, function (i, projectName) {               
                 	$("#selectProjectsForSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
@@ -1118,6 +1130,7 @@ jQuery(document).ready(function () {
                 	$("#selectProjectsForAppTypeSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
                 	$("#selectProjectsForWorkFlowSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
                 	$("#selectProjectsForTenureTypesLandUnitsSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
+                	$("#selectProjectsForLiberaFarmSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
 
                 });
                 

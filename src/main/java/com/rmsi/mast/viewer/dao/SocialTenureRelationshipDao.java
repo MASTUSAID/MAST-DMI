@@ -13,7 +13,13 @@ public interface SocialTenureRelationshipDao extends GenericDAO<SocialTenureRela
 	SocialTenureRelationship saveSocialTenureRelationship(SocialTenureRelationship socialTenureRelationship);
 	
 	SocialTenureRelationship getSocialTenureRelationshipByLandId(Long landId);
+	
+	SocialTenureRelationship getSocialTenureRelationshipByTransactionId(Long transid);
+	
+	SocialTenureRelationship getAllSocialTenureRelationshipByTransactionId(Long transid);
+
 	SocialTenureRelationship getSocialTenureRelationshipByLandIdForBuyer(Long landId,Long processid);
+	List<SocialTenureRelationship> getSocialTenureRelationshipListByLandIdForBuyer(Long landId,Long processid);
 	SocialTenureRelationship getSocialTenureRelationshipByLandIdPartyIdandPersonTypeID(Long landId, Long partyid,Integer persontypeid);
 	
 	boolean updateSocialTenureRelationshipByPartyId(Long partyId, Long landid);
@@ -23,6 +29,8 @@ public interface SocialTenureRelationshipDao extends GenericDAO<SocialTenureRela
 	List<SocialTenureRelationship>getSocialTenureRelationshipBylandIDAndPartyID(Long landId);
 
 	SocialTenureRelationship getSocialTenureRelationshipForSellerByLandId(Long landId);
+	
+	List<SocialTenureRelationship> getSocialTenureRelationshipListForSellerByLandId(Long landId);
 	
 	SocialTenureRelationship getSocialTenureRelationshipByLandIdandTypeId(Long landId,Long processid,Integer persontype);
 	

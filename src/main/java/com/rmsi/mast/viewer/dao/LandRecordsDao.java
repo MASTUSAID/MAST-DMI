@@ -9,6 +9,7 @@ import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
 import com.rmsi.mast.studio.domain.fetch.DataCorrectionReport;
+import com.rmsi.mast.studio.domain.fetch.FarmReport;
 import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.NaturalPersonBasic;
@@ -123,9 +124,22 @@ public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
 	List<LeaseHistoryForFetch> findleasedetailbylandid(Long transactionid,Long landid);
 	List<LeaseHistoryForFetch> findsurrenderleasedetailbylandid(Long transactionid,Long landid);
 	List<MortageHistoryForFetch> findmortagagedetailbylandid(Long transactionid,Long landid);
+	List<MortageHistoryForFetch> findSurrendermortagagedetailbylandid(Long transactionid,Long landid);
 	List<UploadedDocumentDetailsForFetch>  viewdocumentdetailbytransactioid(Long transactionid);
 	
 	List<DataCorrectionReport> getDataCorrectionReport(Long transactionid,Long landId);
+	
+	List<DataCorrectionReport> getBatchDataCorrectionReport(Long transactionid);
+	
 	public List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId);
+	
+	public List<PoiReport> getBatchDataCorrectionReportPOI(Long transactionid);
+
 	List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid,Long landId);
+	
+	List<PersonsReport> getBatchDataCorrectionPersonsReport(Long transactionidstart,Long transactionidend);
+	
+	public List<FarmReport> getFarmReportByLandId(Long landId);
+
+	List<Object> findLiberiaFarmummaryreport(String project);
 }

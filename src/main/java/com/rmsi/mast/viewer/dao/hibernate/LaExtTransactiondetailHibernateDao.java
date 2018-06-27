@@ -64,7 +64,7 @@ implements LaExtTransactiondetailDao{
 	public LaExtTransactiondetail getLaExtTransactionByLeaseeid(Long id) {
 		try {
 		     
-        	String query = "select s from LaExtTransactiondetail  s where s.moduletransid = :id and s.isactive=true and s.processid=1";
+        	String query = "select s from LaExtTransactiondetail  s where s.moduletransid = :id and s.isactive=true and s.laExtApplicationstatus.workflowStatusId=1";
         	List<LaExtTransactiondetail> lstLaExtTransactiondetail = getEntityManager().createQuery(query).setParameter("id", id.intValue()).getResultList();
 
             if (lstLaExtTransactiondetail.size()>0) {
@@ -116,6 +116,23 @@ implements LaExtTransactiondetailDao{
 		try {
 		     
         	String query = "select s from LaExtTransactiondetail  s where s.moduletransid = :id and s.isactive=true and s.processid=9";
+        	List<LaExtTransactiondetail> lstLaExtTransactiondetail = getEntityManager().createQuery(query).setParameter("id", id.intValue()).getResultList();
+
+            if (lstLaExtTransactiondetail.size()>0) {
+                return lstLaExtTransactiondetail.get(0);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+	return null;
+	}
+
+	@Override
+	public LaExtTransactiondetail getpoiByLeaseeid(Long id) {
+		try {
+		     
+        	String query = "select s from LaExtTransactiondetail  s where s.moduletransid = :id and s.isactive=true and s.laExtApplicationstatus.workflowStatusId=2";
         	List<LaExtTransactiondetail> lstLaExtTransactiondetail = getEntityManager().createQuery(query).setParameter("id", id.intValue()).getResultList();
 
             if (lstLaExtTransactiondetail.size()>0) {

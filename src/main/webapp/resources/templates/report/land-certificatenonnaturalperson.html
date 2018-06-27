@@ -10,7 +10,7 @@
 
 <p class="type">LAND CERTIFICATE </p>
 
-     <p class="text-right">Registration Number: : <span id="reg_no">[0000000]</span>
+     <p class="text-right">Registration Number: : <span id="reg_nononnatural">[0000000]</span>
 
 </p>
      <p class="text-right">
@@ -32,8 +32,8 @@ Parcel Number: <span id="parcel_no">[00000000]</span>
 <div class="schedule-separator">
 
 <p class="type"><strong>SCHEDULE</strong></p>
-<p>This parcel of land with an area of <span id="area_report">[area]</span> Acres is located at <span id="Community">[community name]</span>. </p>
-<p>This parcel of land with an area of [Acres] is located at <span id="provence">[Hamlet]</span></p>
+<p>This parcel of land with an area of <span id="area_report">[area]</span> Acre is located at <span id="Community">[community name]</span>. </p>
+<p>This parcel of land with an area of [Acre] is located at <span id="provence">[Hamlet]</span></p>
 <p><strong>Boundaries:</strong></p>
 <p>North boundary: <span id="North_boundary">[North boundary]</span></p>
 <p>South boundary: <span id="South_boundary">[South boundary]</span></p>
@@ -67,6 +67,7 @@ as shown in the sketch
     <th>Name of Occupant</th>
     <th>Address</th>
     <th>Contact</th>
+    <th>Owner Type</th>
    <!--  <th>[Mobile]</th> -->
     
     </tr>  
@@ -91,6 +92,9 @@ as shown in the sketch
  						<td>
                        ${contactno}
                         </td> 
+						<td>
+						${ownertype}
+						</td>
                            
              
                         </tr>
@@ -160,15 +164,15 @@ as shown in the sketch
     <h4 class="space-top-10">Land Occupants </h4>
     <table class="amendbeforeAfterTable space-top-10" >
     <tr>
-    <th>Name of the occupier        </th>
-    <th>Signature/Thumb Print </th>
+    <th style="width: 62%;">Name of the occupier        </th>
+    <th style="width: 150px;">Signature</th>
     <th>Picture </th>
    
     
     </tr>   
     <tr >
     <td id="Owner_nameNonperson">[name]</td>
-    <td ></td>
+    <td></td>
     <td id=imagePersonId></td>
     </tr>
     
@@ -179,15 +183,15 @@ as shown in the sketch
      <h4 class="space-top-10"></h4>
     <table id="jointownertable" class="amendbeforeAfterTable space-top-10" >
      <tr>
-    <th>Name of the JointOccupier</th>
-    <th>Signature/Thumb Print </th>
+    <th style="width: 62%;">Name of the JointOccupier</th>
+    <th style="width: 150px;">Signature</th>
     <th>Picture </th>
    
     
     </tr>   
     <tr >
     <td id="jointOwner_nameNonperson">[name]</td>
-    <td ></td>
+    <td></td>
     <td id=imagejontPersonId></td>
     </tr>
     </table>
@@ -195,15 +199,13 @@ as shown in the sketch
      <h4 class="space-top-10"></h4>
     <table id="jointownertable_2" class="amendbeforeAfterTable space-top-10" >
      <tr>
-    <th>Name of the JointOccupier_2</th>
-    <th>Signature/Thumb Print </th>
+    <th style="width: 62%;">Name of the JointOccupier_2</th>
     <th>Picture </th>
    
     
     </tr>   
     <tr >
     <td id="jointOwner_name2Nonperson">[name]</td>
-    <td ></td>
     <td id=imagejontPersonId_2></td>
     </tr>
     </table>
@@ -213,20 +215,12 @@ as shown in the sketch
     <tr>
     <th>Authorizing Persons        </th>
     <th>Signature</th>
-    <th>Date </th>
-   
     
     </tr>   
     <tr>
-    <td>[Community Leader] </td>
+    <td id="authorizedmember_Id"></td>
     <td id="imageSignature"></td>
-    <td>[Date]</td>
     </tr>
-    <tr>
-    <td>[Land Authority] </td>
-    <td>[Relationship]</td>
-    <td>[Date]</td>
-    </tr>      
     </table>
     
 <div class="buttons btn-holder-float">

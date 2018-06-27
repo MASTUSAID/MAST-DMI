@@ -358,7 +358,7 @@ h5{ font-size: 13px; font-weight: normal; color:#2f2653;}
 
 
 
-.mapImaivgeId { text-align: center; padding: 50px 0;}
+.mapImaivgeId { text-align: center; padding: 20px 0;}
 .btn1 {
     display: inline-block;
     padding: 3px 12px;
@@ -397,4 +397,19 @@ h5{ font-size: 13px; font-weight: normal; color:#2f2653;}
 .margin-ten {
   margin: 10px;	
 
+}
+.ReportLogoMain {
+width: 128px;
+background: url(../images/usaid_logo_300.png) no-repeat;
+height: 51px;
+margin:30px auto;
+float: left;
+margin-top: 0px;
+}
+.InfoDtTable td{
+	padding: 2px 8px;
+}
+
+.pagebreakdatacorrectionreport{
+	page-break-after: always;
 }

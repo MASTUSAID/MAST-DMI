@@ -319,6 +319,66 @@ function fillAccordians(_proj_name)
 			}         
 		});
 		
+		//  Private (jointly)
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/17/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#private_jointlytbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#private_jointlytbl");
+			}         
+		});
+		
+		 // Organization (informal)
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/18/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#organization_informaltbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#organization_informaltbl");
+			}         
+		});
+		
+		
+		// Organization (formal)
+		
+		
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/14/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#organization_formaltbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#organization_formaltbl");
+			}         
+		});
+		
+		
+		// Collective
+		
+		
+		jQuery.ajax({          
+			type: 'GET',
+			url: "projectattrib/display/11/"+proj_name+"/",
+			success: function (categorydata) 
+			{ 	   	
+				jQuery("#collectivetbl").empty();
+				if(categorydata!=null && categorydata!="" && typeof categorydata != "undefined")
+					jQuery("#categoryattrTemplate").tmpl(categorydata).appendTo("#collectivetbl");
+			}         
+		});
+		
+		
+		
+		
 	
 			 
 		  }
@@ -817,7 +877,7 @@ function openAttrDialog(_category)
 				{
 					jQuery("#dialogBody").empty();
 					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
-					attributeCategory = 7;
+					attributeCategory = 16;
 					$('.roleCheckbox').change(function() 
 							{
 						console.log(this);
@@ -875,7 +935,7 @@ function openAttrDialog(_category)
 				{
 					jQuery("#dialogBody").empty();
 					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
-					attributeCategory = 7;
+					attributeCategory = 9;
 					$('.roleCheckbox').change(function() 
 							{
 						console.log(this);
@@ -935,7 +995,7 @@ function openAttrDialog(_category)
 				{
 					jQuery("#dialogBody").empty();
 					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
-					attributeCategory = 7;
+					attributeCategory = 10;
 					$('.roleCheckbox').change(function() 
 							{
 						console.log(this);
@@ -1054,7 +1114,7 @@ function openAttrDialog(_category)
 				{
 					jQuery("#dialogBody").empty();
 					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
-					attributeCategory = 7;
+					attributeCategory =12;
 					$('.roleCheckbox').change(function() 
 							{
 						console.log(this);
@@ -1113,7 +1173,7 @@ function openAttrDialog(_category)
 				{
 					jQuery("#dialogBody").empty();
 					jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
-					attributeCategory = 7;
+					attributeCategory =13;
 					$('.roleCheckbox').change(function() 
 							{
 						console.log(this);
@@ -1130,6 +1190,239 @@ function openAttrDialog(_category)
 		}
 		
 		break;
+		case "private_jointly": // private_jointly
+
+			genAttrDialog = $( "#attr-dialog-form" ).dialog({
+				autoOpen: false,
+				height: 400,
+				width: 300,
+				resizable: false,
+				modal: true,
+
+				buttons: {
+					"Add": function() 
+					{
+						saveprojectAttr();
+						//genAttrDialog.dialog( "close" );
+					},
+					"Cancel": function() 
+					{
+						genAttrDialog.dialog( "close" );
+					}
+				},
+				close: function() {
+					genAttrDialog.dialog( "destroy" );
+					genAttrDialog.dialog( "destroy" );
+
+				}
+			});
+
+
+			var project=$("#projectAttr_project").val();
+			if(project==0){
+				jQuery("#dialogBody").empty();
+				jAlert("Please Select Project First","Alert");
+			}
+			else{
+				genAttrDialog.dialog( "open" );
+				jQuery.ajax({          
+					type: 'GET',
+					url: "projectattrib/displaypop/17/"+project+"/",
+					success: function (popdata) 
+					{
+						jQuery("#dialogBody").empty();
+						jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+						attributeCategory = 17;
+						$('.roleCheckbox').change(function() 
+								{
+							console.log(this);
+							if(this.checked) {
+								var chkid = this.id;
+								$('#uid'+chkid).prop('checked',true);
+							}else{
+								var chkid = this.id;
+								$('#uid'+chkid).prop('checked',false);
+							}
+								});
+					}         
+				});
+			}
+			
+			break;
+		   case "organization_formal": // organization_informal
+
+			genAttrDialog = $( "#attr-dialog-form" ).dialog({
+				autoOpen: false,
+				height: 400,
+				width: 300,
+				resizable: false,
+				modal: true,
+
+				buttons: {
+					"Add": function() 
+					{
+						saveprojectAttr();
+						//genAttrDialog.dialog( "close" );
+					},
+					"Cancel": function() 
+					{
+						genAttrDialog.dialog( "close" );
+					}
+				},
+				close: function() {
+					genAttrDialog.dialog( "destroy" );
+					genAttrDialog.dialog( "destroy" );
+
+				}
+			});
+
+
+			var project=$("#projectAttr_project").val();
+			if(project==0){
+				jQuery("#dialogBody").empty();
+				jAlert("Please Select Project First","Alert");
+			}
+			else{
+				genAttrDialog.dialog( "open" );
+				jQuery.ajax({          
+					type: 'GET',
+					url: "projectattrib/displaypop/14/"+project+"/",
+					success: function (popdata) 
+					{
+						jQuery("#dialogBody").empty();
+						jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+						attributeCategory = 14;
+						$('.roleCheckbox').change(function() 
+								{
+							console.log(this);
+							if(this.checked) {
+								var chkid = this.id;
+								$('#uid'+chkid).prop('checked',true);
+							}else{
+								var chkid = this.id;
+								$('#uid'+chkid).prop('checked',false);
+							}
+								});
+					}         
+				});
+			}
+			break;
+			case "collective": // collective
+
+				genAttrDialog = $( "#attr-dialog-form" ).dialog({
+					autoOpen: false,
+					height: 400,
+					width: 300,
+					resizable: false,
+					modal: true,
+
+					buttons: {
+						"Add": function() 
+						{
+							saveprojectAttr();
+							//genAttrDialog.dialog( "close" );
+						},
+						"Cancel": function() 
+						{
+							genAttrDialog.dialog( "close" );
+						}
+					},
+					close: function() {
+						genAttrDialog.dialog( "destroy" );
+						genAttrDialog.dialog( "destroy" );
+
+					}
+				});
+
+
+				var project=$("#projectAttr_project").val();
+				if(project==0){
+					jQuery("#dialogBody").empty();
+					jAlert("Please Select Project First","Alert");
+				}
+				else{
+					genAttrDialog.dialog( "open" );
+					jQuery.ajax({          
+						type: 'GET',
+						url: "projectattrib/displaypop/11/"+project+"/",
+						success: function (popdata) 
+						{
+							jQuery("#dialogBody").empty();
+							jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+							attributeCategory = 11;
+							$('.roleCheckbox').change(function() 
+									{
+								console.log(this);
+								if(this.checked) {
+									var chkid = this.id;
+									$('#uid'+chkid).prop('checked',true);
+								}else{
+									var chkid = this.id;
+									$('#uid'+chkid).prop('checked',false);
+								}
+									});
+						}         
+					});
+				}
+				break;
+			case "organization_informal": // organization_informal
+
+				genAttrDialog = $( "#attr-dialog-form" ).dialog({
+					autoOpen: false,
+					height: 400,
+					width: 300,
+					resizable: false,
+					modal: true,
+
+					buttons: {
+						"Add": function() 
+						{
+							saveprojectAttr();
+							//genAttrDialog.dialog( "close" );
+						},
+						"Cancel": function() 
+						{
+							genAttrDialog.dialog( "close" );
+						}
+					},
+					close: function() {
+						genAttrDialog.dialog( "destroy" );
+						genAttrDialog.dialog( "destroy" );
+
+					}
+				});
+
+
+				var project=$("#projectAttr_project").val();
+				if(project==0){
+					jQuery("#dialogBody").empty();
+					jAlert("Please Select Project First","Alert");
+				}
+				else{
+					genAttrDialog.dialog( "open" );
+					jQuery.ajax({          
+						type: 'GET',
+						url: "projectattrib/displaypop/18/"+project+"/",
+						success: function (popdata) 
+						{
+							jQuery("#dialogBody").empty();
+							jQuery("#customAttrTemplate").tmpl(popdata).appendTo("#dialogBody");
+							attributeCategory = 18;
+							$('.roleCheckbox').change(function() 
+									{
+								console.log(this);
+								if(this.checked) {
+									var chkid = this.id;
+									$('#uid'+chkid).prop('checked',true);
+								}else{
+									var chkid = this.id;
+									$('#uid'+chkid).prop('checked',false);
+								}
+									});
+						}         
+					});
+				}
+				break;	
 		
 	default:
 	}
@@ -1474,6 +1767,62 @@ else if (_option=='private') {
 		});
 
 		_attributecategory=13;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}else if (_option=='private_jointly') {   //  Private (jointly)
+
+		$('#private_jointlytbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=17;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}else if (_option=='organization_informal') {  // Organization (informal)
+
+		$('#organization_informaltbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=18;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}else if (_option=='organization_formal') {  // Organization (formal)
+
+		$('#organization_formal tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=14;
+
+		$("#attributecategory").val(_attributecategory);
+
+	}else if (_option=='collective') {  // Collective 
+
+		$('#collectivetbl tr').each(function() {
+			var test=$(this).find("td:first").attr("id");
+			idorder.push(test);
+
+			$("#_optionOrder").val(idorder);
+
+		});
+
+		_attributecategory=11;
 
 		$("#attributecategory").val(_attributecategory);
 

@@ -50,8 +50,25 @@ public class ResourceAttributeValues implements Serializable {
 	
 	@Transient
 	private String Fieldname;
+	
+	@Transient
+	private String FieldAliasName;
 
 	
+	public String getFieldAliasName() {
+		return FieldAliasName;
+	}
+
+
+
+
+	public void setFieldAliasName(String fieldAliasName) {
+		FieldAliasName = fieldAliasName;
+	}
+
+
+
+
 	public ResourceAttributeValues(){
 		
 	}

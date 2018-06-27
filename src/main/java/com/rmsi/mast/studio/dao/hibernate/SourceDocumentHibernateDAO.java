@@ -224,7 +224,7 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
 		try {
 	            
 	            String strQuery = " select * from la_ext_documentdetails plm left join la_ext_transactiondetails td on td.transactionid=plm.transactionid"
-	            		+ "  where plm.landid= "+id +" and td.processid=" + processId +" and td.applicationstatusid=1 ";
+	            		+ "  where plm.landid= "+id +" and td.processid=" + processId +" and td.applicationstatusid=1 and plm.isactive= true";
 				
 				List<SourceDocument> lstSourceDocument = getEntityManager().createNativeQuery(strQuery,SourceDocument.class).getResultList();
 	           return lstSourceDocument;
@@ -254,5 +254,36 @@ public class SourceDocumentHibernateDAO extends GenericHibernateDAO<SourceDocume
             return null;
         }
     }
+
+	@Override
+	public List<SourceDocument> findBatchSourceDocumentByLandIdandTransactionid(
+			Long transactionid) {
+		
+	/*	Long startid=transactionidstart;
+		
+		Long endid=transactionidend;
+		
+		Long transiddiffr = transactionidend - transactionidstart;
+		String ids= startid+",";
+		for(int i=0; i<transiddiffr; i++){
+			transactionidstart =transactionidstart+1;
+			ids=ids+transactionidstart+",";
+		}
+		
+		ids=ids.substring(0, ids.length()-1);
+		*/
+		  try {
+	        	
+	            Query query = getEntityManager().createQuery("Select sd from SourceDocument sd where sd.laExtTransactiondetail.transactionid ="+ transactionid+" and sd.isactive= true");
+	            List<SourceDocument> documentlist = query.getResultList();
+	           return    documentlist;
+	           
+	        } catch (Exception e) {
+
+	            logger.error(e);
+	            return null;
+	        }
+
+	}
 
 }

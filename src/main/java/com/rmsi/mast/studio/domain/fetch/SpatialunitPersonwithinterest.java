@@ -1,6 +1,8 @@
 package com.rmsi.mast.studio.domain.fetch;
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 
 
@@ -54,6 +56,8 @@ public class SpatialunitPersonwithinterest implements Serializable {
 	
 	
 	private Integer typeid;
+	
+	private Integer transactionid;
 	
 
 	public SpatialunitPersonwithinterest() {
@@ -217,6 +221,16 @@ public class SpatialunitPersonwithinterest implements Serializable {
 
 	public void setTypeid(Integer typeid) {
 		this.typeid = typeid;
+	}
+
+
+	public Integer getTransactionid() {
+		return transactionid;
+	}
+
+
+	public void setTransactionid(Integer transactionid) {
+		this.transactionid = transactionid;
 	}
 
 

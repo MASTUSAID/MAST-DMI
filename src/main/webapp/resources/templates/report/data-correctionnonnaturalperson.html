@@ -392,8 +392,8 @@
     <th></th>
     </tr>
     <tr>
-    <td>Size  </td>
-    <td></td>
+    <td>Size (Acre) </td>
+    <td id="correctionForm_SizeId"></td>
     </tr>
     <tr>
     <td>Land Type </td>
@@ -405,9 +405,10 @@
     </div>
   </div>
   </div>
+  <div class="pagebreakdatacorrectionreport"></div>
   <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span6"> 
+    <div class="span6" style="width: 88.4%;"> 
       <div style="border: 1px solid #888;" class="space-top-10">
 	    Parcel Location
  <div id="mapImageId1" class="mapImaivgeId"></div>
@@ -433,13 +434,22 @@
     </div>
     <div class="span6">
         <table class="amendbeforeAfterTable space-top-10" id="latLongId" >
+          <tr>
+										<th>POINT</th>
+										<th>X</th>
+										<th>Y</th>
+									</tr>
+
+									<tbody id="vertexTableBody_map">
+
+									</tbody>
     </table>
       </div>
     </div>
     </div>
   
     
-            <h4 class="space-top-10">Property Information </h4>
+            <!-- <h4 class="space-top-10">Property Information </h4> -->
     
   </div>
    
@@ -452,4 +462,19 @@
 </div>
 
 
+
+<script id="vertexTable_map" type="text/x-jquery-tmpl">
+ <tr> 
+<td>
+	${index}
+  </td>                                                                       
+  <td>
+	${x}
+  </td>
+  
+  <td>
+  ${y}
+  </td>
+ </tr>
+</script>
 

@@ -16,9 +16,11 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "la_party_person")
 @PrimaryKeyJoinColumn(name = "PERSONID", referencedColumnName = "PARTYID")
-public class NaturalPerson extends LaParty implements Serializable {
-	// public class NaturalPerson extends Person implements Serializable
 
+public class NaturalPerson extends LaParty implements Serializable {
+
+	//public class NaturalPerson extends LaParty implements Serializable,Comparable<NaturalPerson> {
+		// public class NaturalPerson extends Person implements Serializable
     private static final long serialVersionUID = 1L;
     
   
@@ -76,6 +78,8 @@ public class NaturalPerson extends LaParty implements Serializable {
 	
 	@Column(name="address")
 	private String address;
+	
+	private Integer ownertype;
 
 		//bi-directional one-to-one association to LaParty
 /*	@OneToOne
@@ -509,6 +513,22 @@ public class NaturalPerson extends LaParty implements Serializable {
 			ProjectRegion laSpatialunitgroupHierarchy6) {
 		this.laSpatialunitgroupHierarchy6 = laSpatialunitgroupHierarchy6;
 	}
+
+	public Integer getOwnertype() {
+		return ownertype;
+	}
+
+	public void setOwnertype(Integer ownertype) {
+		this.ownertype = ownertype;
+	}
+
+	/*@Override
+	public int compareTo(NaturalPerson objnp) {
+		// TODO Auto-generated method stub
+		return this.getOwnertype().compareTo(objnp.getOwnertype());
+	}
+*/
+	
 	
 	
     

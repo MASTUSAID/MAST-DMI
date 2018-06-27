@@ -43,6 +43,7 @@ import com.rmsi.mast.studio.domain.fetch.AttributeValuesFetch;
 import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
 import com.rmsi.mast.studio.domain.fetch.DataCorrectionReport;
+import com.rmsi.mast.studio.domain.fetch.FarmReport;
 import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.OwnerHistoryForFetch;
@@ -207,6 +208,8 @@ public interface LandRecordsService {
      *
      */
     List<SocialTenureRelationship> findAllSocialTenureByUsin(Long id);
+    
+    List<SocialTenureRelationship> findBatchAllSocialTenureByUsin(Long transid);
 
     /**
      * @return Non Natural Person
@@ -883,10 +886,23 @@ public interface LandRecordsService {
 	List<LeaseHistoryForFetch>  findleasedetailbylandid(Long transactionid,Long landid);
 	List<LeaseHistoryForFetch>  findsurrenderleasedetailbylandid(Long transactionid,Long landid);
 	List<MortageHistoryForFetch>  findmortagagedetailbylandid(Long transactionid,Long landid);
+	List<MortageHistoryForFetch>  findSurrendermortagagedetailbylandid(Long transactionid,Long landid);
 	List<UploadedDocumentDetailsForFetch>  viewdocumentdetailbytransactioid(Long transactionid);
 	
 	List<DataCorrectionReport> getDataCorrectionReport(Long transactionid,Long landId);
+	
+	List<DataCorrectionReport> getBatchDataCorrectionReport(Long transactionid);
 	List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId);
+	
+	List<PoiReport> getBatchDataCorrectionReportPOI(Long transactionidstart,Long transactionidend);
+
 	List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid,Long landId);
+	
+	List<PersonsReport> getBatchDataCorrectionPersonsReport(Long transactionidstart,Long transactionidend);
+
+	
+	List<FarmReport> getFarmReportByLandId(Long landId);
+
+	List<Object> findLiberiaFarmummaryreport(String project);
     
 }

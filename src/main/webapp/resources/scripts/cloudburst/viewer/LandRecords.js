@@ -342,6 +342,7 @@ function editAttribute(id) {
    nonnaturalperson(id);
    disputes(id);
    disputePerson(id);
+   landDocs(id);
    
   
    
@@ -652,7 +653,7 @@ function updateattributesGen() {
             neighbor_east: "Please enter neighbour name",
             neighbor_west: "Please enter neighbour name",
 			tenureDuration: {
-            required: "Enter Mobile Number",
+            required: "Enter Length of Occupancy",
 			number: jQuery.format("Only Numeric Allowed"),
             }
         }
@@ -1051,14 +1052,33 @@ function viewMultimediaByTransid(id) {
     }
 }
 
-function showOnMap(usin, statusId) {
+function showOnMap(usin, statusId ,split) {
     $.ajaxSetup({
         cache: false
     });
     var relLayerName = "Mast:la_spatialunit_land";
     var fieldName = "landid";
     var fieldVal = usin;
+    
+    var layer = getLayerByAliesName("spatialUnitLand");
+                layer.getSource().clear();
+                
+     if(split=="split")
+    	 {
+    	 
+    	 jQuery.ajax({
+    	        type: 'GET',
+    	        async:false,
+    	        url: "landrecords/splitupdate/" + usin,
+    	        success: function (result) {
+    	        },
+    	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+    	            jAlert('Request not completed');
+    	        }
+    	    });    	 
+    	 }
     zoomToLayerFeature(relLayerName, fieldName, fieldVal);
+   
 }
 function zoomToLayerFeature(relLayerName, fieldName, fieldVal) {
  
@@ -1148,11 +1168,13 @@ function zoomToAnyFeature(geom) {
 	  
 		var ext=featureOverlay.getSource().getExtent();
 		var center=ol.extent.getCenter(ext);
-		map.setView( new ol.View({
+		var coordMin = ol.proj.fromLonLat([center[0], center[1]], 'EPSG:4326');
+		/*map.setView( new ol.View({
 			projection: projection,//or any projection you are using
 			center: [center[0] , center[1]],//zoom to the center of your feature
 			zoom: 18 //here you define the levelof zoom
-		}));
+		}));*/
+		 map.getView().animate({center: coordMin, zoom: 16});
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#map-tab"]').parent().index());
         $('#sidebar').show();
         $('#collapse').show();
@@ -1541,6 +1563,8 @@ function generateCcro(usin) {
 	if(usin == null)
 		{
 			usin = $("#ccroStart").val();
+			
+			
 		}
 	
    /* $.ajax({
@@ -1630,6 +1654,33 @@ reports.prototype.ProjectTenureTypesLandUnitsSummaryReport=function(tag,projecti
 
 	}
 
+function generateProjectsForLiberaFarmSummaryReport()
+{
+	projectid= $("#selectProjectsForLiberaFarmSummary").val();
+	if(projectid == "" || projectid == null)
+	{
+		alert ("Select Project");
+		return false;
+
+	}
+	var rep = "1";
+	var reportTmp=new reports();
+	if(rep=="1")
+	{
+		//console.log(villageSelected);
+		reportTmp.ProjectsForLiberaFarmSummaryReport("NEW",projectid, "1");
+		// reportDialog.dialog( "destroy" );
+	}
+
+}
+
+reports.prototype.ProjectsForLiberaFarmSummaryReport=function(tag,projectid,villageId){
+	//alert ("Under Function");
+		window.open("landrecords/projectdetailedliberiafarmSummaryreport/"+projectid+"/"+tag+"/"+villageId,'popUp','height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
+
+	}
+
+
 function generateCcros() 
 {
 	result = RESPONSE_OK;
@@ -1637,23 +1688,443 @@ function generateCcros()
 		result = RESPONSE_OK;
 		var fromRecord = $("#ccroStartbatch").val();
 		var endRecord = $("#ccroEndbatch").val();
+		
+		$.ajax({
+	        type: "GET",
+	        url: "landrecords/batchlandcorrectionreport/" + fromRecord+"/"+ endRecord+"/"+0,
+	        async: false,
+	        success: function (newdata) {
+	        	jQuery("#printDiv").empty();
+	        	
+					jQuery.get("resources/templates/report/batchland-certificate.html", function (template) 
+					{
+						
+						jQuery("#printDiv").append(template);
+						for(var index=0; index<newdata.length; index++){
+							var flag=0;
+					if(index > 0){
+						
+						 flag=index-1;
+					}
+						if(newdata[index]!=null || newdata[index]!="" || newdata[index]!="undefined")
+						{
+						
+                           if(newdata[index]!=null){	
+                        	   var data = newdata[index];
+							if(data[0] != null && data[0].length!=0){
+								
+								
+								if(data[0][0].region!=null || data[0][0].commune!=null || data[0][0].province!=null)
+									data[0][0].compaddresstoadd = data[0][0].region +", "+data[0][0].commune+", "+ data[0][0].province;
+								
+								
+								
+//								$('#dynamiclanddata').attr('id', 'dynamiclanddata-'+i);
+								
+								 $("<div id='landdetails-" + data[0][0].transactionid +  "'></div>").insertAfter("#forinsertafterdiv");
+								jQuery("#dynamiclanddatatemplate").tmpl(data[0][0]).appendTo('#landdetails-'+data[0][0].transactionid);
+								
+								/*if(data[0][0].landsharetype !=null)
+									if(data[0][0].landsharetype =="Single Tenancy"){
+										$('#jointownertable').hide();
+										$('#jointownertable_2').hide();
+										
+//										$('#jointownertable_2').hide();
+										
+									}
+									else if(data[0][0].landsharetype =="Joint Tenancy"){
+										
+//										$('#jointownertable').show();
+//										$('#jointownertable_2').hide();
+									}
+									else{
+								//		$('#jointownertable_2').show();
+									}*/
+								
+								
+								if(null!=data[2] && data[2].length!=0){
+									
+									
+									 $("<div id='persondetails-" + data[0][0].transactionid +  "'></div>").insertAfter("#landdetails-"+data[0][0].transactionid);
 
-		/*if (!checkIntNumber(fromRecord))
-            fromRecord = 1;
+									 for(var i=0;i<data[2].length;i++){
+										 if(data[2][i].ownertype=="Primary occupant /Point of contact"){
+									 $('#owner').text(data[2][i].firstname+" "+data[2][i].middlename+" "+data[2][i].lastname);
+										 }
+									 }
+									 
+									 $.each(data[2], function(indexes,val){
+										 val['transactionid']=data[0][0].transactionid;
+										 if(indexes==0){
+											
+											 
+											 jQuery("#OwnerRecordsAttrTemplate1").tmpl(val).appendTo("#persondetails-"+data[0][0].transactionid);
+										 }
+										 else{
+											 
+											 jQuery("#jointOwnerRecordsAttrTemplate1").tmpl(val).appendTo("#OwnerRecordsRowData1-"+ data[0][0].transactionid);
+										 }
+										 
+										 
+									 });
+									 
+									
+								}
+								
+								if(null!=data[5] && data[5].length!=0){
+									
+									
+									 $("<div id='persondetails-" + data[0][0].transactionid +  "'></div>").insertAfter("#landdetails-"+data[0][0].transactionid);
 
-        if (!checkIntNumber(endRecord))
-            endRecord = 100000;*/
+									 for(var i=0;i<data[5].length;i++){
+										
+									 $('#owner').text(data[5][i].organizationname);
+										
+									 }
+									 
+									 $.each(data[5], function(indexes,val){
+										 val['transactionid']=data[0][0].transactionid;
+										 if(indexes==0){
+											
+											 
+											 jQuery("#non-naturalRecordsAttrTemplate1").tmpl(val).appendTo("#persondetails-"+data[0][0].transactionid);
+										 }
+										 else{
+											 
+											 jQuery("#jointnonnaturalRecordsAttrTemplate1").tmpl(val).appendTo("#NonnaturalRecordsRowData1-"+ data[0][0].transactionid);
+										 }
+										 
+										 
+									 });
+									 
+									
+								}
+								
+								if(null!=data[1] && data[1].length!=0){	
+									if(null!=data[2] && data[2].length!=0){
+									var ind= data[2].length-1;
+									
+									$("<div id='POIDetails-" + data[0][0].transactionid +  "'></div>").insertAfter("#persondetails-"+data[0][0].transactionid);
 
-		var w = window.open("landrecords/ccroformsinbatch/" + activeProject + "/" + fromRecord + "/" + endRecord, 'CcroForms', 'left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=true');
-		if (window.focus) {
-			w.focus();
-		}
-	} else {
+		                        	 for(var i=0; i<data[1].length; i++){
+		                        		 data[1][i]['transactionid']=data[0][0].transactionid;
+		                        		 if(i==0){
+		                        			 jQuery("#POIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#POIDetails-"+data[0][0].transactionid);
+		                        			 
+		                        		 }else{
+		                        			 
+		                        			 $('#batchPOIRecordsAttrTemplate1').tmpl(data[1][i]).appendTo("#POIRecordsRowData1-"+ data[0][0].transactionid);
+		                        		 }
+								 
+									if(data[1][i] != null){
+//										$("<div id='POIDetails-" + index +  "'></div>").insertAfter("#persondetails-"+index);
+									
+										
+									}
+		                        	 }
+									}
+									else if(null!=data[5] && data[5].length!=0){
+										var ind= data[5].length-1;
+										
+										$("<div id='POIDetails-" + data[0][0].transactionid +  "'></div>").insertAfter("#persondetails-"+data[0][0].transactionid);
+
+			                        	 for(var i=0; i<data[1].length; i++){
+			                        		 data[1][i]['transactionid']=data[0][0].transactionid;
+			                        		 if(i==0){
+			                        			 jQuery("#POIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#POIDetails-"+data[0][0].transactionid);
+			                        			 
+			                        		 }else{
+			                        			 
+			                        			 $('#batchPOIRecordsAttrTemplate1').tmpl(data[1][i]).appendTo("#POIRecordsRowData1-"+ data[0][0].transactionid);
+			                        		 }
+									 
+										if(data[1][i] != null){
+//											$("<div id='POIDetails-" + index +  "'></div>").insertAfter("#persondetails-"+index);
+										
+											
+										}
+			                        	 }
+										}
+								}
+								else
+									{
+									$("<div id='POIDetails-" + data[0][0].transactionid +  "'></div>").insertAfter("#persondetails-"+data[0][0].transactionid);
+									var PoiEmptyJsonObject = {"firstName":"","middleName":"","lastName":"","relationship":"","gender":""}
+									jQuery("#POIRecordsAttrTemplate1").tmpl(PoiEmptyJsonObject).appendTo("#POIDetails-"+data[0][0].transactionid);
+									}
+
+
+
+
+								
+							if(null!=data[2] && data[2].length!=0){
+								if(data[2].length==1)//Single
+									{
+									if(data[2][0] != null){
+										var ownername = {"ownername" : data[2][0].firstname+" "+data[2][0].middlename+" "+data[2][0].lastname,"partyid":data[2][0].id};
+										$("<div id='SingleOwnerDetailsDiv-" + data[0][0].transactionid +  "'>" +
+										"</div>").insertAfter("#POIDetails-"+data[0][0].transactionid);
+										jQuery("#SingleOwnerNameTemplate").tmpl(ownername).appendTo("#SingleOwnerDetailsDiv-"+data[0][0].transactionid);
+										}									
+									}
+								else if (data[2].length>1)//Joint
+									{
+									
+									$.each(data[2],function(index,optiondata){
+
+										if(index==0)
+											{
+											var ownername = {"ownername" : optiondata.firstname+" "+optiondata.middlename+" "+optiondata.lastname, "partyid":optiondata.id};
+											$("<div id='SingleOwnerDetailsDiv-" + data[0][0].transactionid +  "'>" +
+											"</div>").insertAfter("#POIDetails-"+data[0][0].transactionid);
+											jQuery("#SingleOwnerNameTemplate").tmpl(ownername).appendTo("#SingleOwnerDetailsDiv-"+data[0][0].transactionid);
+											
+											}
+										else
+											{
+											var jointownername = {"jointownername" : optiondata.firstname+" "+optiondata.middlename+" "+optiondata.lastname,"partyid":optiondata.id};
+											$("<div id='jointOwnerDetailsDiv-" + index +  "'></div>").insertAfter("#SingleOwnerDetailsDiv-"+ data[0][0].transactionid);
+											jQuery("#jointownertableNameTemplate").tmpl(jointownername).appendTo("#jointOwnerDetailsDiv-"+index);
+											}
+									});
+									}
+							}
+							
+							
+							if(null!=data[5] && data[5].length!=0){
+								if(data[5].length==1)//Single
+									{
+									if(data[5][0] != null){
+										var ownername = {"ownername" : data[5][0].firstname+" "+data[5][0].middlename+" "+data[5][0].lastname,"partyid":data[5][0].id};
+										$("<div id='SingleOwnerDetailsDiv-" + data[0][0].transactionid +  "'>" +
+										"</div>").insertAfter("#POIDetails-"+data[0][0].transactionid);
+										jQuery("#SingleOwnerNameTemplate").tmpl(ownername).appendTo("#SingleOwnerDetailsDiv-"+data[0][0].transactionid);
+										}									
+									}
+								/*else if (data[2].length>1)//Joint
+									{
+									
+									$.each(data[2],function(index,optiondata){
+
+										if(index==0)
+											{
+											var ownername = {"ownername" : optiondata.firstname+" "+optiondata.middlename+" "+optiondata.lastname, "partyid":optiondata.id};
+											$("<div id='SingleOwnerDetailsDiv-" + data[0][0].transactionid +  "'>" +
+											"</div>").insertAfter("#POIDetails-"+data[0][0].transactionid);
+											jQuery("#SingleOwnerNameTemplate").tmpl(ownername).appendTo("#SingleOwnerDetailsDiv-"+data[0][0].transactionid);
+											
+											}
+										else
+											{
+											var jointownername = {"jointownername" : optiondata.firstname+" "+optiondata.middlename+" "+optiondata.lastname,"partyid":optiondata.id};
+											$("<div id='jointOwnerDetailsDiv-" + data[0][0].transactionid +  "'></div>").insertAfter("#SingleOwnerDetailsDiv-"+ data[0][0].transactionid);
+											jQuery("#jointownertableNameTemplate").tmpl(jointownername).appendTo("#jointOwnerDetailsDiv-"+data[0][0].transactionid);
+											}
+									});
+									}*/
+							}
+								
+									
+
+							if(null!=data[4] && data[4].length!=0){
+								if(null!=data[2]){
+								
+										if(data[2].length==1){
+											$("<div  id='authrisedDetailsDiv-" +  data[0][0].transactionid +  "'></div>").insertAfter("#SingleOwnerDetailsDiv-"+ data[0][0].transactionid);
+											  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
+											 var jsonSignImage = {"authrisedpersonName":data[4].authorizedmember,"imageUrl":url2};
+											  jQuery("#authrisedpersonTemplate").tmpl(jsonSignImage).appendTo("#authrisedDetailsDiv-"+ data[0][0].transactionid);
+											  
+											
+										}
+										else{
+											var ind= data[2].length-1;
+											$("<div  id='authrisedDetailsDiv-" +  data[0][0].transactionid +  "'></div>").insertAfter("#jointOwnerDetailsDiv-"+ 1);
+											  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
+											  var jsonSignImage = {"authrisedpersonName":data[4].authorizedmember,"imageUrl":url2};
+											  jQuery("#authrisedpersonTemplate").tmpl(jsonSignImage).appendTo("#authrisedDetailsDiv-"+ data[0][0].transactionid);
+											  
+										}
+										
+								}
+								
+								if(null!=data[5] && data[5].length!=0){
+									
+									if(data[5].length==1){
+										$("<div id='authrisedDetailsDiv-" +  data[0][0].transactionid +  "'></div>").insertAfter("#SingleOwnerDetailsDiv-"+ data[0][0].transactionid);
+										  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
+										 var jsonSignImage = {"authrisedpersonName":data[4].authorizedmember,"imageUrl":url2};
+										  jQuery("#authrisedpersonTemplate").tmpl(jsonSignImage).appendTo("#authrisedDetailsDiv-"+ data[0][0].transactionid);
+										  
+										
+									}
+									else{
+										var ind= data[5].length-1;
+										$("<div id='authrisedDetailsDiv-" +  data[0][0].transactionid +  "'></div>").insertAfter("#jointOwnerDetailsDiv-"+ data[0][0].transactionid);
+										  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
+										  var jsonSignImage = {"authrisedpersonName":data[4].authorizedmember,"imageUrl":url2};
+										  jQuery("#authrisedpersonTemplate").tmpl(jsonSignImage).appendTo("#authrisedDetailsDiv-"+ data[0][0].transactionid);
+										  
+									}
+									
+							}
+									
+								
+								  
+								
+								}
+								
+								if(null!=data[3]){
+									
+										 for(var i=0; i<data[3].length; i++){
+										  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
+											 var jsonpersonSignImage = {"imagePersonId":url1};
+											 if(null!=data[3][i].laParty){
+											 if(data[3][i].laParty.ownertype==1){
+												 $("#imagesinglePersonId_"+data[3][i].laParty.partyid).append('<img  src='+url1+'>')
+											 }else if(data[3][i].laParty.ownertype==2){
+												 
+												 $("#imagejontPersonId_"+data[3][i].laParty.partyid).append('<img  src='+url1+'>')
+												 
+											 }
+											 }
+
+											 
+										
+									  }
+									 
+								}
+							}
+							
+						}
+                          
+                           var layerName = "spatialUnitLand";
+							 var objLayer=getLayerByAliesName(layerName);
+							
+								 var _wfsurl=objLayer.values_.url;
+								var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+								//Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+								$.ajax({
+									url: PROXY_PATH + _wfsSchema,
+									async: false,
+									success: function (data) {
+										 _featureNS=data.targetNamespace;
+										 
+									}
+								});
+
+		                var relLayerName = "Mast:la_spatialunit_land";
+						var fieldName = "landid";
+						var fieldVal = data[0][0].landId;
+		
+						var _featureTypes= [];
+						_featureTypes.push("la_spatialunit_land");
+						var _featurePrefix="Mast";
+						var featureRequest1 = new ol.format.WFS().writeGetFeature({
+												srsName: 'EPSG:4326',
+												featureNS: _featureNS,
+												featurePrefix: _featurePrefix,
+												featureTypes: _featureTypes,
+												outputFormat: 'application/json',
+												filter: ol.format.filter.equalTo(fieldName, fieldVal)
+											  });
+											  
+											  
+							  var _url= window.location.protocol+'//'+window.location.host+'/geoserver/wfs';
+										  fetch(_url, {
+											method: 'POST',
+											async:false,
+											body: new XMLSerializer().serializeToString(featureRequest1)
+										  }).then(function(response) {
+											return response.json();
+										  }).then(function(json) {
+											  
+											  var features = new ol.format.GeoJSON().readFeatures(json);
+											  callback_function(features,features[0].values_.landid);
+							});
+										  
+										 	
+										  
+										  
+						}
+						else
+						{
+							jAlert('info','error in fetching details',"");
+						}
+						
+						}
+						
+						
+						
+					});
+		      }
+	        });
+		
+		
+	  
+			
+			
+	} 
+	else {
 		jAlert(result, 'Error');
 	}	
 
 }
 
+
+function callback_function(features,landId){
+	
+
+    var vectorSource = new ol.source.Vector();
+	 vectorSource.addFeatures(features);
+	 extent=vectorSource.getExtent();
+	 var cqlFilter = 'landid='+landId ;  				  				
+	  var vertexlist1=features[0].values_.geometry.clone().getCoordinates();
+
+		var tempStr="";
+		for(var i=0;i<vertexlist1[0].length;i++)
+		{
+			
+			if (tempStr=="") {
+				tempStr = vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+
+			} 
+			else {
+				tempStr = tempStr + "," + vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+			}
+			
+			
+		} 
+		
+		var serverData = {"vertexList":tempStr};
+		$.ajax({
+
+			type : 'POST',
+			url: "landrecords/vertexlabel",
+			data: serverData,
+			async:false,
+			success: function(data){
+
+			}
+		});
+		
+		var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+landId+";";
+
+	$("#mapImageId_"+landId).empty();
+	 $("#mapImageId_"+landId).append('<img  src='+url1+'>')
+	 
+	 var html2 = $("#printdiv2").html();
+	   var printWindow=window.open('','popUpWindow',  'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+		printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
+   '<html><head><title></title>'+' <link rel="stylesheet" href="/mast/resources/styles/style.css" type="text/css" />'
+   +'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style1.css" type="text/css" />'
+		+'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'
+    +'</head><body>'+html2+'</body></html>');	
+		printWindow.document.close();
+	 
+	
+}
 function generateLandForm() 
 {
 	result = RESPONSE_OK;
@@ -1910,7 +2381,7 @@ if((refrence.title).trim() == "approve")
 	deleteParcel(landid,workflowid)
 
 }else if((refrence.title).trim() == "edit  spatial"){
-	showOnMap(landid,workflowid)
+	showOnMap(landid,workflowid,"")
 
 }else if((refrence.title).trim() == "edit  parcel"){
 	edituserDefineParcel(landid,workflowid);
@@ -2176,7 +2647,7 @@ function pad (str, max)
 
 function  registerParcel(usin,workId,parcelnum){
 
-var parcelnumwithpadding = pad(parcelnum, 9);
+var parcelnumwithpadding = pad(usin, 9);
 
  jConfirm('Do you want to finalize the land record and commit the record to the land registry with parcel no ' + parcelnumwithpadding , 'Approve Confirmation', function (response) {
 
@@ -3225,7 +3696,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 		            type: "POST",
 //		            contentType: "application/json; charset=utf-8",
 		            traditional: true,
-		            url: "landrecords/savePersonOfInterestForEditing/" + landId,
+		            url: "landrecords/savePersonOfInterestForEditing/" + landId+"/"+_transactionid,
 		            data: ajaxdata,
 		            error: function (request, textStatus, errorThrown) {
 		                jAlert(request.responseText);
@@ -3383,6 +3854,7 @@ reports.prototype.ProjectDetailedSummaryReportForCommune=function(tag,communeidb
 function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 {
 	var extent;
+	var _extent;
 	var _workflowid=workflowid;
 	jQuery.ajax(
 			{
@@ -3474,7 +3946,11 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 									 $('#TypeOdClaimId').html(data[0][0].claimtype);   
 								
 								if(data[0][0].landno!=null)
-									 $('#plotId').html(data[0][0].landno);   
+									 $('#plotId').html(data[0][0].landId); 
+								
+								if(data[0][0].area!=null)
+									 $('#correctionForm_SizeId').html(data[0][0].area);   
+								
 								
 								
 							}
@@ -3586,32 +4062,77 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 													 vectorSource.addFeatures(features);
 													 extent=vectorSource.getExtent();
 													 var cqlFilter = 'landid='+fieldVal ;  				  				
-     												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
-
-				                                     var url2 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&landid="+fieldVal+";";
+													 var _extent=extent.slice();
 													 
+                                                     extent[0]=extent[0]-2.00017;
+                                                     extent[1]=extent[1]-2.00017;
+													 extent[2]=extent[2]+2.00017;
+													 extent[3]=extent[3]+2.00017;
+													 
+													 
+													 
+													 var vertexlist1=features[0].values_.geometry.clone().getCoordinates();
+
+														var tempStr="";
+														for(var i=0;i<vertexlist1[0].length;i++)
+														{
+															
+															if (tempStr=="") {
+																tempStr = vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+
+															} 
+															else {
+																tempStr = tempStr + "," + vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+															}
+															
+															
+														} 
+														
+														
+														var serverData = {"vertexList":tempStr};
+														$.ajax({
+
+															type : 'POST',
+															url: "landrecords/vertexlabel",
+															data: serverData,
+															async:false,
+															success: function(data){
+
+															}
+														});
+						
+                              							var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+_extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+fieldVal+";";
+														var url2 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=600&height=350&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+fieldVal+";";
+
+									
+																					 
 													jQuery('#mapImageId').empty();
 													jQuery('#mapImageId').append('<img  src='+url1+'>');
 
 													jQuery('#mapImageId1').empty();
 	                                                jQuery('#mapImageId1').append('<img  src='+url2+'>');
 
-												    var _html="";
-													var _th="<tr><th>Latitude</th><th>Longitude </th></tr>"
-													 for (i = 0; i < features[0].geometryChangeKey_.target.flatCoordinates.length/2; i++) {
-														 var j=i;
-														_html =_html+ "<tr><td>"+features[0].geometryChangeKey_.target.flatCoordinates[i] +"</td><td>"+features[0].geometryChangeKey_.target.flatCoordinates[j++] + "</td><tr>";
-													} 
-													jQuery('#latLongId').empty();
-													var _table=_th+_html;
-	                                                jQuery('#latLongId').append(_table);	
-													
-												
+												  
+												    jQuery('#vertexTableBody_map').empty();
+												     vertexTableList=[];
+													 var _index=1;
+													     for(var i=0;i<vertexlist1[0].length;i++) {
+															var tempList=[];
+															tempList["index"]=_index;
+															tempList["x"]=(vertexlist1[0][i][0]).toFixed(5);
+															tempList["y"]=(vertexlist1[0][i][1]).toFixed(5);
+															vertexTableList.push(tempList);
+															_index=_index+1;
+														}
+					                                  	jQuery("#vertexTable_map").tmpl(vertexTableList).appendTo("#vertexTableBody_map");
+														
+														
+														
 	                            
 	                       							var html = $("#printDiv").html();
 													var printWindow=window.open('','popUpWindow', 'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
 															printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
-															'<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
+															'<html><head><title></title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
 															+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+
 															'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'+
 															 +'</head><body>'+html+'</body></html>');	
@@ -3711,7 +4232,13 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 								 $('#TypeOdClaimId').html(data[0][0].claimtype);   
 							
 							if(data[0][0].landno!=null)
-								 $('#plotId').html(data[0][0].landno);   
+								 $('#plotId').html(data[0][0].landId);
+							
+							
+							if(data[0][0].area!=null)
+							 $('#correctionForm_SizeId').html(data[0][0].area);   
+							
+							
 							
 							
 						}
@@ -3768,11 +4295,24 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 							 
 							}
 							else if(data[2].length == 1){
+								jQuery("#OwnerRecordsAttrTemplate1").val("");
 									jQuery("#OwnerRecordsAttrTemplate1").tmpl(data[2][0]).appendTo("#OwnerRecordsRowData1");
 								
 							}
 							
 						}
+						 
+						 
+						 if(data[2]!= null){
+								
+							 $('#OwnerRecordsRowData1').empty();
+								
+
+							 for(var i=0;i<data[2].length;i++){
+							 $("#OwnerRecordsAttrTemplate1").tmpl(data[2][i]).appendTo("#OwnerRecordsRowData1");
+							 }
+						 
+					 }
 							 var layerName = "spatialUnitLand";
 							 var objLayer=getLayerByAliesName(layerName);
 							
@@ -3819,32 +4359,72 @@ function FetchdataCorrectionReport(trans_id,land_id,workflowid )
 												 vectorSource.addFeatures(features);
 												 extent=vectorSource.getExtent();
 												 var cqlFilter = 'landid='+fieldVal ;  				  				
-												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
-			                                     var url2 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&landid="+fieldVal+";";
-
+												
+												 var _extent=extent.slice();
+													 
+                                                     extent[0]=extent[0]-2.00017;
+                                                     extent[1]=extent[1]-2.00017;
+													 extent[2]=extent[2]+2.00017;
+													 extent[3]=extent[3]+2.00017;
+													 
 												 
+													 var vertexlist1=features[0].values_.geometry.clone().getCoordinates();
+
+														var tempStr="";
+														for(var i=0;i<vertexlist1[0].length;i++)
+														{
+															
+															if (tempStr=="") {
+																tempStr = vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+
+															} 
+															else {
+																tempStr = tempStr + "," + vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+															}
+															
+															
+														} 
+														
+														var serverData = {"vertexList":tempStr};
+														$.ajax({
+
+															type : 'POST',
+															url: "landrecords/vertexlabel",
+															data: serverData,
+															async:false,
+															success: function(data){
+
+															}
+														});
+														
+														var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+_extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+fieldVal+";";
+														var url2 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=600&height=350&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+fieldVal+";";
+						
 												jQuery('#mapImageId').empty();
 												jQuery('#mapImageId').append('<img  src='+url1+'>');
 
 												jQuery('#mapImageId1').empty();
                                                 jQuery('#mapImageId1').append('<img  src='+url2+'>');
 
-											    var _html="";
-												var _th="<tr><th>Latitude</th><th>Longitude </th></tr>"
-												 for (i = 0; i < features[0].geometryChangeKey_.target.flatCoordinates.length/2; i++) {
-													 var j=i;
-													_html =_html+ "<tr><td>"+features[0].geometryChangeKey_.target.flatCoordinates[i] +"</td><td>"+features[0].geometryChangeKey_.target.flatCoordinates[j++] + "</td><tr>";
-												} 
-												jQuery('#latLongId').empty();
-												var _table=_th+_html;
-                                                jQuery('#latLongId').append(_table);	
-												
+											 jQuery('#vertexTableBody_map').empty();
+												     vertexTableList=[];
+													 var _index=1;
+													     for(var i=0;i<vertexlist1[0].length;i++) {
+															var tempList=[];
+															tempList["index"]=_index;
+															tempList["x"]=(vertexlist1[0][i][0]).toFixed(5);
+															tempList["y"]=(vertexlist1[0][i][1]).toFixed(5);
+															vertexTableList.push(tempList);
+															_index=_index+1;
+														}
+					                                  	jQuery("#vertexTable_map").tmpl(vertexTableList).appendTo("#vertexTableBody_map");
+														
 											
                             
                        							var html = $("#printDiv").html();
 												var printWindow=window.open('','popUpWindow', 'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
 														printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
-														'<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
+														'<html><head><title></title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
 														+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+
 														'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'+
 														 +'</head><body>'+html+'</body></html>');	
@@ -3916,10 +4496,10 @@ function _generateFinalLandForm(trans_id,land_id)
 									 $('#claimTypeId').html(data[0][0].claimtype);*/
 								 
 								if(data[0][0].transactionid!=null)
-									 $('#reg_no').text(data[0][0].transactionid);
+									 $('#reg_nononnatural').text(data[0][0].transactionid);
 								
 								if(data[0][0].landno != "")
-									$('#parcel_no').text("000000"+data[0][0].landno);
+									$('#parcel_no').text(data[0][0].landno);
 								/* if(data[0][0].claimdate!=null)
 									 $('#claimDateId').html(data[0][0].claimdate); */
 								 
@@ -4089,6 +4669,8 @@ function _generateFinalLandForm(trans_id,land_id)
 								if(data[4]!=null){
 									  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
 									  jQuery('#imageSignature').append('<img  src='+url2+'>');
+									  jQuery('#authorizedmember_Id').text(data[4].authorizedmember);
+									  
 									}
 									
 								
@@ -4139,9 +4721,37 @@ function _generateFinalLandForm(trans_id,land_id)
 													 vectorSource.addFeatures(features);
 													 extent=vectorSource.getExtent();
 													 var cqlFilter = 'landid='+fieldVal ;  				  				
-    												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
-    			                                     //var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
-													 
+													  var vertexlist1=features[0].values_.geometry.clone().getCoordinates();
+
+														var tempStr="";
+														for(var i=0;i<vertexlist1[0].length;i++)
+														{
+															
+															if (tempStr=="") {
+																tempStr = vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+
+															} 
+															else {
+																tempStr = tempStr + "," + vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+															}
+															
+															
+														} 
+														
+														var serverData = {"vertexList":tempStr};
+														$.ajax({
+
+															type : 'POST',
+															url: "landrecords/vertexlabel",
+															data: serverData,
+															async:false,
+															success: function(data){
+
+															}
+														});
+														
+														var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+fieldVal+";";
+						
 													jQuery('#mapImageId01').empty();
 													jQuery('#mapImageId01').append('<img  src='+url1+'>');
 
@@ -4204,10 +4814,10 @@ function _generateFinalLandForm(trans_id,land_id)
 								 $('#claimTypeId').html(data[0][0].claimtype);*/
 							 
 							if(data[0][0].transactionid!=null)
-								 $('#reg_no').text(data[0][0].transactionid);
+								 $('#reg_noSingle').text(data[0][0].transactionid);
 							
 							if(data[0][0].landno != "")
-								$('#parcel_no').text("000000"+data[0][0].landno);
+								$('#parcel_no').text(data[0][0].landno);
 							/* if(data[0][0].claimdate!=null)
 								 $('#claimDateId').html(data[0][0].claimdate); */
 							 
@@ -4266,8 +4876,19 @@ function _generateFinalLandForm(trans_id,land_id)
 							}
                         	 }
 						}
-						 if(data[2]!= null){
-							 if(data[2].length > 2){
+//						 if(data[2]!= null){
+							
+									
+									
+
+								/* for(var i=0;i<data[2].length;i++){
+								
+								 $("#OwnerRecordsAttrTemplate1").tmpl(data[2][i]).appendTo("#OwnerRecordsRowData1");
+								 }*/
+								
+						
+							 
+							/* if(data[2].length > 2){
 								 if(data[2][2] != null){
 								if(data[2][2].firstname!=null || data[2][2].middlename!=null || data[2][2].lastname!=null){
 									 $('#Owner_name').text(data[2][2].firstname+" "+data[2][2].middlename+" "+data[2][2].lastname);
@@ -4317,7 +4938,7 @@ function _generateFinalLandForm(trans_id,land_id)
 								
 							}
 							
-						}
+						}*/
 						/*	if(data[0][0].landsharetype!=null)
 								 $('#TypeOftenureId').html(data[0][0].landsharetype);  
 							
@@ -4326,11 +4947,50 @@ function _generateFinalLandForm(trans_id,land_id)
 							 
 							if(data[0][0].tenureclasstype!=null)
 								 $('#TypeofRightId').html(data[0][0].tenureclasstype);  */
+						 if(data[2]!= null){
+								
+							 $('#OwnerRecordsRowData1').empty();
+								if(data[2].length>2){
+									$('#jointownertable_2').show();
+									
+								}else{
+									
+									$('#jointownertable_2').hide();
+								}
+
+								 for(var i=0;i<data[2].length;i++){
+									 if(i==0){
+											$('#owner').text(data[2][i].firstname+" "+data[2][i].middlename+" "+data[2][i].lastname);
+											 $("#FirstOwnerTemplate").tmpl(data[2][i]).appendTo("#FirstOwnerRowData1");
+									 }else {
+										 $("#jointOwnerTemplate").tmpl(data[2][i]).appendTo("#jointOwnerRowData1");									 }
+									 
+									 /*else if(i==2){
+										 $('#jointOwner_name2').text(data[2][i].firstname+" "+data[2][i].middlename+" "+data[2][i].lastname);
+
+									 }
+*/									 
+								 $("#OwnerRecordsAttrTemplate1").tmpl(data[2][i]).appendTo("#OwnerRecordsRowData1");
+								 }
 							 
+						 }
 						 
 							if(data[3]!=null){
 								
-								if(data[3].length > 2){
+								 for(var i=0; i<data[3].length; i++){
+									 if(null != data[3][i].laParty){
+										 if(null != data[3][i].laParty.partyid){
+									  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname;
+									  
+									  jQuery('#imagePersonId_'+data[3][i].laParty.partyid).append('<img  src='+url1+'>');
+									 }
+								 }
+									 
+									 
+								 }
+							}
+								
+							/*	if(data[3].length > 2){
 									 for(var i=0; i<data[3].length; i++){
 								  if(i==2){
 									  var url1 = "http://"+location.host+"/mast_files"+data[3][i].documentlocation +"/" +data[3][i].documentname ;
@@ -4363,13 +5023,14 @@ function _generateFinalLandForm(trans_id,land_id)
 									 var url1 = "http://"+location.host+"/mast_files"+data[3][0].documentlocation +"/" +data[3][0].documentname ;
 									  jQuery('#imagePersonId').append('<img  src='+url1+'>');
 									
-								}
+								}*/
 							  
-							}
+							
 							
 							if(data[4]!=null){
 								  var url2 = "http://"+location.host+"/mast_files"+"/resources/signatures" +"/" +data[4].authorizedmembersignature;
 								  jQuery('#imageSignature').append('<img  src='+url2+'>');
+								  jQuery('#authorizedmember_Id').text(data[4].authorizedmember);
 								}
 								
 							
@@ -4420,10 +5081,41 @@ function _generateFinalLandForm(trans_id,land_id)
 												 vectorSource.addFeatures(features);
 												 extent=vectorSource.getExtent();
 												 var cqlFilter = 'landid='+fieldVal ;  				  				
-												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
-			                                    // var url2 = url1.replace('{{CQLFILTER}}', cqlFilter);
-												jQuery('#mapImageId01').empty();
-												jQuery('#mapImageId01').append('<img  src='+url1+'>');
+												
+                                                        var vertexlist1=features[0].values_.geometry.clone().getCoordinates();
+
+														var tempStr="";
+														for(var i=0;i<vertexlist1[0].length;i++)
+														{
+															
+															if (tempStr=="") {
+																tempStr = vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+
+															} 
+															else {
+																tempStr = tempStr + "," + vertexlist1[0][i][0] + "," + vertexlist1[0][i][1];
+															}
+															
+															
+														} 
+														
+														var serverData = {"vertexList":tempStr};
+														$.ajax({
+
+															type : 'POST',
+															url: "landrecords/vertexlabel",
+															data: serverData,
+															async:false,
+															success: function(data){
+
+															}
+														});
+														
+														var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;;INCLUDE;INCLUDE;landid="+fieldVal+";";
+						
+
+														jQuery('#mapImageId01').empty();
+														jQuery('#mapImageId01').append('<img  src='+url1+'>');
 
 											
                                                 var html2 = $("#printdiv2").html();
@@ -4454,6 +5146,160 @@ function _generateFinalLandForm(trans_id,land_id)
 				}
 			});
 }
-				
-		
 	
+function landDocs(id){
+$.ajax({
+    type: "GET",
+    url: "landrecords/landDocs/" + id,
+    data: filter,
+    success: function(data)
+    {
+    	if(data.length > 0){
+        	
+        	
+    	  $("#genmultimediaRowData").empty();
+          $("#landmediaTemplate_add").tmpl(data).appendTo("#genmultimediaRowData");	
+    	}
+}
+});
+}
+
+function viewMultimediaByLandId(id) {
+	
+	var flag=false;
+    jQuery.ajax({
+        type: 'GET',
+        async:false,
+        url: "landrecords/landmediaavail/" + id,
+        success: function (result) {
+            if (result == true) {
+            	flag=true; 
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            jAlert('Request not completed');
+        }
+    });
+    
+    if(flag){
+    window.open("landrecords/downloadlandmedia/" + id, 'popUp', 'height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
+    }else{
+
+    	 jAlert('File not Found',"Info");
+    }
+}	
+	
+
+function uploadLandMediaFile(id)
+{
+
+
+	var flag=false;
+	var val1 = 0;
+	var formData = new FormData();
+	var appid='#'+"landmediafileUpload"+id;
+	var file = $(""+appid+"")[0].files[0];
+
+	var alias=$("#alias").val();
+
+	 if(typeof(file)==="undefined")
+	{
+	
+		jAlert('Please Select file to upload','upload');
+	}
+
+	
+
+	else
+	{
+		
+		$.each($(""+appid+"")[0].files,
+				function(ind2, obj2) {
+                		$.each(	$(""+appid+"")[0].files[val1],
+									function(ind3, obj3) {
+										if (ind3 == "type") {
+											if (obj3 == "image/png"
+													|| obj3 == "image/jpeg"
+													|| obj3 == "image/gif") {
+												 flag =true;
+											} else {
+												 flag =false;
+												jAlert("Select File should be of type png,jpeg,gif.");
+												
+											}
+										}
+
+									});
+					val1 = val1 + 1;
+				});
+		
+		if(flag){
+		formData.append("spatialdata",file);
+		formData.append("transid", _transactionid);
+		formData.append("landid", Personusin);
+		formData.append("docsid", id);
+		
+		$.ajax({
+			url: 'upload/landmedia/',
+			type: 'POST',
+			data:  formData,
+			mimeType:"multipart/form-data",
+			contentType: false,
+			cache: false,
+			processData:false,
+			success: function(data, textStatus, jqXHR)
+			{	
+				
+				
+				if(data=="Success"){
+					landDocs(Personusin);
+					jAlert(' Multimedia Upload Sucessful','Upload');
+					$('#alias').val('');
+					$(""+appid+"").val(null);
+				}
+				else
+					{
+					
+
+				jAlert('Unable To Upload Multimedia','upload');
+				//displayRefreshedProjectData(project);
+//				displaySelectedCategory(project);
+				/*$('#fileUploadSpatial').val('');
+				$('#alias').val('');*/
+					}
+
+			}
+			
+		});
+		}
+		
+	}
+}
+
+function deleteLandMediaFile(id){
+	
+	var formData = new FormData();
+	
+	formData.append("docid", id);
+	formData.append("transid", _transactionid);
+	formData.append("landid", Personusin);
+	
+	$.ajax({
+		url: 'delete/landmedia/',
+		type: 'POST',
+		data:  formData,
+		mimeType:"multipart/form-data",
+		contentType: false,
+		cache: false,
+		processData:false,
+		success: function(data, textStatus, jqXHR)
+		{	
+			
+
+			jAlert('File Deleted Successfull');
+			
+
+		}
+		
+	});
+}

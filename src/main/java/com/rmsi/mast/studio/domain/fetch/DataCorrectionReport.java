@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 public class DataCorrectionReport implements Serializable {
@@ -47,6 +48,9 @@ public class DataCorrectionReport implements Serializable {
 	private String proposedused; //
 	private Integer claimno; //
 	private Integer transactionid;
+	
+	@Transient
+	private String landnumber;
 	
 	public Long getLandId() {
 		return landId;
@@ -198,6 +202,16 @@ public class DataCorrectionReport implements Serializable {
 	}
 	public void setPartyid(Integer partyid) {
 		this.partyid = partyid;
+	}
+	
+	@Transient
+	public String getLandnumber() {
+		return landnumber;
+	}
+	
+	@Transient
+	public void setLandnumber(String landnumber) {
+		this.landnumber = landnumber;
 	}
 	
 		

@@ -392,19 +392,7 @@ public class UserDataServiceImpl implements UserDataService {
             // Get list of all attributes defined for the project
             List<Surveyprojectattribute> projectAttributes = surveyProjectAttribute.getSurveyProjectAttributes(projectName);
        
-            LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
-			laExtTransactiondetail.setCreatedby(userId);
-			laExtTransactiondetail.setCreateddate(new Date());
-			laExtTransactiondetail.setIsactive(true);
-			
-			Status status = registrationRecordsService.getStatusById(1);
-			
-			laExtTransactiondetail.setLaExtApplicationstatus(status);
-			laExtTransactiondetail.setModuletransid(1);
-			laExtTransactiondetail.setRemarks("");
-			laExtTransactiondetail.setProcessid(1l);
-			LaExtTransactiondetail LaExtTransactionObj =laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
-			
+           
 			
             for (Property prop : properties) {
 
@@ -550,9 +538,24 @@ public class UserDataServiceImpl implements UserDataService {
 //                }
               
                 
-                spatialUnit.setArea( Double.parseDouble(new DecimalFormat(".######").format(geomConverter.getArea(prop.getCoordinates()))));
+            	spatialUnit.setArea( Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
                 serverPropId = spatialUnitDao.addSpatialUnit(spatialUnit).getLandid();
                 spatialUnitDao.clear();
+                
+                
+                LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+    			laExtTransactiondetail.setCreatedby(userId);
+    			laExtTransactiondetail.setCreateddate(new Date());
+    			laExtTransactiondetail.setIsactive(true);
+    			
+    			Status status = registrationRecordsService.getStatusById(1);
+    			
+    			laExtTransactiondetail.setLaExtApplicationstatus(status);
+    			laExtTransactiondetail.setModuletransid(1);
+    			laExtTransactiondetail.setRemarks("");
+    			laExtTransactiondetail.setProcessid(1l);
+    			LaExtTransactiondetail LaExtTransactionObj =laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
+    			
 
                 // Save property attributes
                 List<AttributeValues> attributes = createAttributesList(projectAttributes, prop.getAttributes());
@@ -693,7 +696,7 @@ public class UserDataServiceImpl implements UserDataService {
 //Vishal(10-1-2018)
                                                 attributeValuesDao.addAttributeValues(attributes, socialTenurerelationship.getPersonlandid());
                         // Only 1 natural person is allowed for non-natural
-                        break;
+//                        break;
                     }
                 
                 
@@ -867,6 +870,7 @@ public class UserDataServiceImpl implements UserDataService {
                     
                     if(splited.length>2)
                     poi.setLastName(splited[2]);
+                    poi.setTransactionid(LaExtTransactionObj.getTransactionid());
                     
                     poi.setCreatedby(userId);
                     poi.setCreateddate(new Date());
@@ -897,14 +901,16 @@ public class UserDataServiceImpl implements UserDataService {
                     spatialUnitDeceasedPersonDao.addDeceasedPerson(deadPersons, serverPropId);
                 }
                 
+                
+                result.put(featureId.toString(), Long.toString(serverPropId));
                 }
                 
           
                 WorkflowStatusHistory workflowStatusHistory = new WorkflowStatusHistory();
-
+//                result.put(featureId.toString(), Long.toString(serverPropId));
  
                 // Add server property ID to the result
-                result.put(featureId.toString(), Long.toString(serverPropId));
+              
             
           
             
@@ -1132,6 +1138,7 @@ public class UserDataServiceImpl implements UserDataService {
             	}
             }
             
+            
             else if(id == 1134){
             	
             	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
@@ -1169,6 +1176,13 @@ public class UserDataServiceImpl implements UserDataService {
 
                 naturalPerson.setLaPartygroupIdentitytype(idTypeDao.getTypeByAttributeOptionId(attOptions.getParentid()));
             }
+            
+            else if (id == 1156) {
+            	if(! value.equalsIgnoreCase("")){
+            	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
+                naturalPerson.setOwnertype(attOptions.getParentid());
+            	}
+            } 
            /* else if (id == 22 && value != null && !value.equals("")) {
                 naturalPerson.setDateofbirth(new SimpleDateFormat("yyyy-MM-dd").parse(value));
             }*/
@@ -2343,7 +2357,7 @@ public class UserDataServiceImpl implements UserDataService {
                 
                 setReourcePolygonPropAttibutes(spatialUnit, prop);
                 try {
-					spatialUnit.setArea( Double.parseDouble(new DecimalFormat(".######").format(geomConverter.getArea(prop.getCoordinates()))));
+                	spatialUnit.setArea( Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2599,6 +2613,9 @@ public class UserDataServiceImpl implements UserDataService {
                 	resourcePoiAttribvalues.setLandid(serverPropId.intValue());
                 	resourcePoiAttribvalues.setGeomtype(prop.getGeomType());
                 	resourcePoiAttribvalues.setProjectid(Integer.parseInt(projectName));
+                	if(null != attributes.getGroupId()){
+                	resourcePoiAttribvalues.setGroupid(attributes.getGroupId());
+                	}
                 	resourcePOIAttributeValuesdao.addResourcePOIAttributeValues(resourcePoiAttribvalues);
                 	
                 }
@@ -2609,6 +2626,7 @@ public class UserDataServiceImpl implements UserDataService {
                 resourcelandClassification.setClassificationid(resourceClassification);
                 resourcelandClassification.setLandid(serverPropId.intValue());
                 resourcelandClassification.setGeomtype(prop.getGeomType());
+                resourcelandClassification.setCategoryid(prop.getClassificationAttributes().get(2).getAttribID());
                 resourcelandClassification.setProjectid(Integer.parseInt(projectName));
                 ResourceSubClassification resourcesubClassification = resourceSubClassificationService.getById(prop.getClassificationAttributes().get(1).getAttribID());
                 resourcelandClassification.setSubclassificationid(resourcesubClassification);
@@ -2622,6 +2640,7 @@ public class UserDataServiceImpl implements UserDataService {
                 customAttributes.setCustomattributeid(resouceCustomAttributes);
                 customAttributes.setAttributevalue(rescustomAttribute.getAttribValue());
                 customAttributes.setLandid(serverPropId.intValue());
+                customAttributes.setAttributeoptionsid(rescustomAttribute.getResID());
                 customAttributes.setGeomtype(prop.getGeomType());
                 customAttributes.setProjectid(Integer.parseInt(projectName));
                 if(rescustomAttribute.getSubclassificationid().equalsIgnoreCase("null")){

@@ -28,7 +28,7 @@ public class AttributeOptionsHibernateDao extends
     @Override
     public List<AttributeOptions> getAttributeOptions(Long attributeId) {
 
-        String query = "select a from AttributeOptions a where a.attributeMaster.attributemasterid = :attributeId";
+        String query = "select a from AttributeOptions a where a.attributeMaster.attributemasterid = :attributeId order by a.attributeoptionsid";
 
         try {
             @SuppressWarnings("unchecked")

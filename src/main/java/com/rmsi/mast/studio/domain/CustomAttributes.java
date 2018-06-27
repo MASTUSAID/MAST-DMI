@@ -46,9 +46,21 @@ public class CustomAttributes implements Serializable{
 	
 	@Transient
 	private Integer Fieldname;
+	
+	private Integer attributeoptionsid;
 
 	
 	
+	public Integer getAttributeoptionsid() {
+		return attributeoptionsid;
+	}
+
+
+	public void setAttributeoptionsid(Integer attributeoptionsid) {
+		this.attributeoptionsid = attributeoptionsid;
+	}
+
+
 	public CustomAttributes(){
 		
 	}

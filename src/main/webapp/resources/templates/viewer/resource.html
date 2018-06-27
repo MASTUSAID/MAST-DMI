@@ -162,6 +162,8 @@
 							<li><a href="#tabGeneralInfo">General Info</a></li>
 							<li id="liPoi_res" onclick="issavedisabled();"><a
 								class="linkliPoi" href="#tabs-2c-res">Person</a></li>
+								<li><a href="#tab-Custom-attributes">Custom Attributes</a></li>
+								
 
 						</ul>
 						<div id="tabGeneralInfo">
@@ -209,8 +211,13 @@
 												class="text ui-widget-content ui-corner-all" readonly>
 											</td>
 											
-											<td><label>Property Size</label> <input type="text"
+											<td><label>Property Size (Acre)</label> <input type="text"
 												name="size_id" id="size_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
+											
+											<td><label>LandId</label> <input type="text"
+												name="landid" id="landid" value=""
 												class="text ui-widget-content ui-corner-all" readonly>
 											</td>
 
@@ -304,9 +311,36 @@
 												</h3></td>
 										</tr>
 									</table>
+									
+									<button id="addPersonbutton" onclick="javascript:addNewPerson();">
+                                          AddPerson
+                                        </button>
 								</div>
 								<div id="ResourcepersonsEditingGrid0"></div>
-								<div id="CustomAttributes">
+								
+								
+								<div  id="ResourcePOI" style="margin-top: -80px;">
+									<table style="width: 100%; margin-bottom: 23px;">
+										<tr>
+											<td class="borderedBottom" colspan="4"><h3>
+													<label class="no-margin-bottom">POI</label>
+												</h3></td>
+										</tr>
+									</table>
+									
+									<button id="addPersonbutton" onclick="javascript:addNewResourcePOI();">
+                                          AddPOI
+                                        </button>
+                                        
+								</div>
+								<!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
+								<div id="ResourcePOIGrid"></div>
+								
+							</div>
+						</div>
+						
+						<div id="tab-Custom-attributes">
+						<div id="CustomAttributes">
 									<table style="width: 100%; margin-bottom: 23px;">
 										<tr>
 											<td class="borderedBottom" colspan="4"><h3>
@@ -317,7 +351,6 @@
 								</div>
 								<!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
 								<div id="CustomAttributeEditingGrid0"></div>
-							</div>
 						</div>
 					</div>
 				</form>

@@ -35,8 +35,8 @@ public class LaExtTransactionHistory implements Serializable{
 	private Integer transactionhistoryid;
 	
 	
-	private Long oldownerid;
-	private Long newownerid;
+	private String oldownerid;
+	private String newownerid;
 	private Long landid;
 	private Integer transactionid;
 	private Boolean isactive;
@@ -65,7 +65,7 @@ public class LaExtTransactionHistory implements Serializable{
 	public void setTransactionid(Integer transactionid) {
 		this.transactionid = transactionid;
 	}
-	public Long getOldownerid() {
+	/*public Long getOldownerid() {
 		return oldownerid;
 	}
 	public void setOldownerid(Long oldownerid) {
@@ -76,7 +76,7 @@ public class LaExtTransactionHistory implements Serializable{
 	}
 	public void setNewownerid(Long newownerid) {
 		this.newownerid = newownerid;
-	}
+	}*/
 	public Boolean getIsactive() {
 		return isactive;
 	}
@@ -113,6 +113,18 @@ public class LaExtTransactionHistory implements Serializable{
 	}
 	public void setLandid(Long landid) {
 		this.landid = landid;
+	}
+	public String getOldownerid() {
+		return oldownerid;
+	}
+	public void setOldownerid(String oldownerid) {
+		this.oldownerid = oldownerid;
+	}
+	public String getNewownerid() {
+		return newownerid;
+	}
+	public void setNewownerid(String newownerid) {
+		this.newownerid = newownerid;
 	}
 
 

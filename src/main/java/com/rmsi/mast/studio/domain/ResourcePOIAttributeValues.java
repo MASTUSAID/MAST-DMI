@@ -45,6 +45,18 @@ public class ResourcePOIAttributeValues implements Serializable {
 
 	private String geomtype;
 	
+	public Integer getGroupid() {
+		return groupid;
+	}
+
+
+	public void setGroupid(Integer groupid) {
+		this.groupid = groupid;
+	}
+
+
+	private Integer groupid;
+	
 	
 	public ResourcePOIAttributeValues(){
 		

@@ -10,6 +10,7 @@ public interface LaExtTransactiondetailDao extends GenericDAO<LaExtTransactionde
 
 	LaExtTransactiondetail getLaExtTransactiondetail(Integer id);
 	LaExtTransactiondetail getLaExtTransactionByLeaseeid(Long id);
+	LaExtTransactiondetail getpoiByLeaseeid(Long id);
 	LaExtTransactiondetail getLaExtTransactionByLeaseeidForSurrenderLease(Long id);
 	LaExtTransactiondetail getLaExtTransactiondetailByLandid(long id);
 	@Transactional

@@ -232,4 +232,39 @@ public class SocialTenureRelationshipHibernateDAO extends GenericHibernateDAO<So
 
     }
 
+	@Override
+	public List<SocialTenureRelationship> findBatchbyUsin(
+			Long transactionid) {
+		
+		/*Long startid=transactionidstart;
+		
+		Long endid=transactionidend;
+		
+		Long transiddiffr = transactionidend - transactionidstart;
+		String ids= startid+",";
+		for(int i=0; i<transiddiffr; i++){
+			transactionidstart =transactionidstart+1;
+			ids=ids+transactionidstart+",";
+		}
+		
+		ids=ids.substring(0, ids.length()-1);*/
+		
+
+        try {
+            Query query = getEntityManager().createQuery("Select st from SocialTenureRelationship st where (st.laExtTransactiondetail.transactionid ="+ transactionid +" and st.isactive=true and st.laPartygroupPersontype.persontypeid in (1,2,3))");
+            List<SocialTenureRelationship> socialTenure = query.getResultList();
+
+            if (socialTenure.size() > 0) {
+                return socialTenure;
+            } else {
+                return new ArrayList<SocialTenureRelationship>();
+            }
+        } catch (Exception e) {
+
+            logger.error(e);
+            return new ArrayList<SocialTenureRelationship>();
+        }
+
+    }
+
 }

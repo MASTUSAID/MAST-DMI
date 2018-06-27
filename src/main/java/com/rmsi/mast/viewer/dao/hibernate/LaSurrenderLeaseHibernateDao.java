@@ -64,5 +64,38 @@ public class LaSurrenderLeaseHibernateDao extends GenericHibernateDAO<LaSurrende
 		}
 	}
 
+	@Override
+	public LaSurrenderLease getSurrenderleaseByLandandTransId(Long landId,
+			Integer transactionid) {
+		try{
+			 String strQuery = "select * from la_surrenderlease ls left join la_ext_transactiondetails trans on ls.leaseid = trans.moduletransid where ls.landid= "+landId+" and trans.transactionid"+transactionid +" and trans.processid= 5";
+				List<LaSurrenderLease> laSurenderLeaseobj = getEntityManager().createNativeQuery(strQuery,LaSurrenderLease.class).getResultList();
+			if(laSurenderLeaseobj.size()>0){
+			return laSurenderLeaseobj.get(0);
+			}
+			return null;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	@Override
+	public LaSurrenderLease getObjbySurrenderLeaseeId(Integer leaseeId) {
+		
+		try {
+			Query query = getEntityManager().createQuery("select la from LaSurrenderLease la where la.leaseid = :landid");
+			@SuppressWarnings("unchecked")
+			List<LaSurrenderLease> laSurrenderLeaseobj = query.setParameter("landid", leaseeId).getResultList();
+
+			return laSurrenderLeaseobj.get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 }

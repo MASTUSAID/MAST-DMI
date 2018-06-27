@@ -37,6 +37,21 @@ var Custom3 = "";
 var Custom4 = "";
 
 var Custom5 = "";
+var Custom6 = "";
+var Custom7 = "";
+var Custom8 = "";
+var Custom9 = "";
+
+var Community_Area = "";
+
+var poiFirstName = "";
+var poiMiddleName = "";
+var poiLastName ="";
+var poiDob= "";
+var poiRelation= "";
+var poiGender="";
+var isAddPerson = 0;
+var geomName= "";
 
 
 
@@ -61,12 +76,18 @@ function resource(_selectedItem) {
 
 function displayRefreshedResourceRecords() {
 
+	records_from_Res=0;
+	
        jQuery.ajax({
         url: "resource/getAllresouce/" + activeProject + "/" + 0,
         async: false,
         success: function (data) {
             dataList = data;
-           projectId =  dataList[0].projectId
+            if(null==dataList && dataList==""){
+           
+            }else{
+            	projectId =  dataList[0].projectId;
+            }
 			
 
         jQuery("#landresource-div").empty();
@@ -135,8 +156,8 @@ function RegistrationRecords_Res(records_from_Res){
         url: "resource/getAllresouce/" + activeProject + "/" + records_from_Res,
         async: false,
         success: function (data) {
-            
-			 jQuery("#resourceRecordsRowData1").empty();
+        	dataList=data;
+             jQuery("#resourceRecordsRowData1").empty();
 
 			 if (data.length != 0 && data.length != undefined) {
                  jQuery("#resourceRecordsAttrTemplate1").tmpl(data).appendTo("#resourceRecordsRowData1");
@@ -165,6 +186,8 @@ function ActionfillResource(landid,geomType){
 	    var html="";
     	html+="<li> <a title='Edit Attribute' id='' name=''  href='#' onclick='viewAttribute("+landid+")'>Edit Attribute</a></li>";
 		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=viewOnMap("+landid+",'"+geomType+"')>Edit Spatial</a></li>";
+//		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=getFarmReport("+landid+","+projectId+",'"+geomType+"')>Farm Report</a></li>";
+		
 		$(""+appid+"").append('<div class="signin_menu"><div class="signin"><ul>'+html+'</ul></div></div>');
 
 		$(".signin_menu").toggle();
@@ -207,6 +230,11 @@ function viewOnMap(usin,geom) {
 		  layerAlias="point";
 	 }
     var fieldVal = usin;
+    
+    var layer = getLayerByAliesName(layerAlias);
+    layer.getSource().clear();
+    
+    
     zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes,layerAlias);
 }
 function zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes,layerAlias) {
@@ -318,6 +346,8 @@ function zoomToResource(geom) {
 }
 function viewAttribute(usin)
 {
+	
+	 isAddPerson = 0;
 	$(".signin_menu").hide();
 	landId = usin;
 	
@@ -338,6 +368,7 @@ function viewAttribute(usin)
 	
 	for(var i=0; i < dataList.length; i++){
 		if(dataList[i].landid == usin){
+			$("#landid").val("");
 			$("#subClassification_id").val("");
         	$("#Classification_id").val("");
         	$("#tenure_type_res").val("");
@@ -345,18 +376,23 @@ function viewAttribute(usin)
 			$("#Classification_id").val(dataList[i].classificationName);
 			$("#subClassification_id").val(dataList[i].subclassificationName);
 			$("#tenure_type_res").val(dataList[i].categoryName);
+			$("#landid").val(dataList[i].landid);
+			geomName = dataList[i].geometryName;
 
 			
 		}
 	}
 	
+
+	
 	FillResourcePersonDataNew();
 	FillResourceCustoAttributes();
+	loadResourcePersonsOfEditingForEditing();
 
 	
 	attributeHistoryDialog = $( "#editattribute-res-dialog-form" ).dialog({
 		autoOpen: false,
-		height: 500,
+		height: 600,
 		width: 1161,
 		left: 95,
 		resizable: true,
@@ -374,6 +410,18 @@ function viewAttribute(usin)
 			{	
 				
 					saveInstitute();
+					
+			}
+
+		},
+		{
+			text : "Save",
+			"id" : "Custom_Save",
+			
+			click : function()
+			{	
+				
+				saveCustomAttributes();
 					
 			}
 
@@ -405,6 +453,7 @@ function viewAttribute(usin)
 	$("#comment_cancel").html('<span class="ui-button-text">cancel</span>');
 	attributeHistoryDialog.dialog( "open" );
 	$("#comment_Save").prop("disabled",false).hide();
+	$("#Custom_Save").prop("disabled",false).hide();
 	$("#tabs").tabs({ active: 0 });
 }
 
@@ -426,13 +475,21 @@ function FillResourcePersonDataNew()
 		success : function(data1) {
 			data=data1;
 		console.log(data);
-			
+			if(data == ""){
+				$("#ResourcepersonsEditingGrid0").hide();
+			}
+			else{
+				$("#ResourcepersonsEditingGrid0").show();
+			}
 			var ctr = 2;
 			
 			var groupfinalid = 0;
 			var lastsel;
 			for ( var i = 0; i < data.length; ++i) {
 					name_Columns[ctr] = data[i][0];
+					if(data[i][3] =="Community Area"){
+						name_Columns[ctr] = data[i][3];
+					}
 					var id = data[i][1];
 					var groupid =data[i][2];
 					if(groupfinalid == 0){
@@ -456,11 +513,21 @@ function FillResourcePersonDataNew()
 					if(id==1021 || id==1068 || id==1129 || id==1120){
 						val.type= "date";
 					}
+					else if(id==1165 || id==1164 || id==1163 || id==1162 || id==1161 || id==1160|| id==1159 || id==1158|| id==1156){
+						val.visible = false;
+					}
 					else if(id==1033){
 						val.type= "date";
 					}
 					else if(id==1107){
-						val.items=[{id: 1, name: "National"}, {id: 2, name: "Regional"},{id: 3, name: "District"}, {id: 4, name: "Local "}];
+						$.ajax({
+							url :"resource/alloptions/" + id,
+							 async: false,
+							success : function(data1) {
+						
+						val.items=data1;
+							}
+						});
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -477,7 +544,14 @@ function FillResourcePersonDataNew()
 //						val.index = 4;
 //					}
 					else if(id==1022 || id==1064 || id==1116){
-						val.items=[{id: 1, name: "un-married"}, {id: 2, name: "married"},{id: 3, name: "divorced"}, {id: 4, name: "widow"},{id: 5, name: "widower"}];
+						$.ajax({
+							url :"resource/alloptions/" + id,
+							 async: false,
+							success : function(data1) {
+						
+						val.items=data1;
+							}
+						});
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -486,15 +560,30 @@ function FillResourcePersonDataNew()
 
 					}
 					else if(id==1024 || id==1070 || id==1122){
-						val.items=[{id: 1, name: "Ethnicity 1"}, {id: 2, name: "Ethnicity 2"},{id: 3, name: "Ethnicity 3"}, {id: 4, name: "Ethnicity 4"}];
+						$.ajax({
+							url :"resource/alloptions/" + id,
+							 async: false,
+							success : function(data1) {
+						
+						val.items=data1;
+							}
+						});
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
 						val.filtering= false;
 						val.name = name_Columns[ctr];
+							
 					}
 					else if(id==1025 || id==1071 || id==1123){
-						val.items=[{id: 1, name: "Yes"}, {id: 2, name: "No"}];
+						$.ajax({
+							url :"resource/alloptions/" + id,
+							 async: false,
+							success : function(data1) {
+						
+						val.items=data1;
+							}
+						});
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -504,7 +593,14 @@ function FillResourcePersonDataNew()
 
 					}
 					else if(id==1020 || id==1067 || id==1119){
-						val.items=[{id: 1, name: "male"}, {id: 2, name: "female"}];
+						$.ajax({
+							url :"resource/alloptions/" + id,
+							 async: false,
+							success : function(data1) {
+						
+						val.items=data1;
+							}
+						});
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -514,7 +610,14 @@ function FillResourcePersonDataNew()
 					}
 					
 					else if(id==1023 || id==1069 || id==1121){
-						val.items=[{id: 1, name: "Not Known"}, {id: 2, name: "Country1"}, {id: 3, name: "Country2"}, {id: 4, name: "Others"}];
+						$.ajax({
+							url :"resource/alloptions/" + id,
+							 async: false,
+							success : function(data1) {
+						
+						val.items=data1;
+							}
+						});
 						val.type= "select";
 						val.valueField="name";
 						val.textField= "name";
@@ -522,6 +625,7 @@ function FillResourcePersonDataNew()
 						val.name = name_Columns[ctr];
 
 					}
+					
 					
 					myColumns1[ctr] = val;
 					ctr++;
@@ -629,22 +733,52 @@ var personsEditingControllerForResourcePerson = {
 				$.each( result, function(index,value){
 					 
 					 for(var i in value){
-					 if(value[i].fieldname == "firstname"){
+					 if(value[i].attributevalueid == 1017 ||
+					    value[i].attributevalueid == 1035 ||
+						value[i].attributevalueid == 1063 ||
+						value[i].attributevalueid == 1079 ||
+						value[i].attributevalueid == 1088 ||
+						value[i].attributevalueid == 1097 ||
+						value[i].attributevalueid == 1108 ||
+						value[i].attributevalueid == 1115){
 						 LandId = value[0].landid;
 						 GroupId = value[0].groupid;
 						 Firstname = value[i].attributevalue;
 						 $("#landId").val(LandId);
 					 }
-					 else if(value[i].fieldname == "middlename"){
+					 else if(value[i].attributevalueid == 1018 ||
+							    value[i].attributevalueid == 1036 ||
+								value[i].attributevalueid == 1065 ||
+								value[i].attributevalueid == 1080 ||
+								value[i].attributevalueid == 1089 ||
+								value[i].attributevalueid == 1109 ||
+								value[i].attributevalueid == 1098 ||
+								value[i].attributevalueid == 1117){
 						 Middlename = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "lastname"){
+					 else if(value[i].attributevalueid == 1019 ||
+							    value[i].attributevalueid == 1037 ||
+								value[i].attributevalueid == 1066 ||
+								value[i].attributevalueid == 1081 ||
+								value[i].attributevalueid == 1090 ||
+								value[i].attributevalueid == 1099 ||
+								value[i].attributevalueid == 1110 ||
+								value[i].attributevalueid == 1118){
 						 Lastname = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Mobile No"){
+					 else if(value[i].attributevalueid == 1042 ||
+							    value[i].attributevalueid == 1030 ||
+								value[i].attributevalueid == 1073 ||
+								value[i].attributevalueid == 1086 ||
+								value[i].attributevalueid == 1095 ||
+								value[i].attributevalueid == 1105 ||
+								value[i].attributevalueid == 1125){
 						 Mobile = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Dob"){
+					 else if(value[i].attributevalueid == 1021 ||
+							    value[i].attributevalueid == 1068 ||
+								value[i].attributevalueid == 1129 ||
+								value[i].attributevalueid == 1120){
 						 Dob = value[i].attributevalue;
 						
 					    	
@@ -659,28 +793,37 @@ var personsEditingControllerForResourcePerson = {
 					    		}
 					    	}
 					 }
-					 else if(value[i].fieldname == "Marital Status"){
+					 else if(value[i].attributevalueid == 1022 ||
+							    value[i].attributevalueid == 1064 ||
+								value[i].attributevalueid == 1116){
 						 Maritalstatus = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "genderid"){
+					 else if(value[i].attributevalueid == 1020 ||
+							    value[i].attributevalueid == 1067 ||
+								value[i].attributevalueid == 1119){
 						 genderid = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Citizenship"){
+					 else if(value[i].attributevalueid == 1023 ||
+							    value[i].attributevalueid == 1069 ||
+								value[i].attributevalueid == 1121){
 						 Citizenship = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Ethnicity"){
+					 else if(value[i].attributevalueid == 1024 ||
+							    value[i].attributevalueid == 1070 ||
+								value[i].attributevalueid == 1122){
 						 Ethnicity = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Resident of Community"){
+					 else if(value[i].attributevalueid == 1025){
 						 Resident_of_Community = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Resident"){
+					 else if(value[i].attributevalueid == 1071 ||
+							   value[i].attributevalueid == 1123){
 						 Resident_of_Community = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Address"){
-						 Address = value[i].attributevalue;
-					 }
-					 else if(value[i].fieldname == "Institution Name"){
+					
+					
+					 else if(value[i].attributevalueid == 1031||
+							    value[i].attributevalueid == 1077){
 						 $("#Institution_id").val(value[i].attributevalue);
 						 Institution_Name = value[i].attributevalue;
 			        	 $("#institute").show();
@@ -689,13 +832,13 @@ var personsEditingControllerForResourcePerson = {
 			        	
 			        	 
 					 }
-					 else if(value[i].fieldname == "Registration No"){
+					 else if(value[i].attributevalueid == 1032){
 						 $("#reg_no").val(value[i].attributevalue);
 						 Registration_No = value[i].attributevalue;
 						 $("#regNo").show();
 //						 $("#tenure_occupancy").show();
 					 }
-					 else if(value[i].fieldname == "Registration Date"){
+					 else if(value[i].attributevalueid == 1033){
 						 
 			        	
 						 Registration_Date = value[i].attributevalue;
@@ -716,31 +859,41 @@ var personsEditingControllerForResourcePerson = {
 					 
 						
 					 }
-					 else if(value[i].fieldname == "How many members?"){
+					 else if(value[i].attributevalueid == 1034 ||
+							    value[i].attributevalueid == 1078){
 						 $("#members").val(value[i].attributevalue);
 						 No_Of_members = value[i].attributevalue;
 						 $("#members_tr").show();
 //						 $("#tenure_occupancy").show();
 						 $("#members_id").val(value[i].attributevalueid);
 					 }
-					 else if(value[i].fieldname == "Other details"){
+					 else if(value[i].attributevalueid == 1053 ||
+							    value[i].attributevalueid == 1055){
 						 Other_details = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Agency Name"){
+					 else if(value[i].attributevalueid == 1106){
 						 Agency = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "How are concessions to land handled?"){
+					 else if(value[i].attributevalueid == 1060){
 						 land_handled = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Community or Parties"){
+					 else if(value[i].attributevalueid == 1096){
 						 Community = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "Level of Authority"){
+					 else if(value[i].attributevalueid == 1107){
 						 Authority = value[i].attributevalue;
 					 }
-					 else if(value[i].fieldname == "How many members in collective organization?"){
+					 else if(value[i].attributevalueid == 1087){
 						 collective_members_no = value[i].attributevalue;
 					 }
+					 else if(value[i].attributevalueid == 1112){
+						 Community_Area = value[i].attributevalue;
+					 }
+					 else if(value[i].fieldAliasName != "Community Area"){
+						 if(value[i].fieldname == "Address" || value[i].fieldname == "Address/Street"){
+							 Address = value[i].attributevalue;
+						 }
+					}
 					 }
 					 var persondata ={
 			        			"landid"   :LandId,
@@ -750,6 +903,7 @@ var personsEditingControllerForResourcePerson = {
 				    			"Mobile No":Mobile,
 				    			"groupId":GroupId,
 				    			"Address": Address,
+				    			"Community Area": Community_Area, 
 				    			"Resident of Community": Resident_of_Community,
 				    			"Resident": Resident_of_Community,
 				    			"Ethnicity": Ethnicity,
@@ -792,7 +946,7 @@ var personsEditingControllerForResourcePerson = {
 	       
 	    },
 	    insertItem: function (item) {
-	        return false;
+	        
 	    },
 	    updateItem: function (item) {
 	    
@@ -800,9 +954,9 @@ var personsEditingControllerForResourcePerson = {
 	    	
 	        return $.ajax({
 	            type: "POST",
-//	            contentType: "application/json; charset=utf-8",
+//	            contentType: "application/json; charset=utf-8" landId,
 	            traditional: true,
-	            url: "landrecords/saveResourcePersonForEditing",
+	            url: "landrecords/saveResourcePersonForEditing/"+landId,
 	            data: item,
 				success:function(){
 					FillResourcePersonDataNew();
@@ -816,6 +970,17 @@ var personsEditingControllerForResourcePerson = {
 	        return false;
 	    }
 	};
+
+
+function addNewPerson(){
+	
+	$("#ResourcepersonsEditingGrid0").jsGrid("loadData");
+	isAddPerson = 1;
+	$("#ResourcepersonsEditingGrid0").jsGrid("insertItem",{});
+
+
+}
+
 
 
 
@@ -840,11 +1005,12 @@ function FillResourceCustoAttributes()
 			
 			if(data1 == ""){
 				$("#CustomAttributeEditingGrid0").hide();
-				$("#CustomAttributes").hide();
+//				$("#CustomAttributes").hide();
 			}
 			else{
 				$("#CustomAttributeEditingGrid0").show();
-				$("#CustomAttributes").show();
+//				$("#CustomAttributes").show();
+				
 			data=data1;
 		console.log(data);
 			
@@ -938,34 +1104,68 @@ var ControllerForResourceCustomAttributes = {
 	            }
 	        }).then(function(result){
 	        	var persondataArray=[];
-	        	
+	        	var map= new Map();
 					 
 					 for(var i=0; i<result.length; i++){
-					 if(result[i].fieldname == "2"){
-						 LandId = result[0].landid;
-						 Custom1 = result[i].attributevalue;
+						 
+						 if(map.size==0){
+							 map["landid"]=result[i][0];
+						 }
+						 
+						 map[result[i][6]]=result[i][2];
+						 
 					 }
-					 else if(result[i].fieldname == "5"){
+						 
+					/* if(result[i][5] == "103"){
+						 LandId = result[0].landid;
+						 Custom1 = result[i][2];
+					 }
+					 else if(result[i][5] == "104"){
 						 Custom2 = result[i].attributevalue;
 					 }
-					 else if(result[i].fieldname == "6"){
+					 else if(result[i][5] == "105"){
 						 Custom3 = result[i].attributevalue;
-					 }
-					 else if(result[i].fieldname == "7"){
+					 }*/
+					 /*else if(result[i].fieldname == "116"){
 						 Custom4 = result[i].attributevalue;
 					 }
-					
+					 else if(result[i].fieldname == "117"){
+						 Custom5 = result[i].attributevalue;
 					 }
-					 var persondata ={
+					 else if(result[i].fieldname == "118"){
+						 Custom6 = result[i].attributevalue;
+					 }
+					 else if(result[i].fieldname == "119"){
+						 Custom7 = result[i].attributevalue;
+					 }
+					 else if(result[i].fieldname == "120"){
+						 Custom8 = result[i].attributevalue;
+					 }*/
+					
+					
+					/* var persondata ={
 			        			"landid"   :LandId,
-				    			"Resource Custom Attribute":  Custom1,
-				    			"Resource Custom Attribute Sub Class 3":  Custom2,
-				    			"Resource Custom Attribute Sub Class 4":  Custom3,
-				    			"Resource Custom Attribute Sub Class 5":Custom4,
+				    			"Primary Crop":  Custom1,
+				    			"Plant Date (Primary Crop)":  Custom2,
+				    			"Duration (Primary Crop)":  Custom3,
+				    			"Secondary Crop":Custom4,
+				    			"Plant Date (Secondary Crop)":Custom5,
+				    			"Duration (Secondary Crop)":Custom6,
+				    			"Total Expenditures (Farmer)":Custom7,
+				    			"Total Sales (Farmer)":Custom8
 				    			
-				    		};
+				    		};*/
+					 
+					/* var persondata ={
+			        			"landid"   :LandId,
+				    			"Color of sky":  Custom1,
+				    			"Color of bear":  Custom2,
+				    			"Color of soil":  Custom3
+				    			
+				    			
+				    		};*/
 							
-							persondataArray.push(persondata);
+							persondataArray.push(map);
 					
 
 
@@ -999,6 +1199,251 @@ var ControllerForResourceCustomAttributes = {
 	    }
 	};
 
+
+
+function loadResourcePersonsOfEditingForEditing() {
+	 
+	  var name_Columns = [];
+		var myColumns = [];	
+		var myColumns1 = [];
+		var data = [];
+		myColumns1[0] = {type: "control", deleteButton: false};
+		myColumns1[1] = {name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"},  visible: false };
+
+		$.ajax({
+			url :"resource/allPoiDatatype/" + landId+ "/" + projectId,
+			 async: false,
+			success : function(data1) {
+				
+				if(data1 == ""){
+					$("#ResourcePOIGrid").hide();
+					$("#ResourcePOI").hide();
+				}
+				else{
+					$("#ResourcePOIGrid").show();
+					$("#ResourcePOI").show();
+				data=data1;
+			console.log(data);
+				
+				var ctr = 2;
+				var groupfinalid = 0;
+				var lastsel;
+				for ( var i = 0; i < data.length; ++i) {
+						name_Columns[ctr] = data[i][0];
+						var id = data[i][1];
+						var groupid =data[i][2];
+						if(groupfinalid == 0){
+							groupfinalid = groupid;
+							}
+							else{
+								
+							}
+							if(groupfinalid != groupid){
+								
+							}
+							if(groupfinalid == groupid){
+						
+						var val = new Object();
+						val.name = name_Columns[ctr];
+						
+						
+						val.index = ctr;
+						val.width = 120;
+						val.editable = true;
+						val.type= "text";
+						if(id==4){
+							val.type= "date";
+						}
+						else if(id==5){
+							
+							
+							$.ajax({
+								url :"resource/relationshipTypes/",
+								 async: false,
+								success : function(data1) {
+							
+							val.items=data1;
+								}
+							});
+							val.type= "select";
+							val.valueField="name";
+							val.textField= "name";
+							val.filtering= false;
+							val.name = name_Columns[ctr];
+						}
+						else if(id==6){
+							val.items= [{id: 1, name: "Male"}, {id: 2, name: "Female"}];
+							val.type= "select";
+							val.valueField="name";
+							val.textField= "name";
+							val.filtering= false;
+							val.name = name_Columns[ctr];
+						}
+						
+						
+						myColumns1[ctr] = val;
+						ctr++;
+						
+
+				}
+							myColumns1[ctr]= {name: "groupId", title: "GroupId", type: "number", width: 120, visible: false};
+				}
+				}
+				}
+
+		});
+		
+		 $("#ResourcePOIGrid").jsGrid({
+		        width: "100%",
+		        height: "200px",
+		        inserting: false,
+		        editing: true,
+		        sorting: false,
+		        filtering: false,
+		        paging: true,
+		        autoload: false,
+		        controller: resourcepersonsEditingController,
+		        pageSize: 50,
+		        pageButtonCount: 20,
+		        fields: myColumns1
+		        	
+		        	/*[
+		            {type: "control", deleteButton: false},
+		            {name: "firstName", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
+		            {name: "middleName", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
+		            {name: "lastName", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
+		            {name: "gender", title: "Gender", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}, {id: 3, name: "Other"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
+		            {name: "dob", title: "Date of birth", type: "date", width: 120 ,validate: {validator: "required", message: "Enter first name"}},
+		            {name: "relation", title: "Relation", type: "select", items: [{id: 1, name: "Spouse"}, {id: 2, name: "Son"}, {id: 3, name: "Daughter"}, {id: 4, name: "Grandson"}, {id: 5, name: "Granddaughter"}, {id: 6, name: "Brother"},
+		                                                                          {id: 7, name: "Sister"}, {id: 8, name: "Father"}, {id: 9, name: "Mother"}, {id: 10, name: "Grandmother"}, {id: 11, name: "Grandfather"}, {id: 12, name: "Aunt"},
+		                                                                          {id: 13, name: "Uncle"}, {id: 14, name: "Niece"}, {id: 15, name: "Nephew"}, {id: 16, name: "Other"}, {id: 17, name: "Other relatives"}, {id: 18, name: "Associate"},
+		                                                                          {id: 19, name: "Parents and children"}, {id: 20, name: "Siblings"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
+		            {name: "landid", title: "LandID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
+		            {name: "id", title: "ID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
+
+
+		        ]*/
+		    });
+		 $("#ResourcePOIGrid .jsgrid-table th:first-child :button").click();
+		$("#ResourcePOIGrid").jsGrid("loadData");
+	}
+
+	var resourcepersonsEditingController = {
+	   loadData: function (filter) {
+	       return $.ajax({
+	           type: "GET",
+	           url: "resource/PoiData/" + landId+ "/" + projectId,
+	           data: filter,
+				async: false,
+	           success: function(data)
+	           {
+	           }
+	       }).then(function(result){
+	       	var persondataArray=[];
+	       	var gid=0;
+	       /*	var poiFirstName = "";
+	       	var poiMiddleName = "";
+	       	var poiLastName ="";
+	       	var poiDob= "";
+	       	var poiRelation= "";
+	       	var poiGender="";*/
+	       	$.each( result, function(index,value){
+	       	 for(var i in value){
+					
+					 if(value[i].poiattributevalueid == "1"){
+						 LandId = value[i].landid;
+						 gid=value[i].groupid;
+						 poiFirstName = value[i].attributevalue;
+					 }
+					 else if(value[i].poiattributevalueid == "2"){
+						 poiMiddleName = value[i].attributevalue;
+					 }
+					 else if(value[i].poiattributevalueid == "3"){
+						 poiLastName =value[i].attributevalue;
+					 }
+					 else if(value[i].poiattributevalueid == "4"){
+//						 poiDob = result[i][2];
+						
+						    			  var date = new Date(value[i].attributevalue);
+						    			
+						    			  poiDob= date			
+						    			
+//						    	
+					 }
+					 else if(value[i].poiattributevalueid == "5"){
+						 poiRelation =value[i].attributevalue;
+					 }
+					 else if(value[i].poiattributevalueid == "6"){
+						 poiGender = value[i].attributevalue;
+					 }
+					
+					 }
+	      
+					 var persondata ={
+			        			"landid"   :LandId,
+				    			"First Name":  poiFirstName,
+				    			"Middle Name":  poiMiddleName,
+				    			"Last Name":  poiLastName,
+				    			"DOB": poiDob,
+				    			"Relationship Type": poiRelation,
+				    			"Gender": poiGender,
+				    			"groupId": gid
+				    			
+				    		};
+							
+							persondataArray.push(persondata);
+					
+	        });
+
+					 return persondataArray;	
+	       });
+	      
+	   },
+	   insertItem: function (item) {
+	      
+	   },
+	   updateItem: function (item) {
+	   	
+	  /* 	var ajaxdata = {
+	   			"firstName": item.firstName,
+	   			"middleName": item.middleName,
+	   			"lastName": item.lastName,
+	   			"gender": item.gender,
+	   			"dob": item.dob,
+	   			"relation": item.relation,
+	   			"id": item.id
+	   			
+					}*/
+	   
+	       return $.ajax({
+	           type: "POST",
+//	           contentType: "application/json; charset=utf-8",
+	           traditional: true,
+	           url: "landrecords/saveResourcePoi/" + landId+ "/" +geomName,
+	           data: item,
+	           success:function(){
+	        	   loadResourcePersonsOfEditingForEditing();
+				},
+	           error: function (request, textStatus, errorThrown) {
+	        	  
+	               jAlert(request.responseText);
+	           }
+	       });
+	   },
+	   deleteItem: function (item) {
+	       return false;
+	   }
+	};
+
+	
+	function addNewResourcePOI(){
+		$("#ResourcePOIGrid").jsGrid("loadData");
+		$("#ResourcePOIGrid").jsGrid("insertItem",{});
+
+
+	}
+
+
 function formatDate_R(date) {
 	return jQuery.datepicker.formatDate('yy-mm-dd', new Date(date));
 }
@@ -1018,5 +1463,171 @@ function saveInstitute(){
 		}
 		});
 	}
+	
 }
+
+
+function saveCustomAttributes(){
+	if ($("#editAttributeformID_res").valid()) {
+
+	jQuery.ajax({
+		type : "POST",
+		url : "landrecords/saveResourceCustomAttributes",
+		data : jQuery("#editAttributeformID_res")
+				.serialize(),
+		success : function(result) {
+			 $("input,select,textarea").removeClass('addBg');
+			 $("#Custom_Save").prop("disabled",false).hide();
+		}
+		});
+	}
+	
+}
+
+
+function getFarmReport(land_id,projectId,geomType)
+{
+	var extent;
+	jQuery.ajax(
+			{
+			   	type: 'GET',
+				url:  'landrecords/farmreport/'+land_id+ '/'+ projectId,
+				async:false,
+				cache: false,
+				success: function (data) 
+				{
+					
+					//if(data[0] != null && data[0].length != 0){
+						if(true){
+
+						jQuery.get("resources/templates/report/farm-report.html", function (template) 
+						{
+							jQuery("#printDiv").empty();
+							jQuery("#printDiv").append(template);
+							
+							//if(data!=null || data!="" || data!="undefined")
+						    if(true)
+							{
+									jQuery('#reportNameId').empty();
+									jQuery('#reportNameId').text("Data Correction Report"); 
+							
+								 var layerName = "";
+								 var relLayerName = "";
+								 var fieldName = "";
+								var _featureTypes= [];
+									
+								 $.ajaxSetup({
+								        cache: false
+								    });
+									if(geomType=="Polygon"){
+										 relLayerName = "Mast:la_spatialunit_resource_land";
+										 fieldName = "landid";
+										 _featureTypes.push("la_spatialunit_resource_land");
+										 layerAlias="Resource";
+									 }else if(geomType=="Line"){
+										  relLayerName = "Mast:la_spatialunit_resource_line";
+								          fieldName = "landid";
+										  _featureTypes.push("la_spatialunit_resource_line");
+										  layerAlias="Line";
+									 }else if(geomType=="Point"){
+										 relLayerName = "Mast:la_spatialunit_resource_point";
+								          fieldName = "landid";
+										  _featureTypes.push("la_spatialunit_resource_point");
+										  layerAlias="point";
+									 }
+									
+									
+								 var objLayer=getLayerByAliesName(layerAlias);
+								
+									 var _wfsurl=objLayer.values_.url;
+									var _wfsSchema = _wfsurl + "request=DescribeFeatureType&version=1.1.0&typename=" + objLayer.values_.name +"&maxFeatures=1&outputFormat=application/json";;
+
+									//Get Geometry column name, featureTypes, targetNamespace for the selected layer object //
+									$.ajax({
+										url: PROXY_PATH + _wfsSchema,
+										async: false,
+										success: function (data) {
+											 _featureNS=data.targetNamespace;
+											 
+										}
+									});
+
+			             	var fieldVal = land_id;
+							var _featurePrefix="Mast";
+							
+							
+								
+							var featureRequest1 = new ol.format.WFS().writeGetFeature({
+													srsName: 'EPSG:4326',
+													featureNS: _featureNS,
+													featurePrefix: _featurePrefix,
+													featureTypes: _featureTypes,
+													outputFormat: 'application/json',
+													filter: ol.format.filter.equalTo(fieldName, fieldVal)
+												  });
+												  
+												  
+								  var _url= window.location.protocol+'//'+window.location.host+'/geoserver/wfs';
+											  fetch(_url, {
+												method: 'POST',
+												body: new XMLSerializer().serializeToString(featureRequest1)
+											  }).then(function(response) {
+												return response.json();
+											  }).then(function(json) {
+											   var features = new ol.format.GeoJSON().readFeatures(json);
+
+											         var vectorSource = new ol.source.Vector();
+													 vectorSource.addFeatures(features);
+													 extent=vectorSource.getExtent();
+													 var cqlFilter = 'landid='+fieldVal ;  				  				
+     												 var url1 = "http://"+location.host+"/geoserver/wms?" +"bbox="+extent+"&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326"+"&CQL_FILTER;INCLUDE;landid="+fieldVal+";";
+													 
+													 
+                                                   
+													jQuery('#mapImageId').empty();
+													jQuery('#mapImageId').append('<img  src='+url1+'>');
+
+																									    var _html="";
+													var _th="<tr><th>Latitude</th><th>Longitude </th></tr>"
+													 for (i = 0; i < features[0].geometryChangeKey_.target.flatCoordinates.length/2; i++) {
+														 var j=i;
+														_html =_html+ "<tr><td>"+features[0].geometryChangeKey_.target.flatCoordinates[i] +"</td><td>"+features[0].geometryChangeKey_.target.flatCoordinates[j++] + "</td><tr>";
+													} 
+													jQuery('#latLongId').empty();
+													var _table=_th+_html;
+	                                                jQuery('#latLongId').append(_table);	
+													
+												
+	                            
+	                       							var html = $("#printDiv").html();
+													var printWindow=window.open('','popUpWindow', 'height=600,width=950,left=40,top=20,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=no, location=no');
+															printWindow.document.write ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">'+
+															'<html><head><title>Report</title>'+' <link rel="stylesheet" href="/mast/resources/styles/complete-style.css" type="text/css" />'
+															+'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>'+
+															'<script src="../resources/scripts/cloudburst/viewer/Print.js"></script>'+
+															 +'</head><body>'+html+'</body></html>');	
+															
+															printWindow.document.close();
+									
+									
+											   });
+											   
+									
+							}
+							else
+							{
+								jAlert('info','error in fetching details',"");
+							}
+						});
+						
+						
+					}
+					
+				},
+				error : function(jqXHR, textStatus, errorThrown) {									
+					jAlert('info', "", "");
+				}
+			});
+}
+
 

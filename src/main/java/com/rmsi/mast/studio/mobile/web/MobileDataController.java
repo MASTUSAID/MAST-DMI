@@ -527,9 +527,17 @@ public class MobileDataController {
 			ResourceSourceDocument resourceDocument = new ResourceSourceDocument();
 			Iterator<String> files = request.getFileNames();
 			String attributes = request.getParameter("fileattribs");
+		
+			JSONArray name=null;
+			JSONArray comments=null;
 			String mediaId = null;
 			JSONArray sourceDocumentAttribute = new JSONArray(attributes);
 			JSONArray media = sourceDocumentAttribute.getJSONArray(0);
+			String flag=media.get(7).toString();
+			if(null != sourceDocumentAttribute.getJSONArray(1) && flag.equalsIgnoreCase("M")){
+			 name = sourceDocumentAttribute.getJSONArray(1).getJSONArray(0);
+			 comments = sourceDocumentAttribute.getJSONArray(1).getJSONArray(1);
+			}
 			while (files.hasNext()) {
 				String fileName = files.next();
 				System.out.println("FILE NAME:::: " + fileName);
@@ -576,7 +584,7 @@ public class MobileDataController {
 				
 				
 				
-				mediaId = setDocumentAttributes(sourceDocument,resourceDocument, attributes, counter);
+				mediaId = setDocumentAttributes(sourceDocument,resourceDocument, attributes, counter, flag);
 
 				counter=counter+1;
 				if (!"".equals(originalFileName)
@@ -599,7 +607,7 @@ public class MobileDataController {
 					// sourceDocument.setDocumentname(originalFileName);
 
 					// Add data to Source Document
-					if(sourceDocument.getLaExtTransactiondetail()!=null){
+					if(sourceDocument.getLaExtTransactiondetail()!=null && (flag.equalsIgnoreCase("P") ||flag.equalsIgnoreCase("M"))){
 						File documentsDir = new File(
 								FileUtils.getFielsFolder(request)
 										+ sourceDocument.getDocumentlocation());
@@ -607,14 +615,19 @@ public class MobileDataController {
 						if (!documentsDir.exists()) {
 							documentsDir.mkdirs();
 						}
+						if(flag.equalsIgnoreCase("M")){
+							sourceDocument.setDocumentname(name.get(1).toString());
+							sourceDocument.setRemarks(comments.get(1).toString());
+							
+						}
 						mobileUserService.uploadMultimedia(sourceDocument, mpFile,
 								documentsDir);
 						
 					}
-					else{
+					else if(flag.equalsIgnoreCase("R")){
 						File documentsDir = new File(
 								FileUtils.getFielsFolder(request)
-										+ sourceDocument.getDocumentlocation());
+										+ resourceDocument.getDocumentlocation());
 
 						if (!documentsDir.exists()) {
 							documentsDir.mkdirs();
@@ -856,7 +869,7 @@ public class MobileDataController {
 	}
 
 	private String setDocumentAttributes(SourceDocument document,ResourceSourceDocument resdoc,
-			String attributes, int counter) {
+			String attributes, int counter, String flag) {
 		try {
 			String mediaId = null;
 		
@@ -877,7 +890,7 @@ public class MobileDataController {
 				List<LaExtDisputelandmapping> disputelandmapping = laExtDisputelandmappingDAO.findLaExtDisputelandmappingByLandId(usin);
 				List<SourceDocument> sourcedocument = sourceDocumentDAO.findByGId(usin);
 				LaExtTransactiondetail transobj =null;
-				if(socialtenurerelationship.size()>0 ){
+				if(socialtenurerelationship.size()>0 && flag.equalsIgnoreCase("P")){
 					
 						
 				 transobj = transactiondao
@@ -902,9 +915,9 @@ public class MobileDataController {
 						}
 					}
 				
-					
+					mediaId = media.getString(2);
 				}
-				else if(disputelandmapping.size() > 0){
+				else if(disputelandmapping.size() > 0 && flag.equalsIgnoreCase("P")){
 					 transobj = transactiondao
 							.getLaExtTransactiondetailByLandid(disputelandmapping
 									.get(0).getLaExtTransactiondetail()
@@ -924,7 +937,7 @@ public class MobileDataController {
 										.getPartyid()));
 							
 							}
-							else if(null != sourcedocument.get(j)){
+							/*else if(null != sourcedocument.get(j)){
 								document.setLaParty(lapartydao
 										.getPartyIdByID(disputelandmapping.get(j+1)
 												.getPartyid()));
@@ -948,18 +961,13 @@ public class MobileDataController {
 								document.setLaParty(lapartydao
 										.getPartyIdByID(disputelandmapping.get(j+1)
 												.getPartyid()));
-									}
+									}*/
 						}
 					
 				}
 				
 				// document.setLaSpatialunitLand(laSpatialunitLand.setLandid(usin));
-				else{
-					resdoc.setLaSpatialunitLand(usin);
-					resdoc.setDocumentlocation("/storage/emulated/0/MAST/multimedia/Resource_Media");
-//					resdoc.setLaExtTransactiondetail(99999);
-//					resdoc.setLaParty(99999);
-				}
+				
 
 				
 
@@ -969,6 +977,39 @@ public class MobileDataController {
 				
 
 			}
+				else if(socialtenurerelationship.size()>0 && flag.equalsIgnoreCase("M")){
+					
+						
+				 transobj = transactiondao
+						.getLaExtTransactiondetailByLandid(socialtenurerelationship
+								.get(0).getLaExtTransactiondetail()
+								.getTransactionid());
+				 document.setLaSpatialunitLand(usin);
+					document.setDocumentlocation("/storage/emulated/0/MAST/multimedia/Parcel_Media");
+					document.setLaExtTransactiondetail(transobj);
+					
+				
+					mediaId = media.getString(2);
+				}
+				else if(disputelandmapping.size() > 0 && flag.equalsIgnoreCase("M")){
+					 transobj = transactiondao
+							.getLaExtTransactiondetailByLandid(disputelandmapping
+									.get(0).getLaExtTransactiondetail()
+									.getTransactionid());
+					 document.setLaSpatialunitLand(usin);
+						document.setDocumentlocation("/storage/emulated/0/MAST/multimedia/Parcel_Media");
+						document.setLaExtTransactiondetail(transobj);
+						mediaId = media.getString(2);
+		
+			}
+				
+				else if(flag.equalsIgnoreCase("R")){
+					resdoc.setLaSpatialunitLand(usin);
+					resdoc.setDocumentlocation("/storage/emulated/0/MAST/multimedia/Resource_Media");
+					mediaId = media.getString(2);
+//					resdoc.setLaExtTransactiondetail(99999);
+//					resdoc.setLaParty(99999);
+				}
 			
 			document.setIsactive(true);
 			// document.setRecordation(new SimpleDateFormat("dd/MM/yyyy")

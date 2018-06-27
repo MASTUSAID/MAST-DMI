@@ -65,8 +65,20 @@ public class SpatialUnitPersonWithInterest implements Serializable {
 	
 	private Integer typeid;
 	
+	private Integer transactionid;
+	
 
 	public SpatialUnitPersonWithInterest() {
+	}
+
+
+	public Integer getTransactionid() {
+		return transactionid;
+	}
+
+
+	public void setTransactionid(Integer transactionid) {
+		this.transactionid = transactionid;
 	}
 
 

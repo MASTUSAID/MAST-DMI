@@ -79,6 +79,8 @@ public class LaSpatialunitLand implements Serializable {
 	@Transient
 	private String  workflowstatus;
 	
+	@Transient
+	private String  tenancyType;
 	
 	@Transient
 	private String shareType;
@@ -414,6 +416,12 @@ public class LaSpatialunitLand implements Serializable {
 	}
 	public void setProposedused(Integer proposedused) {
 		this.proposedused = proposedused;
+	}
+	public String getTenancyType() {
+		return tenancyType;
+	}
+	public void setTenancyType(String tenancyType) {
+		this.tenancyType = tenancyType;
 	}
 	
 	

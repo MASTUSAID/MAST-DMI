@@ -34,6 +34,28 @@ public class LeaseHistoryForFetch implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createddate;
 	
+	public Date getLeasestartdate() {
+		return leasestartdate;
+	}
+
+	public void setLeasestartdate(Date leasestartdate) {
+		this.leasestartdate = leasestartdate;
+	}
+
+	public Date getLeaseenddate() {
+		return leaseenddate;
+	}
+
+	public void setLeaseenddate(Date leaseenddate) {
+		this.leaseenddate = leaseenddate;
+	}
+
+	@Temporal(TemporalType.DATE)
+	private Date leasestartdate;
+	
+	@Temporal(TemporalType.DATE)
+	private Date leaseenddate;
+	
 	
 	public Long getRnum() {
 		return rnum;

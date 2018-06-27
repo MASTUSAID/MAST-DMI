@@ -1,9 +1,11 @@
 package com.rmsi.mast.studio.util;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.ibm.icu.text.DecimalFormat;
 import com.rmsi.mast.studio.domain.SpatialUnit;
 import com.rmsi.mast.studio.mobile.service.impl.SurveyProjectAttributeServiceImp;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -94,11 +96,40 @@ public class GeometryConversion {
     }
     
     
-    public double getArea(String wkt) {
+    public String getArea(String wkt) {
+    	String[] coord = wkt.split(",");
+    	List<Coordinate>  lstcoordinate = new ArrayList<Coordinate>();
+        try {
+           
 
-        Geometry geom= new Polygon(new LinearRing(getCoordinateSequence(wkt),
-                    new GeometryFactory(new PrecisionModel(), 900913)), null, new GeometryFactory());
-        return geom.getArea();
+            for (int i = 0; i < coord.length; i++) {
+
+                String axis[] = coord[i].split(" ");
+
+                Coordinate objCoordinate = new Coordinate(Double.parseDouble(axis[0]),Double.parseDouble(axis[1]));
+                lstcoordinate.add(objCoordinate);
+                
+            }
+
+            }catch(Exception e)
+            {
+            	e.printStackTrace();
+            }
+    	List<Coordinate> tmpJtsPoints = new ArrayList<Coordinate>(lstcoordinate);
+        tmpJtsPoints.add(tmpJtsPoints.get(0)); // adding first pointat last to create Ring
+        Coordinate[] coordinates = tmpJtsPoints.toArray(new Coordinate[tmpJtsPoints.size()]);
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        LinearRing lr =geometryFactory.createLinearRing(coordinates);
+        com.vividsolutions.jts.geom.Polygon polygonJts =geometryFactory.createPolygon(lr, null);
+        double area = polygonJts.getArea();
+        double areaMeter = area * (Math.pow(111319.9, 2)) *Math.cos(Math.toRadians(tmpJtsPoints.get(0).y));
+        double areaAcer=areaMeter* 0.00024710538149159;
+        DecimalFormat df = new DecimalFormat("#.##");
+        
+        System.out.println(Double.parseDouble(df.format(areaAcer)));
+       //  double final_area=Double.parseDouble(df.format(areaMeter))
+        return df.format(areaAcer);
+        
   }
 
     

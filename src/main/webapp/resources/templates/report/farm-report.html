@@ -1,0 +1,325 @@
+
+<div class="PrintWrapperLandScape" id="printdiv">
+  <h2><span id="reportNameId"> </span></h2>
+  <div class="personalDetails no-border">  
+   
+    <table class="amendbeforeAfterTable space-top-10">
+      <tbody><tr>
+	    <td rowspan="4" style="width: 400px;"><div class="ReportLogoMain"></div></td>
+		<td>Project Name: </td>
+        <td id="project_nameId"></td> 
+     </tr>
+	 <tr>
+        <td>Country: </td>
+        <td id="countryId"></td>
+      </tr>
+	  
+	  <tr>
+      <td>County: </td>
+      <td id="regionId"></td>
+      </tr>
+	  
+	  <tr>
+      <td>District: </td>
+      <td id="district_Id"></td>
+      </tr>
+	  
+	  <tr>
+	    <td><h4 style="font-weight:bold">Mobile Application to Secure Tenure</h4></td>
+		<td>Clan:</td>
+		<td id="Clan_Id">Clan</td>
+	  </tr>
+	  <tr>
+	    <td><h4 style="font-weight:bold">FIFES FARM REPORT</h4></td>
+		<td>Community:</td>
+		<td id="community">Name of Town/ address line from MOBILE</td>
+	  </tr>
+	  
+    </tbody></table>
+	
+	
+	
+   <table class="amendbeforeAfterTable InfoDtTable space-top-10">
+      <tbody>
+	  <tr>
+	    <td style="width:50%"><h4 style="font-weight:bold">General Information</h4>
+		
+			<!--Table-First-->      		 
+			 <table class="amendbeforeAfterTable space-top-10" style="width:100%">
+				<tbody>
+				 <tr>
+					<td style="width:60%">Land ID Number  </td>
+					<td id="LandRecordNumberId"></td>
+				</tr>
+				<tr>
+					<td>Enterprise Name </td>
+					<td id="enterprisenameId"></td>
+				</tr> 
+				</tbody>
+			 </table>
+		   <!--./Table-First-->
+	   
+		   <h4 class="space-top-10" style="font-weight:bold">Land Classification and Use  </h4>
+		   
+		   <!--Table-Second-->
+		   <table class="amendbeforeAfterTable space-top-10" style="width:100%">
+			<tbody>
+				<tr>
+				 <td style="width:60%">Classification :</td>
+				 <td id="ClassificationId"></td>
+				</tr>
+				<tr>
+					<td>Type of Farm:  </td>
+					<td id="farmTypeId"></td>
+				</tr>
+				 <tr>
+					<td>Size of Parcel:  </td>
+					<td id="plotsizeId"></td>
+				</tr>
+				</tbody>
+			  </table>
+			  
+			  <!--./Table-Second-->
+		  
+				<h4 class="space-top-10" style="font-weight:bold">Tenure</h4>
+			   <!--Table-third-->
+			   <table class="amendbeforeAfterTable space-top-10" style="width:100%">
+				<tbody>
+				 <tr>
+					<td style="width:60%">Type of Tenure/ occupancy   </td>
+					<td id="TypeOftenureId"></td>
+				 </tr>
+				 </tbody>
+				</table>
+			   <!--./Table-third-->
+		   
+			   <h4 class="space-top-10" style="font-weight:bold">Crop Information </h4>
+			   <!--Table-fourth-->
+			   <table class="amendbeforeAfterTable space-top-10" style="width:100%">
+					<tbody><tr>
+					<td style="width:60%"><b>Primary Crop </b> </td>
+					<td id="PrimaryCropId"></td>
+					</tr>
+					 <tr>
+					<td>Plant Date </td>
+					<td id="PlantDate_pId"></td>
+					</tr>
+					
+					 <tr>
+					<td>Duration    </td>
+					<td id="Duration_pId"></td>
+					</tr>
+					
+					 <tr>
+					<td><b>Secondary Crop  </b> </td>
+					<td id="SecondaryCropId"></td>
+					</tr>
+					 <tr>
+					<td>Plant Date </td>
+					<td id="PlantDate_sId"></td>
+					</tr>
+					
+					 <tr>
+					<td>Duration    </td>
+					<td id="Duration_sId"></td>
+					</tr>
+					</tbody></table>
+					<!--./Table-fourth-->
+		   </td><!--./For Data Only-->
+		   
+			
+			<td>
+			   <h4 style="font-weight:bold">Parcel Plot</h4>
+			   
+			  <div style="text-align:center" class="space-top-10">
+				<div id="mapImageId" class="mapImaivgeId" style="padding:23px 0;"></div>
+				<div class="span6">
+				<table class="amendbeforeAfterTable space-top-10" id="latLongId" >
+				</table>
+				</div>
+
+			  </div>
+      
+    
+   
+			
+			</td>
+		 </tr>
+		 
+		  
+		</tbody></table>
+     
+  <h4 class="space-top-10" style="font-weight:bold">Persons</h4>
+  
+   <table class="amendbeforeAfterTable space-top-10" >
+    
+    <tr>
+    <td style="width:400px">Type of Person   </td>
+    <td id="TypeofPersonId"></td>
+    </tr>
+    <tr>
+    <td>Name of Institution  </td>
+    <td id="NameofInstitutionId"></td>
+    </tr>
+     
+  </table>
+    
+    
+ <h4 class="space-top-10" style="font-weight:bold">Person/Primary Holder/POC  </h4>
+   <table id="Natural" class="amendbeforeAfterTable space-top-10" >
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Gender</th>
+    <th>Date of Birth</th>
+    <th>Marital Status</th>
+    <th>Resident</th>
+    <th>Ethnicity/Clan</th>
+    <th>Citizenship</th>
+    <th>Mobile No.</th>
+  <!--   <th>Occupation</th> -->
+    
+    
+    </tr>  
+    </thead>
+    
+    <tbody id="farmOwnerRecordsRowData1">
+						</tbody>  
+	<table id="non-Natural" class="amendbeforeAfterTable space-top-10" >
+    <thead>
+    <tr>
+    <th>Name</th>
+    <th>Address</th>
+    <th>Mobile No.</th>
+  <!--   <th>Occupation</th> -->
+    
+    
+    </tr>  
+    </thead>
+    
+    <tbody id="farmnonNaturalOwnerRecordsRowData1">
+						</tbody>  
+						
+<!-- 	<tbody>
+	<tr>
+	<td id="name"></td>
+	<td id="farm_gender"></td>
+	<td id="farm_dob"></td>
+	<td id="marital"></td>
+	<td id="resident"></td>
+	<td id="ethnicity"></td>
+	<td id="citizenship"></td>
+	<td id="mobileno"></td>
+	<td id="occupation"></td>
+	<td></td>
+	</tr>
+	</tbody> -->
+						
+						
+						</table>
+
+
+
+			<script id="farmOwnerRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+                        <td>
+						${firstName} ${middleName} ${lastName}
+                        </td> 
+                        <td>
+                       ${gender}
+                        </td> 
+						<td>
+                       ${dob}
+                        </td>
+						<td>
+                       ${maritalStatus}
+                        </td>
+						<td>
+                       ${resident}
+                        </td>
+						<td>
+                       ${ethnicity}
+                        </td>
+						<td>
+                       ${citizenship}
+                        </td>
+						<td>
+                       ${mobileNo}
+                        </td>
+                        </tr>
+                    </script>
+                    
+                    
+<script id="farmnonNaturalOwnerRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+                        <td>
+						${firstName} ${middleName} ${lastName}
+                        </td> 
+						<td>
+                       ${address}
+                        </td>
+						<td>
+                       ${mobileNo}
+                        </td>
+                        </tr>
+                    </script>
+
+	
+     <h4 class="space-top-10" style="font-weight:bold">Persons of Interest</h4>
+     <table class="amendbeforeAfterTable space-top-10" >
+    <thead>
+    <tr>
+    <th>Name of POI</th>
+    <th>gender</th>
+    <th>Date of Birth</th>
+   <th>Relationship</th>
+    
+    </tr>  
+    </thead>
+    
+    <tbody id="farmPOIRecordsRowData1">
+						</tbody>  
+						
+						
+						</table>
+						
+						
+						
+						<script id="farmPOIRecordsAttrTemplate1" type="text/x-jquery-tmpl">
+                        <tr>
+                        <td>
+						  ${firstName} ${middleName} ${lastName}
+                        </td> 
+						  <td>
+                          ${gender}
+                        </td> 
+						 <td>
+                        ${dob}
+                        </td>
+                        <td>
+                        ${relationship}
+                        </td>
+                      
+                           
+             
+                        </tr>
+                    </script>
+    
+  
+  
+
+	
+  </div>
+  
+  
+   
+    <div class="buttons btn-holder-float">
+	
+	<span class="lesserbtn">
+		<input  class="btn1 margin-ten" id="btnPrintDC" type="button" value="Print" onclick="javascript:printDataCorrection();" /> 
+		</span>
+	</div>
+</div>
+
+
+

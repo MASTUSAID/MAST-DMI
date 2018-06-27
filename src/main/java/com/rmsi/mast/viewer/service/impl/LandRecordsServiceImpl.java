@@ -74,6 +74,7 @@ import com.rmsi.mast.studio.domain.fetch.AttributeValuesFetch;
 import com.rmsi.mast.studio.domain.fetch.ClaimProfile;
 import com.rmsi.mast.studio.domain.fetch.ClaimSummary;
 import com.rmsi.mast.studio.domain.fetch.DataCorrectionReport;
+import com.rmsi.mast.studio.domain.fetch.FarmReport;
 import com.rmsi.mast.studio.domain.fetch.LeaseHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.MortageHistoryForFetch;
 import com.rmsi.mast.studio.domain.fetch.OwnerHistoryForFetch;
@@ -1361,6 +1362,12 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 	{
 		 return landRecordsDao.findprojectTenureTypesLandUnitsummaryreport(project);
 	}
+	
+	@Override
+	public List<Object> findLiberiaFarmummaryreport(String project)
+	{
+		 return landRecordsDao.findLiberiaFarmummaryreport(project);
+	}
 
 	@Override
 	public Integer getTotalrecordByProject(String project) {
@@ -1460,13 +1467,51 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 	@Override
 	public List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId) {
 	
-		return landRecordsDao.getDataCorrectionReportPOI(transactionid, landId);
+		return landRecordsDao.getBatchDataCorrectionReportPOI(transactionid);
 	}
 
 	@Override
 	public List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid, Long landId) {
 		return landRecordsDao.getDataCorrectionPersonsReport(transactionid, landId);
 	}
+
+	@Override
+	public List<MortageHistoryForFetch> findSurrendermortagagedetailbylandid(
+			Long transactionid, Long landid) {
+		return landRecordsDao.findSurrendermortagagedetailbylandid(transactionid,landid);
+		}
+
+	@Override
+	public List<FarmReport> getFarmReportByLandId(Long landId) {
+		// TODO Auto-generated method stub
+		return landRecordsDao.getFarmReportByLandId(landId);
+	}
+
+	@Override
+	public List<DataCorrectionReport> getBatchDataCorrectionReport(
+			Long transactionid) {
+		
+		return landRecordsDao.getBatchDataCorrectionReport(transactionid);
+	}
+
+	@Override
+	public List<PoiReport> getBatchDataCorrectionReportPOI(
+			Long transactionid, Long transactionidend) {
+	
+		return landRecordsDao.getBatchDataCorrectionReportPOI(transactionid);
+	}
+
+	@Override
+	public List<PersonsReport> getBatchDataCorrectionPersonsReport(
+			Long transactionidstart, Long transactionidend) {		
+		return landRecordsDao.getBatchDataCorrectionPersonsReport(transactionidstart,  transactionidend);
+}
+
+	@Override
+	public List<SocialTenureRelationship> findBatchAllSocialTenureByUsin(
+			Long transid) {      
+		return socialTenureRelationshipDAO.findBatchbyUsin(transid);
+}
     
     
     

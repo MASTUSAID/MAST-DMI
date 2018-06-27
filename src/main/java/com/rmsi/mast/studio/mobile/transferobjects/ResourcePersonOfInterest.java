@@ -15,7 +15,18 @@ public class ResourcePersonOfInterest implements Serializable{
 	    private String value;
 	    private String dob;
 	    private int genderId;
-	    private int relationshipId;
+	    public Integer getGroupId() {
+			return groupId;
+		}
+
+
+		public void setGroupId(Integer groupId) {
+			this.groupId = groupId;
+		}
+
+
+		private int relationshipId;
+	    private Integer groupId;
 
     
     public ResourcePersonOfInterest(){

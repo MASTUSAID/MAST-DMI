@@ -1,79 +1,90 @@
-<div class="PrintWrapperLandScape">
-	<div class="personalDetails-wrap">
-		<p style="text-align:center;font-size: 18px;"><U><strong><span id="title1"></span></strong></U></p>
-		<div class="container-fluid">
-			<div class="row-fluid">
+<div class="PrintWrapperLandScape" id="printdiv">
+  <div class="personalDetails no-border">  
+   
+    <table class="amendbeforeAfterTable space-top-10" style="width: 100%; margin-bottom: 10px;" >
+      <tr>
+        
+	<td ><h4 id="map_printTitle" style="text-align:center;height:30px; padding:15px 0; font-size: 22px;">
+	</h4>
+	</td>
+        </tr>
 
-				
-					<div class="personalDetails alt">
-						<div id=print_map class="personalDetails-inner" >
-						</div>
-					</div>
-
-			
-			
-		</div>
-		
-		<p style="text-align:center;"><U><strong>Parcel Details</strong></U></p>
-		
-			<div class="personalDetails alt">
-
-			<div class="personalDetails-inner">
-			<table class="tablesorter" id="printDetailsTable" cellpadding="0" cellspacing="0">
-			<thead>
-			<th>Usin</th>
-			<th>Uka No.</th>
-			<th>Hamlet Name</th>
-			<th>Person Type</th>
-			<th>Person Name</th>
-			<th>Person With Interest</th>
-			
-			
-			</thead>
-			<tbody id="printDetailsBodyData">
-			</tbody>
-			
-			</table>
-				
-
-			</div>
-
-
-		</div>
-	</div>
-
-<!-- 
-	<div class="personalDetails-wrap">
-		<div class="personalDetails no-border">
-		div
-
-		</div>
-	</div> -->
-</div>
-</div>
-
-<script id="printDetailsTemplate" type="text/x-jquery-tmpl">
-	<tr>                                                                        
-		<td>
-			${usin}
-		</td>
-		<td>
-			${uka}
-		</td>
-		<td>
-		   ${hamletName}
-		</td>
-		<td>
-		   ${personSubType}
-		</td>
-	<td>
-		   ${name}
-		</td>
-	<td>
-		   ${pwi}
-		</td>
+    </table>
 	
-		
+	<div> <img id="mapImageId1" style="max-width:100%"/></div>
+	
+	<table class="amendbeforeAfterTable space-top-10" id="layermanagerBody_print" style="width:100%; " >
+    </table>
 
-	</tr>
-</script>
+    </div>
+	 <div class="buttons btn-holder-float">
+	
+	<span class="lesserbtn">
+		<input  class="btn1 margin-ten" id="btnPrintDC" type="button" value="Print" onclick="javascript:print_Map();" /> 
+		</span>
+	</div>
+	 
+</div>
+
+
+
+<script id="layermanagerTemplate_Print" type="text/x-jquery-tmpl">
+      {{each(i,layergroupList) $item.projectLayergroup}}  
+		<tbody>
+			
+			<tr>
+				<th id="${layergroupList.layergroupBean.name}" class="rowhead" > ${layergroupList.layergroupBean.alias}
+				</th>
+				<th>
+				</th>
+				
+			</tr>
+		
+         
+		 {{each(j,layerList) layergroupList.layergroupBean.layerLayergroups}}	
+		 {{if (layerList.layers)}} 	
+						{{if (layerList.layers.displayinlayermanager)}} 	
+						<tr>
+						<td id='${layerList.layers.alias}' width="100%" class="layerTR">
+								<table width="100%" style="border: none;">
+									<tr>
+										<td width="40%" class="leftshift">
+                                         
+										 ${layerList.layers.alias}
+											
+										</td>
+										
+										<td align="center" class="layer-td">
+											<img  class="layer_info" id='${layerList.layers.alias}_editablePrint'src=""> </img>&nbsp;
+											<img  class="layer_info" id='${layerList.layers.alias}_selectablePrint'src=""> </img>&nbsp;
+											<img  class="layer_info" id='${layerList.layers.alias}_queryablePrint'src=""> </img>&nbsp;
+											<img  class="layer_info" id='${layerList.layers.alias}_exportablePrint'src=""> </img>
+										</td>
+										
+									</tr>
+								</table>
+							</td>
+							
+							<td id='chk-${layerList.layers.alias}'align="center" class="layer-td layerTR">	
+										<input type="checkbox" id="VisibilityPrint__${layerList.layers.alias}"  name="Visibility" class="${layergroupList.layergroupBean.name}"
+										value="${layerList.layers.alias}" /> 
+							</td>
+						
+						</tr>
+						
+							
+								
+			{{/if}} 	
+			{{/if}} 	
+			{{/each}}
+			
+			
+
+
+		</tbody>	
+		{{/each}} 
+		
+		
+			
+ 
+ </script>
