@@ -24,7 +24,7 @@ public class SpatialUnitPersonWithInterestHibernateDAO extends GenericHibernateD
 
         try {
 
-            Query query = getEntityManager().createQuery("Select sp from SpatialunitPersonwithinterest sp where sp.landid = :usin and sp.isactive= true order by sp.id asc ");
+            Query query = getEntityManager().createQuery("Select sp from SpatialunitPersonwithinterest sp where sp.landid = :usin order by sp.id asc ");
             List<SpatialunitPersonwithinterest> personinterest = query.setParameter("usin", usin).getResultList();
 
             if (personinterest.size() > 0) {

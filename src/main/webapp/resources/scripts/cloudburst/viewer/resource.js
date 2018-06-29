@@ -76,8 +76,6 @@ function resource(_selectedItem) {
 
 function displayRefreshedResourceRecords() {
 
-	records_from_Res=0;
-	
        jQuery.ajax({
         url: "resource/getAllresouce/" + activeProject + "/" + 0,
         async: false,
@@ -186,7 +184,7 @@ function ActionfillResource(landid,geomType){
 	    var html="";
     	html+="<li> <a title='Edit Attribute' id='' name=''  href='#' onclick='viewAttribute("+landid+")'>Edit Attribute</a></li>";
 		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=viewOnMap("+landid+",'"+geomType+"')>Edit Spatial</a></li>";
-//		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=getFarmReport("+landid+","+projectId+",'"+geomType+"')>Farm Report</a></li>";
+		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=getFarmReport("+landid+","+projectId+",'"+geomType+"')>Farm Report</a></li>";
 		
 		$(""+appid+"").append('<div class="signin_menu"><div class="signin"><ul>'+html+'</ul></div></div>');
 
@@ -230,11 +228,6 @@ function viewOnMap(usin,geom) {
 		  layerAlias="point";
 	 }
     var fieldVal = usin;
-    
-    var layer = getLayerByAliesName(layerAlias);
-    layer.getSource().clear();
-    
-    
     zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes,layerAlias);
 }
 function zoomToLayerFeatureResource(relLayerName, fieldName, fieldVal,_featureTypes,layerAlias) {
@@ -383,16 +376,121 @@ function viewAttribute(usin)
 		}
 	}
 	
+	$.ajax({
+        type: "GET",
+        url: "resource/allCustomAttribue/" + landId+ "/" + projectId,
+        data: filter,
+		async: false,
+        success: function(data)
+        {
+        }
+    }).then(function(result){
+    	var persondataArray=[];
+    	
+    	 $("#priamaryCrop").val("");
+    	 $("#priamaryCrop").empty();
+    	 $("#primaryplantdate").val("");
+    	 $("#primaryduration").val("");
+    	 $("#secCrop").val("");
+    	 $("#secCrop").empty();
+    	 $("#secplantdate").val("");
+    	 $("#secduration").val("");
+    	 $("#totalExpenditure").val(""); 
+    	 $("#totalsales").val("");
+    	 
+    	 jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+			
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cocoa").text("Cocoa"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Plantain").text("Plantain"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Rice").text("Rice"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Oil Palm").text("Oil Palm"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Pepper").text("Pepper"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Ground Nuts").text("Ground Nuts"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cassava").text("Cassava"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cow Peas").text("Cow Peas"));
+		
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+		
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cocoa").text("Cocoa"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Plantain").text("Plantain"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Rice").text("Rice"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Oil Palm").text("Oil Palm"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Pepper").text("Pepper"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Ground Nuts").text("Ground Nuts"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cassava").text("Cassava"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cow Peas").text("Cow Peas"));
+			
+			
+			
+			 
+			 for(var i=0; i<result.length; i++){
+			 if(result[i].fieldname == "103" || result[i].fieldname == "122" || result[i].fieldname == "131" || result[i].fieldname == "140" || result[i].fieldname == "149" || result[i].fieldname == "158"){
+				 LandId = result[0].landid;
+				 Custom1 = result[i].attributevalue;
+				 $("#priamaryCrop").val(result[i].attributevalue);
+				 
+			 }
+			 else if(result[i].fieldname == "104" || result[i].fieldname == "123" || result[i].fieldname == "132" || result[i].fieldname == "141" || result[i].fieldname == "150" || result[i].fieldname == "159"){
+				 $("#primaryplantdate").val(result[i].attributevalue);
+			 }
+			 else if(result[i].fieldname == "105" || result[i].fieldname == "124" || result[i].fieldname == "133"  || result[i].fieldname == "142"  || result[i].fieldname == "151"  || result[i].fieldname == "160" ){
+				 $("#primaryduration").val(result[i].attributevalue);
+			 }
+			 else if(result[i].fieldname == "116" || result[i].fieldname == "125" || result[i].fieldname == "134"  || result[i].fieldname == "143"  || result[i].fieldname == "152"  || result[i].fieldname == "161" ){
+				  $("#secCrop").val(result[i].attributevalue);
+			 }
+			 else if(result[i].fieldname == "117" || result[i].fieldname == "126" || result[i].fieldname == "135"  || result[i].fieldname == "144"  || result[i].fieldname == "153"  || result[i].fieldname == "162"){
+				 $("#secplantdate").val(result[i].attributevalue);
+			 }
+			 else if(result[i].fieldname == "118" || result[i].fieldname == "127" || result[i].fieldname == "136"  || result[i].fieldname == "145"  || result[i].fieldname == "154"  || result[i].fieldname == "163"){
+				 $("#secduration").val(result[i].attributevalue);
+			 }
+			 else if(result[i].fieldname == "119" || result[i].fieldname == "128" || result[i].fieldname == "137"  || result[i].fieldname == "146"  || result[i].fieldname == "155"  || result[i].fieldname == "164"){
+				 $("#totalExpenditure").val(result[i].attributevalue);
+			 }
+			 else if(result[i].fieldname == "120" || result[i].fieldname == "129" || result[i].fieldname == "138"  || result[i].fieldname == "147"  || result[i].fieldname == "156"  || result[i].fieldname == "165"){
+				 $("#totalsales").val(result[i].attributevalue);
+			 }
+			
+			 }
+			/* var persondata ={
+	        			"landid"   :LandId,
+		    			"Primary Crop":  Custom1,
+		    			"Plant Date (Primary Crop)":  Custom2,
+		    			"Duration (Primary Crop)":  Custom3,
+		    			"Secondary Crop":Custom4,
+		    			"Plant Date (Secondary Crop)":Custom5,
+		    			"Duration (Secondary Crop)":Custom6,
+		    			"Total Expenditures (Farmer)":Custom7,
+		    			"Total Sales (Farmer)":Custom8,
+		    			"Name of Enterprise Farm": Custom9
+		    			
+		    		};*/
+			 
+			/* var persondata ={
+	        			"landid"   :LandId,
+		    			"Color of sky":  Custom1,
+		    			"Color of bear":  Custom2,
+		    			"Color of soil":  Custom3
+		    			
+		    			
+		    		};*/
+					
+				/*	persondataArray.push(persondata);
+			
 
+
+			 return persondataArray;*/	
+    });
 	
 	FillResourcePersonDataNew();
-	FillResourceCustoAttributes();
+//	FillResourceCustoAttributes();
 	loadResourcePersonsOfEditingForEditing();
 
 	
 	attributeHistoryDialog = $( "#editattribute-res-dialog-form" ).dialog({
 		autoOpen: false,
-		height: 600,
+		height: 500,
 		width: 1161,
 		left: 95,
 		resizable: true,
@@ -989,7 +1087,7 @@ function addNewPerson(){
 
 
 
-function FillResourceCustoAttributes()
+/*function FillResourceCustoAttributes()
 {
 	var name_Columns = [];
 	var myColumns = [];	
@@ -1104,46 +1202,42 @@ var ControllerForResourceCustomAttributes = {
 	            }
 	        }).then(function(result){
 	        	var persondataArray=[];
-	        	var map= new Map();
+	        	
 					 
 					 for(var i=0; i<result.length; i++){
-						 
-						 if(map.size==0){
-							 map["landid"]=result[i][0];
-						 }
-						 
-						 map[result[i][6]]=result[i][2];
-						 
-					 }
-						 
-					/* if(result[i][5] == "103"){
+					 if(result[i].fieldname == "103"){
 						 LandId = result[0].landid;
-						 Custom1 = result[i][2];
+						 Custom1 = result[i].attributevalue;
+						 $("#priamaryCrop").val(result[i].attributevalue);
+						 
 					 }
-					 else if(result[i][5] == "104"){
-						 Custom2 = result[i].attributevalue;
+					 else if(result[i].fieldname == "104"){
+						 $("#primaryplantdate").val(result[i].attributevalue);
 					 }
-					 else if(result[i][5] == "105"){
-						 Custom3 = result[i].attributevalue;
-					 }*/
-					 /*else if(result[i].fieldname == "116"){
-						 Custom4 = result[i].attributevalue;
+					 else if(result[i].fieldname == "105"){
+						 $("#primaryduration").val(result[i].attributevalue);
+					 }
+					 else if(result[i].fieldname == "116"){
+						  $("#secCrop").val(result[i].attributevalue);
 					 }
 					 else if(result[i].fieldname == "117"){
-						 Custom5 = result[i].attributevalue;
+						 $("#secplantdate").val(result[i].attributevalue);
 					 }
 					 else if(result[i].fieldname == "118"){
-						 Custom6 = result[i].attributevalue;
+						 $("#secduration").val(result[i].attributevalue);
 					 }
 					 else if(result[i].fieldname == "119"){
-						 Custom7 = result[i].attributevalue;
+						 $("#totalExpenditure").val(result[i].attributevalue);
 					 }
 					 else if(result[i].fieldname == "120"){
-						 Custom8 = result[i].attributevalue;
-					 }*/
+						 $("#totalsales").val(result[i].attributevalue);
+					 }
+					 else if(result[i].fieldname == "100"){
+						 $("#totalsales").val(result[i].attributevalue);
+					 }
 					
-					
-					/* var persondata ={
+					 }
+					 var persondata ={
 			        			"landid"   :LandId,
 				    			"Primary Crop":  Custom1,
 				    			"Plant Date (Primary Crop)":  Custom2,
@@ -1152,20 +1246,21 @@ var ControllerForResourceCustomAttributes = {
 				    			"Plant Date (Secondary Crop)":Custom5,
 				    			"Duration (Secondary Crop)":Custom6,
 				    			"Total Expenditures (Farmer)":Custom7,
-				    			"Total Sales (Farmer)":Custom8
+				    			"Total Sales (Farmer)":Custom8,
+				    			"Name of Enterprise Farm": Custom9
 				    			
-				    		};*/
+				    		};
 					 
-					/* var persondata ={
+					 var persondata ={
 			        			"landid"   :LandId,
 				    			"Color of sky":  Custom1,
 				    			"Color of bear":  Custom2,
 				    			"Color of soil":  Custom3
 				    			
 				    			
-				    		};*/
+				    		};
 							
-							persondataArray.push(map);
+							persondataArray.push(persondata);
 					
 
 
@@ -1197,7 +1292,7 @@ var ControllerForResourceCustomAttributes = {
 	    deleteItem: function (item) {
 	        return false;
 	    }
-	};
+	};*/
 
 
 

@@ -16,10 +16,5 @@ public interface LaMortgageSurrenderDao extends GenericDAO<LaSurrenderMortgage, 
 	
 	LaSurrenderMortgage getMortgageByLandId(Long landId);
 	
-	LaSurrenderMortgage getMortgageBysurMortgageId(Integer motgageId);
-
-	
 	LaSurrenderMortgage getMortgageByLandIdandprocessId(Long landId, Long processId);
-	
-	LaSurrenderMortgage getMortgageByLandIdandTransId(Long landId, Integer transactionId);
 }

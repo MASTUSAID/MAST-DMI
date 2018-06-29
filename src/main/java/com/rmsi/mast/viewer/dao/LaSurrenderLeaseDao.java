@@ -16,11 +16,5 @@ public interface LaSurrenderLeaseDao extends GenericDAO<LaSurrenderLease, Intege
 	LaSurrenderLease getSurrenderleaseByLandandProcessId(Long landId, Long processId);
 	LaSurrenderLease getObjbylandId(Long landId);
 	
-	LaSurrenderLease getObjbySurrenderLeaseeId(Integer leaseeId);
-
-	
-	LaSurrenderLease getSurrenderleaseByLandandTransId(Long landId, Integer transactionid);
-
-	
 	
 }

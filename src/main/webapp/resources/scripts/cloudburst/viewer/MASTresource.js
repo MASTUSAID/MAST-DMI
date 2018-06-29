@@ -315,13 +315,12 @@ function zoomToResource(geom) {
 	  
 		var ext=featureOverlay.getSource().getExtent();
 		var center=ol.extent.getCenter(ext);
-		var coordMin = ol.proj.fromLonLat([center[0], center[1]], 'EPSG:4326');
-		/*map.setView( new ol.View({
+		map.setView( new ol.View({
 			projection: projection,//or any projection you are using
 			center: [center[0] , center[1]],//zoom to the center of your feature
-			zoom: 8 //here you define the levelof zoom
-		}));*/
-		 map.getView().animate({center: coordMin, zoom: 16});
+			zoom: 14 //here you define the levelof zoom
+		}));
+		
 		
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#map-tab"]').parent().index());
         $('#sidebar').show();
@@ -377,115 +376,10 @@ function viewAttribute(usin)
 		}
 	}
 	
-	$.ajax({
-        type: "GET",
-        url: "resource/allCustomAttribue/" + landId+ "/" + projectId,
-        data: filter,
-		async: false,
-        success: function(data)
-        {
-        }
-    }).then(function(result){
-    	var persondataArray=[];
-    	
-    	 $("#priamaryCrop").val("");
-    	 $("#priamaryCrop").empty();
-    	 $("#primaryplantdate").val("");
-    	 $("#primaryduration").val("");
-    	 $("#secCrop").val("");
-    	 $("#secCrop").empty();
-    	 $("#secplantdate").val("");
-    	 $("#secduration").val("");
-    	 $("#totalExpenditure").val(""); 
-    	 $("#totalsales").val("");
-    	 
-    	 jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
-			
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cocoa").text("Cocoa"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Plantain").text("Plantain"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Rice").text("Rice"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Oil Palm").text("Oil Palm"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Pepper").text("Pepper"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Ground Nuts").text("Ground Nuts"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cassava").text("Cassava"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cow Peas").text("Cow Peas"));
-		
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
-		
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cocoa").text("Cocoa"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Plantain").text("Plantain"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Rice").text("Rice"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Oil Palm").text("Oil Palm"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Pepper").text("Pepper"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Ground Nuts").text("Ground Nuts"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cassava").text("Cassava"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cow Peas").text("Cow Peas"));
-			
-			
-			
-			 
-			 for(var i=0; i<result.length; i++){
-			 if(result[i].fieldname == "103" || result[i].fieldname == "122" || result[i].fieldname == "131" || result[i].fieldname == "140" || result[i].fieldname == "149" || result[i].fieldname == "158"){
-				 LandId = result[0].landid;
-				 Custom1 = result[i].attributevalue;
-				 $("#priamaryCrop").val(result[i].attributevalue);
-				 
-			 }
-			 else if(result[i].fieldname == "104" || result[i].fieldname == "123" || result[i].fieldname == "132" || result[i].fieldname == "141" || result[i].fieldname == "150" || result[i].fieldname == "159"){
-				 $("#primaryplantdate").val(result[i].attributevalue);
-			 }
-			 else if(result[i].fieldname == "105" || result[i].fieldname == "124" || result[i].fieldname == "133"  || result[i].fieldname == "142"  || result[i].fieldname == "151"  || result[i].fieldname == "160" ){
-				 $("#primaryduration").val(result[i].attributevalue);
-			 }
-			 else if(result[i].fieldname == "116" || result[i].fieldname == "125" || result[i].fieldname == "134"  || result[i].fieldname == "143"  || result[i].fieldname == "152"  || result[i].fieldname == "161" ){
-				  $("#secCrop").val(result[i].attributevalue);
-			 }
-			 else if(result[i].fieldname == "117" || result[i].fieldname == "126" || result[i].fieldname == "135"  || result[i].fieldname == "144"  || result[i].fieldname == "153"  || result[i].fieldname == "162"){
-				 $("#secplantdate").val(result[i].attributevalue);
-			 }
-			 else if(result[i].fieldname == "118" || result[i].fieldname == "127" || result[i].fieldname == "136"  || result[i].fieldname == "145"  || result[i].fieldname == "154"  || result[i].fieldname == "163"){
-				 $("#secduration").val(result[i].attributevalue);
-			 }
-			 else if(result[i].fieldname == "119" || result[i].fieldname == "128" || result[i].fieldname == "137"  || result[i].fieldname == "146"  || result[i].fieldname == "155"  || result[i].fieldname == "164"){
-				 $("#totalExpenditure").val(result[i].attributevalue);
-			 }
-			 else if(result[i].fieldname == "120" || result[i].fieldname == "129" || result[i].fieldname == "138"  || result[i].fieldname == "147"  || result[i].fieldname == "156"  || result[i].fieldname == "165"){
-				 $("#totalsales").val(result[i].attributevalue);
-			 }
-			
-			 }
-			/* var persondata ={
-	        			"landid"   :LandId,
-		    			"Primary Crop":  Custom1,
-		    			"Plant Date (Primary Crop)":  Custom2,
-		    			"Duration (Primary Crop)":  Custom3,
-		    			"Secondary Crop":Custom4,
-		    			"Plant Date (Secondary Crop)":Custom5,
-		    			"Duration (Secondary Crop)":Custom6,
-		    			"Total Expenditures (Farmer)":Custom7,
-		    			"Total Sales (Farmer)":Custom8,
-		    			"Name of Enterprise Farm": Custom9
-		    			
-		    		};*/
-			 
-			/* var persondata ={
-	        			"landid"   :LandId,
-		    			"Color of sky":  Custom1,
-		    			"Color of bear":  Custom2,
-		    			"Color of soil":  Custom3
-		    			
-		    			
-		    		};*/
-					
-				/*	persondataArray.push(persondata);
-			
 
-
-			 return persondataArray;*/	
-    });
 	
 	FillResourcePersonDataNew();
-//	FillResourceCustoAttributes();
+	FillResourceCustoAttributes();
 	loadResourcePersonsOfEditingForEditing();
 
 	
@@ -1088,7 +982,7 @@ function addNewPerson(){
 
 
 
-/*function FillResourceCustoAttributes()
+function FillResourceCustoAttributes()
 {
 	var name_Columns = [];
 	var myColumns = [];	
@@ -1209,36 +1103,31 @@ var ControllerForResourceCustomAttributes = {
 					 if(result[i].fieldname == "103"){
 						 LandId = result[0].landid;
 						 Custom1 = result[i].attributevalue;
-						 $("#priamaryCrop").val(result[i].attributevalue);
-						 
 					 }
 					 else if(result[i].fieldname == "104"){
-						 $("#primaryplantdate").val(result[i].attributevalue);
+						 Custom2 = result[i].attributevalue;
 					 }
 					 else if(result[i].fieldname == "105"){
-						 $("#primaryduration").val(result[i].attributevalue);
+						 Custom3 = result[i].attributevalue;
 					 }
-					 else if(result[i].fieldname == "116"){
-						  $("#secCrop").val(result[i].attributevalue);
+					 /*else if(result[i].fieldname == "116"){
+						 Custom4 = result[i].attributevalue;
 					 }
 					 else if(result[i].fieldname == "117"){
-						 $("#secplantdate").val(result[i].attributevalue);
+						 Custom5 = result[i].attributevalue;
 					 }
 					 else if(result[i].fieldname == "118"){
-						 $("#secduration").val(result[i].attributevalue);
+						 Custom6 = result[i].attributevalue;
 					 }
 					 else if(result[i].fieldname == "119"){
-						 $("#totalExpenditure").val(result[i].attributevalue);
+						 Custom7 = result[i].attributevalue;
 					 }
 					 else if(result[i].fieldname == "120"){
-						 $("#totalsales").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "100"){
-						 $("#totalsales").val(result[i].attributevalue);
-					 }
+						 Custom8 = result[i].attributevalue;
+					 }*/
 					
 					 }
-					 var persondata ={
+					/* var persondata ={
 			        			"landid"   :LandId,
 				    			"Primary Crop":  Custom1,
 				    			"Plant Date (Primary Crop)":  Custom2,
@@ -1247,10 +1136,9 @@ var ControllerForResourceCustomAttributes = {
 				    			"Plant Date (Secondary Crop)":Custom5,
 				    			"Duration (Secondary Crop)":Custom6,
 				    			"Total Expenditures (Farmer)":Custom7,
-				    			"Total Sales (Farmer)":Custom8,
-				    			"Name of Enterprise Farm": Custom9
+				    			"Total Sales (Farmer)":Custom8
 				    			
-				    		};
+				    		};*/
 					 
 					 var persondata ={
 			        			"landid"   :LandId,
@@ -1293,7 +1181,7 @@ var ControllerForResourceCustomAttributes = {
 	    deleteItem: function (item) {
 	        return false;
 	    }
-	};*/
+	};
 
 
 
@@ -1604,146 +1492,13 @@ function getFarmReport(land_id,projectId,geomType)
 							//if(data!=null || data!="" || data!="undefined")
 						    if(true)
 							{
-									/*jQuery('#reportNameId').empty();
-									jQuery('#reportNameId').text("Data Correction Report"); */
+									jQuery('#reportNameId').empty();
+									jQuery('#reportNameId').text("Data Correction Report"); 
 							
 								 var layerName = "";
 								 var relLayerName = "";
 								 var fieldName = "";
 								var _featureTypes= [];
-								
-//								
-								
-								if(null != data[0][0].county || data[0][0].county != ""){
-									
-									$("#countryId").html(data[0][0].county);
-								}
-								 if(null != data[0][0].community || data[0][0].community != ""){
-									
-									$("#regionId").html(data[0][0].community);
-								}
-								 if(null != data[0][0].district || data[0][0].district != ""){
-									
-									$("#district_Id").html(data[0][0].district);
-								}
-								 if(null != data[0][0].clanname || data[0][0].clanname != ""){
-	
-									$("#Clan_Id").html(data[0][0].clanname);
-											}
-								 if(null != data[0][0].town || data[0][0].town != ""){
-	
-									$("#community").html(data[0][0].town);
-												}
-								 if(null != data[0][0].landid || data[0][0].landid != ""){
-	
-									$("#LandRecordNumberId").html("000000"+data[0][0].landid);
-											}
-								 if(null != data[0][0].enterpriseGroupname || data[0][0].enterpriseGroupname != ""){
-	
-									$("#enterprisenameId").html(data[0][0].enterpriseGroupname);
-										}
-								 if(null != data[0][0].classificationname || data[0][0].classificationname != ""){
-									
-									$("#ClassificationId").html(data[0][0].classificationname);
-								}
-								 if(null != data[0][0].subclassificationname || data[0][0].subclassificationname != ""){
-									
-									$("#farmTypeId").html(data[0][0].subclassificationname);
-								}
-								 if(null != data[0][0].area || data[0][0].area != ""){
-	
-									$("#plotsizeId").html(data[0][0].area);
-											}
-								 if(null != data[0][0].categoryname || data[0][0].categoryname != ""){
-	
-									$("#TypeOftenureId").html(data[0][0].categoryname);
-									
-												}
-								 if(null != data[0][0].primarycrop || data[0][0].primarycrop != ""){
-	
-									$("#PrimaryCropId").html(data[0][0].primarycrop);
-											}
-								 if(null != data[0][0].primarycropdate || data[0][0].primarycropdate != ""){
-	
-									$("#PlantDate_pId").html(data[0][0].primarycropdate);
-										}
-								 if(null != data[0][0].primarycropduration || data[0][0].primarycropduration != ""){
-									
-									$("#Duration_pId").html(data[0][0].primarycropduration);
-								}
-								 if(null != data[0][0].seccrop || data[0][0].seccrop != ""){
-	
-									$("#SecondaryCropId").html(data[0][0].seccrop);
-											}
-								 if(null != data[0][0].seccropdate || data[0][0].seccropdate != ""){
-	
-									$("#PlantDate_sId").html(data[0][0].seccropdate);
-												}
-								 if(null != data[0][0].seccropduration || data[0][0].seccropduration != ""){
-	
-									$("#Duration_sId").html(data[0][0].seccropduration);
-											}
-								 if(null != data[0][0].persontype || data[0][0].persontype != ""){
-	
-									$("#TypeofPersonId").html(data[0][0].persontype);
-										}
-								 if(null !=data[0][0].project || data[0][0].project != ""){
-									$("#project_nameId").html(data[0][0].project);
-								}
-								 if(null !=data[0][0].name || data[0][0].name != ""){
-										$("#name").html(data[0][0].name);
-									}
-								 if(null !=data[0][0].gender || data[0][0].gender != ""){
-										$("#farm_gender").html(data[0][0].gender);
-									}
-								 if(null !=data[0][0].dob || data[0][0].dob != ""){
-										$("#farm_dob").html(data[0][0].dob);
-									}
-								 if(null !=data[0][0].maritalStatus || data[0][0].maritalStatus != ""){
-										$("#marital").html(data[0][0].maritalStatus);
-									}
-								 if(null !=data[0][0].resident || data[0][0].resident != ""){
-										$("#resident").html(data[0][0].resident);
-									}
-								 if(null !=data[0][0].ethnicity || data[0][0].ethnicity != ""){
-										$("#ethnicity").html(data[0][0].ethnicity);
-									}
-								 if(null !=data[0][0].mobileNo || data[0][0].mobileNo != ""){
-										$("#mobileno").html(data[0][0].mobileNo);
-									}
-								 
-								 if(data[1] !=0 ){
-									 for(var i=0; i<data[1].length; i++){
-										 
-										 jQuery("#farmPOIRecordsAttrTemplate1").tmpl(data[1][i]).appendTo("#farmPOIRecordsRowData1");
-										
-									 }
-									 
-								 }
-								
-								 if(data[2] !=0 ){
-									 for(var i=0; i<data[2].length; i++){
-										 
-										 if(data[0][0].categoryname=="Organization (formal)"|| data[0][0].categoryname=="Organization (informal)"||
-												   data[0][0].categoryname=="Collective"||data[0][0].categoryname=="Community"){
-													$("#Natural").hide();
-													$("#non-Natural").show();
-													 jQuery("#farmnonNaturalOwnerRecordsAttrTemplate1").tmpl(data[2][i]).appendTo("#farmnonNaturalOwnerRecordsRowData1");
-													 if(data[2][i].institutionName !="" || data[2][i].institutionName!= null){
-														 
-														 $("#NameofInstitutionId").html(data[2][i].institutionName);
-														 }
-													
-												}
-										 else{
-										 $("#Natural").show();
-										 $("#non-Natural").hide();
-										 jQuery("#farmOwnerRecordsAttrTemplate1").tmpl(data[2][i]).appendTo("#farmOwnerRecordsRowData1");
-										 }
-										
-									 }
-									 
-								 }
 									
 								 $.ajaxSetup({
 								        cache: false

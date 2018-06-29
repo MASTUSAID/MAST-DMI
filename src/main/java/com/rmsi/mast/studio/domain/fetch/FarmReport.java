@@ -18,7 +18,7 @@ public class FarmReport implements Serializable {
 	@Id
 	 private Long landid;
 	 
-	 private String project;
+	 
 	 private  Date createddate;
 	 private String username;
 	 private String county;
@@ -44,7 +44,7 @@ public class FarmReport implements Serializable {
 	 private String classificationname;
 	 private String subclassificationname;
 	 private String ispoi;
-//	 private String relationship;
+	 private String relationship;
 	 private String categoryname;
 	 private String persontype;
 	public Long getLandid() {
@@ -198,12 +198,12 @@ public class FarmReport implements Serializable {
 	public void setIspoi(String ispoi) {
 		this.ispoi = ispoi;
 	}
-//	public String getRelationship() {
-//		return relationship;
-//	}
-//	public void setRelationship(String relationship) {
-//		this.relationship = relationship;
-//	}
+	public String getRelationship() {
+		return relationship;
+	}
+	public void setRelationship(String relationship) {
+		this.relationship = relationship;
+	}
 	public String getCategoryname() {
 		return categoryname;
 	}
@@ -221,12 +221,6 @@ public class FarmReport implements Serializable {
 	}
 	public void setCreateddate(Date createddate) {
 		this.createddate = createddate;
-	}
-	public String getProject() {
-		return project;
-	}
-	public void setProject(String project) {
-		this.project = project;
 	}
 	 
 	 

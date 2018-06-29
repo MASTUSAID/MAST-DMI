@@ -2,7 +2,6 @@ package com.rmsi.mast.studio.web.mvc;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.dao.WorkflowStatusHistoryDAO;
-import com.rmsi.mast.studio.domain.LaExtRegistrationLandShareType;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ProjectArea;
 import com.rmsi.mast.studio.domain.User;
@@ -36,7 +34,6 @@ import com.rmsi.mast.studio.service.ProjectRegionService;
 import com.rmsi.mast.studio.service.UserService;
 import com.rmsi.mast.studio.service.WorkflowActionService;
 import com.rmsi.mast.studio.service.WorkflowService;
-import com.rmsi.mast.viewer.service.LaExtRegistrationLandShareTypeService;
 
 
 @Controller
@@ -80,8 +77,6 @@ public class WorkflowController {
 	 private ClaimBasicService claimBasicService;
 	 
 	 
-	 @Autowired
-	 private LaExtRegistrationLandShareTypeService laExtRegistrationLandShareTypeService;
 	 
 	 
 	@RequestMapping(value = "/viewer/landrecords/workflow", method = RequestMethod.GET)
@@ -170,7 +165,7 @@ public class WorkflowController {
 
 			String username = principal.getName();
 			User user = userService.findByUniqueName(username);
-			Long userid = user.getId();
+			long userid = user.getId();
 			
 			if(workflowId==4){
 
@@ -212,25 +207,7 @@ public class WorkflowController {
 			}
 
 
-			int i= workflowActionService.actionRegister(land, userid,workflowId,comments);
-			if(i>0){
-				
-				ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(land).get(0);
-				
-				LaExtRegistrationLandShareType objLaExtRegistrationLandShareType = new LaExtRegistrationLandShareType();
-				objLaExtRegistrationLandShareType.setLandid(spatialUnit.getLandid());
-				objLaExtRegistrationLandShareType.setLandsharetypeid((long)spatialUnit.getLaRightLandsharetype().getLandsharetypeid());
-				objLaExtRegistrationLandShareType.setIsactive(true);
-				objLaExtRegistrationLandShareType.setCreateddate(new Date());
-				objLaExtRegistrationLandShareType.setCreatedby(userid.intValue());
-				try{
-				laExtRegistrationLandShareTypeService.addLaExtRegistrationLandShareType(objLaExtRegistrationLandShareType);
-				}catch(Exception e){
-					e.printStackTrace();
-					return 0;
-				}
-			}
-			return 1;
+			return workflowActionService.actionRegister(land, userid,workflowId,comments);
 			
 
 		}

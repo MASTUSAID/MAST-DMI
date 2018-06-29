@@ -92,7 +92,7 @@ $(function() {
 									 </select>
 								</td>
 							
-								<td><label>Reference No</label> <input type="text"
+								<td><label>Reference NO</label> <input type="text"
 									name="usinstr_id_R" id="usinstr_id_R" value=""
 									onkeypress="return isNumber(event)" class="input-medium">
 								</td>
@@ -117,7 +117,7 @@ $(function() {
 						cellpadding="0" cellspacing="0">
 						<thead>
 							<tr>
-								<!-- <th class="no-sort">Reference No</th> -->
+								<th class="no-sort">Reference No</th>
 								<th class="no-sort">Registration No</th>
 								<th class="no-sort">Parcel No</th>
 								<!-- <th class="no-sort">Application Type</th> -->
@@ -164,6 +164,9 @@ $(function() {
 
 					<script id="registryRecordsAttrTemplate1" type="text/x-jquery-tmpl">
                         <tr>
+                        <td>
+						${transactionid}
+                        </td> 
                         <td>
                       ${registrationNo}
                         </td>
@@ -214,8 +217,6 @@ $(function() {
 
 					<input type="hidden" name="landidhide" id="landidhide" value="">
 					 <input type="hidden" 	name="processidhide" id="processidhide" value="">
-					 <input type="hidden" 	name="editflag" id="editflag" value="">
-					 <input type="hidden" 	name="transactionId" id="transactionId" value="">
 
 					<div id="tabsl">
 						<ul>
@@ -236,10 +237,7 @@ $(function() {
 									<li id = "selectedowner"><a href="#Owner_Details" onclick="javascript:OwnerTabClick();">Owner Details</a></li>
 									<li id = "selectedLanddetails"><a href="#Land_Details_lease" onclick="javascript:landdetailsTabClick();">Land Details</a></li>
 									<li id = "selectedApplicant"><a href="#Applicant_Details" onclick="javascript:ApplicantTabClick();">Lessee</a></li>
-									<li id = "selectedLeasepoi"><a href="#regLeasePoi" onclick="javascript:leasePoiTabClick();" id = "selectedleasepoianchor">POI Details</a></li>
-									
 									<li id = "selectedsleasedetails"><a href="#Lease_Details" onclick="javascript:LeaseeDetailsTabClick();">Lease Details</a></li>
-									
 									<!-- onclick="javascript:validateLease();" -->
 									<li id = "selecteddocs"><a href="#Upload_Documents_Lease" onclick="javascript:DocsTabClick();">Transaction Details</a></li>
 									<!-- onclick="javascript:validateLeasedata();" -->
@@ -253,7 +251,7 @@ $(function() {
 
 
 
-											<!-- <table style="width: 100%" id="tableGeneralAttributes"
+											<table style="width: 100%" id="tableGeneralAttributes"
 												class="landrecords22 ">
 
 												<tr>
@@ -264,15 +262,15 @@ $(function() {
 													<td><label>First Name</label> <input type="text"
 														name="firstname_r_lease" id="firstname_r_lease" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimNumber</td>
+														readonly="readonly"> <!-- claimNumber --></td>
 													<td><label>Middle Name</label> <input type="text"
 														name="middlename_r_lease" id="middlename_r_lease" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimNumber</td>
+														readonly="readonly"> <!-- claimNumber --></td>
 													<td><label>Last Name</label> <input type="text"
 														name="lastname_r_lease" id="lastname_r_lease" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimNumber</td>
+														readonly="readonly"> <!-- claimNumber --></td>
 												</tr>
 
 												<tr>
@@ -281,7 +279,7 @@ $(function() {
 													<td><label>Address</label> <input type="text"
 														name="address_lease" id="address_lease" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimStatus</td>
+														readonly="readonly"> <!-- claimStatus --></td>
 													<td><label>Contact No</label> <input type="text"
 														name="contact_no_lease" id="contact_no_lease" value=""
 														onkeypress="return isNumber(event)"
@@ -299,7 +297,7 @@ $(function() {
 													<td><label>Identification No</label> <input type="text"
 														name="id_r_lease" id="id_r_lease" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimStatus</td>
+														readonly="readonly"> <!-- claimStatus --></td>
 
 													
 												</tr>
@@ -309,7 +307,7 @@ $(function() {
 														name="date_Of_birth_lease" id="date_Of_birth_lease"
 														value="" class="text ui-widget-content ui-corner-all" disabled
 														readonly="readonly">
-														<select name="existing_use_r" id="existing_use_r" class="gendisable"></select>
+														<!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
 													</td>
 												</tr>
 													
@@ -335,82 +333,20 @@ $(function() {
 
 
 
-											</table> -->
-											
-											<label>Owner Details</label>
-											<table class="amendbeforeAfterTable space-top-10">
-												<thead>
-													<tr>
-														<th>Name of Owner</th>
-														<th>Address</th>
-														<th>Contact No</th>
-														<th>Identification Type</th>
-														<th>Identification No</th>
-														<th>Date Of Birth</th>
-														<th>Gender</th>
-														<th>Martial Status</th>
-													</tr>
-												</thead>
-
-												<tbody id="OwnerRecordsRowDataLease">
-												</tbody>
-
-
 											</table>
 
-											<script id="OwnerRecordsAttrTemplateLease"
-												type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstname} ${middlename} ${lastname}
-                 											       </td> 
-                   												   <td>
-                  													${address}
-                   												 </td>
-                   											     <td>
-                     											 ${contactno}
-                       											 </td> 
-																<td>		
-                     											 ${identitytype}
-                       											 </td>
-																<td>		
-                     											 ${identityno}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-																<td>		
-                     											 ${gendername}
-                       											 </td> 
-																<td>		
-                     											 ${maritalstatus}
-                       											 </td> 
-                           
-             
-                       											</tr>
-                 										   </script>	
-												
-
-											
-
-										</div>
-
-									</div>
-									
-									<div style="margin: 10px; border: 1px solid #ccc; padding: 10px;">
-									<table class="amendbeforeAfterTable space-top-10">
+											<table class="amendbeforeAfterTable space-top-10">
 												<thead>
 													<tr>
 														<th>Name of POI</th>
 														<th>Relationship</th>
-														<th>Gender</th>
-														<th>Date Of Birth</th>
+														<th>gender</th>
 														<!--  <th>[Mobile]</th> -->
 
 													</tr>
 												</thead>
 
-												<tbody id="POIownerRecordsRowDataLease1">
+												<tbody id="POIRecordsRowDataLease1">
 												</tbody>
 
 
@@ -418,33 +354,32 @@ $(function() {
 
 
 
-											<script id="POIownerRecordsAttrTemplateLease1"
+											<script id="POIRecordsAttrTemplateLease1"
 												type="text/x-jquery-tmpl">
                      											   <tr>
                     											    <td>
 																	${firstName} ${middleName} ${lastName}
                  											       </td> 
                    												   <td>
-                  													${relation}
+                  													${relationship}
                    												 </td>
-                   											 		<td>
+                   											 <td>
                      											 ${gender}
-                       											 </td> 
-																<td>
-                     											 ${dob}
                        											 </td> 
                            
              
                        											</tr>
                  										   </script>
-									
+
+
+										</div>
+
 									</div>
 								</div>
 								<div id="Land_Details_lease">
 
 									<div class="tab-pane landrecords22" id="registry-recordLease3">
-								
-		<div
+										<div
 											style="margin: 10px; border: 1px solid #ccc; padding: 10px">
 
 
@@ -489,7 +424,7 @@ $(function() {
 												
 													
 
-													<td><label>Size of Parcel (Acre)</label> <input type="text"
+													<td><label>Size of Parcel (acres)</label> <input type="text"
 														name="lease_area" id="lease_area" value=""
 														class="text ui-widget-content ui-corner-all" disabled
 														readonly="readonly"></td>
@@ -569,10 +504,6 @@ $(function() {
 
 												<tr>
 													<td><label>Lessee</label></td>
-												<input type="hidden" name="leaseepersonid" id="leaseepersonid" value="">
-												
-												<input type="hidden" name="leaseeperson" id="leaseeperson" value="">
-													
 												</tr>
 
 												<tr>
@@ -638,122 +569,10 @@ $(function() {
 
 
 												</tr>
-												
-												</table>
-												<button style="float: right;margin-top: -20px;" id="saveleasee" onclick="javscript:saveattributesLeasePersonData()">Add Person</button>
-
-											
-											
-										</div>
-										
-										<div id="newLeaseeOwner" style="margin: 10px; border: 1px solid #ccc; padding: 10px">
-											
-											
-											<label >New Owner Details</label>
-											<table class="amendbeforeAfterTable space-top-10">
-												<thead>
-													<tr>
-														<th>Name of Owner</th>
-														<th>Address</th>
-														<th>Contact No</th>
-														<th>Identification Type</th>
-														<th>Identification No</th>
-														<th>Date Of Birth</th>
-														<th>Gender</th>
-														<th>Martial Status</th>
-														<th>Edit</th>
-													</tr>
-												</thead>
-
-												<tbody id="newLeaseeRecordsRowDataSale">
-												</tbody>
-
 
 											</table>
-
-											<script id="newLeaseeRecordsAttrTemplateSale"
-												type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstname} ${middlename} ${lastname}
-                 											       </td> 
-                   												   <td>
-                  													${address}
-                   												 </td>
-                   											     <td>
-                     											 ${contactno}
-                       											 </td> 
-																<td>		
-                     											 ${identitytype}
-                       											 </td>
-																<td>		
-                     											 ${identityno}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-																<td>		
-                     											 ${gendername}
-                       											 </td> 
-																<td>		
-                     											 ${maritalstatus}
-                       											 </td> 
-																<td>		
-																<button value="Submit" onclick="editNewLeasee('${personid}');">Edit</button>		
-																</td >
-                           
-             
-                       											</tr>
-                 										   </script>	
 											
-											
-                 										  
-                 										   
-                 										  
-											
-											</div>
-									</div>
-									<div  style="margin: 10px; border: 1px solid #ccc; padding: 10px; display: none">
-
-										<table class="amendbeforeAfterTable space-top-10">
-											<thead>
-												<tr>
-													<th>Name of POI</th>
-													<th>Relationship</th>
-													<th>Gender</th>
-													<th>Date Of Birth</th>
-													<!--  <th>[Mobile]</th> -->
-
-												</tr>
-											</thead>
-
-											<tbody id="POIRecordsRowDataLease1">
-											</tbody>
-
-
-										</table>
-
-
-
-										<script id="POIRecordsAttrTemplateLease1"
-											type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstName} ${middleName} ${lastName}
-                 											       </td> 
-                   												   <td>
-                  													${relationship}
-                   												 </td>
-                   											 		<td>
-                     											 ${gender}
-                       											 </td> 
-																<td>
-                     											 ${dob}
-                       											 </td> 
-                           
-             
-                       											</tr>
-                 										   </script>
+										</div>
 									</div>
 								</div>
 								<div id="Lease_Details">
@@ -810,140 +629,78 @@ $(function() {
 										
 									</div>
 
-								
-								</div>
-							<!-- 	<div id= "regLeasePoi">
-									<div>Person of interest
-						 <button id="addLeasePoi" onclick="javascript:addRegLeasePOI();">
-                                          AddPOI
-                                        </button>
-                                        </div>
-                            <div class="row-fluid ">
-                            <div id="RegLeasepersonsEditingGrid"></div>
-                            <div id="editRegpersonsEditingGridLeasee"></div>
-                            
-                           
+									<!-- <div class="tab-pane landrecords22" id="registry-recordLease3">
+                                <div style="margin: 10px; border: 1px solid #ccc; padding: 10px" >
+                                    
 
-                            </div>
-									</div> -->
-									
-									<div id= "regLeasePoi">
-									<div style="margin: 10px; border: 1px solid #ccc; padding: 10px">
-
-
-											<table style="width: 100%" id="tableLeasePOIDetails"
-												class="landrecords22 ">
-
-												<tr>
-													<td><label>POI</label></td>
-												<input type="hidden" name="leaseepoiid" id="leaseepoiid" value="">
-												</tr>
-
-												<tr>
-													<td><label>First Name</label> <input type="text"
-														name="firstname_r_poi" id="firstname_r_poi"
-														value="" class="text ui-widget-content ui-corner-all"
-														maxlength="50"> <!-- claimNumber --></td>
-													<td><label>Middle Name</label> <input type="text"
-														name="middlename_r_poi" id="middlename_r_poi"
-														value="" class="text ui-widget-content ui-corner-all"
-														maxlength="50"> <!-- claimNumber --></td>
-													<td><label>Last Name</label> <input type="text"
-														name="lastname_r_poi" id="lastname_r_poi"
-														value="" class="text ui-widget-content ui-corner-all"
-														maxlength="50"> <!-- claimNumber --></td>
-												</tr>
-
-												
-
-												<tr>
-													<td><label>Gender</label> <select
-														name="gender_type_POI" id="gender_type_POI">
-
-													</select></td>
-													
-													<td><label>Relationship</label> <select
-														name="Relationship_POI" id="Relationship_POI">
-
-													</select></td>
-													
-													
-
-													<td><label>Date Of Birth</label> <input type="text"
-														name="date_Of_birthPOI"
-														id="date_Of_birthPOI" value=""
-														class="input-medium datepicker">
-
-													</td>
-												</tr>
-
-												
-												</table>
-												<button style="float: right;margin-top: -20px;" id="saveleaseePOI" onclick="javscript:saveattributesLeasePOIData()">Add POI</button>
-
-											
-											
-										</div>
+                                    <table style="width: 100%" id="tableLeaseLandDetails" class="landrecords22 " >
+                                       
+									   <tr>
+											<td>
+                                                <label >Land Details</label>
+                                               
+                                            </td>
+										</tr>
 										
-										<div  style="margin: 10px; border: 1px solid #ccc; padding: 10px; ">
-
-										<table class="amendbeforeAfterTable space-top-10">
-											<thead>
-												<tr>
-													<th>FirstName</th>
-													<th>MiddleName</th>
-													<th>LastName</th>
-													<th>Relationship</th>
-													<th>Gender</th>
-													<th>Date Of Birth</th>
-													<th>Edit</th>
-													<!--  <th>[Mobile]</th> -->
-
-												</tr>
-											</thead>
-
-											<tbody id="BuyerPOIRecordsRowDataLease">
-											</tbody>
-
-
-										</table>
-
-
-
-										<script id="BuyerPOIRecordsAttrTemplateLease"
-											type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstName}  
-                 											       </td>
-																	<td>
-																	${middleName}
-																	</td>
-																	<td>
-																	${lastName}
-																	</td>
-                   												   <td>
-                  													${relation}
-                   												 </td>
-                   											 		<td>
-                     											 ${gender}
-                       											 </td> 
-																<td>
-                     											 ${dob}
-                       											 </td>
-																	<td>
-																	<button value="Submit" onclick="editLeaseePOI('${id}');">Edit</button>
-                     											
-                       											 </td>
- 
-                           
-             
-                       											</tr>
-                 										   </script>
-									</div>
-									</div>
-								
-								
+										<tr>
+											<td>
+                                                <label >Country </label> 
+                                                <select name="lease_Country" id="lease_Country" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											<td>
+                                                <label >Region </label> 
+                                                <select name="lease_Region" id="lease_Region" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											<td>
+                                                <label >Provience </label> 
+                                                <select name="lease_Provience" id="lease_Provience" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+										</tr>
+										<tr>
+										<td>
+                                                <label >Parcel No</label> 
+                                                <input type="text" name="parcel_r_lease" id="parcel_r_lease" value="" class="text ui-widget-content ui-corner-all" disabled readonly="readonly"> 
+                                            </td>
+										
+										<td>
+                                                <label >Land Type </label> 
+                                                <select name="lease_Land_Type" id="lease_Land_Type" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											
+											<td>
+                                                <label >Ownership Share Type </label> 
+                                                <select name="lease_Ownership_Type" id="lease_Ownership_Type" disabled readonly="readonly">
+													
+												</select>
+                                            </td>
+											
+											
+																					
+										</tr>
+										<tr>
+										
+											<td>
+                                                <label >Land Use</label> 
+												<input type="text" name="lease_land_use" id="lease_land_use" value="" class="text ui-widget-content ui-corner-all" disabled readonly="readonly">
+                                            </td>
+											
+											<td>
+                                                <label >Area</label> 
+												<input type="text" name="lease_area" id="lease_area" value="" class="text ui-widget-content ui-corner-all" disabled readonly="readonly">
+                                            </td>
+										</tr>
+									</table>
+								</div>
+							</div> -->
+								</div>
 								<div id="Upload_Documents_Lease">
 									<table style="width: 100%" id="tableupload_Lease"
 										class="landrecords22 ">
@@ -1066,14 +823,11 @@ $(function() {
 
 
 
-
 								<div id="tabs_registry1">
 									<ul>
 										<li id = "selectedseller" ><a href="#Seller_Details" onclick="javascript:SellerTabClick();" id = "selectedselleranchor" >Seller Details</a></li>
 										<li id = "selectedland"><a href="#Land_Details_Sale" onclick="javascript:LandTabClick();">Land Details</a></li>
 										<li id = "selectedbuyer"><a href="#Buyer_Details" onclick="javascript:BuyerTabClick();" id = "selectedbuyeranchor">Buyer Details</a></li>
-										<li id = "selectedpoi"><a href="#regPoi" onclick="javascript:poiTabClick();" id = "selectedpoianchor">POI Details</a></li>
-										
 										<li id = "selecteddoc"><a href="#Upload_Document_Sale" onclick="javascript:SaleDocTabClick();">Transaction Details</a></li>
 										<!-- onclick="javascript:validateSale();" -->
 									</ul>
@@ -1083,7 +837,7 @@ $(function() {
 
 
 											<!-- table -->
-											<!-- <table style="width: 100%" id="tableGeneralAttributes_sale"
+											<table style="width: 100%" id="tableGeneralAttributes_sale"
 												class="landrecords22 ">
 												<tr>
 													<td><label id = "selectedsellerlabel">Seller Details</label></td>
@@ -1110,7 +864,7 @@ $(function() {
 													<td><label>Address</label> <input type="text"
 														name="address_sale" id="address_sale" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimStatus</td>
+														readonly="readonly"> <!-- claimStatus --></td>
 
 													<td><label>Contact No</label> <input type="text"
 														name="contact_no_sale" id="contact_no_sale" value=""
@@ -1131,7 +885,7 @@ $(function() {
 													<td><label>Identification No</label> <input type="text"
 														name="id_r" id="id_r" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimStatus</td>
+														readonly="readonly"> <!-- claimStatus --></td>
 
 													
 
@@ -1141,7 +895,7 @@ $(function() {
 													<td><label>Date Of Birth</label> <input type="text"
 														name="date_Of_birth_sale" id="date_Of_birth_sale" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> <select name="existing_use_r" id="existing_use_r" class="gendisable"></select>
+														readonly="readonly"> <!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
 													</td>
 												</tr>
 
@@ -1168,67 +922,49 @@ $(function() {
 
 												</tr>
 												
-											</table> -->
-											<label id = "selectedsellerlabel">Seller Details</label>
-											<table class="amendbeforeAfterTable space-top-10">
+											</table>
+											
+														<table class="amendbeforeAfterTable space-top-10">
 												<thead>
 													<tr>
-														<th>Name of Owner</th>
-														<th>Address</th>
-														<th>Contact No</th>
-														<th>Identification Type</th>
-														<th>Identification No</th>
-														<th>Date Of Birth</th>
-														<th>Gender</th>
-														<th>Martial Status</th>
+														<th>Name of POI</th>
+														<th>Relationship</th>
+														<th>gender</th>
+														<!--  <th>[Mobile]</th> -->
+
 													</tr>
 												</thead>
 
-												<tbody id="OwnerRecordsRowDataSale">
+												<tbody id="POIRecordsRowDataSale1">
 												</tbody>
 
 
 											</table>
 
-											<script id="OwnerRecordsAttrTemplateSale"
+
+
+											<script id="POIRecordsAttrTemplateSale1"
 												type="text/x-jquery-tmpl">
                      											   <tr>
                     											    <td>
-																	${firstname} ${middlename} ${lastname}
+																	${firstName} ${middleName} ${lastName}
                  											       </td> 
                    												   <td>
-                  													${address}
+                  													${relationship}
                    												 </td>
-                   											     <td>
-                     											 ${contactno}
-                       											 </td> 
-																<td>		
-                     											 ${identitytype}
-                       											 </td>
-																<td>		
-                     											 ${identityno}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-																<td>		
-                     											 ${gendername}
-                       											 </td> 
-																<td>		
-                     											 ${maritalstatus}
+                   											 <td>
+                     											 ${gender}
                        											 </td> 
                            
              
                        											</tr>
-                 										   </script>	
-												
-												
+                 										   </script>
 										</div>
 										
-										<!-- <div style="margin: 10px; border: 1px solid #ccc; padding: 10px; display: none;" id="SecondOwner"  name="SecondOwner" >
-											table
+										<div style="margin: 10px; border: 1px solid #ccc; padding: 10px; display: none;" id="SecondOwner"  name="SecondOwner" >
+											<!-- table -->
 											<table style="width: 100%" id="tableGeneralAttributes_sale_seller2" class="landrecords22">
-												Second Seller
+												<!-- Second Seller -->
 												<tr >
 
 													<td><label>Second Owner </label> </td>
@@ -1260,7 +996,7 @@ $(function() {
 													<td><label>Identification No</label> <input type="text"
 														name="id_r1second" id="id_r1second" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimStatus</td>
+														readonly="readonly"> <!-- claimStatus --></td>
 
 													<td><label>Contact No</label> <input type="text"
 														name="contact_no_sale1second" id="contact_no_sale1second" value=""
@@ -1282,10 +1018,10 @@ $(function() {
 													<td><label>Address</label> <input type="text"
 														name="address_sale1second" id="address_sale1second" value=""
 														class="text ui-widget-content ui-corner-all" disabled
-														readonly="readonly"> claimStatus</td>
+														readonly="readonly"> <!-- claimStatus --></td>
 													<td><label>Date Of Birth</label> <input type="text"
 														name="date_Of_birth_sale1second" id="date_Of_birth_sale1second" value=""
-														class="text ui-widget-content ui-corner-all"> <select name="existing_use_r" id="existing_use_r" class="gendisable"></select>
+														class="text ui-widget-content ui-corner-all"> <!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
 													</td>
 												</tr>
 
@@ -1302,52 +1038,8 @@ $(function() {
 												</tr>
 												
 											</table>
-										</div> -->
-
-										<div style="margin: 10px; border: 1px solid #ccc; padding: 10px;">
-
-											<table class="amendbeforeAfterTable space-top-10">
-												<thead>
-													<tr>
-														<th>Name of POI</th>
-														<th>Relationship</th>
-														<th>gender</th>
-														<th>Date Of Birth</th>
-														<!--  <th>[Mobile]</th> -->
-
-													</tr>
-												</thead>
-
-												<tbody id="POIRecordsRowDataSale1">
-												</tbody>
-
-
-											</table>
-
-
-
-											<script id="POIRecordsAttrTemplateSale1"
-												type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstName} ${middleName} ${lastName}
-                 											       </td> 
-                   												   <td>
-                  													${relation}
-                   												 </td>
-                   											     <td>
-                     											 ${gender}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-                           
-             
-                       											</tr>
-                 										   </script>
-
 										</div>
-
+										
 									</div>
 									<div id="Land_Details_Sale">
 										<div class="tab-pane landrecords22"
@@ -1416,7 +1108,7 @@ $(function() {
 												</select>
                                             </td> -->
 														
-														<td><label>Size of Parcel (Acre)</label> <input type="text"
+														<td><label>Size of Parcel (acres)</label> <input type="text"
 															name="sale_area" id="sale_area" value=""
 															class="text ui-widget-content ui-corner-all" disabled
 															readonly="readonly"></td>
@@ -1501,7 +1193,6 @@ $(function() {
 													
 													<tr>
 														<td><label id = "selectedbuyerlabel">Buyer Details</label></td>
-														<input type="hidden" name="personid" id="personid" value="">
 													</tr>
 													
 													<tr>
@@ -1576,341 +1267,11 @@ $(function() {
 
 												</table>
 												
-												<button style="float: right;margin-top: -20px;" id="savebuyer" onclick="javscript:savebuyerdetails()">Add Person</button>
-												
-																								
-												
 												
 											</div>
-											
-											<div id="newOwner" style="margin: 10px; border: 1px solid #ccc; padding: 10px">
-											
-											
-											<label >New Owner Details</label>
-											<table class="amendbeforeAfterTable space-top-10">
-												<thead>
-													<tr>
-														<th>Name of Owner</th>
-														<th>Address</th>
-														<th>Contact No</th>
-														<th>Identification Type</th>
-														<th>Identification No</th>
-														<th>Date Of Birth</th>
-														<th>Gender</th>
-														<th>Martial Status</th>
-														<th>Edit</th>
-													</tr>
-												</thead>
-
-												<tbody id="newOwnerRecordsRowDataSale">
-												</tbody>
-
-
-											</table>
-
-											<script id="newOwnerRecordsAttrTemplateSale"
-												type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstname} ${middlename} ${lastname}
-                 											       </td> 
-                   												   <td>
-                  													${address}
-                   												 </td>
-                   											     <td>
-                     											 ${contactno}
-                       											 </td> 
-																<td>		
-                     											 ${identitytype}
-                       											 </td>
-																<td>		
-                     											 ${identityno}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-																<td>		
-                     											 ${gendername}
-                       											 </td> 
-																<td>		
-                     											 ${maritalstatus}
-                       											 </td> 
-																<td>		
-																<button value="Submit" onclick="editNewBuyer('${personid}');">Edit</button>		
-																</td >
-                           
-             
-                       											</tr>
-                 										   </script>	
-											
-											
-                 										  
-                 										   
-                 										  
-											
-											</div>
-											
-											<div id="SellerEdit">
-											
-											 <label>Seller Details</label>
-											<table class="amendbeforeAfterTable space-top-10">
-												<thead>
-													<tr>
-														<th>Name of Owner</th>
-														<th>Address</th>
-														<th>Contact No</th>
-														<th>Identification Type</th>
-														<th>Identification No</th>
-														<th>Date Of Birth</th>
-														<th>Gender</th>
-														<th>Martial Status</th>
-														<th>Edit</th>
-													</tr>
-												</thead>
-
-												<tbody id="OwnerRecordsRowDataSaleEdit">
-												</tbody>
-
-
-											</table>
-
-											<script id="OwnerRecordsAttrTemplateSaleEdit"
-												type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstname} ${middlename} ${lastname}
-                 											       </td> 
-                   												   <td>
-                  													${address}
-                   												 </td>
-                   											     <td>
-                     											 ${contactno}
-                       											 </td> 
-																<td>		
-                     											 ${identitytype}
-                       											 </td>
-																<td>		
-                     											 ${identityno}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-																<td>		
-                     											 ${gendername}
-                       											 </td> 
-																<td>		
-                     											 ${maritalstatus}
-                       											 </td> 
-																<td>		
-																<button value="Submit" onclick="editSeller('${personid}');">Edit</button>		
-																</td >
-                           
-             
-                       											</tr>
-                 										   </script> 
-											
-											
-											
-												
-											</div>
-											
-											<!-- 	<div style="margin: 10px; border: 1px solid #ccc; padding: 10px">
-												table
-												<table style="width: 100%" id="tablepoi_sale" class="landrecords22 ">
-													
-													<tr>
-														<td><label id = "selectedsalepoilabel">Poi Details</label></td>
-													</tr>
-													
-													<tr>
-														<td><label>First Name</label> <input type="text"
-															name="poi_firstname_r_sale1" id="poi_firstname_r_sale1" value=""
-															class="text ui-widget-content ui-corner-all"
-															maxlength="50"> claimNumber</td>
-														<td><label>Middle Name</label> <input type="text"
-															name="poi_middlename_r_sale1" id="poi_middlename_r_sale1"
-															value="" class="text ui-widget-content ui-corner-all"
-															maxlength="50"> claimNumber</td>
-														<td><label>Last Name</label> <input type="text"
-															name="poi_lastname_r_sale1" id="poi_lastname_r_sale1" value=""
-															class="text ui-widget-content ui-corner-all"
-															maxlength="50"> claimNumber</td>
-													</tr>
-
-
-													<tr>
-
-														<td><label>Gender</label> <select
-															name="poi_sale_gender_buyer" id="poi_sale_gender_buyer">
-																<option>Please Select</option>
-
-														</select></td>
-														<td><label>Relation</label> <select
-															name="poi_relation_sale1" id="poi_relation_sale1">
-																<option>Please Select</option>
-
-														</select></td>
-
-														
-														<td><label>Date Of Birth</label> <input type="text"
-															name="poi_date_Of_birth_sale1" id="poi_date_Of_birth_sale1"
-															value="" class="input-medium datepicker"> <select name="existing_use_r" id="existing_use_r" class="gendisable"></select>
-														</td>
-													</tr>
-
-												</table>
-												
-												
-											</div> -->
 										</div>
 									</div>
-									<div id= "regPoi">
-									<!-- <div>Person of interest
-						 <button id="addPoi" onclick="javascript:addRegPOI();">
-                                          AddPOI
-                                        </button>
-                                        </div>
-                            <div class="row-fluid ">
-                            <div id="RegpersonsEditingGrid"></div>
-                            <div id="editRegpersonsEditingGrid"></div>
-                            
-                             <div>
-                                    <button id="addPoi" onclick="javascript:addPOI();">
-                                          AddPOI
-                                        </button>
-                                        </div>
-
-                            </div> -->
-                            
-                            <div style="margin: 10px; border: 1px solid #ccc; padding: 10px">
-
-
-											<table style="width: 100%" id="tableLeasePOIDetails"
-												class="landrecords22 ">
-
-												
-
-												<tr>
-													<td><label>First Name</label> <input type="text"
-														name="firstname_sale_poi" id="firstname_sale_poi"
-														value="" class="text ui-widget-content ui-corner-all"
-														maxlength="50"> <!-- claimNumber --></td>
-													<td><label>Middle Name</label> <input type="text"
-														name="middlename_sale_poi" id="middlename_sale_poi"
-														value="" class="text ui-widget-content ui-corner-all"
-														maxlength="50"> <!-- claimNumber --></td>
-													<td><label>Last Name</label> <input type="text"
-														name="lastname_sale_poi" id="lastname_sale_poi"
-														value="" class="text ui-widget-content ui-corner-all"
-														maxlength="50"> <!-- claimNumber --></td>
-												</tr>
-
-												
-
-												<tr>
-													<td><label>Gender</label> <select
-														name="gender_sale_POI" id="gender_sale_POI">
-
-													</select></td>
-													
-													<td><label>Relationship</label> <select
-														name="Relationship_sale_POI" id="Relationship_sale_POI">
-
-													</select></td>
-													
-													
-
-													<td><label>Date Of Birth</label> <input type="text"
-														name="date_Of_birthPOI_sale"
-														id="date_Of_birthPOI_sale" value=""
-														class="input-medium datepicker">
-
-													</td>
-												</tr>
-
-												
-												</table>
-												<button style="float: right;margin-top: -20px;" id="saveleaseePOI" onclick="javscript:saveattributesSalePOIData()">Add POI</button>
-
-											
-											
-										</div>
-										<div  style="margin: 10px; border: 1px solid #ccc; padding: 10px; ">
-
-										<table class="amendbeforeAfterTable space-top-10">
-											<thead>
-												<tr>
-													<th>FirstName</th>
-													<th>MiddleName</th>
-													<th>LastName</th>
-													<th>Relationship</th>
-													<th>Gender</th>
-													<th>Date Of Birth</th>
-													<th>Edit</th>
-													<!--  <th>[Mobile]</th> -->
-
-												</tr>
-											</thead>
-
-											<tbody id="BuyerPOIRecordsRowDataSale">
-											</tbody>
-
-
-										</table>
-
-
-
-										<script id="BuyerPOIRecordsAttrTemplateSale"
-											type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstName}  
-                 											       </td>
-																	<td>
-																	${middleName}
-																	</td>
-																	<td>
-																	${lastName}
-																	</td>
-                   												   <td>
-                  													${relation}
-                   												 </td>
-                   											 		<td>
-                     											 ${gender}
-                       											 </td> 
-																<td>
-                     											 ${dob}
-                       											 </td>
-																	<td>
-																	<button value="Submit" onclick="editSalePOI('${id}');">Edit</button>
-                     											
-                       											 </td>
- 
-                           
-             
-                       											</tr>
-                 										   </script>
-									</div>
-									</div>
-									
 									<div id="Upload_Document_Sale">
-									</br>
-									<!-- <div>Person of interest
-						 <button id="addPoi" onclick="javascript:addRegPOI();">
-                                          AddPOI
-                                        </button>
-                                        </div>
-                            <div class="row-fluid ">
-                            <div id="RegpersonsEditingGrid"></div>
-                            
-                             <div>
-                                    <button id="addPoi" onclick="javascript:addPOI();">
-                                          AddPOI
-                                        </button>
-                                        </div>
-
-                            </div> -->
-							
 										<table style="width: 100%" id="tableupload_sale"
 											class="landrecords22 ">
                                           <input type="hidden" 	name="sales_selectedlandid" id="sales_selectedlandid" value="">
@@ -1995,7 +1356,7 @@ $(function() {
 
 										<!-- table -->
 
-										<!-- <table style="width: 100%"
+										<table style="width: 100%"
 											id="tableGeneralAttributes_mortgage" class="landrecords22 ">
 
 
@@ -2006,27 +1367,27 @@ $(function() {
 												<td><label>First Name</label> <input type="text"
 													name="firstname_r_mortgage" id="firstname_r_mortgage"
 													value="" class="text ui-widget-content ui-corner-all"
-													disabled readonly="readonly"> claimNumber
+													disabled readonly="readonly"> <!-- claimNumber -->
 												</td>
 												<td><label>Middle Name</label> <input type="text"
 													name="middlename_r_mortgage" id="middlename_r_mortgage"
 													value="" class="text ui-widget-content ui-corner-all"
-													disabled readonly="readonly"> claimNumber
+													disabled readonly="readonly"> <!-- claimNumber -->
 												</td>
 												<td><label>Last Name</label> <input type="text"
 													name="lastname_r_mortgage" id="lastname_r_mortgage"
 													value="" class="text ui-widget-content ui-corner-all"
-													disabled readonly="readonly"> claimNumber
+													disabled readonly="readonly"> <!-- claimNumber -->
 												</td>
 											</tr>
 
 											<tr>
-
-
+												
+													
 												<td><label>Address</label> <input type="text"
 													name="address_mortgage" id="address_mortgage" value=""
 													class="text ui-widget-content ui-corner-all" disabled
-													readonly="readonly"> claimStatus</td>
+													readonly="readonly"> <!-- claimStatus --></td>
 
 												<td><label>Contact No</label> <input type="text"
 													name="contact_no_mortgage" id="contact_no_mortgage"
@@ -2037,28 +1398,29 @@ $(function() {
 											</tr>
 
 											<tr>
-
-												<td><label>Identification Type</label> <select
+											
+											<td><label>Identification Type</label> <select
 													name="id_type_mortgage" id="id_type_mortgage" disabled
 													readonly="readonly">
 
 												</select></td>
-												<td><label>Identification No</label> <input type="text"
+											<td><label>Identification No</label> <input type="text"
 													name="id_r_mortgage" id="id_r_mortgage" value=""
 													class="text ui-widget-content ui-corner-all" disabled
-													readonly="readonly"> claimStatus</td>
+													readonly="readonly"> <!-- claimStatus --></td>
 
-
+												
 											</tr>
-
+											
 											<tr>
-												<td><label>Date Of Birth</label> <input type="text"
+											<td><label>Date Of Birth</label> <input type="text"
 													name="date_Of_birth_mortgage" id="date_Of_birth_mortgage"
-													value="" class="text ui-widget-content ui-corner-all"
-													disabled readonly="readonly"> <select name="existing_use_r" id="existing_use_r" class="gendisable"></select>
+													value="" class="text ui-widget-content ui-corner-all" disabled
+													readonly="readonly">
+													<!--<select name="existing_use_r" id="existing_use_r" class="gendisable"></select> -->
 												</td>
 											</tr>
-
+											
 											<tr>
 												<td><label>Gender</label> <select
 													name="gender_mortgage" id="gender_mortgage" disabled
@@ -2076,107 +1438,44 @@ $(function() {
 												</select></td>
 
 											</tr>
-										</table> -->
+										</table>
 										
-										
-										
-										<label>Owner Details</label>
-											<table class="amendbeforeAfterTable space-top-10">
+													<table class="amendbeforeAfterTable space-top-10">
 												<thead>
 													<tr>
-														<th>Name of Owner</th>
-														<th>Address</th>
-														<th>Contact No</th>
-														<th>Identification Type</th>
-														<th>Identification No</th>
-														<th>Date Of Birth</th>
-														<th>Gender</th>
-														<th>Martial Status</th>
+														<th>Name of POI</th>
+														<th>Relationship</th>
+														<th>gender</th>
+														<!--  <th>[Mobile]</th> -->
+
 													</tr>
 												</thead>
 
-												<tbody id="OwnerRecordsRowDataMortgage">
+												<tbody id="POIRecordsRowDataMortgage1">
 												</tbody>
 
 
 											</table>
 
-											<script id="OwnerRecordsAttrTemplateMortgage"
+
+
+											<script id="POIRecordsAttrTemplateMortgage1"
 												type="text/x-jquery-tmpl">
-                     											   <tr>
-                    											    <td>
-																	${firstname} ${middlename} ${lastname}
-                 											       </td> 
-                   												   <td>
-                  													${address}
-                   												 </td>
-                   											     <td>
-                     											 ${contactno}
-                       											 </td> 
-																<td>		
-                     											 ${identitytype}
-                       											 </td>
-																<td>		
-                     											 ${identityno}
-                       											 </td> 
-																<td>		
-                     											 ${dob}
-                       											 </td> 
-																<td>		
-                     											 ${gendername}
-                       											 </td> 
-																<td>		
-                     											 ${maritalstatus}
-                       											 </td> 
-                           
-             
-                       											</tr>
-                 										   </script>	
-
-
-									</div>
-								</div>
-
-								<div style="margin: 10px; border: 1px solid #ccc; padding: 10px;">
-									<table class="amendbeforeAfterTable space-top-10">
-										<thead>
-											<tr>
-												<th>Name of POI</th>
-												<th>Relationship</th>
-												<th>Gender</th>
-												<th>Date Of Birth</th>
-												<!--  <th>[Mobile]</th> -->
-
-											</tr>
-										</thead>
-
-										<tbody id="POIRecordsRowDataMortgage1">
-										</tbody>
-
-
-									</table>
-
-
-
-									<script id="POIRecordsAttrTemplateMortgage1"
-										type="text/x-jquery-tmpl">
                      											   <tr>
                     											    <td>
 																	${firstName} ${middleName} ${lastName}
                  											       </td> 
                    												   <td>
-                  													${relation}
+                  													${relationship}
                    												 </td>
-                   											 	 <td>
+                   											 <td>
                      											 ${gender}
                        											 </td> 
- 																<td>
-                     											 ${dob}
-                       											 </td>
                            
              
                        											</tr>
                  										   </script>
+									</div>
 								</div>
 							</div>
 							<div id="Land_Details_Mortgage">
@@ -2241,7 +1540,7 @@ $(function() {
 												</select>
                                             </td> -->
 												
-												<td><label>Size of Parcel (Acre)</label> <input type="text"
+												<td><label>Size of Parcel (acres)</label> <input type="text"
 													name="mortgage_area" id="mortgage_area" value=""
 													class="text ui-widget-content ui-corner-all" disabled
 													readonly="readonly"></td>
@@ -2584,10 +1883,9 @@ $(function() {
 					<th class="langchange">Transactions</th>					
 					<th class="langchange">Date</th>
 					<th class="langchange">Party(Leasor/Owner/Granter)</th>
-					<th class="langchange">Party(Leasee/Applicant/Grantee)</th>
+					<th class="langchange">Party(Leasee/Grantee/Applicant)</th>
 					<th class="langchange">View detail</th>
 					<th class="langchange">View Doc</th>
-					<!-- <th class="langchange">Edit</th> -->
 				</tr>
 			</thead>
 			<tbody id="TransactionHistTrackingBody">
@@ -2640,66 +1938,6 @@ $(function() {
 	</fieldset>
 </div>
 
- <script id="TransactionHistTrackingTemplate" type="text/x-jquery-tmpl">
-
-<tr>       		                  
-		<td class="langchange">
-			${transactiontype} 
- 		</td>    
-		
-		<td class="langchange">
-			${createddate}    
- 		</td>
-		<td class="langchange">
-			${ownername}    
- 		</td>
-		<td class="langchange">
-			${applicantname}    
- 		</td>
-		<td class="langchange">
-		{{if (transactiontype == 'Lease')}}	  
-			<a href="javascript:viewleasedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-		{{if (transactiontype == 'Sale')}}	  
-			<a href="javascript:viewSaleDetails('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-		{{if (transactiontype == 'Change of Owner')}}	  
-			<a href="javascript:viewOwnerDetails('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-		{{if (transactiontype == 'Gift/Inheritance')}}	  
-			<a href="javascript:viewGiftDetails('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-		{{if (transactiontype == 'Change of Joint Owner')}}	  
-			<a href="javascript:viewJointDetails('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-		{{if (transactiontype == 'Surrender Lease')}}	  
-			<a href="javascript:viewsurrenderleasedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
- 		
-		{{if (transactiontype == 'Mortgage')}}	  
-			<a href="javascript:viewMortagagedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-		{{if (transactiontype == 'Surrender Mortgage')}}	  
-			<a href="javascript:viewSurrenderMortagagedetail('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
-		{{/if}}
-
-
-		
-		</td>
-		<td class="langchange">
-			   <a href="javascript:viewdocumentdetail('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a> 
- 		</td>
-		
-
-</tr>
-</script>
-<!--
 <script id="TransactionHistTrackingTemplate" type="text/x-jquery-tmpl">
 
 <tr>       		                  
@@ -2755,12 +1993,8 @@ $(function() {
 		<td class="langchange">
 			   <a href="javascript:viewdocumentdetail('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a> 
  		</td>
-		<td class="langchange">
-			   <a href="javascript:editTransactionDetails('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
- 		</td>
-
 </tr>
-</script>-->
+</script>
 
 <script id="PropertyHistTrackingTemplate" type="text/x-jquery-tmpl">
 
@@ -2794,11 +2028,8 @@ $(function() {
 			${identityno}    
  		</td>
 		<td class="langchange">
-			${leasestartdate}    
- 		</td>	
-		<td class="langchange">
-			${leaseenddate}    
- 		</td>	
+			${createddate}    
+ 		</td>		
 		<td class="langchange">
 			${monthid}    
  		</td>
@@ -2816,7 +2047,9 @@ $(function() {
 		<td class="langchange">
 			${firstname}    ${middlename}  ${lastname}
  		</td>
-		
+		<td class="langchange">
+			${gender}    
+ 		</td>
 		<td class="langchange">
 			${address}    
  		</td>
@@ -2836,7 +2069,9 @@ $(function() {
 		<td class="langchange">
 			${firstname}    ${middlename}  ${lastname}
  		</td>
-		
+		<td class="langchange">
+			${gender}    
+ 		</td>
 		<td class="langchange">
 			${address}    
  		</td>
@@ -2939,7 +2174,7 @@ $(function() {
 			
 			<tr>
 			
-				<td><label>Size of Parcel (Acre)</label> <input type="text"
+				<td><label>Size of Parcel (acres)</label> <input type="text"
 					name="lease_area_View" id="lease_area_View" value=""
 					class="text ui-widget-content ui-corner-all" disabled
 					readonly="readonly"></td>

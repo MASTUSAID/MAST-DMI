@@ -128,17 +128,8 @@ public interface LandRecordsDao extends GenericDAO<SpatialUnitTable, Long> {
 	List<UploadedDocumentDetailsForFetch>  viewdocumentdetailbytransactioid(Long transactionid);
 	
 	List<DataCorrectionReport> getDataCorrectionReport(Long transactionid,Long landId);
-	
-	List<DataCorrectionReport> getBatchDataCorrectionReport(Long transactionid);
-	
 	public List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId);
-	
-	public List<PoiReport> getBatchDataCorrectionReportPOI(Long transactionid);
-
 	List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid,Long landId);
-	
-	List<PersonsReport> getBatchDataCorrectionPersonsReport(Long transactionidstart,Long transactionidend);
-	
 	public List<FarmReport> getFarmReportByLandId(Long landId);
 
 	List<Object> findLiberiaFarmummaryreport(String project);

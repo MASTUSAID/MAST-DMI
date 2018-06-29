@@ -282,8 +282,7 @@ public class SurveyProjectAttributeServiceImp implements
 
 			            for (MediaBasic doc : claim.getMedia()) {
 // && doc.getLaExtTransactiondetail().getTransactionid() == null && doc.getLaExtTransactiondetail().getLaExtDisputelandmappings().get(0).getDisputelandid() == null
-			            	if(null !=doc.getLaParty()){
-			            	if (doc.getLaParty().getLaPartygroupPersontype().getPersontypeid() != null) {
+			                if (doc.getLaParty().getLaPartygroupPersontype().getPersontypeid() != null) {
 			                    Media media = new Media();
 			                    media.setId((long) doc.getDocumentid());
 //                            media.setType(doc.getLaExtDocumentformat().getDocumentformatEn());
@@ -291,7 +290,6 @@ public class SurveyProjectAttributeServiceImp implements
 			                    fillAttributes(media.getAttributes(), doc.getAttributes());
 			                    prop.getMedia().add(media);
 			                }
-			            }
 			            }
 			        }
 
@@ -330,7 +328,6 @@ public class SurveyProjectAttributeServiceImp implements
 			                        propDispute.setMedia(new ArrayList<Media>());
 
 			                        for (MediaBasic doc : claim.getMedia()) {
-			                        	if(null !=doc.getLaParty()){
 			                            if (doc.getIsactive() && doc.getLaParty().getLaPartygroupPersontype().getPersontypeid() != null) {
 			                                Media media = new Media();
 			                                media.setId((long) doc.getDocumentid());
@@ -338,7 +335,6 @@ public class SurveyProjectAttributeServiceImp implements
 			                                media.setAttributes(new ArrayList<Attribute>());
 			                                fillAttributes(media.getAttributes(), doc.getAttributes());
 			                                propDispute.getMedia().add(media);
-			                            }
 			                            }
 			                        }
 			                    }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.LaLease;
 import com.rmsi.mast.studio.domain.LaMortgage;
-import com.rmsi.mast.studio.domain.LaSurrenderLease;
 import com.rmsi.mast.studio.domain.LaSurrenderMortgage;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.viewer.dao.LaMortgageDao;
@@ -58,38 +57,4 @@ public class LaMortgageSurrenderHibernatedDao extends GenericHibernateDAO<LaSurr
 			return null;
 		}
 		
-	}
-
-	@Override
-	public LaSurrenderMortgage getMortgageByLandIdandTransId(Long landId, Integer transactionId) {
-		try{
-			 String strQuery = "select * from la_surrendermortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where  lm.landid= "+landId+" and trans.transactionid="+transactionId+" and trans.processid=9";
-				List<LaSurrenderMortgage> lasurrenderMortgage = getEntityManager().createNativeQuery(strQuery,LaSurrenderMortgage.class).getResultList();
-			if(lasurrenderMortgage.size()>0){
-			return lasurrenderMortgage.get(0);
-			}
-			return null;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
-
-	@Override
-	public LaSurrenderMortgage getMortgageBysurMortgageId(Integer motgageId) {
-		
-		try {
-			Query query = getEntityManager().createQuery("select la from LaSurrenderMortgage la where la.mortgageid = :landid");
-			@SuppressWarnings("unchecked")
-			List<LaSurrenderMortgage> laSurrenderLeaseobj = query.setParameter("landid", motgageId).getResultList();
-
-			return laSurrenderLeaseobj.get(0);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-}
+	}}

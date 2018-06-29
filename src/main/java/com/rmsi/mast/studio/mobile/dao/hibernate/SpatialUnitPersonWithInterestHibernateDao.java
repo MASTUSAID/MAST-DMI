@@ -61,7 +61,7 @@ public class SpatialUnitPersonWithInterestHibernateDao extends   GenericHibernat
     @Override
     public List<SpatialUnitPersonWithInterest> findByUsin(Long usin) {
         try {
-            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.landid = :usin and sp.isactive=true order by sp.id asc ");
+            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.landid = :usin order by sp.id asc ");
             List<SpatialUnitPersonWithInterest> personinterest = query.setParameter("usin", usin).getResultList();
 
             if (personinterest.size() > 0) {
@@ -128,26 +128,6 @@ public class SpatialUnitPersonWithInterestHibernateDao extends   GenericHibernat
 	        }
 		 
 	}
-
-	@Override
-	public List<SpatialUnitPersonWithInterest> findByUsinandTransid(Long usin,
-			Long transid) {
-        try {
-            Query query = getEntityManager().createQuery("Select sp from SpatialUnitPersonWithInterest sp where sp.landid = :usin and sp.transactionid = :transid and sp.isactive=true order by sp.id asc ");
-            List<SpatialUnitPersonWithInterest> personinterest = query.setParameter("usin", usin).setParameter("transid", transid.intValue()).getResultList();
-
-            if (personinterest.size() > 0) {
-                return personinterest;
-            } else {
-                return new ArrayList<SpatialUnitPersonWithInterest>();
-            }
-        } catch (Exception e) {
-            logger.error(e);
-            return new ArrayList<SpatialUnitPersonWithInterest>();
-        }
-    }
-
-
 
 	
 }

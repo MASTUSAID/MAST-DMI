@@ -1467,7 +1467,7 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 	@Override
 	public List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId) {
 	
-		return landRecordsDao.getBatchDataCorrectionReportPOI(transactionid);
+		return landRecordsDao.getDataCorrectionReportPOI(transactionid, landId);
 	}
 
 	@Override
@@ -1486,32 +1486,6 @@ public class LandRecordsServiceImpl implements LandRecordsService {
 		// TODO Auto-generated method stub
 		return landRecordsDao.getFarmReportByLandId(landId);
 	}
-
-	@Override
-	public List<DataCorrectionReport> getBatchDataCorrectionReport(
-			Long transactionid) {
-		
-		return landRecordsDao.getBatchDataCorrectionReport(transactionid);
-	}
-
-	@Override
-	public List<PoiReport> getBatchDataCorrectionReportPOI(
-			Long transactionid, Long transactionidend) {
-	
-		return landRecordsDao.getBatchDataCorrectionReportPOI(transactionid);
-	}
-
-	@Override
-	public List<PersonsReport> getBatchDataCorrectionPersonsReport(
-			Long transactionidstart, Long transactionidend) {		
-		return landRecordsDao.getBatchDataCorrectionPersonsReport(transactionidstart,  transactionidend);
-}
-
-	@Override
-	public List<SocialTenureRelationship> findBatchAllSocialTenureByUsin(
-			Long transid) {      
-		return socialTenureRelationshipDAO.findBatchbyUsin(transid);
-}
     
     
     

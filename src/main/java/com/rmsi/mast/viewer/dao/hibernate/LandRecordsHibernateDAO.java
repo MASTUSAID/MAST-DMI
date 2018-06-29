@@ -1428,7 +1428,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " where ld.projectnameid=" + projectnameid;*/
 
 			
-			/*String query="Select distinct srl.landid,cast(srl.createddate as date),u.username,cav1.attributevalue as EnterpriseGroupname,h1.name as county,h2.name as District,h3.name as Clanname,h4.name as community,h5.name as town,"
+			String query="Select distinct srl.landid,cast(srl.createddate as date),u.username,cav1.attributevalue as EnterpriseGroupname,h1.name as county,h2.name as District,h3.name as Clanname,h4.name as community,h5.name as town,"
 					+ " rc.classificationname,rsc.subclassificationname,area, ac.categoryname,case when ac.attributecategoryid in (10,17) then 'Natural' when ac.attributecategoryid in (14,18) then 'Non-Natural' end as persontype,"
 					+ " rav7.attributevalue||' '||rav8.attributevalue||' '||rav2.attributevalue as Name,case when rpav.attributevalue is null then 'N' else 'Y' end as ispoi,rav4.attributevalue as MaritalStatus,rpav.attributevalue as relationship,"
 					+ " rav3.attributevalue as Gender,rav1.attributevalue as Ethnicity,rav5.attributevalue as Resident,rav6.attributevalue as DOB,rav9.attributevalue as MobileNo, "
@@ -1464,38 +1464,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " left join la_ext_resourceattributevalue rav on rav.landid=srl.landid"
 					+ " inner join la_ext_attributemaster am on am.attributemasterid=rav.attributemasterid"
 					+ " inner join la_ext_attributecategory ac on ac.attributecategoryid=am.attributecategoryid"
-					+ " where srl.projectnameid=" + projectnameid;*/
-			
-			String query = "Select Distinct RA.landID,cast(srl.createddate as date),u.username, (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (100,121,130,139,148,157)) as EnterpriseFarmName,"
-					+ " h1.name as county,h2.name as District,h3.name as Clanname,h4.name as community,h5.name as town,rc.classificationname,rsc.subclassificationname,area,ac.categoryname,"
-					+ " case when ac.attributecategoryid in (10,17) then 'Natural' when ac.attributecategoryid in (14,18) then 'Non-Natural' end as persontype,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1063,1017,1035,1079,1088,1097,1108) and groupid=RA.groupid) ||' '||"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1065,1018,1036,1080,1089,1109,1098) and groupid=RA.groupid) ||' '||"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1066,1019,1037,1081,1090,1099,1110) and groupid=RA.groupid) as OwnerName,"
-					+ " (Select case when count(*)=0 then 'No' else 'Yes' end as ispoi from la_ext_resourcepoiattributevalue where landID=RA.LandID ) as IsPOI,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1022,1064,1116,22) and groupid=RA.groupid) as MaritalStatus, "
-					+ " (Select count(distinct groupid) from la_ext_resourcepoiattributevalue where landID=RA.LandID ) as POICount,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (4,1020,1067,1119) and groupid=RA.groupid) as Gender,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1024,1059,1070,1122) and groupid=RA.groupid) as Etnicity,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (43,1025,1071,1123) and groupid=RA.groupid) as Resisdent,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1021,1068,1120,1129) and groupid=RA.groupid) as DOB,"
-					+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (5,8,1030,1042,1051,1073,1086,1095,1105,1125) and groupid=RA.groupid) as Mobile,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (103,122,131,140,149,158)) as primarycrop,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (104,123,132,141,150,159)) as primarycropdate,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (105,124,133,142,151,160)) as primarycropduration,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (116,125,134,143,152,161)) as seccrop,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (117,126,135,144,153,162)) as seccropdate,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (118,127,136,145,154,163)) as seccropduration, "
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (119,128,137,146,155,164)) as TotalExpenditure,"
-					+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (120,129,138,147,156,165)) as TotalSale"
-					+ " from la_spatialunit_resource_land srl,la_ext_resourceattributevalue RA,la_ext_attributemaster AM,la_ext_attributecategory ac"
-					+ " ,la_ext_user u,la_spatialunitgroup_hierarchy h1 ,la_spatialunitgroup_hierarchy h2,la_spatialunitgroup_hierarchy h3,la_spatialunitgroup_hierarchy h4,la_spatialunitgroup_hierarchy h5 ,la_ext_resourcelandclassificationmapping rlcm"
-					+ " ,la_ext_resourceclassification rc ,la_ext_resourcesubclassification rsc "
-					+ " Where srl.LandID=RA.landID and rlcm.landid=srl.landid and rc.classificationid=rlcm.classificationid and rsc.subclassificationid=rlcm.subclassificationid"
-					+ " And u.userid=srl.createdby And h1.hierarchyid=srl.hierarchyid1 and h1.spatialunitgroupid=1 And h2.hierarchyid=srl.hierarchyid2 and h2.spatialunitgroupid=2"
-					+ " And h3.hierarchyid=srl.hierarchyid3 and h3.spatialunitgroupid=3 And h4.hierarchyid=srl.hierarchyid4 and h4.spatialunitgroupid=4 And h5.hierarchyid=srl.hierarchyid5 and h5.spatialunitgroupid=5"
-					+ " AND RA.AttributeMasterID=AM.AttributeMasterID AND AM.AttributeCategoryID=ac.AttributeCategoryID AND srl.isactive = true and RA.projectid = "+ projectnameid+""
-					+ " Order by Ra.Landid";
+					+ " where srl.projectnameid=" + projectnameid;
 
 			
 			
@@ -2153,7 +2122,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,plm.createddate,plm.transactionid "
 					+ " from la_spatialunit_land ld inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " inner join la_Party_person ps on ps.personid=plm.partyid "
-					+ " where plm.persontypeid=1 and plm.isactive=true and ld.landid="+ landid + "order by ps.ownertype asc";
+					+ " where plm.persontypeid=1 and plm.isactive=true and ld.landid="+ landid + "order by plm.personlandid desc";
 			
 			
 			Query query = getEntityManager().createNativeQuery(sql, OwnerHistoryForFetch.class);
@@ -2185,7 +2154,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 	
 		try 
 		{
-			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
+			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate"
 					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " where ld.landid="+ landid + "order by lea.createddate desc;";
@@ -2220,7 +2189,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 	
 		try 
 		{
-			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
+			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate"
 					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
@@ -2256,7 +2225,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 	
 		try 
 		{
-			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
+			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate"
 					+ " from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
@@ -2436,18 +2405,23 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		String sql = null;
 	
 		try 
-		{			
+		{
+			/*sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
+					+ " from la_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
+					+ " where ld.landid="+ landid + " order by mor.createddate desc;";*/
+			
 			sql = " select row_number() OVER () as rnum,transactiontype,landid,applicantname,ownername,createddate,transactionid,personid from "
-					+ "( select distinct on (lea.personid) 'Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
+					+ "( select 'Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
 					+ " lea.createddate,td.transactionid,lea.personid"
 					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
 					+ " left join la_Party_person ps1 on ps1.personid=lea.personid "
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid "
 					+ " left join la_Party_person ps2 on ps2.personid=lea.ownerid"
-					+ " where ld.landid="+ landid + " and td.processid=1 and td.isactive=true "
+					+ " where ld.landid="+ landid + " and td.processid=1"
 					+ "	Union"
-					+ "	select distinct on (personid) 'Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
+					+ "	select 'Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
 					+ "	from la_mortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
@@ -2456,7 +2430,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " left join la_Party_person ps2 on ps2.personid=mor.ownerid "
 					+ "	where ld.landid="+ landid + " and td.processid=3"
 					+ " Union"	
-					+ "	select distinct on (personid) 'Surrender Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
+					+ "	select 'Surrender Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
 					+ "	from la_surrendermortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
@@ -2465,83 +2439,39 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " left join la_Party_person ps2 on ps2.personid=mor.ownerid "
 					+ "	where ld.landid="+ landid + " and td.processid=9"
 					+ " Union"
-					+ " (select transactiontype,landid,string_agg(applicantname,' ' order by applicantname)as applicantname,string_agg(ownename,' ' order by ownename)as ownename,"
-					+ " createddate,transactionid,null as personid from("
-					+ " select distinct 'Sale' as transactiontype, th.landid,null as applicantname,"
-					+ " string_agg(ps.firstname||' '||ps.lastname,' / ' order by ps.firstname,ps.lastname)as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps on cast(ps.personid as character varying) in (SELECT  regexp_split_to_table(th.oldownerid, E','))"
+					+ " select 'Sale' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
 					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=2 group by th.landid,th.createddate,th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=2"
+					+ " Union"					
+					+ " select 'Change of Owner' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=4"					
+					+ " Union"					
+					+ " select 'Change of Joint Owner' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=7"
+					+ " Union"					
+					+ " select 'Gift/Inheritance' as transactiontype, th.landid,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as applicantname,"
+					+ " ps.firstname||' '||ps.middlename||' '||ps.lastname as ownename, th.createddate,th.transactionid, ps.personid "
+					+ " from la_ext_transactionhistory th "
+					+ " inner join la_Party_person ps on ps.personid=th.oldownerid"
+					+ " inner join la_Party_person ps2 on ps2.personid=th.newownerid"
+					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
+					+ "	where th.landid="+ landid + " and td.processid=6"
 					+ " union"
-					+ " select distinct 'Sale' as transactiontype, th.landid,"
-					+ " string_agg(ps2.firstname||' '||ps2.lastname,' / ' order by ps2.firstname,ps2.lastname)as applicantname, null as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps2 on cast(ps2.personid as character varying) in (SELECT  regexp_split_to_table(th.newownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=2 group by th.landid,th.createddate,th.transactionid) as temp"
-					+ " group by transactiontype,landid,createddate,transactionid,personid)"					
-					+ " Union "					
-					+ " (select transactiontype,landid,string_agg(applicantname,' ' order by applicantname)as applicantname,string_agg(ownename,' ' order by ownename)as ownename,"
-					+ " createddate,transactionid,null as personid from("
-					+ " select distinct 'Change of Owner' as transactiontype, th.landid,null as applicantname,"
-					+ " string_agg(ps.firstname||' '||ps.lastname,' / ' order by ps.firstname,ps.lastname)as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps on cast(ps.personid as character varying) in (SELECT  regexp_split_to_table(th.oldownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=4 group by th.landid,th.createddate,th.transactionid"
-					+ " union"
-					+ " select distinct 'Change of Owner' as transactiontype, th.landid,"
-					+ " string_agg(ps2.firstname||' '||ps2.lastname,' / ' order by ps2.firstname,ps2.lastname)as applicantname, null as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps2 on cast(ps2.personid as character varying) in (SELECT  regexp_split_to_table(th.newownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=4 group by th.landid,th.createddate,th.transactionid) as temp"
-					+ " group by transactiontype,landid,createddate,transactionid,personid)"					
-					+ " Union "					
-					+ " (select transactiontype,landid,string_agg(applicantname,' ' order by applicantname)as applicantname,string_agg(ownename,' ' order by ownename)as ownename,"
-					+ " createddate,transactionid,null as personid from("
-					+ " select distinct 'Change of Joint Owner' as transactiontype, th.landid,null as applicantname,"
-					+ " string_agg(ps.firstname||' '||ps.lastname,' / ' order by ps.firstname,ps.lastname)as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps on cast(ps.personid as character varying) in (SELECT  regexp_split_to_table(th.oldownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=7 group by th.landid,th.createddate,th.transactionid"
-					+ " union"
-					+ " select distinct 'Change of Joint Owner' as transactiontype, th.landid,"
-					+ " string_agg(ps2.firstname||' '||ps2.lastname,' / ' order by ps2.firstname,ps2.lastname)as applicantname, null as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps2 on cast(ps2.personid as character varying) in (SELECT  regexp_split_to_table(th.newownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=7 group by th.landid,th.createddate,th.transactionid) as temp"
-					+ " group by transactiontype,landid,createddate,transactionid,personid)"					
-					+ " Union "
-					+ " (select transactiontype,landid,string_agg(applicantname,' ' order by applicantname)as applicantname,string_agg(ownename,' ' order by ownename)as ownename,"
-					+ " createddate,transactionid,null as personid from("
-					+ " select distinct 'Gift/Inheritance' as transactiontype, th.landid,null as applicantname,"
-					+ " string_agg(ps.firstname||' '||ps.lastname,' / ' order by ps.firstname,ps.lastname)as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps on cast(ps.personid as character varying) in (SELECT  regexp_split_to_table(th.oldownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=6 group by th.landid,th.createddate,th.transactionid"
-					+ " union"
-					+ " select distinct 'Gift/Inheritance' as transactiontype, th.landid,"
-					+ " string_agg(ps2.firstname||' '||ps2.lastname,' / ' order by ps2.firstname,ps2.lastname)as applicantname, null as ownename,"
-					+ " th.createddate,th.transactionid,null as personid"
-					+ " from la_ext_transactionhistory th"                                                                           
-					+ " inner join la_Party_person ps2 on cast(ps2.personid as character varying) in (SELECT  regexp_split_to_table(th.newownerid, E','))"
-					+ " inner join la_ext_transactiondetails td on td.transactionid=th.transactionid"
-					+ " where th.landid="+ landid + "  and td.processid=6 group by th.landid,th.createddate,th.transactionid) as temp"
-					+ " group by transactiontype,landid,createddate,transactionid,personid)"					
-					+ " Union "
-					+ " Select distinct on (lea.personid) 'Surrender Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
+					+ " Select 'Surrender Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
 					+ " lea.createddate,td.transactionid,lea.personid 	from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
 					+ " left join la_Party_person ps1 on ps1.personid=lea.personid "
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid "
@@ -2673,12 +2603,6 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 
 				if (datacorrectionlst.size() > 0) 
 				{
-					for( DataCorrectionReport objDataCorrectionReport:datacorrectionlst)
-					{
-						long landID=objDataCorrectionReport.getLandId();
-						 String landnumber =addZeroinLandNo(landID+"");
-						 objDataCorrectionReport.setLandno(landnumber);
-					}
 					 return datacorrectionlst;
 				}
 				else
@@ -2704,9 +2628,9 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			{
 				
 
-				sql = " select SP.id as Id,SP.first_name as firstName , SP.middle_name as middleName ,SP.last_name as lastName , GN.gender_en as gender ,RL.relationshiptype_en as relationship, SP.dob from la_ext_spatialunit_personwithinterest SP "   
+				sql = " select SP.id as Id,SP.first_name as firstName , SP.middle_name as middleName ,SP.last_name as lastName , GN.gender_en as gender ,RL.relationshiptype_en as relationship from la_ext_spatialunit_personwithinterest SP "   
 						+" inner join la_partygroup_gender GN on SP.gender= GN.genderid "
-						+" inner join la_partygroup_relationshiptype RL on  SP.relation=RL.relationshiptypeid where   SP.landid="+ landId + " and SP.isactive= true and SP.transactionid="+transactionid;
+						+" inner join la_partygroup_relationshiptype RL on  SP.relation=RL.relationshiptypeid where   SP.landid="+ landId ;
  
  
 				
@@ -2751,7 +2675,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 						+" left join la_partygroup_occupation oc on ps.occupationid=oc.occupationid "
 						+" left join la_partygroup_educationlevel eu on ps.educationlevelid=eu.educationlevelid "
 						+" left join la_ext_attributeoptions aopt on aopt.parentid=ps.ownertype and aopt.attributemasterid=1156 "
-						+" where td.transactionid="+ transactionid +" order by ownertype desc" ;
+						+" where td.transactionid="+ transactionid ;
 
 									 
 				
@@ -2784,90 +2708,50 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			try{
 				
 				
-			/*String sql = Select distinct on (srl.landid) srl.landid,cast(srl.createddate as date),u.username,h1.name as county,h2.name as District,h3.name as Clanname,h4.name as community,h5.name as town,area, 
-						cav1.attributevalue as EnterpriseGroupname, cav2.attributevalue as primarycrop, cav3.attributevalue as primarycropdate,cav4.attributevalue as primarycropduration,
-						 cav5.attributevalue as seccrop, cav6.attributevalue as seccropdate,cav7.attributevalue as seccropduration,
-						  case when rav1.attributevalue is null then ' ' else rav1.attributevalue end  as Ethnicity,rav7.attributevalue||' '||rav8.attributevalue||' '||rav2.attributevalue as Name,
-						  case when rav3.attributevalue is null then ' ' else rav3.attributevalue end as Gender,case when rav4.attributevalue is null then ' ' else rav4.attributevalue end  as MaritalStatus,
-						  case when rav5.attributevalue is null then ' ' else rav5.attributevalue end  as Resident,case when rav6.attributevalue is null then ' ' else rav6.attributevalue end  as DOB,
-						 rav9.attributevalue as MobileNo, rc.classificationname,rsc.subclassificationname, case when rpav.attributevalue is null then 'N' else 'Y' end as ispoi,
-						  case when rpav.attributevalue is null then ' ' else rpav.attributevalue end as relationship, ac.categoryname, case when ac.attributecategoryid in (10,17) then 'Natural' 
-						 when ac.attributecategoryid in (14,18) then 'Non-Natural' end as persontype, prj.projectname as project 
-						
-						from la_spatialunit_resource_land srl 
-						inner join la_ext_user u on u.userid=srl.createdby 
-						inner join la_spatialunitgroup_hierarchy h1 on h1.hierarchyid=srl.hierarchyid1 and h1.spatialunitgroupid=1 
-						inner join la_spatialunitgroup_hierarchy h2 on h2.hierarchyid=srl.hierarchyid2 and h2.spatialunitgroupid=2 
-						inner join la_spatialunitgroup_hierarchy h3 on h3.hierarchyid=srl.hierarchyid3 and h3.spatialunitgroupid=3  
-						inner join la_spatialunitgroup_hierarchy h4 on h4.hierarchyid=srl.hierarchyid4 and h4.spatialunitgroupid=4 
-						inner join la_spatialunitgroup_hierarchy h5 on h5.hierarchyid=srl.hierarchyid5 and h5.spatialunitgroupid=5 
-			
-						inner join la_ext_resource_custom_attributevalue cav1 on cav1.landid=srl.landid and cav1.attributeoptionsid in (100,121,130,139,148,157) 
-						inner join la_ext_resource_custom_attributevalue cav2 on cav2.landid=srl.landid and cav2.attributeoptionsid in (103,122,131,140,149,158) 
-						inner join la_ext_resource_custom_attributevalue cav3 on cav3.landid=srl.landid and cav3.attributeoptionsid in (104,123,132,141,150,159) 
-						inner join la_ext_resource_custom_attributevalue cav4 on cav4.landid=srl.landid and cav4.attributeoptionsid in (105,124,133,142,151,160) 
-						inner join la_ext_resource_custom_attributevalue cav5 on cav5.landid=srl.landid and cav5.attributeoptionsid in (116,125,134,143,152,161) 
-						inner join la_ext_resource_custom_attributevalue cav6 on cav6.landid=srl.landid and cav6.attributeoptionsid in (117,126,135,144,153,162) 
-						inner join la_ext_resource_custom_attributevalue cav7 on cav7.landid=srl.landid and cav7.attributeoptionsid in (118,127,136,145,154,163) 
-			
-						inner join la_ext_resourceattributevalue rav1 on rav1.landid=srl.landid and rav1.attributemasterid in (1024,1059,1070,1122) 
-						inner join la_ext_resourceattributevalue rav7 on rav7.landid=srl.landid and rav7.attributemasterid in (1063,1017,1035,1079,1088,1097,1108) 
-						inner join la_ext_resourceattributevalue rav8 on rav8.landid=srl.landid and rav8.attributemasterid in (1065,1018,1036,1080,1089,1109,1098) 
-						inner join la_ext_resourceattributevalue rav2 on rav2.landid=srl.landid and rav2.attributemasterid in (1066,1019,1037,1081,1090,1099,1110) 
-						inner join la_ext_resourceattributevalue rav3 on rav3.landid=srl.landid and rav3.attributemasterid in (4,1020,1067,1119) 
-						inner join la_ext_resourceattributevalue rav4 on rav4.landid=srl.landid and rav4.attributemasterid in (1022,1064,1116,22)  
-						inner join la_ext_resourceattributevalue rav5 on rav5.landid=srl.landid and rav5.attributemasterid in (43,1025,1071,1123) 
-						inner join la_ext_resourceattributevalue rav6 on rav6.landid=srl.landid and rav6.attributemasterid in (1021,1068,1120,1129)  
-						inner join la_ext_resourceattributevalue rav9 on rav9.landid=srl.landid and rav9.attributemasterid in (1086,1095,1105,1030,1042,1073) 
-			
-						inner join la_ext_resourcelandclassificationmapping rlcm on rlcm.landid=srl.landid 
-						inner join la_ext_resourceclassification rc on rc.classificationid=rlcm.classificationid 
-						inner join la_ext_resourcesubclassification rsc on rsc.subclassificationid=rlcm.subclassificationid 
-			
-						left join la_ext_resourcepoiattributevalue rpav on rpav.landid=srl.landid and rpav.attributemasterid=5 
-						left join la_ext_resourceattributevalue rav on rav.landid=srl.landid 
-						inner join la_ext_attributemaster am on am.attributemasterid=rav.attributemasterid 
-						inner join la_ext_attributecategory ac on ac.attributecategoryid=am.attributecategoryid 
-						inner join la_spatialsource_projectname prj on rlcm.projectid=prj.projectnameid 
-			
-						where srl.landid =12;*/
-				
-				
-String sql = "Select Distinct on (RA.landID) RA.landID,cast(srl.createddate as date),u.username, (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID "
-		+ " and attributeoptionsid in (100,121,130,139,148,157)) as EnterpriseGroupname, h1.name as county,h2.name as District,h3.name as Clanname,h4.name as community,h5.name as town,"
-		+ "rc.classificationname,rsc.subclassificationname,area,ac.categoryname, case when ac.attributecategoryid in (10,17,11,12) then 'Natural' when ac.attributecategoryid "
-		+ "in (14,18) then 'Non-Natural' end as persontype, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1063,1017,1035,1079,1088,1097,1108) and groupid=RA.groupid) ||' '|| "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1065,1018,1036,1080,1089,1109,1098) and groupid=RA.groupid) ||' '|| "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1066,1019,1037,1081,1090,1099,1110) and groupid=RA.groupid) as Name, "
-		+ " (Select case when count(*)=0 then 'No' else 'Yes' end as ispoi from la_ext_resourcepoiattributevalue where landID=RA.LandID ) as ispoi, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1022,1064,1116,22) and groupid=RA.groupid) as MaritalStatus, " 
-		+ " (Select count(distinct groupid) from la_ext_resourcepoiattributevalue where landID=RA.LandID ) as POICount, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (4,1020,1067,1119) and groupid=RA.groupid) as Gender, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1024,1059,1070,1122) and groupid=RA.groupid) as Ethnicity, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (43,1025,1071,1123) and groupid=RA.groupid) as Resident, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (1021,1068,1120,1129) and groupid=RA.groupid) as DOB, "
-		+ " (Select attributevalue from la_ext_resourceattributevalue Where landid=RA.landID and attributemasterid in (5,8,1030,1042,1051,1073,1086,1095,1105,1125) and groupid=RA.groupid) as MobileNo, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (103,122,131,140,149,158)) as primarycrop, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (104,123,132,141,150,159)) as primarycropdate, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (105,124,133,142,151,160)) as primarycropduration, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (116,125,134,143,152,161)) as seccrop, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (117,126,135,144,153,162)) as seccropdate, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (118,127,136,145,154,163)) as seccropduration, " 
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (119,128,137,146,155,164)) as TotalExpenditure, "
-		+ " (Select attributevalue from la_ext_resource_custom_attributevalue where landid=RA.landID and attributeoptionsid in (120,129,138,147,156,165)) as TotalSale, "
-		+ " prj.projectname as project"
+String sql = "Select distinct srl.landid,cast(srl.createddate as date),u.username,h1.name as county,h2.name as District,h3.name as Clanname,h4.name as community,h5.name as town,area, "+
+				"cav1.attributevalue as EnterpriseGroupname, cav2.attributevalue as primarycrop, cav3.attributevalue as primarycropdate,cav4.attributevalue as primarycropduration, "+
+				"cav5.attributevalue as seccrop, cav6.attributevalue as seccropdate,cav7.attributevalue as seccropduration, "+
+				"rav1.attributevalue as Ethnicity,rav7.attributevalue||' '||rav8.attributevalue||' '||rav2.attributevalue as Name,rav3.attributevalue as Gender,rav4.attributevalue as MaritalStatus, "+
+				"rav5.attributevalue as Resident,rav6.attributevalue as DOB,rav9.attributevalue as MobileNo, rc.classificationname,rsc.subclassificationname, "+
+				"case when rpav.attributevalue is null then 'N' else 'Y' end as ispoi, rpav.attributevalue as relationship, ac.categoryname, "+
+				"case when ac.attributecategoryid in (10,17) then 'Natural' when ac.attributecategoryid in (14,18) then 'Non-Natural' end as persontype "+
 
-					
-        + " from la_spatialunit_resource_land srl,la_ext_resourceattributevalue RA,la_ext_attributemaster AM,la_ext_attributecategory ac "
-        + " ,la_ext_user u,la_spatialunitgroup_hierarchy h1 ,la_spatialunitgroup_hierarchy h2,la_spatialunitgroup_hierarchy h3,la_spatialunitgroup_hierarchy h4,la_spatialunitgroup_hierarchy h5 , "
-        + "	la_ext_resourcelandclassificationmapping rlcm ,la_ext_resourceclassification rc ,la_ext_resourcesubclassification rsc, la_spatialsource_projectname prj "
-	    + "  Where srl.LandID=RA.landID and rlcm.projectid=prj.projectnameid and rlcm.landid=srl.landid and rc.classificationid=rlcm.classificationid and rsc.subclassificationid=rlcm.subclassificationid "
-		+ "  And u.userid=srl.createdby And h1.hierarchyid=srl.hierarchyid1 and h1.spatialunitgroupid=1 And h2.hierarchyid=srl.hierarchyid2 and h2.spatialunitgroupid=2 "
-		+ " And h3.hierarchyid=srl.hierarchyid3 and h3.spatialunitgroupid=3 And h4.hierarchyid=srl.hierarchyid4 and h4.spatialunitgroupid=4 And h5.hierarchyid=srl.hierarchyid5 and h5.spatialunitgroupid=5 "
-		+ "  AND RA.AttributeMasterID=AM.AttributeMasterID AND AM.AttributeCategoryID=ac.AttributeCategoryID AND srl.isactive = true and "
-		+ " srl.landid = "+ landId 
-		+ " Order by Ra.Landid";
+				"from la_spatialunit_resource_land srl "+
+				"inner join la_ext_user u on u.userid=srl.createdby "+
+				"inner join la_spatialunitgroup_hierarchy h1 on h1.hierarchyid=srl.hierarchyid1 and h1.spatialunitgroupid=1 "+
+				"inner join la_spatialunitgroup_hierarchy h2 on h2.hierarchyid=srl.hierarchyid2 and h2.spatialunitgroupid=2 "+
+				"inner join la_spatialunitgroup_hierarchy h3 on h3.hierarchyid=srl.hierarchyid3 and h3.spatialunitgroupid=3  "+
+				"inner join la_spatialunitgroup_hierarchy h4 on h4.hierarchyid=srl.hierarchyid4 and h4.spatialunitgroupid=4 "+
+				"inner join la_spatialunitgroup_hierarchy h5 on h5.hierarchyid=srl.hierarchyid5 and h5.spatialunitgroupid=5 "+
+	
+				"inner join la_ext_resource_custom_attributevalue cav1 on cav1.landid=srl.landid and cav1.attributeoptionsid=100 "+
+				"inner join la_ext_resource_custom_attributevalue cav2 on cav2.landid=srl.landid and cav2.attributeoptionsid=103 "+
+				"inner join la_ext_resource_custom_attributevalue cav3 on cav3.landid=srl.landid and cav3.attributeoptionsid=104 "+
+				"inner join la_ext_resource_custom_attributevalue cav4 on cav4.landid=srl.landid and cav4.attributeoptionsid=105 "+
+				"inner join la_ext_resource_custom_attributevalue cav5 on cav5.landid=srl.landid and cav5.attributeoptionsid=116 "+
+				"inner join la_ext_resource_custom_attributevalue cav6 on cav6.landid=srl.landid and cav6.attributeoptionsid=117 "+
+				"inner join la_ext_resource_custom_attributevalue cav7 on cav7.landid=srl.landid and cav7.attributeoptionsid=118 "+
+	
+				"inner join la_ext_resourceattributevalue rav1 on rav1.landid=srl.landid and rav1.attributemasterid=1024 "+
+				"inner join la_ext_resourceattributevalue rav7 on rav7.landid=srl.landid and rav7.attributemasterid=1017 "+
+				"inner join la_ext_resourceattributevalue rav8 on rav8.landid=srl.landid and rav8.attributemasterid=1018 "+
+				"inner join la_ext_resourceattributevalue rav2 on rav2.landid=srl.landid and rav2.attributemasterid=1019 "+
+				"inner join la_ext_resourceattributevalue rav3 on rav3.landid=srl.landid and rav3.attributemasterid=1020 "+
+				"inner join la_ext_resourceattributevalue rav4 on rav4.landid=srl.landid and rav4.attributemasterid=1022 "+
+				"inner join la_ext_resourceattributevalue rav5 on rav5.landid=srl.landid and rav5.attributemasterid=1025 "+
+				"inner join la_ext_resourceattributevalue rav6 on rav6.landid=srl.landid and rav6.attributemasterid=1021 "+
+				"inner join la_ext_resourceattributevalue rav9 on rav9.landid=srl.landid and rav9.attributemasterid=1030 "+
+	
+				"inner join la_ext_resourcelandclassificationmapping rlcm on rlcm.landid=srl.landid "+
+				"inner join la_ext_resourceclassification rc on rc.classificationid=rlcm.classificationid "+
+				"inner join la_ext_resourcesubclassification rsc on rsc.subclassificationid=rlcm.subclassificationid "+
+	
+				"left join la_ext_resourcepoiattributevalue rpav on rpav.landid=srl.landid and rpav.attributemasterid=5 "+
+				"left join la_ext_resourceattributevalue rav on rav.landid=srl.landid "+
+				"inner join la_ext_attributemaster am on am.attributemasterid=rav.attributemasterid "+
+				"inner join la_ext_attributecategory ac on ac.attributecategoryid=am.attributecategoryid "+
+	
+				"where srl.landid ="+landId ;
 				
 				
 				
@@ -2884,183 +2768,6 @@ String sql = "Select Distinct on (RA.landID) RA.landID,cast(srl.createddate as d
 				e.printStackTrace();
 				return null;
 			}
-			
-		}
-
-		@Override
-		public List<DataCorrectionReport> getBatchDataCorrectionReport(
-				Long transactionid) {
-			
-			/*Long startid=transactionidstart;
-			
-			Long endid=transactionidend;
-			
-			Long transiddiffr = transactionidend - transactionidstart;
-			String ids= startid+",";
-			for(int i=0; i<transiddiffr; i++){
-				transactionidstart =transactionidstart+1;
-				ids=ids+transactionidstart+",";
-			}
-			
-			ids=ids.substring(0, ids.length()-1);*/
-			
-		
-			String sql = null;
-			
-			try 
-			{
-				sql = " Select LD.landid, LD.landno, TR.transactionid ,ST.landsharetype as landsharetype , LC.claimtype_en as claimtype, LT.landusetype_en as landusetype ,PU.landusetype_en as proposedused, LU.landtype_en as landtype, "
-						+ "TC.tenureclass_en as tenureclasstype ,LD.area,LD.neighbor_east,LD.neighbor_west,LD.neighbor_north,LD.neighbor_south,LD.occupancylength, LD.claimno, PR.projectname,LD.createddate as claimdate,"
-						+ " hie1.name as  county , hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place, PL.partyid from la_spatialunit_land LD"
-						+ " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid"
-						+ " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "
-						+ " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "
-						+ " inner join la_baunit_landusetype LT on LD.landusetypeid=LT.landusetypeid"
-						+ " inner join la_baunit_landusetype PU on LD.proposedused=PU.landusetypeid"
-						+ " inner join la_baunit_landtype LU on LD.landtypeid=LU.landtypeid"
-						+ " inner join la_right_tenureclass TC on LD.tenureclassid=TC.tenureclassid"
-						+ " inner join la_spatialsource_projectname PR on  LD.projectnameid= PR.projectnameid"
-						+ " left join la_spatialunitgroup_hierarchy hie1 on hie1.hierarchyid=ld.hierarchyid1 and LD.spatialunitgroupid1=1"
-						+ " left join la_spatialunitgroup_hierarchy hie2 on hie2.hierarchyid=ld.hierarchyid2 and LD.spatialunitgroupid2=2 "
-						+ " left join la_spatialunitgroup_hierarchy hie3 on hie3.hierarchyid=ld.hierarchyid3 and LD.spatialunitgroupid3=3"
-						+ " left join la_spatialunitgroup_hierarchy hie4 on hie4.hierarchyid=ld.hierarchyid4 and LD.spatialunitgroupid4=4"
-						+ " left join la_spatialunitgroup_hierarchy hie5 on hie5.hierarchyid=ld.hierarchyid5 and LD.spatialunitgroupid5=5"
-						+ " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  where TR.transactionid ="+ transactionid +" order by landid";
-
-				
-				
-				Query query = getEntityManager().createNativeQuery(sql, DataCorrectionReport.class);
-				List<DataCorrectionReport> datacorrectionlst = query.getResultList();
-
-				if (datacorrectionlst.size() > 0) 
-				{
-					 return datacorrectionlst;
-				}
-				else
-				{
-	                return null;
-	            }
-			}
-			catch (Exception e) 
-			{	
-				e.printStackTrace();
-				logger.error(e);
-				return null;
-			}
-		
-		
-         }
-
-		@Override
-		public List<PoiReport> getBatchDataCorrectionReportPOI(
-				Long transactionid) {
-		
-			
-		/*	Long startid=transactionidstart;
-			
-			Long endid=transactionidend;
-			
-			Long transiddiffr = transactionidend - transactionidstart;
-			String ids= startid+",";
-			for(int i=0; i<transiddiffr; i++){
-				transactionidstart =transactionidstart+1;
-				ids=ids+transactionidstart+",";
-			}
-			
-			ids=ids.substring(0, ids.length()-1);*/
-			
-			String sql = null;
-			try 
-			{
-				
-
-				sql = " select SP.id as Id,SP.first_name as firstName , SP.middle_name as middleName ,SP.last_name as lastName , GN.gender_en as gender ,RL.relationshiptype_en as relationship, SP.dob from la_ext_spatialunit_personwithinterest SP "   
-						+" inner join la_partygroup_gender GN on SP.gender= GN.genderid "
-						+" inner join la_partygroup_relationshiptype RL on  SP.relation=RL.relationshiptypeid where SP.isactive= true and SP.transactionid="+transactionid;
- 
- 
-				
-				Query query = getEntityManager().createNativeQuery(sql, PoiReport.class);
-				List<PoiReport> PoiReportlst = query.getResultList();
-
-				if (PoiReportlst.size() > 0) 
-				{
-					 return PoiReportlst;
-				}
-				else
-				{
-	                return null;
-	            }
-			}
-			catch (Exception e) 
-			{	
-				e.printStackTrace();
-				logger.error(e);
-				return null;
-			}
-			
-			
-		}
-
-		@Override
-		public List<PersonsReport> getBatchDataCorrectionPersonsReport(
-				Long transactionidstart, Long transactionidend) {
-			
-			
-			Long startid=transactionidstart;
-			
-			Long endid=transactionidend;
-			
-			Long transiddiffr = transactionidend - transactionidstart;
-			String ids= startid+",";
-			for(int i=0; i<transiddiffr; i++){
-				transactionidstart =transactionidstart+1;
-				ids=ids+transactionidstart+",";
-			}
-			
-			ids=ids.substring(0, ids.length()-1);
-			
-			
-			String sql = null;
-			try 
-			{
-				
-				sql = "  select ps.personid as id,  ps.firstname as firstname ,ps.middlename as middlename ,ps.lastname as lastname ,ps.address as address ,ps.dateofbirth as dateofbirth, g.gender as gender ,ms.maritalstatus as maritalstatus ,id.identitytype as identitytype ,ps.identityno as identityno , "
-						+" ps.contactno as contact ,oc.occupation_en as occupation,eu.educationlevel_en as educationlevel, aopt.optiontext as ownertype "
-						+" from la_ext_transactiondetails td "
-						+" inner join la_ext_personlandmapping plm on plm.transactionid=td.transactionid "
-						+" inner join la_spatialunit_land ld on ld.landid=plm.landid "
-						+" inner join la_Party_person ps on ps.personid=plm.partyid "
-						+" left join la_partygroup_gender g on g.genderid=ps.genderid "
-						+" left join la_partygroup_maritalstatus ms on ms.maritalstatusid=ps.maritalstatusid "
-						+" left join la_partygroup_identitytype id on id.identitytypeid=ps.identitytypeid "
-						+" left join la_partygroup_occupation oc on ps.occupationid=oc.occupationid "
-						+" left join la_partygroup_educationlevel eu on ps.educationlevelid=eu.educationlevelid "
-						+" left join la_ext_attributeoptions aopt on aopt.parentid=ps.ownertype and aopt.attributemasterid=1156 "
-						+" where td.transactionid in ("+ ids+")" ;
-
-									 
-				
-				Query query = getEntityManager().createNativeQuery(sql, PersonsReport.class);
-				List<PersonsReport> PersonsReportlst = query.getResultList();
-
-				if (PersonsReportlst.size() > 0) 
-				{
-					 return PersonsReportlst;
-				}
-				else
-				{
-	                return null;
-	            }
-			}
-			catch (Exception e) 
-			{	
-				e.printStackTrace();
-				logger.error(e);
-				return null;
-			}
-			
-			
 			
 		}
 

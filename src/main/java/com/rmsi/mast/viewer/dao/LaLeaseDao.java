@@ -20,8 +20,5 @@ public interface LaLeaseDao extends GenericDAO<LaLease, Integer>{
 	boolean islandunderlease(Long landid);
 	LaSurrenderLease getSurrenderLeaseById(Integer leaseId);
 	List<LaLease> getleaseeListByLandId(Long landId);
-	
-	List<LaLease> getleaseeListByLandandPersonId(Long landId, Long personid);
 	LaLease getleaseobjbylandandprocessid(Long landId, Long processId);
-	List<LaLease> getleaseobjbylandandprocessidList(Long landId, Long processId);
 }

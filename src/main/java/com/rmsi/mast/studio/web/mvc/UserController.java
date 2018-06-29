@@ -495,10 +495,6 @@ public class UserController {
         {
         	for(UserProject obj :userprojectlst)
         	{
-        		obj.getProject().setProjectArea(null);
-        		obj.getProject().setProjectBaselayers(null);
-        		obj.getProject().setProjectLayergroups(null);
-        		obj.getProject().setUserProjects(null);
         		project.add(obj.getProject());
         	}
         	

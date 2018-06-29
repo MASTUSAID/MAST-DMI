@@ -183,7 +183,6 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 		return laPartyPersonDao.getAllPartyPersonDetails(landid);
 	}
 	
-	
 	@Override
 	public List<LaPartyPerson> fillAllPartyPersonDetails(Integer landid,Integer processid){
 		return laPartyPersonDao.fillAllPartyPersonDetails(landid,processid);
@@ -193,8 +192,6 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 	public LaPartyPerson getPartyPersonDetailssurrenderlease(Integer landid){
 		return laPartyPersonDao.getPartyPersonDetailssurrenderlease(landid);
 	}
-	
-	
 
 	@Override
 	public List<MaritalStatus> getMaritalStatusDetails() {
@@ -487,51 +484,4 @@ public class RegistrationRecordsImpl implements RegistrationRecordsService{
 		// TODO Auto-generated method stub
 		return laMortgageDao.disablelease(personid, landid);
 	}
-
-	@Override
-	public List<SocialTenureRelationship> getSocialTenureRelationshipListForSellerByLandId(
-			Long landId) {
-		
-		return socialTenureRelationshipDao.getSocialTenureRelationshipListForSellerByLandId(landId);
-			
-	}
-
-	@Override
-	public List<SocialTenureRelationship> getSocialTenureRelationshipListByLandIdForBuyer(
-			Long landId, Long processid) {
-		
-		return socialTenureRelationshipDao.getSocialTenureRelationshipListByLandIdForBuyer(landId,processid);
-			
-	}
-
-	@Override
-	public List<LaPartyPerson> getAllPartyPersonDetailsByTransactionId(
-			Integer transid) {
-		return laPartyPersonDao.getAllPartyPersonDetailsByTransactionId(transid);
-		}
-
-	@Override
-	public List<LaPartyPerson> editPartyPersonDetailssurrenderlease(Integer landid, Integer transid) {
-		return laPartyPersonDao.editPartyPersonDetailssurrenderlease(landid, transid);
-		}
-
-	@Override
-	public SocialTenureRelationship getSocialTenureRelationshipByTransactionId(
-			Long transactionId) {
-		return socialTenureRelationshipDao.getSocialTenureRelationshipByTransactionId(transactionId);
-		}
-
-	@Override
-	public List<LaPartyPerson> getPartyPersonDetailssurrenderleaseList(
-			Integer landid) {
-		
-		return laPartyPersonDao.getPartyPersonDetailssurrenderleaseList(landid);
-			
-	}
-
-	@Override
-	public SocialTenureRelationship getAllSocialTenureRelationshipByTransactionId(
-			Long transactionId) {	
-		return socialTenureRelationshipDao.getAllSocialTenureRelationshipByTransactionId(transactionId);
-}
 }

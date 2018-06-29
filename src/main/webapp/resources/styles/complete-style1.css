@@ -105,9 +105,7 @@ background: #fff;
 
 
 .personalDetails {page-break-after: always;}
-.authrisedpersonDetails{
-	page-break-after: always;
-}
+
 
 }
 ol.lower-roman-list {
@@ -357,7 +355,7 @@ color: #114477;
 h4{ font-size: 14px; font-weight:normal; color:#2f2653;}
 h5{ font-size: 13px; font-weight: normal; color:#2f2653;}
 
-.imagePersonId img{
+#imagePersonId img{
 	height:90px;
 	width:90px;
 }

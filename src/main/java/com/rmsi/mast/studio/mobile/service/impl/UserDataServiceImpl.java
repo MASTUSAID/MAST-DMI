@@ -392,7 +392,19 @@ public class UserDataServiceImpl implements UserDataService {
             // Get list of all attributes defined for the project
             List<Surveyprojectattribute> projectAttributes = surveyProjectAttribute.getSurveyProjectAttributes(projectName);
        
-           
+            LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+			laExtTransactiondetail.setCreatedby(userId);
+			laExtTransactiondetail.setCreateddate(new Date());
+			laExtTransactiondetail.setIsactive(true);
+			
+			Status status = registrationRecordsService.getStatusById(1);
+			
+			laExtTransactiondetail.setLaExtApplicationstatus(status);
+			laExtTransactiondetail.setModuletransid(1);
+			laExtTransactiondetail.setRemarks("");
+			laExtTransactiondetail.setProcessid(1l);
+			LaExtTransactiondetail LaExtTransactionObj =laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
+			
 			
             for (Property prop : properties) {
 
@@ -541,21 +553,6 @@ public class UserDataServiceImpl implements UserDataService {
             	spatialUnit.setArea( Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
                 serverPropId = spatialUnitDao.addSpatialUnit(spatialUnit).getLandid();
                 spatialUnitDao.clear();
-                
-                
-                LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
-    			laExtTransactiondetail.setCreatedby(userId);
-    			laExtTransactiondetail.setCreateddate(new Date());
-    			laExtTransactiondetail.setIsactive(true);
-    			
-    			Status status = registrationRecordsService.getStatusById(1);
-    			
-    			laExtTransactiondetail.setLaExtApplicationstatus(status);
-    			laExtTransactiondetail.setModuletransid(1);
-    			laExtTransactiondetail.setRemarks("");
-    			laExtTransactiondetail.setProcessid(1l);
-    			LaExtTransactiondetail LaExtTransactionObj =laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
-    			
 
                 // Save property attributes
                 List<AttributeValues> attributes = createAttributesList(projectAttributes, prop.getAttributes());
@@ -696,7 +693,7 @@ public class UserDataServiceImpl implements UserDataService {
 //Vishal(10-1-2018)
                                                 attributeValuesDao.addAttributeValues(attributes, socialTenurerelationship.getPersonlandid());
                         // Only 1 natural person is allowed for non-natural
-//                        break;
+                        break;
                     }
                 
                 
@@ -901,16 +898,14 @@ public class UserDataServiceImpl implements UserDataService {
                     spatialUnitDeceasedPersonDao.addDeceasedPerson(deadPersons, serverPropId);
                 }
                 
-                
-                result.put(featureId.toString(), Long.toString(serverPropId));
                 }
                 
           
                 WorkflowStatusHistory workflowStatusHistory = new WorkflowStatusHistory();
-//                result.put(featureId.toString(), Long.toString(serverPropId));
+
  
                 // Add server property ID to the result
-              
+                result.put(featureId.toString(), Long.toString(serverPropId));
             
           
             

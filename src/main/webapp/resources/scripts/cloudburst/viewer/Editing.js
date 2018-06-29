@@ -700,43 +700,7 @@ if (_confirm) {
 
 
 function saveEdit() {
-   for (var i=0;i<updateArr.length;i++){
-	   
-	   if(updateArr[i].values_.geometrytype=="Polygon"){
-		   
-		   if(updateArr[i].values_.geometry.flatCoordinates[0]!= updateArr[i].values_.geometry.flatCoordinates[updateArr[i].values_.geometry.flatCoordinates.length-2] 
-		     && 
-			 updateArr[i].values_.geometry.flatCoordinates[1]!= updateArr[i].values_.geometry.flatCoordinates[updateArr[i].values_.geometry.flatCoordinates.length-1] 
-		   
-		   ){
-			   alert("Invalid Geometry");
-			    insertedArr = [];
-				updateArr = [];
-				deleteArr = [];
-				featureArr=[];
-				map.removeInteraction(selectInteraction_edit);
-				map.removeInteraction(intraction_dragBox);
-				map.removeInteraction(modifyInteraction);
-				map.removeInteraction(deleteInteraction);
-			
-			if(selectedFeaturesEdit!=null)
-				{
-			    selectedFeaturesEdit.clear();
-			     vectorSource.clear();
-				}
-				
-				
-				return false;
-			   
-		   }
-		   
-	   }
-			
-            
-
-			
-			}
-			
+   
    formatWFS = new ol.format.WFS();
 	   node = formatWFS.writeTransaction(insertedArr, updateArr, deleteArr, {
 		   featureNS: featureNS_,
@@ -757,8 +721,7 @@ function saveEdit() {
                 data:  s.serializeToString(node)
                 }).done(function(response) {
 			  console.log(response);
-			
-			 insertedArr = [];
+			insertedArr = [];
 			updateArr = [];
 			deleteArr = [];
 			featureArr=[];
@@ -768,10 +731,8 @@ function saveEdit() {
 			map.removeInteraction(deleteInteraction);
 			
 			if(selectedFeaturesEdit!=null)
-				{
-			    selectedFeaturesEdit.clear();
-			     vectorSource.clear();
-				}
+			   selectedFeaturesEdit.clear();
+			vectorSource.clear();
 			
 			if( _flagSplit){
 			 var result = formatWFS.readTransactionResponse(response);
@@ -782,7 +743,6 @@ function saveEdit() {
 					url: "landrecords/updateParcelNumberSplit/" + landId,
 					async: false,
 					success: function (data) {
-					     vectorSource.clear();
 						jAlert(""+data +"","info");
 					}
 				});

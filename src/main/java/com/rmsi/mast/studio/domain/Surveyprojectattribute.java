@@ -19,8 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * The persistent class for the surveyprojectattributes database table.
  * 
@@ -101,7 +99,7 @@ public class Surveyprojectattribute implements Serializable {
 	public void setAttributeMaster(AttributeMaster attributeMaster) {
 		this.attributeMaster = attributeMaster;
 	}
-	@JsonIgnore
+
 	public Project getName() {
 		return name;
 	}

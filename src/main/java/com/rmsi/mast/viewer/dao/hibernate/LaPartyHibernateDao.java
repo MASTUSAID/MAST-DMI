@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.rmsi.mast.studio.dao.hibernate.GenericHibernateDAO;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaParty;
-import com.rmsi.mast.studio.domain.NaturalPerson;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 import com.rmsi.mast.viewer.dao.LaPartyDao;
 
@@ -116,33 +115,6 @@ GenericHibernateDAO<LaParty, Long> implements LaPartyDao{
 	            ex.printStackTrace();
 	            return null;
 	        }
-	}
-	@Override
-	public List<NaturalPerson> getObjectsBypartyId(String id) {
-		 List<LaParty> lstLaParty = new ArrayList<LaParty>();
-		 
-		 List<NaturalPerson> lstNaturalPerson = new ArrayList<NaturalPerson>();
-		 
-	        try {
-	     
-
-	        	String query = "select s from LaParty  s where s.partyid in ("+ id+ ")";
-	        	lstLaParty = getEntityManager().createQuery(query).getResultList();
-
-	            if (lstLaParty.size()>0) {
-	            	
-	            	for(LaParty obj: lstLaParty){
-	            		
-	            		lstNaturalPerson.add((NaturalPerson)obj);
-	            		
-	            	}
-	                return lstNaturalPerson;
-	            }
-	        } catch (Exception ex) {
-	            ex.printStackTrace();
-	            return null;
-	        }
-		return null;
 	}
 
 }

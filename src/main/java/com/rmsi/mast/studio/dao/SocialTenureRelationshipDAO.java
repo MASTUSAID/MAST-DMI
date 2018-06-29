@@ -9,8 +9,6 @@ import com.rmsi.mast.studio.domain.SocialTenureRelationship;
 public interface SocialTenureRelationshipDAO extends GenericDAO<SocialTenureRelationship, Long> {
 
 	List<SocialTenureRelationship> findbyUsin(Long id);
-	
-	List<SocialTenureRelationship> findBatchbyUsin(Long transactionid);
 
 	List<SocialTenureRelationship> findByGid(Integer id);
         

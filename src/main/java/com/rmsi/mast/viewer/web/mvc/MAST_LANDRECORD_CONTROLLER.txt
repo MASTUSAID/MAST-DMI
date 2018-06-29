@@ -55,7 +55,7 @@ import com.rmsi.mast.viewer.service.ResourceAttributeValuesService;
 
 
 @Controller
-public class LandResourceController {
+public class MASTLandResourceController {
 
 	
 	@PersistenceContext
@@ -985,15 +985,14 @@ public class LandResourceController {
 			String custom6 = "";
 			String custom7 = "";
 			String custom8= "";
-			String custom9 = "";
 			
 			User userobj =userdao.findByName(principal.getName());
 			String project =userobj.getDefaultproject();
 		
 			 Project objproject=projectDAO.findByName(project);
 			 projectId= objproject.getProjectnameid();
-		  /*  try{landId = ServletRequestUtils.getRequiredIntParameter(request, "landid");}catch(Exception e){}
-			try{custom1 =  ServletRequestUtils.getRequiredStringParameter(request, "Primary Crop");}catch(Exception e){}
+		    try{landId = ServletRequestUtils.getRequiredIntParameter(request, "landid");}catch(Exception e){}
+			/*try{custom1 =  ServletRequestUtils.getRequiredStringParameter(request, "Primary Crop");}catch(Exception e){}
 			try{custom2 =ServletRequestUtils.getRequiredStringParameter(request, "Plant Date (Primary Crop)");}catch(Exception e){}
 			try{custom3 =ServletRequestUtils.getRequiredStringParameter(request, "Duration (Primary Crop)");}catch(Exception e){}
 			try{custom4 =ServletRequestUtils.getRequiredStringParameter(request, "Secondary Crop");}catch(Exception e){}
@@ -1001,89 +1000,48 @@ public class LandResourceController {
 			try{custom6 =ServletRequestUtils.getRequiredStringParameter(request, "Duration (Secondary Crop)");}catch(Exception e){}
 			try{custom7 =ServletRequestUtils.getRequiredStringParameter(request, "Total Expenditures (Farmer)");}catch(Exception e){}
 			try{custom8 =ServletRequestUtils.getRequiredStringParameter(request, "Total Sales (Farmer)");}catch(Exception e){}
-			try{custom9 =ServletRequestUtils.getRequiredStringParameter(request, "Name of Enterprise Farm");}catch(Exception e){}
-*/	       
-
-			 
-			  try{landId = ServletRequestUtils.getRequiredIntParameter(request, "landid");}catch(Exception e){}
-				try{custom1 =  ServletRequestUtils.getRequiredStringParameter(request, "priamaryCrop");}catch(Exception e){}
-				try{custom2 =ServletRequestUtils.getRequiredStringParameter(request, "primaryplantdate");}catch(Exception e){}
-				try{custom3 =ServletRequestUtils.getRequiredStringParameter(request, "primaryduration");}catch(Exception e){}
-				try{custom4 =ServletRequestUtils.getRequiredStringParameter(request, "secCrop");}catch(Exception e){}
-				try{custom5 =ServletRequestUtils.getRequiredStringParameter(request, "secplantdate");}catch(Exception e){}
-				try{custom6 =ServletRequestUtils.getRequiredStringParameter(request, "secduration");}catch(Exception e){}
-				try{custom7 =ServletRequestUtils.getRequiredStringParameter(request, "totalExpenditure");}catch(Exception e){}
-				try{custom8 =ServletRequestUtils.getRequiredStringParameter(request, "totalsales");}catch(Exception e){}
-				try{custom9 =ServletRequestUtils.getRequiredStringParameter(request, "Name of Enterprise Farm");}catch(Exception e){}
-
+*/
 		    
-		   /* try{custom1 =  ServletRequestUtils.getRequiredStringParameter(request, "Color of sky");}catch(Exception e){}
+		    try{custom1 =  ServletRequestUtils.getRequiredStringParameter(request, "Color of sky");}catch(Exception e){}
 			try{custom2 =ServletRequestUtils.getRequiredStringParameter(request, "Color of bear");}catch(Exception e){}
-			try{custom3 =ServletRequestUtils.getRequiredStringParameter(request, "Color of soil");}catch(Exception e){}*/
+			try{custom3 =ServletRequestUtils.getRequiredStringParameter(request, "Color of soil");}catch(Exception e){}
 			
 			List<CustomAttributes> resobj =customAttributesdao.getResourceCustomAttributeValuesBylandId( objproject.getProjectnameid(), landId);
 			for(CustomAttributes objlst :resobj){
 				
 				
-				if(objlst.getAttributeoptionsid()==103 || objlst.getAttributeoptionsid()==122 || objlst.getAttributeoptionsid()==131 || objlst.getAttributeoptionsid()==140 || objlst.getAttributeoptionsid()==149 || objlst.getAttributeoptionsid()==158){
-					if(! custom1.equalsIgnoreCase("")){
-				
+				if(objlst.getAttributeoptionsid()==103){
 					objlst.setAttributevalue(custom1);
 					em.merge(objlst);
-					}
 				}
-				else if(objlst.getAttributeoptionsid()==104 || objlst.getAttributeoptionsid()==123 || objlst.getAttributeoptionsid()==132 || objlst.getAttributeoptionsid()==141 || objlst.getAttributeoptionsid()==150 || objlst.getAttributeoptionsid()==159){
-					if(! custom2.equalsIgnoreCase("")){
-				
+				else if(objlst.getAttributeoptionsid()==104){
 					objlst.setAttributevalue(custom2);
 					em.merge(objlst);
-					}
 				}
-				else if(objlst.getAttributeoptionsid()==105 || objlst.getAttributeoptionsid()==124 || objlst.getAttributeoptionsid()==133 || objlst.getAttributeoptionsid()==142 || objlst.getAttributeoptionsid()==151 || objlst.getAttributeoptionsid()==160){
-					if(! custom3.equalsIgnoreCase("")){
-				
+				else if(objlst.getAttributeoptionsid()==105){
 					objlst.setAttributevalue(custom3);
 					em.merge(objlst);
-					}
 				}
-				else if(objlst.getAttributeoptionsid()==116 || objlst.getAttributeoptionsid()==125 || objlst.getAttributeoptionsid()==134 || objlst.getAttributeoptionsid()==143 || objlst.getAttributeoptionsid()==152 || objlst.getAttributeoptionsid()==161){
-					if(! custom4.equalsIgnoreCase("")){
+				/*else if(objlst.getAttributeoptionsid()==116){
 					objlst.setAttributevalue(custom4);
 					em.merge(objlst);
 				}
-				}
-				else if(objlst.getAttributeoptionsid()==117 || objlst.getAttributeoptionsid()==126 || objlst.getAttributeoptionsid()==135 || objlst.getAttributeoptionsid()==144 || objlst.getAttributeoptionsid()==153 || objlst.getAttributeoptionsid()==162){
-					if(! custom5.equalsIgnoreCase("")){
-				
+				else if(objlst.getAttributeoptionsid()==117){
 					objlst.setAttributevalue(custom5);
 					em.merge(objlst);
-					}
 				}
-				else if(objlst.getAttributeoptionsid()==118 || objlst.getAttributeoptionsid()==127 || objlst.getAttributeoptionsid()==136 || objlst.getAttributeoptionsid()==145 || objlst.getAttributeoptionsid()==154 || objlst.getAttributeoptionsid()==163){
-					if(! custom6.equalsIgnoreCase("")){
-				
+				else if(objlst.getAttributeoptionsid()==118){
 					objlst.setAttributevalue(custom6);
 					em.merge(objlst);
-					}
 				}
-				else if(objlst.getAttributeoptionsid()==119 || objlst.getAttributeoptionsid()==128 || objlst.getAttributeoptionsid()==137 || objlst.getAttributeoptionsid()==146 || objlst.getAttributeoptionsid()==155 || objlst.getAttributeoptionsid()==164){
-					if(! custom7.equalsIgnoreCase("")){
+				else if(objlst.getAttributeoptionsid()==119){
 					objlst.setAttributevalue(custom7);
 					em.merge(objlst);
-					}
 				}
-				else if(objlst.getAttributeoptionsid()==120 || objlst.getAttributeoptionsid()==129 || objlst.getAttributeoptionsid()==138 || objlst.getAttributeoptionsid()==147 || objlst.getAttributeoptionsid()==156 || objlst.getAttributeoptionsid()==165){
-					if(! custom8.equalsIgnoreCase("")){
+				else if(objlst.getAttributeoptionsid()==120){
 					objlst.setAttributevalue(custom8);
 					em.merge(objlst);
-					}
-				}
-				else if(objlst.getAttributeoptionsid()==121){
-					if(! custom9.equalsIgnoreCase("")){
-					objlst.setAttributevalue(custom9);
-					em.merge(objlst);
-					}
-				}
+				}*/
 					/*if(objlst.getCustomattributeid().getCustomattributeid()==2){
 					objlst.setAttributevalue(custom1);
 					em.merge(objlst);

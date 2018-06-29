@@ -15,6 +15,12 @@
 	            $("#comment_Save").prop("disabled", false).show();
 	           
 	        });
+	        
+	        $("#priamaryCrop,#primaryplantdate,#primaryduration,#secCrop,#secplantdate,#secduration,#totalExpenditure,#totalsales").on('change',function () {
+	            $(this).addClass('addBg');
+	            $("#Custom_Save").prop("disabled", false).show();
+	           
+	        });
 	    })
     </script>
     
@@ -211,7 +217,7 @@
 												class="text ui-widget-content ui-corner-all" readonly>
 											</td>
 											
-											<td><label>Property Size (Acre)</label> <input type="text"
+											<td><label>Property Size</label> <input type="text"
 												name="size_id" id="size_id" value=""
 												class="text ui-widget-content ui-corner-all" readonly>
 											</td>
@@ -319,7 +325,7 @@
 								<div id="ResourcepersonsEditingGrid0"></div>
 								
 								
-								<div  id="ResourcePOI" style="margin-top: -80px;">
+								<div id="ResourcePOI">
 									<table style="width: 100%; margin-bottom: 23px;">
 										<tr>
 											<td class="borderedBottom" colspan="4"><h3>
@@ -340,7 +346,7 @@
 						</div>
 						
 						<div id="tab-Custom-attributes">
-						<div id="CustomAttributes">
+						<!-- <div id="CustomAttributes">
 									<table style="width: 100%; margin-bottom: 23px;">
 										<tr>
 											<td class="borderedBottom" colspan="4"><h3>
@@ -348,9 +354,127 @@
 												</h3></td>
 										</tr>
 									</table>
-								</div>
+								</div> -->
 								<!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
-								<div id="CustomAttributeEditingGrid0"></div>
+								<!-- <div id="CustomAttributeEditingGrid0"></div> -->
+								
+								<div>
+								<table style="width: 100%" id="tableGeneralAttributes"
+										class="landrecords22 ">
+
+
+
+										<tr>
+											<td class="borderedBottom" colspan="4">
+												<h3>
+													<label class="no-margin-bottom">Custom</label>
+												</h3>
+											</td>
+										</tr>
+										<tr>
+											<td class="borderedBottom" colspan="4">
+												<h4>
+													<label class="no-margin-bottom">Crops</label>
+												</h4>
+											</td>
+										</tr>
+
+
+
+										<tr id="rowClaimNumber">
+
+											<td><label>Priamary Crop</label> 
+											<!-- <input type="text"
+												name="priamaryCrop" id="priamaryCrop" value=""
+												class="text ui-widget-content ui-corner-all" > -->
+												 <select name="priamaryCrop" id="priamaryCrop" class="input-medium">
+									 </select>
+											</td>
+											
+											<!-- <td><label>From List</label> <input type="text"
+												name="primaryfromlist" id="primaryfromlist" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td> -->
+											
+											<td><label>Plant Date</label> <input type="text"
+												name="primaryplantdate" id="primaryplantdate" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td>
+											<!-- <td><label>Date Crop was planted</label> <input type="text"
+												name="primarycropplantdate" id="primarycropplantdate" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td> -->
+											<td><label>Duration (Primary Crop, Months)</label> <input type="text"
+												name="primaryduration" id="primaryduration" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td>
+											<!-- <td><label>Estimated Duration</label> <input type="text"
+												name="primaryestimatedduration" id="primaryestimatedduration" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td> -->
+
+										</tr>
+										
+										<tr id="rowClaimNumber">
+
+											<td><label>Secondary Crop</label> 
+											<!-- <input type="text"
+												name="secCrop" id="secCrop" value=""
+												class="text ui-widget-content ui-corner-all" >
+												 -->
+												 <select name="secCrop" id="secCrop" class="input-medium">
+									 </select>
+											</td>
+											
+											<!-- <td><label>From List</label> <input type="text"
+												name="secfromlist" id="secfromlist" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td> -->
+											
+											<td><label>Plant Date</label> <input type="text"
+												name="secplantdate" id="secplantdate" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td>
+											<!-- <td><label>Date Crop was planted</label> <input type="text"
+												name="seccropplantdate" id="seccropplantdate" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td> -->
+											<td><label>Duration (Secondary Crop, Months)</label> <input type="text"
+												name="secduration" id="secduration" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td>
+										<!-- 	<td><label>Estimated Duration</label> <input type="text"
+												name="secestimatedduration" id="secestimatedduration" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td> -->
+
+										</tr>
+										<tr></tr>
+										<tr>
+											<td class="borderedBottom" colspan="4">
+												<h4>
+													<label class="no-margin-bottom">Expenditures/Sales</label>
+												</h4>
+											</td>
+										</tr>
+										
+											<tr id="rowClaimNumber">
+
+											<td><label>Total Farmer Expenditures (LRD)</label> <input type="text"
+												name="totalExpenditure" id="totalExpenditure" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td>
+											
+											<td><label>Total Farmer Sales (LRD)</label> <input type="text"
+												name="totalsales" id="totalsales" value=""
+												class="text ui-widget-content ui-corner-all" >
+											</td>
+											
+										</tr>
+										
+										
+									</table>
+									</div>
 						</div>
 					</div>
 				</form>

@@ -47,8 +47,8 @@ public class LaPartyPerson implements Serializable{
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date dateofbirth;
 	private String fathername;
-	private String identitytype;
-	private String maritalstatus;
+	private String husbandname;
+	private String mothername;
 	private String contactno;
 	private String address;
 	private byte[] photo;
@@ -231,7 +231,7 @@ public class LaPartyPerson implements Serializable{
 	public void setFathername(String fathername) {
 		this.fathername = fathername;
 	}
-	/*public String getHusbandname() {
+	public String getHusbandname() {
 		return husbandname;
 	}
 	public void setHusbandname(String husbandname) {
@@ -242,7 +242,7 @@ public class LaPartyPerson implements Serializable{
 	}
 	public void setMothername(String mothername) {
 		this.mothername = mothername;
-	}*/
+	}
 	public String getContactno() {
 		return contactno;
 	}
@@ -328,18 +328,6 @@ public class LaPartyPerson implements Serializable{
 	}
 	public void setOwnertype(Integer ownertype) {
 		this.ownertype = ownertype;
-	}
-	public String getIdentitytype() {
-		return identitytype;
-	}
-	public void setIdentitytype(String identitytype) {
-		this.identitytype = identitytype;
-	}
-	public String getMaritalstatus() {
-		return maritalstatus;
-	}
-	public void setMaritalstatus(String maritalstatus) {
-		this.maritalstatus = maritalstatus;
 	}
 	
 	

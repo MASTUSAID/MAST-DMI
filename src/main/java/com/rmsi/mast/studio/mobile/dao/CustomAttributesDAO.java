@@ -11,11 +11,9 @@ public interface CustomAttributesDAO extends GenericDAO<CustomAttributes, Intege
 
 	CustomAttributes addResourceCustomAttributeValues (CustomAttributes resourceAttributevalues);
 	
-	List<Object[]> getResourceAttributeValuesBylandId(Integer projectId, Integer landId);
+	List<CustomAttributes> getResourceAttributeValuesBylandId(Integer projectId, Integer landId);
 	
 	List<CustomAttributes> getResourceCustomAttributeValuesBylandId(Integer projectId, Integer landId);
-	
-	List<CustomAttributes> getResourceCustomAttributeValuesBylandid(Integer projectId, Integer landId);
 	
 	List<ResourcePOIAttributeValues> getResourcePoiValuesBylandId(Integer projectId, Integer landId);
 }

@@ -1,12 +1,9 @@
 package com.rmsi.mast.studio.domain.fetch;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class PoiReport implements Serializable {
@@ -28,12 +25,6 @@ public class PoiReport implements Serializable {
 	private String gender;
 	
 	private String relationship;
-	
-	@Temporal(TemporalType.DATE)
-	private Date dob;
-	
-//	private boolean isactive;
-//	private Integer transactionid;
 
 	public Long getId() {
 		return id;
@@ -82,33 +73,7 @@ public class PoiReport implements Serializable {
 	public void setRelationship(String relationship) {
 		this.relationship = relationship;
 	}
-
-	public Date getDob() {
-		return dob;
-	}
-
-	public void setDob(Date dob) {
-		this.dob = dob;
-	}
-
 	
-
-	/*public boolean isIsactive() {
-		return isactive;
-	}
-
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
-	}
-
-	public Integer getTransactionid() {
-		return transactionid;
-	}
-
-	public void setTransactionid(Integer transactionid) {
-		this.transactionid = transactionid;
-	}
-	*/
 	
 	
 	

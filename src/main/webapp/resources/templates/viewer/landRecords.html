@@ -32,7 +32,7 @@
         });
     });
     $(function(){
-        $("#neighbor_north,#neighbor_east,#neighbor_west,#neighbor_south,#tenureclass_id,#tenure_type,#tenureDuration,#existing_use,#proposed_use,#aquisition_id,#area").on('change',function () {
+        $("#neighbor_north,#neighbor_east,#neighbor_west,#neighbor_south,#tenureclass_id,#tenure_type,#tenureDuration,#existing_use,#proposed_use").on('change',function () {
             $(this).addClass('addBg');
             $("#parcelsavebutton").prop("disabled", false).show();
            
@@ -465,7 +465,7 @@
                                         <tr>
                                         
                                          	<td>
-                                                <label >Area (Acre)</label> 
+                                                <label >Area</label> 
                                                 <input type="text" name="area" id="area" class="text ui-widget-content ui-corner-all justread">
 												
                                             </td> 
@@ -654,11 +654,14 @@
 									<table id="genmultimediaTable" class="table table-bordered">
 										<thead>
 											<tr>
-												<th>Doc</th>
-												<th>Remarks</th>
+												<th>First Name</th>
+												<th>Middle Name</th>
+												<th>Last name</th>
+												<!-- <th>Address</th>
+												<th>Dob</th> -->
 												<th>View</th>
 												<th>Browse</th>
-												<!-- <th>Delete</th> -->
+												<th>Delete</th>
 												
 											</tr>
 										</thead>
@@ -1125,30 +1128,6 @@ ${comments}
 				<td>		
 				<button value="Submit" onclick="deleteMediaFile('${partyid}');">Delete</button>		
 				</td >
-				
-
-                </tr>
-            </script>
-            
-            <script id="landmediaTemplate_add" type="text/x-jquery-tmpl">
-                <tr>
-                <td>
-                ${documentname}
-                </td>
- 				<td>
-                ${remarks}
-                </td>
-				   
-             	<td align="center" >
-               <a href="javascript:viewMultimediaByLandId('${documentid}');"><img src="resources/images/studio/document-image-view.png" title="View Document" /></a>
-                </td>
-				<td class="project_cell_adjust styleForm">		
-				<input name="file2"  type="file" id="landmediafileUpload${documentid}" />
-
-						<button value="Submit" onclick="uploadLandMediaFile('${documentid}');">Upload</button>
-						
-				</td >
-				
 				
 
                 </tr>

@@ -42,9 +42,8 @@ var Pan = function(x,y)
 					  
 				  });
 				   var coordinate= [x, y];
-				   var coordMin = ol.proj.fromLonLat([x, y], 'EPSG:4326');
 				  var iconFeature = new ol.Feature({
-						  geometry: new  ol.geom.Point(coordMin)
+						  geometry: new  ol.geom.Point(ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'))
 						});
                    vectorSource.addFeature(iconFeature);
 				   
@@ -65,9 +64,8 @@ var Pan = function(x,y)
 						});
 						vectorLayer.set('aname', "pan_icon");	
 						map.addLayer(vectorLayer);
-						//map.getView().setCenter(ol.proj.transform(coordMin));
-						//map.getView().setZoom(10);
-						  map.getView().animate({center: coordMin, zoom: 10});
+						map.getView().setCenter(ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326'));
+						map.getView().setZoom(5);
 						
 	
         $("#loading").hide();

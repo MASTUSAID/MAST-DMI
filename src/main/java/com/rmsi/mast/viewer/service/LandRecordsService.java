@@ -208,8 +208,6 @@ public interface LandRecordsService {
      *
      */
     List<SocialTenureRelationship> findAllSocialTenureByUsin(Long id);
-    
-    List<SocialTenureRelationship> findBatchAllSocialTenureByUsin(Long transid);
 
     /**
      * @return Non Natural Person
@@ -890,16 +888,8 @@ public interface LandRecordsService {
 	List<UploadedDocumentDetailsForFetch>  viewdocumentdetailbytransactioid(Long transactionid);
 	
 	List<DataCorrectionReport> getDataCorrectionReport(Long transactionid,Long landId);
-	
-	List<DataCorrectionReport> getBatchDataCorrectionReport(Long transactionid);
 	List<PoiReport> getDataCorrectionReportPOI(Long transactionid,Long landId);
-	
-	List<PoiReport> getBatchDataCorrectionReportPOI(Long transactionidstart,Long transactionidend);
-
 	List<PersonsReport> getDataCorrectionPersonsReport(Long transactionid,Long landId);
-	
-	List<PersonsReport> getBatchDataCorrectionPersonsReport(Long transactionidstart,Long transactionidend);
-
 	
 	List<FarmReport> getFarmReportByLandId(Long landId);
 

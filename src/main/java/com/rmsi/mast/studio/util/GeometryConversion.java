@@ -123,12 +123,11 @@ public class GeometryConversion {
         com.vividsolutions.jts.geom.Polygon polygonJts =geometryFactory.createPolygon(lr, null);
         double area = polygonJts.getArea();
         double areaMeter = area * (Math.pow(111319.9, 2)) *Math.cos(Math.toRadians(tmpJtsPoints.get(0).y));
-        double areaAcer=areaMeter* 0.00024710538149159;
         DecimalFormat df = new DecimalFormat("#.##");
         
-        System.out.println(Double.parseDouble(df.format(areaAcer)));
+        System.out.println(Double.parseDouble(df.format(areaMeter)));
        //  double final_area=Double.parseDouble(df.format(areaMeter))
-        return df.format(areaAcer);
+        return df.format(areaMeter);
         
   }
 

@@ -41,17 +41,8 @@ public interface RegistrationRecordsService {
 	
 	LaPartyPerson getPartyPersonDetails(Integer landid);
 	List<LaPartyPerson> getAllPartyPersonDetails(Integer landid);
-	
-	List<LaPartyPerson> getAllPartyPersonDetailsByTransactionId(Integer transid);
-	
-	
 	List<LaPartyPerson> fillAllPartyPersonDetails(Integer landid,Integer processid);
 	LaPartyPerson getPartyPersonDetailssurrenderlease(Integer landid);
-	
-	List<LaPartyPerson> getPartyPersonDetailssurrenderleaseList(Integer landid);
-	
-	List<LaPartyPerson> editPartyPersonDetailssurrenderlease(Integer landid, Integer transid);
-	
 	List<MaritalStatus> getMaritalStatusDetails();
 	List<Gender> getGenderDetails();
 	
@@ -116,10 +107,6 @@ public interface RegistrationRecordsService {
 	
 	SocialTenureRelationship getSocialTenureRelationshipByLandId(Long landId);
 	
-	SocialTenureRelationship getSocialTenureRelationshipByTransactionId(Long transactionId);
-	
-	SocialTenureRelationship getAllSocialTenureRelationshipByTransactionId(Long transactionId);
-	
 	LaParty getLaPartyById(Long partyId);
 	
 	LaExtTransactiondetail getLaExtTransactiondetail(Integer id);
@@ -157,12 +144,8 @@ public interface RegistrationRecordsService {
 	 boolean islandunderlease(Long landid);
 
 	SocialTenureRelationship getSocialTenureRelationshipByLandIdForBuyer(Long landId,Long processid);
-	
-	List<SocialTenureRelationship> getSocialTenureRelationshipListByLandIdForBuyer(Long landId,Long processid);
 
 	SocialTenureRelationship getSocialTenureRelationshipForSellerByLandId(Long landId);
-	
-	List<SocialTenureRelationship> getSocialTenureRelationshipListForSellerByLandId(Long landId);
 	
 	@Transactional
 	LaExtTransactionHistory saveTransactionHistory(LaExtTransactionHistory latranshist);
