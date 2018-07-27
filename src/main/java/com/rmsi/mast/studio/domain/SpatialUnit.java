@@ -122,6 +122,28 @@ public class SpatialUnit implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date surveydate;
 	
+	private String other_use;
+	
+	
+	
+	
+//  @ManyToOne
+//	@JoinColumn(name="tenureclassid")
+//	private TenureClass laRightTenureclass;
+//  
+  
+	
+	 public String getOther_use() {
+		return other_use;
+	}
+
+
+
+
+	public void setOther_use(String other_use) {
+		this.other_use = other_use;
+	}
+	
 //  @Column(name = "the_geom", columnDefinition = "Geometry")
 //  private Geometry theGeom;
 	

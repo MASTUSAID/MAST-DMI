@@ -48,6 +48,7 @@ public class DataCorrectionReport implements Serializable {
 	private String proposedused; //
 	private Integer claimno; //
 	private Integer transactionid;
+	private String other_use;
 	
 	@Transient
 	private String landnumber;
@@ -212,6 +213,12 @@ public class DataCorrectionReport implements Serializable {
 	@Transient
 	public void setLandnumber(String landnumber) {
 		this.landnumber = landnumber;
+	}
+	public String getOther_use() {
+		return other_use;
+	}
+	public void setOther_use(String other_use) {
+		this.other_use = other_use;
 	}
 	
 		

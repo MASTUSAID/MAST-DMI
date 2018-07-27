@@ -184,8 +184,9 @@ var _project=$("#ShowProjectNameID").text();
 
  
 function printDataCorrection(){
-			
+	$("#btnPrintDC").hide();
 				window.print();
+				
 		}
 		
 	

@@ -20,17 +20,17 @@ import javax.persistence.Transient;
 public class NaturalPerson extends LaParty implements Serializable {
 
 	//public class NaturalPerson extends LaParty implements Serializable,Comparable<NaturalPerson> {
-		// public class NaturalPerson extends Person implements Serializable
-    private static final long serialVersionUID = 1L;
-    
-  
+	// public class NaturalPerson extends Person implements Serializable
+	private static final long serialVersionUID = 1L;
 
-    @Column(name="createdby")
+
+
+	@Column(name="createdby")
 	private Integer createdby;
 
-    @Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.DATE)
 	private Date createddate;
-    
+
 	@Temporal(TemporalType.DATE)
 	private Date dateofbirth;
 
@@ -42,15 +42,15 @@ public class NaturalPerson extends LaParty implements Serializable {
 
 	@Column(name="genderid")
 	private Integer genderid;
-	
+
 	@Column(name="contactno")
 	private String contactno;
 
-//	@Column(name="hierarchyid6")
-//	private Integer hierarchyid6;
-	
+	//	@Column(name="hierarchyid6")
+	//	private Integer hierarchyid6;
+
 	@Column(name="photo")
-    private byte[] photo;
+	private byte[] photo;
 
 	@Column(name="husbandname")
 	private String husbandname;
@@ -75,14 +75,14 @@ public class NaturalPerson extends LaParty implements Serializable {
 
 	@Column(name="mothername")
 	private String mothername;
-	
+
 	@Column(name="address")
 	private String address;
-	
+
 	private Integer ownertype;
 
-		//bi-directional one-to-one association to LaParty
-/*	@OneToOne
+	//bi-directional one-to-one association to LaParty
+	/*	@OneToOne
     @PrimaryKeyJoinColumn
 	private LaParty laParty;*/
 
@@ -115,7 +115,7 @@ public class NaturalPerson extends LaParty implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="tenureclassid")
 	private TenureClass laRightTenureclass;
-	
+
 	@Transient
 	private String gender;
 
@@ -161,11 +161,47 @@ public class NaturalPerson extends LaParty implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="hierarchyid1")
 	private ProjectRegion laSpatialunitgroupHierarchy1;
+
+	private Integer ethnicity;
+
+	private Integer citizenship;
 	
-	public NaturalPerson(){
-		
+	private String resident; 
+	
+	
+	
+
+
+
+
+	public String getResident() {
+		return resident;
 	}
-	
+
+	public void setResident(String resident) {
+		this.resident = resident;
+	}
+
+	public Integer getEthnicity() {
+		return ethnicity;
+	}
+
+	public void setEthnicity(Integer ethnicity) {
+		this.ethnicity = ethnicity;
+	}
+
+	public Integer getCitizenship() {
+		return citizenship;
+	}
+
+	public void setCitizenship(Integer citizenship) {
+		this.citizenship = citizenship;
+	}
+
+	public NaturalPerson(){
+
+	}
+
 
 	public String getGender() {
 		return gender;
@@ -321,13 +357,13 @@ public class NaturalPerson extends LaParty implements Serializable {
 		this.genderid = genderid;
 	}
 
-//	public Integer getHierarchyid6() {
-//		return hierarchyid6;
-//	}
-//
-//	public void setHierarchyid6(Integer hierarchyid6) {
-//		this.hierarchyid6 = hierarchyid6;
-//	}
+	//	public Integer getHierarchyid6() {
+	//		return hierarchyid6;
+	//	}
+	//
+	//	public void setHierarchyid6(Integer hierarchyid6) {
+	//		this.hierarchyid6 = hierarchyid6;
+	//	}
 
 	public String getHusbandname() {
 		return husbandname;
@@ -392,15 +428,15 @@ public class NaturalPerson extends LaParty implements Serializable {
 	public void setMothername(String mothername) {
 		this.mothername = mothername;
 	}
-	
 
-//	public Integer getSpatialunitgroupid6() {
-//		return spatialunitgroupid6;
-//	}
-//
-//	public void setSpatialunitgroupid6(Integer spatialunitgroupid6) {
-//		this.spatialunitgroupid6 = spatialunitgroupid6;
-//	}
+
+	//	public Integer getSpatialunitgroupid6() {
+	//		return spatialunitgroupid6;
+	//	}
+	//
+	//	public void setSpatialunitgroupid6(Integer spatialunitgroupid6) {
+	//		this.spatialunitgroupid6 = spatialunitgroupid6;
+	//	}
 
 	public String getAddress() {
 		return address;
@@ -410,7 +446,7 @@ public class NaturalPerson extends LaParty implements Serializable {
 		this.address = address;
 	}
 
-/*	public LaParty getLaParty() {
+	/*	public LaParty getLaParty() {
 		return laParty;
 	}
 
@@ -527,11 +563,11 @@ public class NaturalPerson extends LaParty implements Serializable {
 		// TODO Auto-generated method stub
 		return this.getOwnertype().compareTo(objnp.getOwnertype());
 	}
-*/
-	
-	
-	
-    
-    
-  
+	 */
+
+
+
+
+
+
 }

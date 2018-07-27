@@ -579,8 +579,11 @@ public class MobileDataController {
 						+ "/"
 						+ FileUtils.getFileExtension(sourceDocument
 								.getDocumentname()));
+				if(null!=outputformat){
 				sourceDocument.setLaExtDocumentformat(outputformat);
+				
 				resourceDocument.setLaExtDocumentformat(outputformat.getDocumentformatid());
+				}
 				
 				
 				
@@ -616,7 +619,8 @@ public class MobileDataController {
 							documentsDir.mkdirs();
 						}
 						if(flag.equalsIgnoreCase("M")){
-							sourceDocument.setDocumentname(name.get(1).toString());
+							sourceDocument.setDocumentname(name.get(1).toString()+"."+FileUtils.getFileExtension(sourceDocument
+									.getDocumentname()));
 							sourceDocument.setRemarks(comments.get(1).toString());
 							
 						}

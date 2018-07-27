@@ -1166,9 +1166,18 @@ public class UserDataServiceImpl implements UserDataService {
             else if(id== 1151){
             	naturalPerson.setAddress(value);
             }
-//            else if (id == 42) {
-//              naturalPerson.setCitizenship_id(citizenshipDao.getCitizensbyId(Integer.parseInt(value))); // KAMAL change
-//            } 
+            else if (id == 42) {
+            	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
+              naturalPerson.setCitizenship(attOptions.getParentid()); 
+            } 
+            else if (id == 43) {
+            	
+              naturalPerson.setResident(attribute.getValue()); 
+            } 
+            else if (id == 1059) {
+            	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));
+                naturalPerson.setEthnicity(attOptions.getParentid()); 
+              } 
             else if (id == 1153) {
                 naturalPerson.setIdentityno(value);
             } else if (id == 1152) {
@@ -1364,6 +1373,9 @@ public class UserDataServiceImpl implements UserDataService {
                    parcel.setNeighborEast(attribute.getValue());
                } else if (attribute.getId() == 47) {
                    parcel.setNeighborWest(attribute.getValue());
+               }
+               else if (attribute.getId() == 53) {
+                   parcel.setOther_use(attribute.getValue());
                }
 //               else if (attribute.getId() == 53) {
 //                   parcel.getLaBaunitLandusetype().setLandusetypeEn(attribute.getValue());
@@ -1809,11 +1821,15 @@ public class UserDataServiceImpl implements UserDataService {
                  * + "." 
                         + FileUtils.getFileExtension(sourceDocument.getDocumentname()
                  */
+            	/*String Docsextention= sourceDocument.getLaExtDocumentformat().getDocumentformatEn();
+            	String[] Docsextentionarray=Docsextention.split("/");*/
                 File serverFile = new File(documentsDir + File.separator
                         + sourceDocument.getDocumentname());
 
                 try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
                     outputStream.write(document);
+                    outputStream.flush();
+                    outputStream.close();
                 }
             }
         } catch (MultipartException | IOException ex) {

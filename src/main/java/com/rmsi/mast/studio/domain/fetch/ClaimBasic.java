@@ -119,6 +119,9 @@ public class ClaimBasic implements Serializable {
 	
 	private String udparcelno;
 	
+	private String other_use;
+	
+	
 	
 	
 //    @ManyToOne
@@ -127,7 +130,21 @@ public class ClaimBasic implements Serializable {
 //    
     
 	
-	 @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+	 public String getOther_use() {
+		return other_use;
+	}
+
+
+
+
+	public void setOther_use(String other_use) {
+		this.other_use = other_use;
+	}
+
+
+
+
+	@OneToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	  @JoinColumn(name = "parentuid")
 	  private List<ClaimAttributeValue> attributes;
 	  

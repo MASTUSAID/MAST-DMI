@@ -187,6 +187,28 @@ public class SpatialUnitTemp implements Serializable {
 	private ProjectRegion laSpatialunitgroupHierarchy6;
 	
 	private Integer projectnameid;
+	
+	private String other_use;
+	
+	
+	
+	
+//  @ManyToOne
+//	@JoinColumn(name="tenureclassid")
+//	private TenureClass laRightTenureclass;
+//  
+  
+	
+	 public String getOther_use() {
+		return other_use;
+	}
+
+
+
+
+	public void setOther_use(String other_use) {
+		this.other_use = other_use;
+	}
 
 	public Long getLandid() {
 		return landid;

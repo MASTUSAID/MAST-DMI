@@ -2648,9 +2648,9 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			
 			try 
 			{
-				sql = " Select LD.landid, LD.landno, TR.transactionid ,ST.landsharetype as landsharetype , LC.claimtype_en as claimtype, LT.landusetype_en as landusetype ,PU.landusetype_en as proposedused, LU.landtype_en as landtype, "
+				sql = " Select Distinct on(LD.landid) LD.landid, LD.landno, TR.transactionid ,ST.landsharetype as landsharetype , LC.claimtype_en as claimtype, LT.landusetype_en as landusetype ,PU.landusetype_en as proposedused, LU.landtype_en as landtype, "
 						+ "TC.tenureclass_en as tenureclasstype ,LD.area,LD.neighbor_east,LD.neighbor_west,LD.neighbor_north,LD.neighbor_south,LD.occupancylength, LD.claimno, PR.projectname,LD.createddate as claimdate,"
-						+ " hie1.name as  county , hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place, PL.partyid from la_spatialunit_land LD"
+						+ " hie1.name as  county , hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place, PL.partyid, case when LD.other_use  is null then ' ' else LD.other_use  end as other_use from la_spatialunit_land LD"
 						+ " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid"
 						+ " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "
 						+ " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "
@@ -2751,7 +2751,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 						+" left join la_partygroup_occupation oc on ps.occupationid=oc.occupationid "
 						+" left join la_partygroup_educationlevel eu on ps.educationlevelid=eu.educationlevelid "
 						+" left join la_ext_attributeoptions aopt on aopt.parentid=ps.ownertype and aopt.attributemasterid=1156 "
-						+" where td.transactionid="+ transactionid +" order by ownertype desc" ;
+						+" where td.transactionid="+ transactionid +" and  ps.isactive='true' order by ownertype desc" ;
 
 									 
 				

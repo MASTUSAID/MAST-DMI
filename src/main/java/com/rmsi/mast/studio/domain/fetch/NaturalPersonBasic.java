@@ -95,6 +95,45 @@ public class NaturalPersonBasic implements Serializable {
 	@Column(name="mothername")
 	private String mothername;
 	
+	private Integer ethnicity;
+	
+	private Integer citizenship;
+	
+	private String resident; 
+	
+	
+	
+
+
+
+
+	public String getResident() {
+		return resident;
+	}
+
+	public void setResident(String resident) {
+		this.resident = resident;
+	}
+	
+	
+	
+	
+	public Integer getEthnicity() {
+		return ethnicity;
+	}
+
+	public void setEthnicity(Integer ethnicity) {
+		this.ethnicity = ethnicity;
+	}
+
+	public Integer getCitizenship() {
+		return citizenship;
+	}
+
+	public void setCitizenship(Integer citizenship) {
+		this.citizenship = citizenship;
+	}
+
 	public String getAddress() {
 		return address;
 	}

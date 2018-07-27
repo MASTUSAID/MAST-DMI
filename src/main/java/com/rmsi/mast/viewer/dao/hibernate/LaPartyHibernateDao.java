@@ -144,5 +144,24 @@ GenericHibernateDAO<LaParty, Long> implements LaPartyDao{
 	        }
 		return null;
 	}
+	@Override
+	public LaParty getActivePartyIdByID(Long id) {
+		 List<LaParty> lstLaParty = new ArrayList<LaParty>();
+		 
+	        try {
+	     
+
+	        	String query = "select s from LaParty  s where s.partyid = :id and s.isactive=true";
+	        	lstLaParty = getEntityManager().createQuery(query).setParameter("id", id).getResultList();
+
+	            if (lstLaParty.size()>0) {
+	                return lstLaParty.get(0);
+	            }
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            return null;
+	        }
+		return null;
+	}
 
 }

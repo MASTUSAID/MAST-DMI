@@ -90,6 +90,7 @@ import com.rmsi.mast.studio.domain.LaExtTransactionHistory;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaParty;
 import com.rmsi.mast.studio.domain.LaPartyPerson;
+import com.rmsi.mast.studio.domain.LaPartygroupOccupation;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.LandType;
 import com.rmsi.mast.studio.domain.LandUseType;
@@ -509,6 +510,7 @@ public class LandRecordsController {
             int proposedUse = ServletRequestUtils.getRequiredIntParameter(request, "proposed_use");
             int claimNumber = ServletRequestUtils.getRequiredIntParameter(request, "claimNumber");
             int aquisitiontype = ServletRequestUtils.getRequiredIntParameter(request, "aquisition_id");
+            String other_use = ServletRequestUtils.getRequiredStringParameter(request, "other_use");
           //  int length_general = ServletRequestUtils.getRequiredIntParameter(request, "general_length");
         
         
@@ -551,10 +553,11 @@ public class LandRecordsController {
             
             spatialUnit.setNeighborEast(neighbour_east);
             spatialUnit.setNeighborNorth(neighbour_north);
+            
             spatialUnit.setNeighborSouth(neighbour_south);
             spatialUnit.setNeighborWest(neighbour_west);
             spatialUnit.setArea(area);
-         
+            spatialUnit.setOther_use(other_use);
 
             if (existingUse != 0) {
                 LandUseType existingObj = landRecordsService.findLandUseById(existingUse);
@@ -3535,6 +3538,17 @@ public class LandRecordsController {
     	   return null;
        }
     }
+    
+    @RequestMapping(value = "/viewer/landrecords/personwithinterest/{usin}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<SpatialUnitPersonWithInterest> getParcelPOI(@PathVariable Long usin) {
+       List<SpatialUnitPersonWithInterest> obj = spatialunitpersonwithinterestdao.findByUsin(usin);
+       if(obj.size()>0){
+    	   return obj;
+       }else{
+    	   return null;
+       }
+    }
 
     @RequestMapping(value = "/viewer/landrecords/poi/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -5846,7 +5860,10 @@ public class LandRecordsController {
   			 
   			 if(obj.getLaPartygroupPersontype().getPersontypeid()== 1)
   			 {
-  				lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+  				NaturalPerson naturalobj = (NaturalPerson) laPartyDao.getActivePartyIdByID(obj.getPartyid());
+  				if(null!=naturalobj){
+  				lstdata.add(naturalobj);
+  				}
   			 }
   			  			 
   		 }
@@ -5934,10 +5951,14 @@ public class LandRecordsController {
 			Integer Gender = 0;
 			Integer identitytypeid =0; 
 			Integer maritalstatusid = 0;
+			Integer occupationid = 0;
 			Integer educationlevelid = 0;
 			Integer transactionid = 0;
 			Long landid = 0L;
 			Integer persontypeid= 0;
+			Integer ethnicity=0;
+			Integer citizenship=0;
+			String resident="";
 			 String username = principal.getName();
 		        User user = userService.findByUniqueName(username);
 		        Long userid = user.getId();
@@ -5963,6 +5984,14 @@ public class LandRecordsController {
 			try{Gender=ServletRequestUtils.getRequiredIntParameter(request, "genderid");}catch(Exception e){}
 			try{identitytypeid=ServletRequestUtils.getRequiredIntParameter(request, "identitytypeid");}catch(Exception e){}
 			try{maritalstatusid=ServletRequestUtils.getRequiredIntParameter(request, "maritalstatusid");}catch(Exception e){}
+			try{occupationid=ServletRequestUtils.getRequiredIntParameter(request, "occupation");}catch(Exception e){}
+
+			try{ethnicity=ServletRequestUtils.getRequiredIntParameter(request, "ethnicity");}catch(Exception e){}
+
+			try{citizenship=ServletRequestUtils.getRequiredIntParameter(request, "citizenship");}catch(Exception e){}
+
+			try{resident=ServletRequestUtils.getRequiredStringParameter(request, "resident");}catch(Exception e){}
+
 			
 			EducationLevel educationlevel =educationLevelDao.getEducationLevelBypk(educationlevelid);
 			NaturalPerson editednaturalperosn = (NaturalPerson) laPartyDao.getPartyIdByID(personid);
@@ -6013,6 +6042,15 @@ public class LandRecordsController {
 				try{naturalperson.setLaPartygroupEducationlevel(educationlevel);}catch(Exception e){}
 				try{naturalperson.setCreatedby(userid.intValue());}catch(Exception e){}
 				try{naturalperson.setCreateddate(new Date());}catch(Exception e){}
+				try{naturalperson.setCitizenship(citizenship);}catch(Exception e){}
+				try{naturalperson.setEthnicity(ethnicity);}catch(Exception e){}
+				if(occupationid != 0){
+				LaPartygroupOccupation occupationobject=  new LaPartygroupOccupation(); 
+				occupationobject.setOccupationid(occupationid);
+				
+				try{naturalperson.setLaPartygroupOccupation(occupationobject);}catch(Exception e){}
+				}
+				try{naturalperson.setResident(resident);}catch(Exception e){}
 				if(personid==0L){
 					naturalperson.setOwnertype(2);
 				}
@@ -6084,6 +6122,15 @@ public class LandRecordsController {
 			try{editednaturalperosn.setIdentityno(identityno);}catch(Exception e){}
 			try{editednaturalperosn.setGenderid(Gender);}catch(Exception e){}
 			try{editednaturalperosn.setLaPartygroupEducationlevel(educationlevel);}catch(Exception e){}
+			try{editednaturalperosn.setCitizenship(citizenship);}catch(Exception e){}
+			try{editednaturalperosn.setEthnicity(ethnicity);}catch(Exception e){}
+			if(occupationid != 0){
+			LaPartygroupOccupation occupationobject=  new LaPartygroupOccupation(); 
+			occupationobject.setOccupationid(occupationid);
+			
+			try{editednaturalperosn.setLaPartygroupOccupation(occupationobject);}catch(Exception e){}
+			}
+			try{editednaturalperosn.setResident(resident);}catch(Exception e){}
 	        try{ 
 	        		String[] datearr = dateofbirth.split("-");
 	        		
@@ -7312,6 +7359,7 @@ public class LandRecordsController {
 	    @ResponseBody
 	    public void landMultimediaShow(@PathVariable Long id,  HttpServletRequest request, HttpServletResponse response) {
 	    	byte[] data =null;
+	    	 String[] format=null;
 	    	SourceDocument doc =null;
 	    	
 	    		  doc =  sourcedocdao.findDocumentByDocumentId(id);
@@ -7319,6 +7367,9 @@ public class LandRecordsController {
 	    	
 	    	 if(doc==null){
 	    		 response.setContentLength(data.length);
+	    		/* if(null!=doc.getLaExtDocumentformat()){
+	    		  format=doc.getLaExtDocumentformat().getDocumentformatEn().split("/");
+	    		 }*/
 	    	 }
 	        String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation()
 	                +"/"+ doc.getDocumentname();
@@ -7665,4 +7716,64 @@ public class LandRecordsController {
 	    	return true;
 
 }
+	    
+	    
+	    @RequestMapping(value = "/viewer/landrecords/deleteperson/{partyid}/{landId}", method = RequestMethod.GET)
+	    @ResponseBody
+	    public boolean deletePerson(HttpServletRequest request, @PathVariable Long partyid,@PathVariable Long landId, Principal principal) {
+	    	
+	    	 /*List<ClaimBasic> claimBasicobj =  spatialUnitService.getClaimsBasicByLandId(landId);*/
+			 List<SocialTenureRelationship> socialtenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipBylandID(landId);
+			 
+			 if(null!=socialtenureobj && socialtenureobj.size()>0){
+
+				for(SocialTenureRelationship socialobj:socialtenureobj){
+					if(socialobj.getPartyid().longValue()==partyid.longValue()){
+	    	NaturalPerson laparty= (NaturalPerson) laPartyDao.getActivePartyIdByID(partyid);
+	    	if(null!= laparty){
+	    		if(laparty.getOwnertype().intValue() != 1){
+	    		laparty.setIsactive(false);
+	    		NaturalPerson obj = naturalPersonDao.addNaturalPerson(laparty);
+	    		socialobj.setIsactive(false);
+	    		registrationRecordsService.saveSocialTenureRelationship(socialobj);
+	    		}else{
+	    			return false;
+	    		}
+	    		
+	    		
+	    	}
+	    	else{
+	    		return false;
+	    	}
+					}
+				}
+				return true;
+			 }
+			 return false;
+}
+	   
+	    
+	    @RequestMapping(value = "/viewer/landrecords/deletepOI/{PoiId}", method = RequestMethod.GET)
+	    @ResponseBody
+	    public boolean deletePOI(HttpServletRequest request, @PathVariable Long PoiId, Principal principal) {
+	    	
+	    	 /*List<ClaimBasic> claimBasicobj =  spatialUnitService.getClaimsBasicByLandId(landId);*/
+			
+			 
+			
+	    	SpatialUnitPersonWithInterest  personinterest = spatialUnitPersonWithInterestService.findSpatialUnitPersonWithInterestById(PoiId.longValue());
+	    	if(null!= personinterest){
+	    		
+	    		personinterest.setIsactive(false);
+	    		spatialUnitPersonWithInterestService.save(personinterest);
+	    		
+	    		
+	    		return true;
+	    	}
+	    	else{
+	    		return false;
+	    	}
+					
+}
+	    
 }

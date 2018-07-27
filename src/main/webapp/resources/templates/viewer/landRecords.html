@@ -32,7 +32,7 @@
         });
     });
     $(function(){
-        $("#neighbor_north,#neighbor_east,#neighbor_west,#neighbor_south,#tenureclass_id,#tenure_type,#tenureDuration,#existing_use,#proposed_use,#aquisition_id,#area").on('change',function () {
+        $("#land_type,#other_use,#neighbor_north,#neighbor_east,#neighbor_west,#neighbor_south,#tenureclass_id,#tenure_type,#tenureDuration,#existing_use,#proposed_use,#aquisition_id,#area").on('change',function () {
             $(this).addClass('addBg');
             $("#parcelsavebutton").prop("disabled", false).show();
            
@@ -510,25 +510,27 @@
                                             </td>
 											
                                             </tr>
-                                       
-										
+
+
 										<tr>
-                                            <td>
-                                              </td>
-                                           
-                                             <td>
-                                              </td>
-                                       
-                                             <td>
-                                                <label>Neighbour West</label>
-                                                <input type="text" name="neighbor_west" id="neighbor_west" class="text ui-widget-content ui-corner-all justread">
-                                            </td>
-											
-											
-                                        </tr>
-											
-											
-                                    </table>
+											<td></td>
+
+											<td><label>Other Use</label> <input type="text"
+												name="other_use" id="other_use"
+												class="text ui-widget-content ui-corner-all justread">
+
+											</td>
+
+											<td><label>Neighbour West</label> <input type="text"
+												name="neighbor_west" id="neighbor_west"
+												class="text ui-widget-content ui-corner-all justread">
+											</td>
+
+
+										</tr>
+
+
+									</table>
 
                                     <div>
                                         <!-- <button id="parcelsavebutton" class="btn hideNew" onclick="javascript:updateattributesGen();">
