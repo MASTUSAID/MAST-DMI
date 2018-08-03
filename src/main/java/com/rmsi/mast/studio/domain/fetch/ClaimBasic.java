@@ -82,7 +82,7 @@ public class ClaimBasic implements Serializable {
 	@Column(name="modifiedby")
 	private Integer modifiedby;
 
-	@Temporal(TemporalType.DATE)
+	
 	private Date modifieddate;
 
 	@Column(name="neighbor_east")

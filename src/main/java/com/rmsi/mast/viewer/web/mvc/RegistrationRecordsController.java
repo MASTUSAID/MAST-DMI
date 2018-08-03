@@ -882,7 +882,7 @@ public class RegistrationRecordsController {
 					RelationshipType obj = new RelationshipType();
 					obj.setRelationshiptypeid(buyerRelationShipId);
 					naturalPerson.setLaPartygroupRelationshiptype(obj);
-					naturalPerson.setOwnertype(2);
+					naturalPerson.setOwnertype(1);
 				}
 				
 				naturalPerson.setLaSpatialunitgroup1(registrationRecordsService.findLaSpatialunitgroupById(1));

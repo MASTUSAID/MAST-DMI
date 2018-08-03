@@ -129,7 +129,7 @@ function previousRecords_Res(){
     if (records_from_Res >= 0) {
         RegistrationRecords_Res(records_from_Res);
     } else {
-        alert("No records found");
+        alert("No Records Found");
     }
 	
 }
@@ -144,7 +144,7 @@ function nextRecords_Res(){
            RegistrationRecords_Res(records_from_Res);
 		
     } else {
-        alert("No records found");
+        alert("No Records Found");
     }
 	
 }
@@ -340,7 +340,7 @@ function zoomToResource(geom) {
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#landresource-div"]').parent().index());
         $('#sidebar').hide();
         $('#collapse').hide();
-        jAlert('Site not found on Map', 'Alert'); 
+        jAlert('Site Not Found on Map', 'Alert'); 
 		 
 	 }
 }
@@ -1616,7 +1616,7 @@ function getFarmReport(land_id,projectId,geomType)
 							}
 							else
 							{
-								jAlert('info','error in fetching details',"");
+								jAlert('info','Error in Fetching Details',"");
 							}
 						});
 						

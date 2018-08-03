@@ -758,6 +758,7 @@ function leaseAttribute(landid) {
 							$("#Seller_Details").hide();
 							$("#Land_Details_Sale").show();
 							$("#Buyer_Details").hide();
+							$("#regPoi").hide();
 							$("#Upload_Document_Sale").hide();
 							$("#selectedseller").removeClass("ui-tabs-active");
 							$("#selectedseller").removeClass("ui-state-active");	
@@ -788,7 +789,7 @@ function leaseAttribute(landid) {
 						else if($('#Buyer_Details').css('display') == 'block')
 						{
 //							savebuyerdetails();
-							if(null!= arry_Buyerbyprocessid){
+							if(null!= arry_Buyerbyprocessid && null!=finalbuyerarray[i]){
 							$("#Seller_Details").hide();
 							$("#Buyer_Details").hide();
 							$("#Land_Details_Sale").hide();
@@ -802,7 +803,7 @@ function leaseAttribute(landid) {
 							$("#comment_Next").show();
 							}else{
 								
-								jAlert("save buyer details First ", "Info");
+								jAlert("Save the Buyer Details First ", "Info");
 							}
 						}	
 						else if($('#regPoi').css('display') == 'block')
@@ -2281,7 +2282,7 @@ function savebuyerdetails()
 		var eliminatedowner = $("#Owner_Elimanated").val();
 		if(eliminatedowner == null || eliminatedowner == "")
 			{
-				jAlert("Please select Eliminated owner ", "Alert");
+				jAlert("Please Select Eliminated Owner ", "Alert");
 				return false;
 			}
 		
@@ -2292,7 +2293,7 @@ function savebuyerdetails()
 		var ownerrelation = $("#sale_relation_buyer").val();
 		if(ownerrelation == 0)
 			{
-				jAlert("Please select relationship with owner ", "Alert");
+				jAlert("Please Select Relationship With Owner ", "Alert");
 				return false;
 			}
 		
@@ -2330,7 +2331,8 @@ function savebuyerdetails()
 			jAlert("Please Fill Mandatory Details", "Alert");
 			return false;
 		} else if ((sale_idtype_buyer.value == "0")
-				|| (sale_gender_buyer.value == "0")) {
+				|| (sale_gender_buyer.value == "0")
+				|| (sale_marital_buyer.value == "0")) {
 			jAlert("Please Fill Mandatory Details", "Alert");
 			return false;
 		}
@@ -2382,22 +2384,21 @@ function savebuyerdetails()
 								$("#RegLeasepersonsEditingGrid").show();
 								$("#editRegpersonsEditingGridLeasee").hide();*/
 							 
-							jAlert('Buyer saved successfully.');
+							jAlert('Buyer Saved Successfully.');
 						} else {
-							jAlert('Request not completed');
+							jAlert('Request Not Completed');
 						}
 					},
 					error : function(XMLHttpRequest,
 							textStatus, errorThrown) {
-						jAlert('Request not completed');
+						jAlert('Request Not Completed');
 					}
 				});
 	
 		
 
 	} else {
-		jAlert("Please Fill Mandatory Details", "Alert");
-	}
+		jAlert("Please Fill Mandatory Details", "Alert");	}
 
 }
 
@@ -2411,8 +2412,8 @@ function saveattributessale() {
 		var eliminatedowner = $("#Owner_Elimanated").val();
 		if(eliminatedowner == null || eliminatedowner == "")
 			{
-				jAlert("Please select Eliminated owner ", "Alert");
-				return false;
+			jAlert("Please Select Eliminated Owner ", "Alert");
+			return false;
 			}
 		
 	}
@@ -2436,7 +2437,7 @@ function saveattributessale() {
 		} 
 
 		jConfirm(
-				'If he/she wants to commit data to land record would be nice',
+				'If He/She Wants to Commit Data to Land Record Would be Nice',
 				'Save Confirmation',
 				function(response) {
 					if (response) {
@@ -2452,16 +2453,14 @@ function saveattributessale() {
 											landRecordsInitialized_R=false;
 											displayRefreshedRegistryRecords_ABC();
 											//RegistrationRecords("registrationRecords");
-											 jAlert('Attributes were successfully saved');
+											 jAlert('Attributes Saved Successfully');
 											 	attributeEditDialog.dialog("close");
 										} else {
-											jAlert('Request not completed');
-										}
+											jAlert('Request Not Completed');										}
 									},
 									error : function(XMLHttpRequest,
 											textStatus, errorThrown) {
-										jAlert('Request not completed');
-									}
+										jAlert('Request Not Completed');									}
 								});
 					}
 				});
@@ -2470,8 +2469,10 @@ function saveattributessale() {
 		jAlert("Please Fill Mandatory Details", "Alert");
 	}
 	 }
-	 else{
-		 jAlert("Save The Buyer Details First")
+	 else if(selectedprocess==2){
+		 jAlert("Save the Buyer Details First ", "Info");
+	 }else{
+		 jAlert("Save the New Owner Details First", "Info");
 	 }
 }
 function saveattributesLease()
@@ -2542,7 +2543,7 @@ function saveattributesLeaseData() {
 		}
 
 		jConfirm(
-				'If he/she wants to commit data to land record would be nice',
+				'If He/She Wants to Commit Data to Land Record Would be Nice',
 				'Save Confirmation',
 				function(response) {
 					if (response) {
@@ -2553,8 +2554,8 @@ function saveattributesLeaseData() {
 									data : jQuery("#editprocessAttributeformID")
 											.serialize(),
 									success : function(result) {
-										jAlert('Attributes were successfully saved');
-										$('#leaseeperson').val(0);
+										 jAlert('Attributes Saved Successfully');
+										 $('#leaseeperson').val(0);
 										landRecordsInitialized_R=false;
 										displayRefreshedRegistryRecords_ABC();
 											attributeEditDialog.dialog("close");
@@ -2562,7 +2563,7 @@ function saveattributesLeaseData() {
 									},
 									error : function(XMLHttpRequest,
 											textStatus, errorThrown) {
-										jAlert('Request not completed');
+										jAlert('Request Not Completed');
 									}
 								});
 					}
@@ -2610,13 +2611,13 @@ function saveattributesSurrenderLease() {
 							$("#selecteddocs").addClass("ui-state-active");
 
 						} else {
-							jAlert('Request not completed');
-						}
+							jAlert('Request Not Completed');						
+							}
 					},
 					error : function(XMLHttpRequest,
 							textStatus, errorThrown) {
-						jAlert('Request not completed');
-					}
+						jAlert('Request Not Completed');
+						}
 				});
 	
 
@@ -2636,7 +2637,7 @@ function approveSurrenderLease() {
 
 	
 		jConfirm(
-				'If he/she wants to commit data to surrender lease would be nice',
+				'If He/She Wants to Commit Data to Land Record Would be Nice',
 				'Save Confirmation',
 				function(response) {
 					if (response) {
@@ -2655,13 +2656,13 @@ function approveSurrenderLease() {
                                              //  RegistrationRecords("registrationRecords");
 
 										} else {
-											jAlert('Request not completed');
-										}
+											jAlert('Request Not Completed');
+											}
 									},
 									error : function(XMLHttpRequest,
 											textStatus, errorThrown) {
-										jAlert('Request not completed');
-									}
+										jAlert('Request Not Completed');
+										}
 								});
 					}
 				});
@@ -2731,7 +2732,7 @@ function saveattributesMortgage() {
 	if ($("#editprocessAttributeformID").valid()) {
 
 		jConfirm(
-				'If he/she wants to commit data to land record would be nice',
+				'If He/She Wants to Commit Data to Land Record Would be Nice',
 				'Save Confirmation',
 				function(response) {
 					if (response) {
@@ -2749,13 +2750,13 @@ function saveattributesMortgage() {
 											attributeEditDialog.dialog("close");
 											
 										} else {
-											jAlert('Request not completed');
-										}
+											jAlert('Request Not Completed');				
+											}
 									},
 									error : function(XMLHttpRequest,
 											textStatus, errorThrown) {
-										jAlert('Request not completed');
-									}
+										jAlert('Request Not Completed');
+										}
 								});
 					}
 
@@ -2953,6 +2954,7 @@ function getprocessvalue(id) {
 		$("#tabs_registry1").tabs({ active: 0 });
 		$("#Seller_Details").show();
 		$("#Land_Details_Sale").hide();
+		$("#regPoi").hide();
 		$("#Buyer_Details").hide();
 		$("#Upload_Document_Sale").hide();
 		$("#selectedseller").addClass("ui-tabs-active");
@@ -2963,6 +2965,8 @@ function getprocessvalue(id) {
 		$("#selectedbuyer").removeClass("ui-state-active");
 		$("#selecteddoc").removeClass("ui-tabs-active");
 		$("#selecteddoc").removeClass("ui-state-active");
+		$("#selectedpoi").removeClass("ui-tabs-active");
+		$("#selectedpoi").removeClass("ui-state-active");
 		
 		processid=id;
 		persontypeid=11;
@@ -3044,6 +3048,7 @@ function getprocessvalue(id) {
 		$("#Seller_Details").show();
 		$("#Land_Details_Sale").hide();
 		$("#Buyer_Details").hide();
+		$("#regPoi").hide();
 		$("#Upload_Document_Sale").hide();
 		$("#selectedseller").addClass("ui-tabs-active");
 		$("#selectedseller").addClass("ui-state-active");	
@@ -3053,6 +3058,8 @@ function getprocessvalue(id) {
 		$("#selectedbuyer").removeClass("ui-state-active");
 		$("#selecteddoc").removeClass("ui-tabs-active");
 		$("#selecteddoc").removeClass("ui-state-active");
+		$("#selectedpoi").removeClass("ui-tabs-active");
+		$("#selectedpoi").removeClass("ui-state-active");
 		
 		processid=id;
 		persontypeid=11;
@@ -3135,6 +3142,7 @@ function getprocessvalue(id) {
 		$("#Seller_Details").show();
 		$("#Land_Details_Sale").hide();
 		$("#Buyer_Details").hide();
+		$("#regPoi").hide();
 		$("#Upload_Document_Sale").hide();
 		$("#selectedseller").addClass("ui-tabs-active");
 		$("#selectedseller").addClass("ui-state-active");	
@@ -3144,6 +3152,8 @@ function getprocessvalue(id) {
 		$("#selectedbuyer").removeClass("ui-state-active");
 		$("#selecteddoc").removeClass("ui-tabs-active");
 		$("#selecteddoc").removeClass("ui-state-active");
+		$("#selectedpoi").removeClass("ui-tabs-active");
+		$("#selectedpoi").removeClass("ui-state-active");
 		
 		processid=id;
 		persontypeid=11;
@@ -3230,6 +3240,7 @@ function getprocessvalue(id) {
 		$("#Seller_Details").show();
 		$("#Land_Details_Sale").hide();
 		$("#Buyer_Details").hide();
+		$("#regPoi").hide();
 		$("#Upload_Document_Sale").hide();
 		$("#selectedseller").addClass("ui-tabs-active");
 		$("#selectedseller").addClass("ui-state-active");	
@@ -3239,6 +3250,8 @@ function getprocessvalue(id) {
 		$("#selectedbuyer").removeClass("ui-state-active");
 		$("#selecteddoc").removeClass("ui-tabs-active");
 		$("#selecteddoc").removeClass("ui-state-active");
+		$("#selectedpoi").removeClass("ui-tabs-active");
+		$("#selectedpoi").removeClass("ui-state-active");
 		
 		processid=id;
 		persontypeid=11;
@@ -4090,7 +4103,7 @@ function ViewHistory(landid) {
 				commentHistoryDialogPop.dialog("open");
 
 			} else {
-				jAlert("No Record", "Info");
+				jAlert("No Records", "Info");
 			}
 		}
 
@@ -4927,6 +4940,11 @@ function viewLandAttribute(landid) {
 			jQuery("#parcel_l_record").val("000000"+land_RV[0].landid);
 			jQuery("#Ownership_Type_l_record").val(land_RV[0].landsharetypeid);// landsharetypeid
 			jQuery("#area_LR").val(land_RV[0].area);
+			if(land_RV[0].other_use !="" && land_RV[0].other_use !=null){
+			jQuery("#other_useregistrationpage").val(land_RV[0].other_use);
+			}else{
+				jQuery("#other_useregistrationpage").val("");
+			}
 			
 			jQuery("#lease_area_View").val(land_RV[0].area);
 	
@@ -5095,8 +5113,8 @@ function saveattributesLeasePersonData() {
 									},
 									error : function(XMLHttpRequest,
 											textStatus, errorThrown) {
-										jAlert('Request not completed');
-									}
+										jAlert('Request Not Completed');
+										}
 								});
 					}
 				
@@ -5393,7 +5411,7 @@ function  AddDocInfoSplit(){
 		async:false,							
 		success: function (data) {
 			if(data){
-				jAlert("Document added scuccessfully","info");
+				jAlert("Document Added Scuccessfully","Info");
 				jQuery("#doc_name_split").val("");
 				jQuery("#doc_date_split").val("");
 				jQuery("#doc_desc_split").val("");
@@ -5429,7 +5447,7 @@ function AddDocInfoRegistration(){
 		async:false,							
 		success: function (data) {
 			if(data){
-				jAlert("Document added scuccessfully","info");
+				jAlert("Document Added Scuccessfully","Info");
 				fetchDocument(selectedlandid,data,processid);
 				clearDocuments();
 
@@ -5457,7 +5475,7 @@ function AddDocInfoRegistration(){
 				async:false,							
 				success: function (data) {
 					if(data){
-						jAlert("Document added scuccessfully","info");
+						jAlert("Document Added Scuccessfully","Info");
 						fetchDocument(selectedlandid,data,processid);
 						clearDocuments();
 
@@ -5485,7 +5503,7 @@ function AddDocInfoRegistration(){
 				async:false,							
 				success: function (data) {
 					if(data){
-						jAlert("Document added scuccessfully","info");
+						jAlert("Document Added Scuccessfully","Info");
 						fetchDocument(selectedlandid,data,processid);
 						clearDocuments();
 
@@ -5811,8 +5829,8 @@ function fetchDocumentSplit(landId)
 										},
 										error : function(XMLHttpRequest,
 												textStatus, errorThrown) {
-											jAlert('Request not completed');
-										}
+											jAlert('Request Not Completed');
+											}
 									});
 					
 		} else {
@@ -5847,13 +5865,13 @@ function fetchDocumentSplit(landId)
 											if (result!=null && result != undefined) {
 //											
 											} else {
-												jAlert('Request not completed');
-											}
+												jAlert('Request Not Completed');
+												}
 										},
 										error : function(XMLHttpRequest,
 												textStatus, errorThrown) {
-											jAlert('Request not completed');
-										}
+											jAlert('Request Not Completed');
+											}
 									});
 				
 
@@ -5962,7 +5980,7 @@ function fetchDocumentSplit(landId)
 		 if(typeof(file)==="undefined")
 		{
 		
-			jAlert('Please Select file to upload','upload');
+			jAlert('Please Select File to Upload','Info');
 		}
 
 		
@@ -5977,7 +5995,7 @@ function fetchDocumentSplit(landId)
 											if (ind3 == "type") {
 												if (obj3 == "application/x-msdownload") {
 													 flag =false;
-													 jAlert("Select File should be of type .exe");
+													 jAlert("Selected File Should be of Type .exe");
 												} else {
 													 flag =true;
 													
@@ -6002,12 +6020,19 @@ function fetchDocumentSplit(landId)
 				processData:false,
 				success: function(data, textStatus, jqXHR)
 				{	
-					
-					
+					if(edit==1)
+					{
+						documentEditFetch();
+						jAlert('File Uploaded','Info');
+						$('#fileUploadSpatial').val('');
+						$('#alias').val('');
+					}
+					else{
 					fetchDocument(parseInt(data),persontypeid,processid);
-					jAlert('File uploaded','upload');
+					jAlert('File Uploaded','Info');
 					$('#fileUploadSpatial').val('');
 					$('#alias').val('');
+					}
 					
 
 				}
@@ -6032,15 +6057,15 @@ function fetchDocumentSplit(landId)
 	            }
 	        },
 	        error: function (XMLHttpRequest, textStatus, errorThrown) {
-	            jAlert('Request not completed');
-	        }
+	        	jAlert('Request Not Completed');
+	        	}
 	    });
 	    
 	    if(flag){
 	        window.open("registration/download/" + id , 'popUp', 'height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
 	        }else{
 
-	        	 jAlert('File not Found',"Info");
+	        	 jAlert('File Not Found',"Info");
 	        }
 }
 	
@@ -6108,13 +6133,13 @@ function fetchDocumentSplit(landId)
 								$("#Upload_Documents_Lease").show();
 
 							} else {
-								jAlert('Request not completed');
-							}
+								jAlert('Request Not Completed');
+								}
 						},
 						error : function(XMLHttpRequest,
 								textStatus, errorThrown) {
-							jAlert('Request not completed');
-						}
+							jAlert('Request Not Completed');
+							}
 					});
 		
 
@@ -6139,7 +6164,7 @@ function fetchDocumentSplit(landId)
 				}
 
 				jConfirm(
-						'If he/she wants to commit data to land record would be nice',
+						'If He/She Wants to Commit Data to Land Record Would be Nice',
 						'Save Confirmation',
 						function(response) {
 							if (response) {
@@ -6157,13 +6182,11 @@ function fetchDocumentSplit(landId)
 													attributeEditDialog.dialog("close");
 													
 												} else {
-													jAlert('Request not completed');
-												}
+													jAlert('Request Not Completed');												}
 											},
 											error : function(XMLHttpRequest,
 													textStatus, errorThrown) {
-												jAlert('Request not completed');
-											}
+												jAlert('Request Not Completed');											}
 										});
 							}
 
@@ -7936,7 +7959,7 @@ function editAttributeRegistration(transactionid, landid) {
 							$("#comment_Next").show();
 							}else{
 								
-								jAlert("save buyer details First ", "Info");
+								jAlert("Save the Buyer Details First ", "Info");
 							}
 						}	
 						else if($('#regPoi').css('display') == 'block')
@@ -8467,12 +8490,12 @@ var editRegpersonsEditingController = {
            success:function(data){
            	if(data=="" || data==null){
            		editPersonsOfEditingForEditing();
-           	jAlert("Add Buyer details to add POI's");
+           	jAlert("Add Buyer Details to Add POI's");
            	
            	}
            	else{
            		editPersonsOfEditingForEditing();
-           		jAlert("POI added successfully", "Info");
+           		jAlert("POI Added Successfully", "Info");
            	}
 			},
            error: function (request, textStatus, errorThrown) {
@@ -8597,12 +8620,12 @@ var editRegpersonsEditingLeaseeController = {
           success:function(data){
           	if(data=="" || data==null){
           		editPersonsOfEditingForEditingLeasee();
-          	jAlert("Add Buyer details to add POI's");
+          	jAlert("Add Buyer Details to Add POI's");
           	
           	}
           	else{
           		editPersonsOfEditingForEditingLeasee();
-          		jAlert("POI added successfully", "Info");
+          		jAlert("POI Added Successfully", "Info");
           	}
 			},
           error: function (request, textStatus, errorThrown) {
@@ -8855,7 +8878,7 @@ function saveattributesLeasePOIData(){
 		}
 		
 		jConfirm(
-				'If he/she wants to commit data to land record would be nice',
+				'If He/She Wants to Commit Data to Land Record Would be Nice',
 				'Save Confirmation',
 				function(response) {
 					if (response && edit==0) {
@@ -9140,7 +9163,7 @@ function saveattributesSalePOIData(){
 		}
 		
 		jConfirm(
-				'If he/she wants to commit data to land record would be nice',
+				'If He/She Wants to Commit Data to Land Record Would be Nice',
 				'Save Confirmation',
 				function(response) {
 					if (response && edit==0) {
@@ -9267,3 +9290,32 @@ function salebuyerdetails(id){
 		}
 	}
 }
+
+
+
+
+
+function documentEditFetch(){
+	jQuery.ajax({ 
+		type:'GET',
+		url: "registryrecords/editDocuments/"+selectedlandid +"/"+finaltransid,
+		async:false,							
+		success: function (data) {
+			if(data!=null && data !="")
+			{
+				
+					$("#salesDocRowData").empty();
+					$("#salesdocumentTemplate_add").tmpl(data).appendTo("#salesDocRowData");
+					
+					$("#LeaseDocRowData").empty();
+					$("#salesdocumentTemplate_add").tmpl(data).appendTo("#LeaseDocRowData");
+					
+					$("#MortagageDocRowData").empty();
+					$("#salesdocumentTemplate_add").tmpl(data).appendTo("#MortagageDocRowData");
+			
+			}
+			
+		}
+	});
+
+	}
