@@ -2587,7 +2587,7 @@ $(function() {
 					<th class="langchange">Party(Leasee/Applicant/Grantee)</th>
 					<th class="langchange">View detail</th>
 					<th class="langchange">View Doc</th>
-					<!-- <th class="langchange">Edit</th> -->
+					<th class="langchange">Edit</th>
 				</tr>
 			</thead>
 			<tbody id="TransactionHistTrackingBody">
@@ -2640,7 +2640,7 @@ $(function() {
 	</fieldset>
 </div>
 
- <script id="TransactionHistTrackingTemplate" type="text/x-jquery-tmpl">
+<!-- <script id="TransactionHistTrackingTemplate" type="text/x-jquery-tmpl">
 
 <tr>       		                  
 		<td class="langchange">
@@ -2698,8 +2698,8 @@ $(function() {
 		
 
 </tr>
-</script>
-<!--
+</script> -->
+
 <script id="TransactionHistTrackingTemplate" type="text/x-jquery-tmpl">
 
 <tr>       		                  
@@ -2755,12 +2755,22 @@ $(function() {
 		<td class="langchange">
 			   <a href="javascript:viewdocumentdetail('${transactionid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a> 
  		</td>
+
 		<td class="langchange">
-			   <a href="javascript:editTransactionDetails('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+
+		{{if (transactiontype == 'Surrender Lease') || (transactiontype == 'Surrender Mortgage')}}
+
+		{{else}}
+ 		<a href="javascript:editTransactionDetails('${transactionid}','${landid}');"><img src="resources/images/studio/doc_view.png" title="View" /></a>
+
+		{{/if}}
+
+
+			  
  		</td>
 
 </tr>
-</script>-->
+</script>
 
 <script id="PropertyHistTrackingTemplate" type="text/x-jquery-tmpl">
 
@@ -2905,6 +2915,9 @@ $(function() {
 		<table style="width: 100%" id="tableGeneralAttributes"
 			class="landrecords22 ">
 
+  			 <tr>
+             	<td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">Property</label></h3></td>
+             </tr>
 
 			<tr>
 				
@@ -3002,7 +3015,12 @@ $(function() {
 			</tr>
 			<tr>
 			<td></td>
-			<td></td>
+			<td><label>Other Use</label> <input type="text"
+					name="other_useregistrationpage" id="other_useregistrationpage"
+					class="text ui-widget-content ui-corner-all justread" disabled
+					readonly="readonly"></td>
+			
+			
                
                <td><label>Neighbour West</label> <input type="text"
 					name="neighbor_west_LR" id="neighbor_west_LR"

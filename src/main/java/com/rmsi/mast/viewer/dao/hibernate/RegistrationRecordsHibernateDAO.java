@@ -35,7 +35,7 @@ implements RegistrationRecordsDao{
 					"inner join la_spatialunitgroup_hierarchy LH on LH.hierarchyid = LD.hierarchyid4 "+					
 					"where PL.persontypeid=1 and workflowstatusid=6 and LD.projectnameid = " + defaultProject + " and LD.isactive = true and PL.isactive = true order by LD.landid ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
 */
-			String hql ="Select Distinct on (LD.landid) LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,TR.transactionid, LP.firstname, LP.middlename, LP.lastname, LH.name_en ,ST.landsharetype " +
+			String hql ="Select Distinct on (LD.landid,LD.modifieddate) LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,TR.transactionid, LP.firstname, LP.middlename, LP.lastname, LH.name_en ,ST.landsharetype " +
                         "from la_spatialunit_land LD  " +
 						"Inner join la_ext_personlandmapping PL on LD.landid = PL.landid inner join la_ext_transactiondetails TR  " +
 						"on PL.transactionid = TR.transactionid inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  " +
@@ -44,8 +44,10 @@ implements RegistrationRecordsDao{
 						"inner join la_spatialunitgroup_hierarchy LH on LH.hierarchyid = LD.hierarchyid4 " +
 						"inner join la_ext_registrationsharetype LS on LS.landid = LD.landid "+
 						"inner Join la_right_landsharetype ST on ST.landsharetypeid =  LS .landsharetypeid "+         					
-						"where PL.persontypeid=1 and workflowstatusid=6 and LD.projectnameid = " + defaultProject + " and LD.isactive = true and PL.isactive = true order by LD.landid " ;
+						"where PL.persontypeid=1 and workflowstatusid=6 and LD.projectnameid = " + defaultProject + " and LD.isactive = true and PL.isactive = true order by LD.modifieddate " ;
 					
+			
+			
 			List<Object[]> arrObject = getEntityManager().createNativeQuery(hql).setFirstResult(startfrom).setMaxResults(10).getResultList();
             
            
@@ -256,6 +258,7 @@ implements RegistrationRecordsDao{
 					"on PL.transactionid = TR.transactionid inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid " +
 					"inner Join la_ext_applicationstatus la on la.applicationstatusid = LD.applicationstatusid " +
 					"inner join la_ext_registrationsharetype LS on LS.landid = LD.landid "+
+					"inner Join la_party_person LP on PL.partyid = LP.personid and LP.ownertype=1"+
 					"inner Join la_right_landsharetype ST on ST.landsharetypeid =  LS .landsharetypeid "+      	
 					"where PL.persontypeid=1 and workflowstatusid=6 and LD.projectnameid = " + project + " and LD.isactive = true and PL.isactive = true  ";// PL.isactive = true and in where clause --TR.applicationstatusid=5 and //--and TR.applicationstatusid = 5 --As discussed with Kamal And gaurav
 				List<BigInteger> arrObject = getEntityManager().createNativeQuery(hql).getResultList();

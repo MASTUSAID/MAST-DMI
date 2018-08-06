@@ -1,6 +1,7 @@
 package com.rmsi.mast.studio.web.mvc;
 
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,6 +83,9 @@ public class WorkflowController {
 	 
 	 @Autowired
 	 private LaExtRegistrationLandShareTypeService laExtRegistrationLandShareTypeService;
+
+
+	private Timestamp date;
 	 
 	 
 	@RequestMapping(value = "/viewer/landrecords/workflow", method = RequestMethod.GET)
@@ -200,6 +204,11 @@ public class WorkflowController {
 						_userDefineparcelnum=_userDefineparcelnum+spatialUnit.getLandid();
 
 						spatialUnit.setUdparcelno(_userDefineparcelnum);
+						
+						Date date=new Date();
+						Timestamp timestamp = new Timestamp(date.getTime());
+						
+						spatialUnit.setModifieddate(timestamp);
 
 						claimBasicService.saveClaimBasicDAO(spatialUnit);
 

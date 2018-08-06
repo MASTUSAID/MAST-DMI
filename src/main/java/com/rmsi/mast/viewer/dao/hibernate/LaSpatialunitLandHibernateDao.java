@@ -27,7 +27,7 @@ implements LaSpatialunitLandDao{
 							"ld.spatialunitgroupid4, ld.hierarchyid4, ld.spatialunitgroupid5, ld.hierarchyid5, ld.spatialunitgroupid6, ld.hierarchyid6, ld.landtypeid, ld.landusetypeid, "+ 
 							"ld.landsoilqualityid, ld.claimtypeid, ld.landsharetypeid, ld.unitid, ld.area, lt.landusetype_en, ld.projectnameid, " +
 							"ld.acquisitiontypeid, ld.tenureclassid, ld.slopevalueid, ld.neighbor_east, ld.neighbor_west, ld.neighbor_north, ld.neighbor_south, " +
-							"ld.surveydate, ld.geometrytype,ld.proposedused from la_spatialunit_land ld" +
+							"ld.surveydate, ld.geometrytype,ld.proposedused,ld.other_use from la_spatialunit_land ld" +
 							" inner Join la_baunit_landusetype lt on ld.landusetypeid = lt.landusetypeid" +
 							" where landid = " + landid + " and ld.isactive = true"; //, ld.geometry
 			List<Object[]> arrObject = getEntityManager().createNativeQuery(query).getResultList();
@@ -111,6 +111,8 @@ implements LaSpatialunitLandDao{
 				if(object[32] != null && !object[32].toString().isEmpty())
 					laSpatialunitLand.setProposedused(Integer.parseInt(object[32].toString()));
 				
+				if(object[33] != null && !object[33].toString().isEmpty())
+					laSpatialunitLand.setOther_use(object[33].toString());
 				
 				
 				lstLaSpatialunitLands.add(laSpatialunitLand);
