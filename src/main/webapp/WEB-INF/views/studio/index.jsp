@@ -1,10 +1,11 @@
 <%@page contentType="text/html;charset=UTF-8"%>
 <%@page pageEncoding="UTF-8"%>
-<%@ page session="false"%>
+<%@ page session="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<fmt:setLocale value="${langCode}" />
 
 <%
     java.lang.String s = null;
@@ -30,9 +31,9 @@
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="${langCode}" dir="${empty ltr ? 'ltr' : ltr ? 'ltr' : 'rtl'}" xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>MAST-Administration Tool</title>
+        <title data-i18n="admin-title"></title>
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <!--  -->
         <link rel="stylesheet"
@@ -70,6 +71,7 @@
             src="<c:url value="resources/scripts/Cloudburst-Studio.js"  />"
         type="text/javascript"></script>	
 
+        <%@include file="../../jspf/HeaderResources.jspf" %>
 
         <!--[if IE 8]>
                         <link rel="stylesheet" href="<c:url value="resources/styles/studio/blueprint/ie.css" />" type="text/css" media="screen, projection">
@@ -88,27 +90,27 @@
             div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
             .ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none; !important; cursor:pointer; position: relative; text-align: center; }
             .ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
-            
-			.main-topolist{
-			  padding:0
-			  margin:0;
-			}
-			.main-topolist > li{
-			  list-style-type: none;
-			  margin-bottom:10px;
-			 
-			}
-			.sub-topolist{
-			   padding:0
-			   margin:0;
-			}
-              .sub-topolist > li{
-			    line-height:27px;
-			  
-			  }
-			  .runTopo{
-			    padding-left:45px !important;
-			  }
+
+            .main-topolist{
+                padding:0
+                    margin:0;
+            }
+            .main-topolist > li{
+                list-style-type: none;
+                margin-bottom:10px;
+
+            }
+            .sub-topolist{
+                padding:0
+                    margin:0;
+            }
+            .sub-topolist > li{
+                line-height:27px;
+
+            }
+            .runTopo{
+                padding-left:45px !important;
+            }
         </style>
 
         <link rel="stylesheet" type="text/css" media="print, projection, screen"
@@ -119,10 +121,9 @@
 
     </head>
     <body>
-
         <div id="_splash" class="splash">				
             <div id="splash-content"> 
-                <img id="enter" src="resources/images/studio/splash-logo.png" alt="Meerkat" /> 
+                <img id="enter" src="resources/images/studio/splash-logo.png" /> 
             </div>
         </div>
 
@@ -146,43 +147,17 @@
                         });
                     });
         </script>
-        <!--start:header-->
-                 <div class="header-top">
-            <div id="usaid_logo" onClick="window.location = 'http://usaid.gov/land-tenure';"></div>
-                    <div class="header_title">Mobile Application to Secure Tenure (MAST)<br />Data Management Infrastructure</div>
-            <!--/subHead-->
-			
-<!-- <div class="loginInfo">
-               <div class="userText">
-               <div class="dropdown" style="cursor:pointer">
-    				<i class="fa fa-user"></i>
-             		  Welcome <span class="username"><%=principal%></span>
-               	&nbsp;&nbsp;          </div>
-               <span class="logoutApp"><a href="/mast/j_spring_security_logout">Logout</a></span>
-        </div>
-               
-               <img src="./resources/images/userInfo.png"/>
-            </div> -->
-			<div class="userinfo" >
-      <ul>
-        <li   class="username">
-             				   <span ><%=principal%></span></li>
-        <li style="float: right; margin-top: 0px;"><a href="../index" class="home"><span class="home-separator">&nbsp;</span></a><a href="/mast/j_spring_security_logout" class="logout">Logout</a></li>
-        
-        
-      </ul>
-    </div>
-    </div>
-        
+            
+        <%@include file="../../jspf/Header.jspf" %>
 
         <div id="vtab">
             <ul>
-                <li id="user"  class="login selected"><img src="resources/images/studio/vtab/users.png" /><span>Users</span></li>			
-                <li id="layer" class="login"><img src="resources/images/studio/vtab/layers.png" /><span>Data Layers</span></li>
-                <li id="layergroup" class="login"><img src="resources/images/studio/vtab/layergroup.png" /><span>Layers Groups</span></li>
-                <li id="project" class="login"><img src="resources/images/studio/vtab/project.png" /><span>Survey Projects</span></li>
-                <li id="masterattribute"  class="login"><img src="resources/images/studio/vtab/users.png" /><span>Master Attribute</span></li>
-                <li id="topologycheck"  class="login"><img src="resources/images/studio/vtab/users.png" /><span>Topology Check</span></li>
+                <li id="user"  class="login selected"><img src="resources/images/studio/vtab/users.png" /><span data-i18n="admin-users"></span></li>			
+                <li id="layer" class="login"><img src="resources/images/studio/vtab/layers.png" /><span data-i18n="admin-data-layers"></span></li>
+                <li id="layergroup" class="login"><img src="resources/images/studio/vtab/layergroup.png" /><span data-i18n="admin-layer-groups"></span></li>
+                <li id="project" class="login"><img src="resources/images/studio/vtab/project.png" /><span data-i18n="admin-survey-projects"></span></li>
+                <li id="masterattribute"  class="login"><img src="resources/images/studio/vtab/users.png" /><span data-i18n="admin-master-attrs"></span></li>
+                <li id="topologycheck"  class="login"><img src="resources/images/studio/vtab/users.png" /><span data-i18n="admin-topology-check"></span></li>
             </ul>
 
             <div id="users"></div>  
@@ -191,38 +166,38 @@
             <div id="projects"></div>
             <div id="masterattribute-div"></div>
 
-		<div id="topologycheck">
-			<div>
-			  <ul class="main-topolist">
-			    <li><b>Below Topology checks will be run using this tool :</b>
-				  <ul class="sub-topolist">
-					<li>Overlaps between geometries</li>
-					<li>Intersects between geometries</li>
-					<li>Smaller area parcels</li>
-					 <li>Empty geometry parcels</li>
-					<li>Self-intersecting parcels</li>
-					<li> Duplicate nodes in the parcels</li>
-			    </ul>
-			</li>
-				
-			  </ul>
-			</div>
-			
-			
-			<div class="project_cell_adjust styleForm runTopo">
-			
-				<label class="searchLbl">Run Topology</label>&nbsp;
-				<button value="Submit" onclick="RunTopologyChecks();">Run
-					Topology</button>
-			</div>
-		</div>
+            <div id="topologycheck">
+                <div>
+                    <ul class="main-topolist">
+                        <li><b><span data-i18n="admin-topology-run-tool"></span></b>
+                            <ul class="sub-topolist">
+                                <li data-i18n="admin-topology-overlaps"></li>
+                                <li data-i18n="admin-topology-intersects"></li>
+                                <li data-i18n="admin-topology-small-parcel"></li>
+                                <li data-i18n="admin-topology-empty"></li>
+                                <li data-i18n="admin-topology-self-intersect"></li>
+                                <li data-i18n="admin-topology-nodes-duplicates"></li>
+                            </ul>
+                        </li>
 
-	</div>
-        <div id="footer"></div>
+                    </ul>
+                </div>
+
+
+                <div class="project_cell_adjust styleForm runTopo">
+                    <label class="searchLbl" data-i18n="admin-topology-run"></label>&nbsp;
+                    <button value="Submit" onclick="RunTopologyChecks();" data-i18n="admin-topology-run"></button>
+                </div>
+            </div>
+
+        </div>
+        <div id="footer">
+            <span class="footer-s" data-i18n="[html]gen-copyright"></span>
+        </div>
         <div id="signature-dialog-form" title="Signature" style="display: none;">
             <form id="formSignature" action="" onsubmit="return false;">
                 <div style="margin: 10px;">
-                    <label>Select signature</label>
+                    <label data-i18n="admin-select-signature"></label>
                     <input name="fileSignature" id="fileSignature" type="file" accept=".jpg,.png,.gif,.jpeg" style="border: #aaa solid 1px;" />
                     <label style="color: #0088cc">.jpeg,.png,.gif</label>
                 </div>

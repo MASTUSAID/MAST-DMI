@@ -256,7 +256,7 @@ $("#toolbar button").bind("click", function(e) {
 						 }
 			       
 				}else{
-					jAlert('Please Select A layer First', 'Selection');
+					jAlert($.i18n("err-select-layer"), $.i18n("gen-selection"));
 				}
 			
 			break;
@@ -428,7 +428,7 @@ function mapClickCallback(evt)
 				jQuery('#infoDiv').remove();
 				jQuery.get("resources/templates/viewer/info.html", function(template) {
 					jQuery('#infoDiv').css("visibility", "visible");
-					addTab($._("info"),template);
+					addTab($.i18n("viewer-info"),template);
                    jQuery("#info_accordion").empty();
 				   jQuery('#infoDiv').css("visibility", "visible");
 

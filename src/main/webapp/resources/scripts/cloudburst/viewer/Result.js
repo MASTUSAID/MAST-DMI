@@ -358,7 +358,7 @@ function extractFeatures(filters, isGridForwardNavigable, btnClicked, displayInG
 					//$("#bottombar").empty()
 					//$("#bottombar").hide();
 
-					jAlert("No records found");
+					jAlert($.i18n("err-no-records"));
 					if (btnClicked != undefined) {
 						if (btnClicked == 'NextRecord'
 							|| btnClicked == 'LastRecord') {
@@ -374,7 +374,7 @@ function extractFeatures(filters, isGridForwardNavigable, btnClicked, displayInG
 			}
 		},
 		error : function(xhr, status) {
-			jAlert('Sorry, there is a problem!');
+			jAlert($.i18n("err-failed-handling-request"));
 		}
 	});
 }
@@ -434,11 +434,11 @@ function performRequery(filters, reverseCoords, isGridForwardNavigable, displayI
 				// Amitabh
 				// loadAttachment(featureIds, actualLyrName);
 			} else {
-				jAlert("No records found");
+				jAlert($.i18n("err-no-records"));
 			}
 		},
 		error : function(xhr, status) {
-			jAlert('Sorry, there is a problem!');
+			jAlert($.i18n("err-failed-handling-request"));
 		}
 	});
 }
@@ -577,7 +577,7 @@ Result.prototype.getQueryResult = function(displayCols, uniqueCol,
 			}).read(data);	
 		},
 		error : function(xhr, status) {
-			jAlert('Sorry, there is a problem!');
+			jAlert($.i18n("err-failed-handling-request"));
 		}
 	});
 	return gmlFeatures;
@@ -660,7 +660,7 @@ Result.prototype.getQueryResultWithHistoryRecord = function(displayCols, uniqueC
 			}).read(data);	
 		},
 		error : function(xhr, status) {
-			jAlert('Sorry, there is a problem!');
+			jAlert($.i18n("err-failed-handling-request"));
 		}
 	});
 	return gmlFeatures;
@@ -850,7 +850,7 @@ function navigateFirstRecord() {
 		// }else{
 		$('#previous').attr("disabled", true);
 		$('#first').attr("disabled", true);
-		// jAlert("No records found");
+		// jAlert($.i18n("err-no-records"));
 	}
 	$('#next').removeAttr("disabled");
 	$('#last').removeAttr("disabled");
@@ -877,7 +877,7 @@ function navigateLastRecord() {
 		// }else{
 		$('#next').attr("disabled", true);
 		$('#last').attr("disabled", true);
-		// jAlert("No records found");
+		// jAlert($.i18n("err-no-records"));
 	}
 	$('#previous').removeAttr("disabled");
 	$('#first').removeAttr("disabled");
@@ -904,7 +904,7 @@ function navigateNextRecord() {
 	} else {
 		// $('#next').attr("disabled", true);
 		// $('#last').attr("disabled", true);
-		jAlert("No records found");
+		jAlert($.i18n("err-no-records"));
 	}
 	$('#previous').removeAttr("disabled");
 	$('#first').removeAttr("disabled");
@@ -931,7 +931,7 @@ function navigatePreviousRecord() {
 	} else {
 		$('#previous').attr("disabled", true);
 		$('#first').attr("disabled", true);
-		jAlert("No records found");
+		jAlert($.i18n("err-no-records"));
 	}
 	$('#next').removeAttr("disabled");
 	$('#last').removeAttr("disabled");
@@ -1034,7 +1034,7 @@ function zoomToFeatures() {
 			cloneLayer.redraw(true);
 		},
 		error : function(xhr, status) {
-			jAlert('Sorry, there is a problem!');
+			jAlert($.i18n("err-failed-handling-request"));
 		}
 	});
 
@@ -1282,7 +1282,7 @@ function fillGrid1(features) {
 					name_Columns[ctr] = featureTypes[0].properties[i].name;
 
 					if(lang == 'cy'){
-						myColumns[ctr] = $._(featureTypes[0].properties[i].name);
+						myColumns[ctr] = $.i18n(featureTypes[0].properties[i].name);
 					}else{
 						myColumns[ctr] = getFieldAlias(featureTypes[0].properties[i].name);
 					}
@@ -1546,7 +1546,7 @@ function getGeometryTyp(layer) {
 			if(selectedLayer.indexOf("OSMM_") > -1){
 				jAlert("WFS operation on " + layerMap[layer.name] + " layer is restricted");
 			}else{
-				jAlert('Sorry, there is a problem!');
+				jAlert($.i18n("err-failed-handling-request"));
 			}
 		}
 	});

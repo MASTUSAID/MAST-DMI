@@ -1,338 +1,326 @@
-
 <script>
 
-		$(function() 
-		{
-			 _Optext_Id=1;
+    $(function ()
+    {
+        _Optext_Id = 1;
 
-            $("#my_option_divId").hide();
-			$("#option_typeId").empty();
+        $("#my_option_divId").hide();
+        $("#option_typeId").empty();
 
-			$("#masterAttr_btnNew").on("click", function() 
-			{
-				attrDialog=$("#attribute-dialog-form").dialog({
-				height : 550,
-				width : 500,
-				resizable : false,
-				modal : true,
-				buttons : {
-					"Add" : function() {
-						
-						savemasterAttr();
-					},
-					"Cancel" : function() {
-						
-						cancelMasterAttr();
-					
-					}
-				},
-				close : function() {
-					cancelMasterAttr();
-				}
-				});
-				
-			});
-		
-			$("#masterAttr_category").on("change", function() {
-				var attrcategory = $("#masterAttr_category").val();
-				
-				attrDialog.dialog("close");
-				displayRefreshedMasterAttr(attrcategory);
-				
-			});
+        $("#masterAttr_btnNew").on("click", function ()
+        {
+            attrDialog = $("#attribute-dialog-form").dialog({
+                height: 550,
+                width: 500,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    "Add": function () {
+                        savemasterAttr();
+                    },
+                    "Cancel": function () {
+                        cancelMasterAttr();
+                    }
+                },
+                close: function () {
+                    cancelMasterAttr();
+                }
+            });
 
-		});
-	</script>
+        });
+
+        $("#masterAttr_category").on("change", function () {
+            var attrcategory = $("#masterAttr_category").val();
+
+            attrDialog.dialog("close");
+            displayRefreshedMasterAttr(attrcategory);
+
+        });
+
+    });
+</script>
 
 <div id="masterAttrFormDiv" style="visibility: hidden">
-	<!-- <style type="text/css">
+    <!-- <style type="text/css">
 label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
 </style> -->
 
 
-	<form class="cmxform" id="masterAttrForm1" action=""
-		onsubmit="return false;">
+    <form class="cmxform" id="masterAttrForm1" action=""
+          onsubmit="return false;">
 
-		<div class="topmenu top-alt">
-			<a id="masterAttr_btnNew" class="btn02"><span class="NewBTN">New</span></a>
-			<!-- <a id="masterAttr_btnSave" class="btn02" onclick="javascript:savemasterAttr();"><span class="saveBTN">Save</span></a>
+        <div class="topmenu top-alt">
+            <a id="masterAttr_btnNew" class="btn02"><span class="NewBTN" data-i18n="gen-new"></span></a>
+            <!-- <a id="masterAttr_btnSave" class="btn02" onclick="javascript:savemasterAttr();"><span class="saveBTN">Save</span></a>
 <a id="masterAttr_btnBack" class="btn02" onclick="javascript:displaymasterAttr();"><span class="BackBTN">Back</span></a> -->
-		</div>
+        </div>
 
 
 
-		<table width="100%" id="masterAttrTable" class="tablesorter"
-			cellpadding="0" cellspacing="0">
+        <table width="100%" id="masterAttrTable" class="tablesorter"
+               cellpadding="0" cellspacing="0">
 
-			<thead>
+            <thead>
 
-				<tr>
-				
-				<td colspan="1">
-						<div class="project_cell_adjust styleForm">
-							<label class="">Category type :</label>&nbsp; <select
-								name="category_type" id="category_type"
-								onchange="displayCategoryType(this);">
-							</select>
-						</div>
-					</td>
+                <tr>
 
-
-					<td colspan="1">
-						<div class="project_cell_adjust styleForm">
-							<label class=""> Category :</label>&nbsp; <select
-								name="category_sel" id="category_sel"
-								onchange="displayCategory(this);">
-							</select>
-						</div>
-					</td>
-
-					<td colspan="6">
-						<div class="project_cell_adjust styleForm">
-							<label class="searchLbl">Search:</label>&nbsp; <input
-								id="masterAttr_txtSearch" value="" maxlength="30" size="30"
-								type="text" />
-							<button value="Submit" onclick="displayRefreshedMasterAttr();">Clear</button>
-						</div>
-					</td>
-				</tr>
-
-				<tr colspan="7">
-					<th>Alias</th>
-					<th>Alias Other Language</th>
-
-					<th>Field Name</th>
-
-					<th>Type</th>
-
-					<th>Size</th>
-					
-					<th>Category Type</th>
-
-					<th class="no-sort">Edit</th>
-					<th class="no-sort">Delete</th>
-				</tr>
-			</thead>
-			<tbody id="masterAttrsRowData">
-
-			</tbody>
-
-			<tfoot>
-			<tfoot>
-
-				<tr class="tblFooter" id="masterAttr_pagerDiv">
-					<td colspan="10">
-						<table cellpadding="0" cellspacing="0" class="cell_margin">
-							<tbody>
-								<tr>
-									<td width="100%" class="cell_color">
-										<table cellpadding="1" cellspacing="1" class="table_adjust">
-											<tbody>
-												<tr>
-													<td class="cell_adjust"><img
-														src="resources/scripts/tablesorter/addons/pager/icons/first.png"
-														class="first" title="First"></td>
-													<td class="cell_adjust"><img
-														src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
-														class="prev" title="Previous"></td>
-													<td class="cell_adjustone"><input type="text"
-														class="pagedisplay" readonly="readonly"></td>
-													<td class="cell_adjust"><img
-														src="resources/scripts/tablesorter/addons/pager/icons/next.png"
-														class="next" title="Next"></td>
-													<td class="cell_adjust"><img
-														src="resources/scripts/tablesorter/addons/pager/icons/last.png"
-														class="last" title="Last"></td>
-													<td class="cell_adjustone"><select class="pagesize">
-															<option selected="selected" value="10">10</option>
-															<option value="20" style="padding-top: 4px;">20</option>
-													</select></td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</tfoot>
-			</tfoot>
+                    <td colspan="1">
+                        <div class="project_cell_adjust styleForm">
+                            <label class="" data-i18n="mob-cat-type"></label>&nbsp; <select
+                                name="category_type" id="category_type"
+                                onchange="displayCategoryType(this);">
+                            </select>
+                        </div>
+                    </td>
 
 
-		</table>
+                    <td colspan="1">
+                        <div class="project_cell_adjust styleForm">
+                            <label class="" data-i18n="mob-cat"></label>&nbsp; <select
+                                name="category_sel" id="category_sel"
+                                onchange="displayCategory(this);">
+                            </select>
+                        </div>
+                    </td>
 
-		<div id="masterAttr_accordion">
-			<h3>
-				<a href="#">General</a>
-			</h3>
-			<div style="height: 250px">
-				<table id="masterAttrDetails">
-					<tbody id="masterAttrDetailBody">
+                    <td colspan="6">
+                        <div class="project_cell_adjust styleForm">
+                            <label class="searchLbl" data-i18n="gen-search"></label>&nbsp; <input
+                                id="masterAttr_txtSearch" value="" maxlength="30" size="30"
+                                type="text" />
+                            <button value="Submit" onclick="displayRefreshedMasterAttr();" data-i18n="gen-clear"></button>
+                        </div>
+                    </td>
+                </tr>
 
-					</tbody>
-				</table>
-			</div>
-		</div>
+                <tr colspan="7">
+                    <th data-i18n="gen-alias"></th>
+                    <th data-i18n="mob-alias-other-lang"></th>
+                    <th data-i18n="admin-field-name"></th>
+                    <th data-i18n="gen-type"></th>
+                    <th data-i18n="gen-size"></th>
+                    <th data-i18n="mob-cat-type"></th>
+                    <th class="no-sort" data-i18n="gen-edit"></th>
+                    <th class="no-sort" data-i18n="gen-delete"></th>
+                </tr>
+            </thead>
+            <tbody id="masterAttrsRowData">
 
-		<script id="masterAttrTemplate" type="text/x-jquery-tmpl">
-       <tr>
+            </tbody>
+
+            <tfoot>
+                <tr class="tblFooter" id="masterAttr_pagerDiv">
+                    <td colspan="10">
+                        <table cellpadding="0" cellspacing="0" class="cell_margin">
+                            <tbody>
+                                <tr>
+                                    <td width="100%" class="cell_color">
+                                        <table cellpadding="1" cellspacing="1" class="table_adjust">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="cell_adjust"><img
+                                                            src="resources/scripts/tablesorter/addons/pager/icons/first.png"
+                                                            class="first" data-i18n="[title]gen-first"></td>
+                                                    <td class="cell_adjust"><img
+                                                            src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
+                                                            class="prev" data-i18n="[title]gen-previous"></td>
+                                                    <td class="cell_adjustone"><input type="text"
+                                                                                      class="pagedisplay" readonly="readonly"></td>
+                                                    <td class="cell_adjust"><img
+                                                            src="resources/scripts/tablesorter/addons/pager/icons/next.png"
+                                                            class="next" data-i18n="[title]gen-next"></td>
+                                                    <td class="cell_adjust"><img
+                                                            src="resources/scripts/tablesorter/addons/pager/icons/last.png"
+                                                            class="last" data-i18n="[title]gen-last"></td>
+                                                    <td class="cell_adjustone"><select class="pagesize">
+                                                            <option selected="selected" value="10">10</option>
+                                                            <option value="20" style="padding-top: 4px;">20</option>
+                                                        </select></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tfoot>
+            </tfoot>
+
+
+        </table>
+
+        <div id="masterAttr_accordion">
+            <h3>
+                <a href="#" data-i18n="gen-general"></a>
+            </h3>
+            <div style="height: 250px">
+                <table id="masterAttrDetails">
+                    <tbody id="masterAttrDetailBody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script id="masterAttrTemplate" type="text/x-jquery-tmpl">
+            <tr>
             <td>
-                ${fieldaliasname}
+            ${fieldaliasname}
             </td> 
-			<td>
-                ${fieldaliasname}
+            <td>
+            ${fieldaliasname}
             </td>                      
-			<td>
-                ${fieldname}
+            <td>
+            ${fieldname}
             </td>           
             <td>
-                ${laExtAttributedatatype.datatype}
+            ${laExtAttributedatatype.datatype}
             </td>
-			<td>
-                ${size}
+            <td>
+            ${size}
             </td>  
-			
-			<td>
-			{{if laExtAttributecategory}}  ${laExtAttributecategory.categorytype.typename}{{/if}}
+
+            <td>
+            {{if laExtAttributecategory}}  ${laExtAttributecategory.categorytype.typename}{{/if}}
             </td>  
-<td align="center">
-{{if (!masterattribute)}}
-       		<a href="javascript:editmasterAttr('${attributemasterid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
-    {{else}}
-	
- {{/if}}       
-</td>
+            <td align="center">
+            {{if (!masterattribute)}}
+            <a href="javascript:editmasterAttr('${attributemasterid}');"><img src="resources/images/studio/edit.png" data-i18n="[title]gen-edit" /></a>
+            {{else}}
 
- <td align="center">
-{{if (!masterattribute)}}
-	<a href="javascript:deleteAttribute('${attributemasterid}','${alias}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
-{{else}}
-	
- {{/if}}                 
-</td>	
+            {{/if}}       
+            </td>
 
-   </tr>
-         
-</script>
+            <td align="center">
+            {{if (!masterattribute)}}
+            <a href="javascript:deleteAttribute('${attributemasterid}','${alias}' );"><img src="resources/images/studio/delete.png" data-i18n="[title]gen-delete" /></a>
+            {{else}}
 
-		<script id="masterAttrTemplateForm" type="text/x-jquery-tmpl">        
- <tr>
- <td>FieldName
-<input type="hidden" name="hid_fieldNameId" id="hid_fieldNameId" value="${hid_fieldNameId}" /> 
+            {{/if}}                 
+            </td>	
 
-</td>
+            </tr>
 
- <td>
-    <input type="textbox" name="fieldName" id="fieldName" value="${fieldname}"/>    	
-    </td>  
+        </script>
 
-<td>Alias</td>
- <td><input type="textbox" name="alias"  id="alias" value="${alias}"/></td>
+        <script id="masterAttrTemplateForm" type="text/x-jquery-tmpl">        
+            <tr>
+            <td><span data-i18n="admin-field-name"></span>
+            <input type="hidden" name="hid_fieldNameId" id="hid_fieldNameId" value="${hid_fieldNameId}" /> 
 
-<td>Alias Other Language</td>
- <td><input type="textbox" name="alias_other"  id="alias_other" value="${alias_other}"/></td>
+            </td>
 
+            <td>
+            <input type="textbox" name="fieldName" id="fieldName" value="${fieldname}"/>    	
+            </td>  
 
-<td>Type</td>
- <td><input type="textbox" name="type"  id="type" value="${datatypeIdBean.datatype}"/></td>
+            <td><span data-i18n="gen-alias"></span></td>
+            <td><input type="textbox" name="alias"  id="alias" value="${alias}"/></td>
+
+            <td><span data-i18n="mob-alias-other-lang"></span></td>
+            <td><input type="textbox" name="alias_other"  id="alias_other" value="${alias_other}"/></td>
 
 
-<td>Size</td>
- <td><input type="textbox" name="size"  id="size" value="${size}"/></td>
-
- </tr>
- 
- </script>
+            <td><span data-i18n="gen-type"></span></td>
+            <td><input type="textbox" name="type"  id="type" value="${datatypeIdBean.datatype}"/></td>
 
 
-	</form>
+            <td><span data-i18n="gen-size"></span></td>
+            <td><input type="textbox" name="size"  id="size" value="${size}"/></td>
+
+            </tr>
+
+        </script>
+
+
+    </form>
 </div>
 
 
 
-<div id="attribute-dialog-form" title="Add Attribute"
-	style="display: none;">
-	<!--p class="validateTips">All form fields are required.</p-->
+<div id="attribute-dialog-form" data-i18n="[title]admin-add-attr"
+     style="display: none;">
+    <!--p class="validateTips">All form fields are required.</p-->
 
 
-	<form class="cmxform" id="addAttributeformID" action=""
-		onsubmit="return false;">
+    <form class="cmxform" id="addAttributeformID" action=""
+          onsubmit="return false;">
 
-		<fieldset>
-
-
-			<input type="hidden" name="primeryky" id="primeryky"> <label
-				for="email">Alias </label> <input type="text" name="alias"
-				id="alias" value="" class="text ui-widget-content ui-corner-all">
-				<br>
-
-			<label for="email">Alias Other Language </label> 
-			<input type="text"  name="alias_other" id="alias_other" value="" class="text ui-widget-content ui-corner-all"><br>
-			
-			<label for="email">Field Name</label> 
-    		 <input type="text" name="fieldName" id="fieldName" value="" class="text ui-widget-content ui-corner-all">	<br>
-				 
-
-			<label for="email">Data Type</label> <br>
-			<select name="type" id="type" onchange="changeDataType(this);"><br><br>
-				<option value="" class="text ui-widget-content ui-corner-all" >Please Select</option><br>
-			</select>
-
-			<br> <label for="email">Size</label> <input type="text"name="size" id="size" value="" 	class="text ui-widget-content ui-corner-all"><br>
-			
-			<label for="email">Category Type</label> <br> 
-			<select name="category_type_sel" id="category_type_sel" onchange="changeCatType(this);"><br><br>
-				<option value="" class="text ui-widget-content ui-corner-all">
-				Please  Select</option><br>
-			</select><br>
-			
-			
-
-			<label for="email">Category</label> <br> 
-			<select name="category" id="category"><br><br>
-				<option value="" class="text ui-widget-content ui-corner-all">Please Select</option><br>
-			</select>
-
-			
-			<br><label for="email">Mandatory</label>&nbsp; 
-			<input 	type="checkbox" id="mandatory" name="mandatory" value="${mandatory}" onClick="changeMandatoryValue(this.value);" />
-
-			<br><br>
-			
-			
-			
-			<div id="my_option_divId">
-			<button type="button" onClick="addoptionDiv();" ><span class="ui-button-text">Add Field</span></button>
-			<br>
-			
-				<div id="option_typeId">
-				
-				<div>
-				<br>
-			</div>
-
-		</fieldset>
-	</form>
-</div>
+        <fieldset>
 
 
-<Script>
+            <input type="hidden" name="primeryky" id="primeryky"> <label
+                for="email" data-i18n="gen-alias"></label> <input type="text" name="alias"
+                id="alias" value="" class="text ui-widget-content ui-corner-all">
+            <br>
+
+            <label for="email" data-i18n="mob-alias-other-lang"></label> 
+            <input type="text"  name="alias_other" id="alias_other" value="" class="text ui-widget-content ui-corner-all"><br>
+
+            <label for="email" data-i18n="admin-field-name"></label> 
+            <input type="text" name="fieldName" id="fieldName" value="" class="text ui-widget-content ui-corner-all">	<br>
 
 
-function displayCategory(sel)
-{
-	
-	displaySelectedCategory(sel.value);
-} 
+            <label for="email" data-i18n="admin-data-type"></label> <br>
+            <select name="type" id="type" onchange="changeDataType(this);"><br><br>
+                <option value="" class="text ui-widget-content ui-corner-all" >Please Select</option><br>
+            </select>
 
-function displayCategoryType(sel)
-{
-	
-	displaySelectedCategoryBytype(sel.value);
-} 
+            <br> <label for="email" data-i18n="gen-size"></label> <input type="text"name="size" id="size" value="" 	class="text ui-widget-content ui-corner-all"><br>
+
+            <label for="email" data-i18n="mob-cat-type"></label> <br> 
+            <select name="category_type_sel" id="category_type_sel" onchange="changeCatType(this);"><br><br>
+                <option value="" class="text ui-widget-content ui-corner-all" data-i18n="gen-please-select"></option><br>
+            </select><br>
 
 
 
+            <label for="email" data-i18n="mob-cat"></label> <br> 
+            <select name="category" id="category"><br><br>
+                <option value="" class="text ui-widget-content ui-corner-all" data-i18n="gen-please-select"></option><br>
+            </select>
 
-</Script>
+
+            <br><label for="email" data-i18n="gen-mandatory"></label>&nbsp; 
+            <input 	type="checkbox" id="mandatory" name="mandatory" value="${mandatory}" onClick="changeMandatoryValue(this.value);" />
+
+            <br><br>
+
+
+
+            <div id="my_option_divId">
+                <button type="button" onClick="addoptionDiv();" ><span class="ui-button-text" data-i18n="admin-add-field"></span></button>
+                <br>
+
+                <div id="option_typeId">
+
+                    <div>
+                        <br>
+                    </div>
+
+                    </fieldset>
+                    </form>
+                </div>
+
+
+                <Script>
+
+
+                    function displayCategory(sel)
+                    {
+
+                        displaySelectedCategory(sel.value);
+                    }
+
+                    function displayCategoryType(sel)
+                    {
+
+                        displaySelectedCategoryBytype(sel.value);
+                    }
+
+
+
+
+                </Script>

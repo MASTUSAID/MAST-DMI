@@ -27,7 +27,7 @@ Cloudburst.ExportData = function (map, _searchdiv) {
 
     $("#tabs-Tool").empty();
 	if(active_layerMap == null){
-					jAlert('Please Select A layer First', 'Selection');
+					jAlert($.i18n("viewer-select-layer"), $.i18n("gen-selection"));
 			return false;
 	
 		}
@@ -37,7 +37,7 @@ Cloudburst.ExportData = function (map, _searchdiv) {
     	//$("#" + searchdiv).append(template);
     	
     	//Add tad
-		addTab('Export',template);
+		addTab($.i18n("viewer-export"),template);
         
 		$("#export-help").tipTip({defaultPosition:"right"});
 		
@@ -144,7 +144,7 @@ Cloudburst.ExportData = function (map, _searchdiv) {
 
 		}else{
 			
-			jAlert('Please Select A layer First', 'Selection');	
+			jAlert($.i18n("viewer-select-layer"), $.i18n("gen-selection"));	
 		}
 		
 		
@@ -216,7 +216,7 @@ var downloadFeature = function () {
 			    window.open(exporturl, "Export");
 				return
 				}else{
-					jAlert('Please Select Region', 'Export');
+					jAlert($.i18n("viewer-select-region"), $.i18n("viewer-export"));
 							return;
 				}
 			}

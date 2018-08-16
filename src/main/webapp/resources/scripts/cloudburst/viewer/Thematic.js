@@ -97,7 +97,7 @@ function Thematic(_map) {
 		
 		//$("#" + searchdiv).append(template);
 		//Add tad
-		addTab($._('thematic'),template);
+		addTab($.i18n('thematic'),template);
 		
 		$("#thematic-help").tipTip({defaultPosition:"right"});
 		
@@ -113,7 +113,7 @@ function Thematic(_map) {
 
         $(document).ready(function () {
             $("#slider").slider();
-            $("#opacity").text($._('theme_opacity') + ':' + opacity + "%");
+            $("#opacity").text($.i18n('theme_opacity') + ':' + opacity + "%");
         });
 
         $("#slider").slider({
@@ -123,13 +123,13 @@ function Thematic(_map) {
             value: 0,
             slide: function (event, ui) {
                 opacity = ui.value;
-                $("#opacity").text($._('theme_opacity') + ':' + opacity + "%");
+                $("#opacity").text($.i18n('theme_opacity') + ':' + opacity + "%");
             }
         });
 
         $("#slider").slider("value", opacity);
         opacity = $("#slider").slider("value");
-        $("#opacity").text($._('theme_opacity') + ':' + opacity + "%");
+        $("#opacity").text($.i18n('theme_opacity') + ':' + opacity + "%");
 
         /*Initialize the drop-downs*/
         $("#poly_pattern").dropdown('poly_Patterns', applyPolygonPattern);
@@ -271,29 +271,29 @@ function Thematic(_map) {
             }
         });
 		*/
-    	$('#symbolType').html($._('theme_symbol') + ':');
-    	$('#mode1').html($._('theme_mode') + ':');
-    	$('#classification').html($._('theme_classification_field') + ':');
-    	$('#interval_field').html($._('theme_interval') + ':');
-    	$('#theme_header').html($._('theme_classification'));
-    	$('#style_header').html($._('theme_style'));
-    	$('#theme_line_outline').html($._('theme_outline') + ':');
-    	$('#theme_line_startcolor').html($._('theme_start') + ':');
-    	$('#theme_line_endcolor').html($._('theme_end') + ':');
-    	$('#theme_linesize').html($._('theme_size') + ':');
-    	$('#theme_classinterval').html($._('theme_class_interval'));
-    	$('#classify').attr("value", $._('theme_classify'));
-    	$('#removeInterval').attr("value", $._('theme_delete_class'));
-    	$('#symbolApply').attr("value", $._('theme_apply'));
-    	$('#theme_fill').html($._('theme_fill'));
-    	$('#theme_poly_startcolor').html($._('theme_start') + ':');
-    	$('#theme_poly_endcolor').html($._('theme_end') + ':');
-    	$('#theme_poly_outline').html($._('theme_outline') + ':');
-    	$('#theme_poly_outcolor').html($._('color') + ':');
-    	$('#theme_poly_outwidth').html($._('theme_outline_width') + ':');
-    	$('#theme_pointsymbol').html($._('theme_symbol') + ':');
-    	$('#theme_pointstartcolor').html($._('theme_start') + ':');
-    	$('#theme_pointsize').html($._('theme_size') + ':');
+    	$('#symbolType').html($.i18n('theme_symbol') + ':');
+    	$('#mode1').html($.i18n('theme_mode') + ':');
+    	$('#classification').html($.i18n('theme_classification_field') + ':');
+    	$('#interval_field').html($.i18n('theme_interval') + ':');
+    	$('#theme_header').html($.i18n('theme_classification'));
+    	$('#style_header').html($.i18n('theme_style'));
+    	$('#theme_line_outline').html($.i18n('theme_outline') + ':');
+    	$('#theme_line_startcolor').html($.i18n('theme_start') + ':');
+    	$('#theme_line_endcolor').html($.i18n('theme_end') + ':');
+    	$('#theme_linesize').html($.i18n('theme_size') + ':');
+    	$('#theme_classinterval').html($.i18n('theme_class_interval'));
+    	$('#classify').attr("value", $.i18n('theme_classify'));
+    	$('#removeInterval').attr("value", $.i18n('theme_delete_class'));
+    	$('#symbolApply').attr("value", $.i18n('theme_apply'));
+    	$('#theme_fill').html($.i18n('theme_fill'));
+    	$('#theme_poly_startcolor').html($.i18n('theme_start') + ':');
+    	$('#theme_poly_endcolor').html($.i18n('theme_end') + ':');
+    	$('#theme_poly_outline').html($.i18n('theme_outline') + ':');
+    	$('#theme_poly_outcolor').html($.i18n('color') + ':');
+    	$('#theme_poly_outwidth').html($.i18n('theme_outline_width') + ':');
+    	$('#theme_pointsymbol').html($.i18n('theme_symbol') + ':');
+    	$('#theme_pointstartcolor').html($.i18n('theme_start') + ':');
+    	$('#theme_pointsize').html($.i18n('theme_size') + ':');
     });
 }
 

@@ -1,0 +1,16 @@
+td, th{
+    text-align: right !important;
+}
+
+.navbar-nav{
+    float: right !important;
+}
+
+.nav-tabs {
+    float: right !important;
+}
+
+.nav-tab-div {
+    min-height: 40px;
+    background-color: #FFF;
+}

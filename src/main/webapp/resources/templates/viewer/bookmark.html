@@ -1,8 +1,8 @@
 <div id="bookmarkdiv" class="dialog-v">
 	<div id="infoDetails">
-		<div id="bookmarkstar" class="bookmark-star" title="New Bookmark"></div>		
-		<div id="span-close" title="Close" class="span-c" onclick="javascript:closeDialog('bookmarkdiv');"></div>
-		<div id="bookmark-help" class="span-h" title="Help for Bookmark" onclick="javascript:openHelpWindow('bookmark_help');"></div>
+            <div id="bookmarkstar" class="bookmark-star" data-i18n="[title]viewer-new-bookmark"></div>		
+            <div id="span-close" data-i18n="[title]gen-close" class="span-c" onclick="javascript:closeDialog('bookmarkdiv');"></div>
+            <div id="bookmark-help" class="span-h" data-i18n="[title]viewer-bookmark-help" onclick="javascript:openHelpWindow('bookmark_help');"></div>
 		<div class="lineBreak05p"></div>
 		
 		<div class="formPattern">
@@ -16,7 +16,7 @@
 				<input type="hidden" name="maxy" id="maxy" />
 				<input type="hidden" name="projectName" id="bkProjectName" />
 			</form>	
-			<a id="bk-save" class="bk-s" href="#">Save</a>
+                    <a id="bk-save" class="bk-s" href="#" data-i18n="gen-save"></a>
 		</div>
 		<div class="lineBreak05p"></div>
 		<div id="bokkmarkBody"></div>
@@ -39,10 +39,10 @@
 			</p>
             <div class="widthadjust">
             	<div class="left">
-                	<div id="zoomBookmark" class="clearmarkers-s"><a href="#" class="zoomlink-s" onclick="javascript:zoomBookmark('${bookmark.bookmarkid}');">Zoom</a></div>
+                	<div id="zoomBookmark" class="clearmarkers-s"><a href="#" class="zoomlink-s" onclick="javascript:zoomBookmark('${bookmark.bookmarkid}');" data-i18n="viewer-zoom"></a></div>
                  </div>
                  <div class="right">
-                 	<div id="removeBookmark" class="clearmarkers-s"><a href="#" class="removebklink-s" onclick="javascript:removeBookmark('${bookmark.bookmarkid}','${bookmark.bookmarkname}');">Remove</a></div>
+                 	<div id="removeBookmark" class="clearmarkers-s"><a href="#" class="removebklink-s" onclick="javascript:removeBookmark('${bookmark.bookmarkid}','${bookmark.bookmarkname}');" data-i18n="gen-remove"></a></div>
                   </div>
             </div>
        	</div>  

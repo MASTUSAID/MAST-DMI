@@ -1,640 +1,640 @@
- <script>
- 
-$(function() {
-genAttrDialog = $( "#attr-dialog-form" ).dialog({
-autoOpen: false,
-height: 400,
-width: 300,
-resizable: false,
-modal: true,
+<script>
 
-buttons: {
-"Add": function() 
-{
-	saveprojectAttr();
-	genAttrDialog.dialog( "close" );
-},
-"Cancel": function() 
-{
-	genAttrDialog.dialog( "close" );
-}
-},
-close: function() {
+    $(function () {
+        genAttrDialog = $("#attr-dialog-form").dialog({
+            autoOpen: false,
+            height: 400,
+            width: 300,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Add": function ()
+                {
+                    saveprojectAttr();
+                    genAttrDialog.dialog("close");
+                },
+                "Cancel": function ()
+                {
+                    genAttrDialog.dialog("close");
+                }
+            },
+            close: function () {
 
-}
-});
+            }
+        });
 
-});
- </script>
- 
+    });
+</script>
+
 <div id="projectAttrFormDiv" style="visibility: hidden">
-<!-- <style type="text/css">
-label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
-</style> -->
+    <!-- <style type="text/css">
+    label.error { float: none; color: red; padding-left: .5em; vertical-align: top; }
+    </style> -->
 
 
-<form class="cmxform" id="projectAttrForm1" action="" onsubmit="return false;">
+    <form class="cmxform" id="projectAttrForm1" action="" onsubmit="return false;">
 
 
 
 
-	<table id="projectAttrTable"  class="tablesorter" cellpadding="0" cellspacing="0">
-	<thead>
-        
-        <tr>
-            <td colspan="5" class="project_cellpadtwo">
-			
-			<table width="100%" cellpadding="0" cellspacing="0" class="project_table_adjust">
-                	
-					<tr>
-					 <td class="project_cell_adjust styleForm">
-						<label class="">Category type:</label>&nbsp;
-						
-						<select  name="category_type" id="category_type" onchange="displayCategoryType(this);">
-						<option  value="" class="text ui-widget-content ui-corner-all">Please Select</option>   									  							
-                               							
-						</select>
-						
-					</td>
-					
-                    <td class="">
-						<label class="">Project:</label>&nbsp;
-						
-						<select name="projectAttr_project" id="projectAttr_project" value="${name}" onchange= "fillAccordians(this.value);">
-						<option  value="" class="text ui-widget-content ui-corner-all">Please Select</option>   									  							
-                               							
-						</select>
-						
-					</td>
-                       </tr>   
-                </table>
-			
-			
-            </td>
-        </tr>
-        
+        <table id="projectAttrTable"  class="tablesorter" cellpadding="0" cellspacing="0">
+            <thead>
 
-    </thead>
-    <tbody>
-		<tr>
-			<td>
-			
-			
-			
-		<div id="projectAttr-accordion" style="text-align: left;">
-		
-		
-		
-		
-		<h3>
-			<a href="#"><span id="general">General</span></a>
-		</h3>
+                <tr>
+                    <td colspan="5" class="project_cellpadtwo">
 
-		<div id="generalBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="general_addRemove" onclick="openAttrDialog('general');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="general_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('general');"><span class="saveBTN">Save</span></a>
-			
+                        <table width="100%" cellpadding="0" cellspacing="0" class="project_table_adjust">
 
-			</div>	
-			<table id="generaltbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="project_cell_adjust styleForm">
+                                    <label class="" data-i18n="mob-cat-type"></label>&nbsp;
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		
-		<h3>
-		
-		<a href="#"><span id="general_property">General Property</span></a>
-		</h3>
+                                    <select  name="category_type" id="category_type" onchange="displayCategoryType(this);">
+                                        <option  value="" class="text ui-widget-content ui-corner-all" data-i18n="gen-please-select"></option>   									  							
 
-		<div id="general_property_Body" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="general_property_addRemove" onclick="openAttrDialog('general_property');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="general_propert_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('general_property');"><span class="saveBTN">Save</span></a>
-			
+                                    </select>
 
-			</div>	
-			<table id="general_property_tbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                                </td>
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		<h3>
-			<a href="#"><span id="naturalperson">Natural Person</span></a>
-		</h3>
+                                <td class="">
+                                    <label class="" data-i18n="viewer-report-project"></label>&nbsp;
 
-		<div id="naturalpersonBody" title="" style="min-height: 191px; overflow: auto;">				
+                                    <select name="projectAttr_project" id="projectAttr_project" value="${name}" onchange= "fillAccordians(this.value);">
+                                        <option  value="" class="text ui-widget-content ui-corner-all" data-i18n="gen-please-select"></option>   									  							
 
-			
-			<div class="headerBtns">
-			<a  href="#" id="naturalperson_addRemove" onclick="openAttrDialog('naturalperson');" class="btn02 btnprojectattr"><span class="PendingLink">Add/remove</span></a>
-			<a id="naturalperson_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('naturalperson');"><span class="saveBTN">Save</span></a>
-			
-			
-			
+                                    </select>
 
-			</div>	
-			<table id="natural_persontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
-			
-			
+                                </td>
+                            </tr>   
+                        </table>
 
-			</table>
-			
-						
-		</div>
-		<h3>
-			<a href="#"><span id="multimedia">Multimedia</span></a>
-		</h3>
 
-		<div id="multimediaBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="multemedia_addRemove" onclick="openAttrDialog('multimedia');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="multemedial_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('multimedia');"><span class="saveBTN">Save</span></a>
-			
+                    </td>
+                </tr>
 
-			</div>	
-			<table id="multimediatbl"  class="tblStyle" cellpadding="0" cellspacing="0">
-		
-			</table>
-		
-			
-		</div>
-		<h3>
-			<a href="#"><span id="tenure">Tenure</span></a>
-		</h3>
 
-		<div id="tenureBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			<div class="headerBtns">
-			<a href="#" id="tenure_addRemove" onclick="openAttrDialog('tenure');" class="btn02 btnprojectattr"><span class="PendingLink">Add/remove</span></a>
-			<a id="tenure_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('tenure');"><span class="saveBTN">Save</span></a>
-			
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
 
-			</div>	
-			<table id="tenuretbl"  class="tblStyle" cellpadding="0" cellspacing="0">
-			</table>
-			
-		</div>
-		<h3>
-			<a href="#"><span id="nonnatural_person">Non Natural Person</span></a>
-		</h3>
 
-		<div id="nonnaturalBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="nonnaturalperson_addRemove" onclick="openAttrDialog('nonnatural_person');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="nonnaturalperson_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('nonnatural_person');"><span class="saveBTN">Save</span></a>
-			
 
-			</div>	
-			<table id="non_Natural_Persontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
-			</table>
-			
-						
-		</div>
-		
-		
-			<h3>
-			<a href="#"><span id="general">Custom</span></a>
-		</h3>
+                        <div id="projectAttr-accordion" style="text-align: left;">
 
-		<div id="customBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="custom_addRemove" onclick="openAttrDialog('custom');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="custom_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('custom');"><span class="saveBTN">Save</span></a>
-			
 
-			</div>	
-			<table id="customtbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-		</div>
-		
-		<h3>
-			<a href="#"><span id="general">Add Person</span></a>
-		</h3>
 
-		<div id="addPersonBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="addPerson_addRemove" onclick="openAttrDialog('add_Person');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="A_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('add_Person');"><span class="saveBTN">Save</span></a>
-			
+                            <h3>
+                                <a href="#"><span id="general" data-i18n="gen-general"></span></a>
+                            </h3>
 
-			</div>	
-			<table id="addPersontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                            <div id="generalBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
 
-			</table>
-			
-		</div>
-		
-		
-		
-	
-	</div>
-	
-	<!-- resource mapping-->
-	
-	
-	<div id="projectAttr-accordion-resource" style="text-align: left;">
-	
-		
-		
-		<h3>
-			<a href="#"><span id="open">Open</span></a>
-		</h3>
+                                <div class="headerBtns">
+                                    <a href="#" id="general_addRemove" onclick="openAttrDialog('general');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="general_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('general');"><span class="saveBTN" data-i18n="gen-save"></span></a>
 
-		<div id="OpenBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="open_addRemove" onclick="openAttrDialog('open');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="general_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('open');"><span class="saveBTN">Save</span></a>
-			
 
-			</div>	
-			<table id="opentbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                                </div>	
+                                <table id="generaltbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		<h3>
-			<a href="#"><span id="private">Private(individual)</span></a>
-		</h3>
+                                </table>
 
-		<div id="privateBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="private_addRemove" onclick="openAttrDialog('private');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="private_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('private');"><span class="saveBTN">Save</span></a>
-			
 
-			</div>	
-			<table id="privatetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		<h3>
-			<a href="#"><span id="common">Common</span></a>
-		</h3>
 
-		<div id="commonBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="common_addRemove" onclick="openAttrDialog('common');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="common_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('common');"><span class="saveBTN">Save</span></a>
-			
 
-			</div>	
-			<table id="commontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                            </div>
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		
-		
-		<h3>
-			<a href="#"><span id="community">Community</span></a>
-		</h3>
 
-		<div id="communityBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="community_addRemove" onclick="openAttrDialog('community');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="community_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('community');"><span class="saveBTN">Save</span></a>
-			
+                            <h3>
 
-			</div>	
-			<table id="communitytbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                                <a href="#"><span id="general_property" data-i18n="mob-gen-prop"></span></a>
+                            </h3>
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		<h3>
-			<a href="#"><span id="public_state">Public / State</span></a>
-		</h3>
+                            <div id="general_property_Body" title=""
+                                 style="min-height: 191px; overflow: auto;">
 
-		<div id="public_stateBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="public_state_addRemove" onclick="openAttrDialog('public_state');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="community_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('public_state');"><span class="saveBTN">Save</span></a>
-			
+                                <div class="headerBtns">
+                                    <a href="#" id="general_property_addRemove" onclick="openAttrDialog('general_property');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="general_propert_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('general_property');"><span class="saveBTN" data-i18n="gen-save"></span></a>
 
-			</div>	
-			<table id="public_statetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-			
-			
-			
-			
-		</div>
-		
-		<!--  private jointly -->
-		
-		<h3>
-			<a href="#"><span id="private_jointly">Private (jointly)</span></a>
-		</h3>
+                                </div>	
+                                <table id="general_property_tbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-		<div id="private_jointlyBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="private_jointly_addRemove" onclick="openAttrDialog('private_jointly');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="private_jointly_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('private_jointly');"><span class="saveBTN">Save</span></a>
-			
+                                </table>
 
-			</div>	
-			<table id="private_jointlytbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-		</div>
-		
-			<!--  Organization (informal) -->
-		
-	     <h3>
-			<a href="#"><span id="organization_informal">Organization (informal)</span></a>
-		</h3>
 
-		<div id="organization_informalBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="organization_informal_addRemove" onclick="openAttrDialog('organization_informal');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="organization_informal_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('organization_informal');"><span class="saveBTN">Save</span></a>
-			
 
-			</div>	
-			<table id="organization_informaltbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-		</div>
-		
-		
-			<!--  Organization (formal) -->
-		
-	     <h3>
-			<a href="#"><span id="organization_formal">Organization (formal)</span></a>
-		</h3>
+                            </div>
 
-		<div id="organization_formalBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="organization_formal_addRemove" onclick="openAttrDialog('organization_formal');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="organization_formal_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('organization_formal');"><span class="saveBTN">Save</span></a>
-			
+                            <h3>
+                                <a href="#"><span id="naturalperson" data-i18n="reg-natural-person"></span></a>
+                            </h3>
 
-			</div>	
-			<table id="organization_formaltbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                            <div id="naturalpersonBody" title="" style="min-height: 191px; overflow: auto;">				
 
-			</table>
-			
-		</div>
-		
-		
-			<!--  Collective -->
-		
-	     <h3>
-			<a href="#"><span id="collective">Collective</span></a>
-		</h3>
 
-		<div id="collectiveBody" title=""
-			style="min-height: 191px; overflow: auto;">
-			
-			<div class="headerBtns">
-			<a href="#" id="collective_addRemove" onclick="openAttrDialog('collective');" class="btn02 btnprojectattr"><span  class="PendingLink">Add/remove</span></a>
-			<a id="collective_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('collective');"><span class="saveBTN">Save</span></a>
-			
+                                <div class="headerBtns">
+                                    <a  href="#" id="naturalperson_addRemove" onclick="openAttrDialog('naturalperson');" class="btn02 btnprojectattr"><span class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="naturalperson_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('naturalperson');"><span class="saveBTN" data-i18n="gen-save"></span></a>
 
-			</div>	
-			<table id="collectivetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
 
-			</table>
-			
-		</div>
-		
-		
-		
-	
-	</div>
-	<!--- resource end--->
-        	</td>
-			</tr>
-			
-    </tbody>
-    
-    <tfoot>
 
-	    
-	</tfoot>
-    
-    
-    </table>
 
-</form>
+                                </div>	
+                                <table id="natural_persontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+
+
+                                </table>
+
+
+                            </div>
+                            <h3>
+                                <a href="#"><span id="multimedia" data-i18n="reg-multimedia"></span></a>
+                            </h3>
+
+                            <div id="multimediaBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="multemedia_addRemove" onclick="openAttrDialog('multimedia');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="multemedial_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('multimedia');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="multimediatbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+
+                            </div>
+                            <h3>
+                                <a href="#"><span id="tenure" data-i18n="reg-tenure"></span></a>
+                            </h3>
+
+                            <div id="tenureBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+                                <div class="headerBtns">
+                                    <a href="#" id="tenure_addRemove" onclick="openAttrDialog('tenure');" class="btn02 btnprojectattr"><span class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="tenure_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('tenure');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="tenuretbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                                </table>
+
+                            </div>
+                            <h3>
+                                <a href="#"><span id="nonnatural_person" data-i18n="reg-nonnatural-person"></span></a>
+                            </h3>
+
+                            <div id="nonnaturalBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="nonnaturalperson_addRemove" onclick="openAttrDialog('nonnatural_person');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="nonnaturalperson_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('nonnatural_person');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="non_Natural_Persontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+                                </table>
+
+
+                            </div>
+
+
+                            <h3>
+                                <a href="#"><span id="general" data-i18n="reg-custom-attr"></span></a>
+                            </h3>
+
+                            <div id="customBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="custom_addRemove" onclick="openAttrDialog('custom');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="custom_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('custom');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="customtbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+                            </div>
+
+                            <h3>
+                                <a href="#"><span id="general" data-i18n="reg-add-person"></span></a>
+                            </h3>
+
+                            <div id="addPersonBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="addPerson_addRemove" onclick="openAttrDialog('add_Person');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="A_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('add_Person');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="addPersontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+                            </div>
+
+
+
+
+                        </div>
+
+                        <!-- resource mapping-->
+
+
+                        <div id="projectAttr-accordion-resource" style="text-align: left;">
+
+
+
+                            <h3>
+                                <a href="#"><span id="open" data-i18n="gen-open"></span></a>
+                            </h3>
+
+                            <div id="OpenBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="open_addRemove" onclick="openAttrDialog('open');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="general_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('open');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="opentbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+
+
+
+
+                            </div>
+
+                            <h3>
+                                <a href="#"><span id="private" data-i18n="mob-priv-ind"></span></a>
+                            </h3>
+
+                            <div id="privateBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="private_addRemove" onclick="openAttrDialog('private');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="private_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('private');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="privatetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+
+
+
+
+                            </div>
+
+                            <h3>
+                                <a href="#"><span id="common" data-i18n="gen-common"></span></a>
+                            </h3>
+
+                            <div id="commonBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="common_addRemove" onclick="openAttrDialog('common');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="common_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('common');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="commontbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+
+
+
+
+                            </div>
+
+
+
+                            <h3>
+                                <a href="#"><span id="community" data-i18n="reg-communinty"></span></a>
+                            </h3>
+
+                            <div id="communityBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="community_addRemove" onclick="openAttrDialog('community');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="community_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('community');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="communitytbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+
+
+
+
+                            </div>
+
+                            <h3>
+                                <a href="#"><span id="public_state" data-i18n="mob-public-state"></span></a>
+                            </h3>
+
+                            <div id="public_stateBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="public_state_addRemove" onclick="openAttrDialog('public_state');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="community_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('public_state');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="public_statetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+
+
+
+
+                            </div>
+
+                            <!--  private jointly -->
+
+                            <h3>
+                                <a href="#"><span id="private_jointly" data-i18n="mob-priv-joint"></span></a>
+                            </h3>
+
+                            <div id="private_jointlyBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="private_jointly_addRemove" onclick="openAttrDialog('private_jointly');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="private_jointly_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('private_jointly');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="private_jointlytbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+                            </div>
+
+                            <!--  Organization (informal) -->
+
+                            <h3>
+                                <a href="#"><span id="organization_informal" data-i18n="mob-org-informal"></span></a>
+                            </h3>
+
+                            <div id="organization_informalBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="organization_informal_addRemove" onclick="openAttrDialog('organization_informal');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="organization_informal_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('organization_informal');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="organization_informaltbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+                            </div>
+
+
+                            <!--  Organization (formal) -->
+
+                            <h3>
+                                <a href="#"><span id="organization_formal" data-i18n="mob-org-formal"></span></a>
+                            </h3>
+
+                            <div id="organization_formalBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="organization_formal_addRemove" onclick="openAttrDialog('organization_formal');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="organization_formal_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('organization_formal');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="organization_formaltbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+                            </div>
+
+
+                            <!--  Collective -->
+
+                            <h3>
+                                <a href="#"><span id="collective" data-i18n="mob-collective"></span></a>
+                            </h3>
+
+                            <div id="collectiveBody" title=""
+                                 style="min-height: 191px; overflow: auto;">
+
+                                <div class="headerBtns">
+                                    <a href="#" id="collective_addRemove" onclick="openAttrDialog('collective');" class="btn02 btnprojectattr"><span  class="PendingLink" data-i18n="gen-add-remove"></span></a>
+                                    <a id="collective_btnSave" class="btn02 btnprojectattr" onclick="javascript:saveLayergroup('collective');"><span class="saveBTN" data-i18n="gen-save"></span></a>
+
+
+                                </div>	
+                                <table id="collectivetbl"  class="tblStyle" cellpadding="0" cellspacing="0">
+
+                                </table>
+
+                            </div>
+
+
+
+
+                        </div>
+                        <!--- resource end--->
+                    </td>
+                </tr>
+
+            </tbody>
+
+            <tfoot>
+
+
+            </tfoot>
+
+
+        </table>
+
+    </form>
 </div>
 
-<div id="attr-dialog-form" title="Attribute">
+<div id="attr-dialog-form" data-i18n="[title]gen-attribute">
 
-<form class="cmxform" id="addProjectAttributeformID" action=""  onsubmit="return false;">
+    <form class="cmxform" id="addProjectAttributeformID" action=""  onsubmit="return false;">
 
-<input type="hidden" name="project" id="project" />
-<input type="hidden" name="attributecategory" id="attributecategory" />  
-<input type="hidden" id="_optionOrder" name="_optionOrder"> 
-<input type="checkbox" id="selectAll" > Select All
-<fieldset>
+        <input type="hidden" name="project" id="project" />
+        <input type="hidden" name="attributecategory" id="attributecategory" />  
+        <input type="hidden" id="_optionOrder" name="_optionOrder"> 
+        <input type="checkbox" id="selectAll" > <span data-i18n="gen-select-all"></span>
+        <fieldset>
 
-<div id="dialogBody">
+            <div id="dialogBody">
 
+
+            </div>
+
+
+
+
+
+
+            <script id="generalAttrTemplate" type="text/x-jquery-tmpl">
+                <tr>		
+                <td colspan="2">
+
+
+
+                {{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
+                {{if (flag)}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
+                <input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
+                {{else}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
+                <input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
+                {{/if}}				
+                </td>       	
+                </tr>	
+            </script>
+
+            <script id="naturalpersonAttrTemplate" type="text/x-jquery-tmpl">
+                <tr>		
+                <td colspan="2">
+                {{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
+                {{if (flag)}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
+                <input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
+                {{else}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
+                <input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
+                {{/if}}				
+                </td>       	
+                </tr>	
+            </script>
+
+
+            <script id="propertyAttrTemplate" type="text/x-jquery-tmpl">
+                <tr>		
+                <td colspan="2">
+                {{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
+                {{if (flag)}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
+                <input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
+                {{else}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
+                <input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
+                {{/if}}				
+                </td>       	
+                </tr>
+            </script>
+
+
+
+            <script id="tenureAttrTemplate" type="text/x-jquery-tmpl">
+                <tr>		
+                <td colspan="2">
+                {{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
+                {{if (flag)}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
+                <input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
+                {{else}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
+                <input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
+                {{/if}}				
+                </td>       	
+                </tr>
+            </script>
+
+
+
+            <script id="multimediaAttrTemplate" type="text/x-jquery-tmpl">
+                <tr>		
+                <td colspan="2">
+                {{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
+                {{if (flag)}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
+                <input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
+                {{else}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
+                <input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
+                {{/if}}				
+                </td>       	
+                </tr>
+            </script>
+
+            <script id="customAttrTemplate" type="text/x-jquery-tmpl">
+                <tr>		
+                <td colspan="2">
+                {{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
+                {{if (flag)}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
+                <input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
+                {{else}}
+                {{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
+                <input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
+                {{/if}}				
+                </td>   
+
+                </tr>
+            </script>
+        </fieldset>
+    </form>
 
 </div>
 
-
-
-
-
-
-<script id="generalAttrTemplate" type="text/x-jquery-tmpl">
-<tr>		
-	<td colspan="2">
-
-
-
-		{{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
-		{{if (flag)}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
-			<input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
-		{{else}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
-			<input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
-		{{/if}}				
-	</td>       	
-</tr>	
-</script>
-
-<script id="naturalpersonAttrTemplate" type="text/x-jquery-tmpl">
-<tr>		
-	<td colspan="2">
-		{{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
-		{{if (flag)}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
-			<input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
-		{{else}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
-			<input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
-		{{/if}}				
-	</td>       	
-</tr>	
-</script>
-
-
-<script id="propertyAttrTemplate" type="text/x-jquery-tmpl">
-<tr>		
-	<td colspan="2">
-		{{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
-		{{if (flag)}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
-			<input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
-		{{else}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
-			<input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
-		{{/if}}				
-	</td>       	
-</tr>
-</script>
-
-				
-
-<script id="tenureAttrTemplate" type="text/x-jquery-tmpl">
-<tr>		
-	<td colspan="2">
-		{{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
-		{{if (flag)}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
-			<input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
-		{{else}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
-			<input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
-		{{/if}}				
-	</td>       	
-</tr>
-</script>
-
-
-
-<script id="multimediaAttrTemplate" type="text/x-jquery-tmpl">
-<tr>		
-	<td colspan="2">
-		{{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
-		{{if (flag)}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
-			<input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
-		{{else}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
-			<input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
-		{{/if}}				
-	</td>       	
-</tr>
-</script>
-
-<script id="customAttrTemplate" type="text/x-jquery-tmpl">
-<tr>		
-	<td colspan="2">
-		{{if (uid)}}<input type="hidden" id="hid_uid${id}" name="hid_aliasuid" value="${uid}"/>{{/if}}		
-		{{if (flag)}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;" checked/>{{/if}}	
-			<input type="checkbox" id="${id}" name="alias" value="${id}_${uid}" class='roleCheckbox' checked /> ${alias}
-		{{else}}
-			{{if (uid)}}<input type="checkbox" id="uid${id}" name="aliasuid" value="${uid}" class='roleCheckbox' style="display:none;"/>{{/if}}
-			<input type="checkbox" id="${id}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}	
-		{{/if}}				
-	</td>   
-    	
-</tr>
-</script>
-</fieldset>
-</form>
-		
-</div>
 <script id="categoryattrTemplate" type="text/x-jquery-tmpl">
-<tr>
-<td id="${attributeMaster.attributemasterid}">
-	${attributeMaster.fieldaliasname}
-</td>
-<td>
-            <a href="#" id="${fieldaliasname}"  name="alias" value="${attributemasterid}" class="lgup"><img src="resources/images/studio/move_up.png"></a>
-            <a href="#" id="${fieldaliasname}"  name="alias" value="${attributemasterid}" class="lgdown"><img src="resources/images/studio/move_down.png"></a>
-			
-</td>
+    <tr>
+    <td id="${attributeMaster.attributemasterid}">
+    ${attributeMaster.fieldaliasname}
+    </td>
+    <td>
+    <a href="#" id="${fieldaliasname}"  name="alias" value="${attributemasterid}" class="lgup"><img src="resources/images/studio/move_up.png"></a>
+    <a href="#" id="${fieldaliasname}"  name="alias" value="${attributemasterid}" class="lgdown"><img src="resources/images/studio/move_down.png"></a>
 
-<input type="checkbox" id="${alias}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}
-</tr>
+    </td>
+
+    <input type="checkbox" id="${alias}" name="alias" value="${id}" class='roleCheckbox' /> ${alias}
+    </tr>
 </script>	
 <script>
 
-$(document).ready(function(){
-	$('#selectAll').on('click',function(){
-		if ($(this).is(':checked')) {
-			$('.roleCheckbox').each(function(){
-				this.checked = true;
-			});
-		}else{
-			$('.roleCheckbox').each(function(){
-				this.checked = false;
-			});
-		}
-	})
-});
+    $(document).ready(function () {
+        $('#selectAll').on('click', function () {
+            if ($(this).is(':checked')) {
+                $('.roleCheckbox').each(function () {
+                    this.checked = true;
+                });
+            } else {
+                $('.roleCheckbox').each(function () {
+                    this.checked = false;
+                });
+            }
+        })
+    });
 </script>	
