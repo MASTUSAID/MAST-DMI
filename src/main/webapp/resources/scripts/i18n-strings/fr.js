@@ -444,6 +444,7 @@ LANGUAGES.fr = {
     "reg-province": "FR_Province",
     "reg-district": "FR_District",
     "reg-village": "FR_Village",
+    "reg-commune": "FR_Commune",
     "reg-place": "FR_Place",
     "reg-parcel-num": "FR_Parcel Number",
     "reg-disputes": "FR_Disputes",
