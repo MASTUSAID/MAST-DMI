@@ -51,13 +51,13 @@ public class MainPagesController {
         return "viewer/index";
     }
 
-    @RequestMapping(value = "/mobile/", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/mobileconfig/", method = {RequestMethod.GET, RequestMethod.POST})
     public String mobileIndex(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
         setLanguageCode(request, response);
         return "mobile/index";
     }
 
-    @RequestMapping(value = "/mobile/index", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/mobileconfig/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String mobileIndex2(ModelMap model, HttpServletRequest request, HttpServletResponse response) {
         setLanguageCode(request, response);
         return "mobile/index";
