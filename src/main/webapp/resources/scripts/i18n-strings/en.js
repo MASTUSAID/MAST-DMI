@@ -444,6 +444,7 @@ LANGUAGES.en = {
     "reg-province": "Province",
     "reg-district": "District",
     "reg-village": "Village",
+    "reg-commune": "Commune",
     "reg-place": "Place",
     "reg-parcel-num": "Parcel Number",
     "reg-disputes": "Disputes",
