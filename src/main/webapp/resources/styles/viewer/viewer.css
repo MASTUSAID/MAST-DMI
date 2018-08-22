@@ -108,9 +108,9 @@ border:0px;
 }
 
 .loader {
-	left: 200px;
+	left: 450px;
 	position: absolute;
-	top: 104px;
+	top: 102px;
 	z-index: 111;
 }
 

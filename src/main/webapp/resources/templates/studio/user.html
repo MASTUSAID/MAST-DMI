@@ -3,14 +3,14 @@
 
         <div class="topmenu top-alt">
             <a id="user_btnNew" class="btn02"
-               onclick="javascript:CreateEditUser();"><span class="NewBTN">New</span></a>
+               onclick="javascript:CreateEditUser();"><span class="NewBTN" data-i18n="gen-new"></span></a>
 
         </div>
         <div class="topmenu ">
 
             <a id="user_btnSave" class="btn02" onclick="javascript:saveUser();"><span
-                    class="saveBTN">Save</span></a> <a id="user_btnBack" class="btn02"
-                                               onclick="javascript:displayUser();"><span class="BackBTN">Back</span></a>
+                    class="saveBTN" data-i18n="gen-save"></span></a> <a id="user_btnBack" class="btn02"
+                                               onclick="javascript:displayUser();"><span class="BackBTN" data-i18n="gen-back"></span></a>
         </div>
 
         <table id="userTable" class="tablesorter" cellpadding="0"
@@ -25,10 +25,10 @@
                                class="project_table_adjust">
                             <tr>
                                 <td class="project_cell_adjust styleForm"><label
-                                        class="searchLbl">Search:</label>&nbsp; <input
+                                        class="searchLbl" data-i18n="gen-search"></label>&nbsp; <input
                                         id="user_txtSearch" value="" maxlength="30" size="30"
                                         type="text" />
-                                    <button value="Submit" onclick="displayRefreshedUser();">Clear</button>
+                                    <button value="Submit" onclick="displayRefreshedUser();" data-i18n="gen-clear"></button>
                                 </td>
                             </tr>
                         </table>
@@ -37,12 +37,12 @@
                 </tr>
 
                 <tr>
-                    <th>Name</th>
-                    <th>DefaultProject</th>
-                    <th>Email</th>
-                    <th>Role</th>
+                    <th data-i18n="reg-name"></th>
+                    <th data-i18n="viewer-def-proj">t</th>
+                    <th data-i18n="gen-email"></th>
+                    <th data-i18n="gen-role"></th>
 
-                    <th>Reporting To</th>
+                    <th data-i18n="admin-report-to"></th>
 
                     <th class="no-sort">&nbsp;</th>
                     <th class=" no-sort">&nbsp;</th>
@@ -64,18 +64,18 @@
                                         <tr>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/first.png"
-                                                    title="First" class="first" /></td>
+                                                    data-i18n="[title]gen-first" class="first" /></td>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
-                                                    title="Previous" class="prev" /></td>
+                                                    data-i18n="[title]gen-previous" class="prev" /></td>
                                             <td class="cell_adjustone"><input type="text"
                                                                               class="pagedisplay" readonly="readonly" /></td>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/next.png"
-                                                    title="Next" class="next" /></td>
+                                                    data-i18n="[title]gen-next" class="next" /></td>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/last.png"
-                                                    title="Last" class="last" /></td>
+                                                    data-i18n="[title]gen-last" class="last" /></td>
                                             <td class="cell_adjustone"><select class="pagesize">
                                                     <option selected="selected" value="10">10</option>
                                                     <option value="20">20</option>
@@ -95,7 +95,7 @@
 
         <div id="user_accordion">
             <h3>
-                <a href="#">General</a>
+                <a href="#" data-i18n="gen-general"></a>
             </h3>
             <div style="height: 500px;">
                 <table id="userDetails">
@@ -127,10 +127,10 @@
             </td>	
 
             <td align="center">
-            <a href="javascript:CreateEditUser('${id}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
+            <a href="javascript:CreateEditUser('${id}');"><img src="resources/images/studio/edit.png" data-i18n="[title]gen-edit" /></a>
             </td>
             <td align="center">
-            <a href="javascript:deleteUser('${id}','${name}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
+            <a href="javascript:deleteUser('${id}','${name}' );"><img src="resources/images/studio/delete.png" data-i18n="[title]gen-delete" /></a>
             </td>	
             </tr>
         </script>
@@ -138,33 +138,33 @@
         <script id="UserTemplateForm" type="text/x-jquery-tmpl">        
             <table class="styleForm inputint">
             <tr>
-            <td class="labelHeader">Username</td>
+            <td class="labelHeader" data-i18n="login-username"></td>
             <input type="hidden" name="hid_userid" id="hid_userid" value="${id}" /> 
             <td><input type="textbox" name="name" id="name" value="${username}" /></td>
 
-            <td class="labelHeader">Name</td>
+            <td class="labelHeader" data-i18n="reg-name"></td>
             <td><input type="text" name="name_user" id="name_user" value="${name}"/></td>
             </tr>
 
             <tr>
 
-            <td class="labelHeader">Password</td>
+            <td class="labelHeader" data-i18n="login-password"></td>
             <td><input type="password" name="password" id="password" value="${password}"/></td>
 
-            <td class="labelHeader">Confirm Password</td>
+            <td class="labelHeader" data-i18n="login-password-confirm"></td>
             <td><input type="password" name="confirmPassword" id="confirmPassword" value="${password}"/></td>
 
             </tr>
 
             <tr>
-            <td class="labelHeader">Email</td>
+            <td class="labelHeader" data-i18n="gen-email"></td>
             <td><input type="textbox" name="email"  id="email" value="${email}"/></td>
 
 
-            <td class="labelHeader">DefaultProject</td>
+            <td class="labelHeader" data-i18n="viewer-def-proj"></td>
             <td>
             <select name="defaultproject" id="user_defaultproject" >
-            <option  value="">Please Select</option>      
+            <option  value="" data-i18n="gen-please-select"></option>      
             </select>
             </td>
 
@@ -172,7 +172,7 @@
             </tr>
 
             <tr>
-            <td class="labelHeader">PasswordExpires</td>
+            <td class="labelHeader" data-i18n="admin-pass-exp"></td>
             {{if (id)}}
             <td><input type="text"  class="datepicker" name="passwordexpires" id="passwordexpires" value="${passwordexpires}" readonly="readonly"/></td>
             <![CDATA[${$item.addDatePicker()}]]> 
@@ -181,59 +181,59 @@
             <td><input type="text"  class="datepicker" name="passwordexpires" id="passwordexpires" value="Please Select" readonly="readonly"/></td>
             <![CDATA[${$item.addDatePicker()}]]> 
             {{/if}}
-            <td class="labelHeader">Reporting To</td>
+            <td class="labelHeader" data-i18n="admin-report-to"></td>
             <td>
             <select name="manager_name" id="manager_name">
-            <option  value="">Please Select</option> 		
+            <option  value="" data-i18n="gen-please-select"></option> 		
             </select>
             </td>
             </tr>
 
             <tr>
-                <td class="labelHeader">
-                    Mobile number
-                </td>
-                <td>
-                    <input type="textbox" name="mobile"  id="mobile" value="${phone}"/>
-                </td>
-                <td class="labelHeader">
-                    Address
-                </td>
-                <td>
-                    <textarea rows="3" cols="30"  name="address"  id="address" />
-                </td>
+            <td class="labelHeader" data-i18n="reg-mobile-num">
+            
+            </td>
+            <td>
+            <input type="textbox" name="mobile"  id="mobile" value="${phone}"/>
+            </td>
+            <td class="labelHeader" data-i18n="reg-address">
+            
+            </td>
+            <td>
+            <textarea rows="3" cols="30"  name="address"  id="address" />
+            </td>
             </tr>
 
 
             <tr>
-                <td class="labelHeader">
-                    Role
-                </td>
-                <td>
-                    <select name="functionalRole" id="functionalRole">
-                        <option  value="">Please Select</option> 		
-                    </select>
-                </td>
-                <td class="labelHeader">
-                    Active
-                </td>
-                <td>
-                    <select name="user_active" id="user_active">
-                        <option value="false">No</option>	
-                        <option value="true">Yes</option>			
-                    </select>
-                </td>
+            <td class="labelHeader" data-i18n="gen-role">
+            
+            </td>
+            <td>
+            <select name="functionalRole" id="functionalRole">
+            <option  value="" data-i18n="gen-please-select"></option> 		
+            </select>
+            </td>
+            <td class="labelHeader" data-i18n="gen-active">
+            
+            </td>
+            <td>
+            <select name="user_active" id="user_active">
+            <option value="false" data-i18n="gen-no"></option>	
+            <option value="true" data-i18n="gen-yes"></option>			
+            </select>
+            </td>
             </tr>
-       <tr>
-                <td class="labelHeader">
-                    Gender
-                </td>
-                <td>
-                    <select name="user_gender" id="user_gender">
-                        <option  value="">Please Select</option> 		
-                    </select>
-                </td>
-                
+            <tr>
+            <td class="labelHeader" data-i18n="reg-gender">
+            
+            </td>
+            <td>
+            <select name="user_gender" id="user_gender">
+            <option  value="" data-i18n="gen-please-select"></option> 		
+            </select>
+            </td>
+
             </tr>
             </table>
         </script>

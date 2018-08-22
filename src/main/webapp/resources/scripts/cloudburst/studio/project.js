@@ -51,31 +51,33 @@ function displayRefreshedProject() {
             jQuery.get("resources/templates/studio/" + selectedItem + ".html", function (template) {
 
                 jQuery("#projects").append(template);
+                jQuery("#projects").i18n();
                 jQuery('#ProjectFormDiv').css("visibility", "visible");
                 jQuery("#projectDetails").hide();
                 jQuery("#ProjectsRowData").empty();
                 jQuery("#projectTable").show();
                 jQuery("#project_accordion").hide();
                 jQuery("#ProjectTemplate").tmpl(data).appendTo("#ProjectsRowData");
+                $("#ProjectsRowData").i18n();
                 jQuery("#project_btnSave").hide();
                 jQuery("#project_btnBack").hide();
                 jQuery("#project_btnNew").show();
 
-				if(data.length>0){
-                $("#projectTable").tablesorter({
-                    headers: {6: {sorter: false}, 7: {sorter: false}},
-                    debug: false, sortList: [[0, 0]], widgets: ['zebra']})
-                        .tablesorterPager({container: $("#project_pagerDiv"), positionFixed: false})
-                        .tablesorterFilter({filterContainer: $("#project_txtSearch"),
-                            filterColumns: [0],
-                            filterCaseSensitive: false,
-                            filterWaitTime: 1000
-                        });
-						}
+                if (data.length > 0) {
+                    $("#projectTable").tablesorter({
+                        headers: {6: {sorter: false}, 7: {sorter: false}},
+                        debug: false, sortList: [[0, 0]], widgets: ['zebra']})
+                            .tablesorterPager({container: $("#project_pagerDiv"), positionFixed: false})
+                            .tablesorterFilter({filterContainer: $("#project_txtSearch"),
+                                filterColumns: [0],
+                                filterCaseSensitive: false,
+                                filterWaitTime: 1000
+                            });
+                }
             });
         }
     });
-   // GetActiveLayer('default', '');
+    // GetActiveLayer('default', '');
 }
 
 function displayProjectNew() {
@@ -103,7 +105,7 @@ var proj_users = null;
 var proj_baselayer = null;
 var proj_country = null;
 var editableProject;
-var proj_projection=null;
+var proj_projection = null;
 
 var createEditProject = function (_name) {
     checkeditHam = false;
@@ -168,137 +170,140 @@ var createEditProject = function (_name) {
         async: false
     });
 
- 
-     jQuery.ajax({
+
+    jQuery.ajax({
         url: "projectcontry/",
         success: function (userdata) {
-             proj_country = userdata;
-         },
-         async: false
-     });
+            proj_country = userdata;
+        },
+        async: false
+    });
 
 
-	  jQuery.ajax({
+    jQuery.ajax({
         url: "projection/",
         success: function (userdata) {
-             proj_projection = userdata;
-         },
-         async: false
-     });
-	 
+            proj_projection = userdata;
+        },
+        async: false
+    });
 
-	 
+
+
 
     if (_name) {
-        jQuery.ajax({
-            url: "adjudicators/" + _name,
-            success: function (adjudicatorList) {
-                adjList = adjudicatorList;
-            },
-            async: false
-        });
+//        jQuery.ajax({
+//            url: "adjudicators/" + _name,
+//            success: function (adjudicatorList) {
+//                adjList = adjudicatorList;
+//            },
+//            async: false
+//        });
 
 
         //@
-       /* jQuery.ajax({
-            url: "hamlet/" + _name,
-            success: function (lsthamlet) {
-                hamletList = lsthamlet;
-            },
-            async: false
-        });
-*/
+        /* jQuery.ajax({
+         url: "hamlet/" + _name,
+         success: function (lsthamlet) {
+         hamletList = lsthamlet;
+         },
+         async: false
+         });
+         */
         jQuery('#name').attr('readonly', true);
         jQuery.ajax({
             url: selectedItem + "/" + _name,
             async: false,
             success: function (data) {
-               
-			   // sortedLyrGroup = new Array(proj_layerGroup.length);
+
+                // sortedLyrGroup = new Array(proj_layerGroup.length);
                 // selectedLyrGroups = data.projectLayergroups;
                 // var _i;
                 // for (_i = 0; _i < selectedLyrGroups.length; _i++) {
-                    // for (_j = 0; _j < proj_layerGroup.length; _j++) {
-                        // if (selectedLyrGroups[_i].layergroups.name == proj_layerGroup[_j].name) {
-                            // sortedLyrGroup[_i] = proj_layerGroup[_j];
-                            // proj_layerGroup.splice(_j, 1);
-                            // break;
-                        // }
-                    // }
+                // for (_j = 0; _j < proj_layerGroup.length; _j++) {
+                // if (selectedLyrGroups[_i].layergroups.name == proj_layerGroup[_j].name) {
+                // sortedLyrGroup[_i] = proj_layerGroup[_j];
+                // proj_layerGroup.splice(_j, 1);
+                // break;
+                // }
+                // }
                 // }
 
                 // for (_k = 0; _k < proj_layerGroup.length; _k++, _i++) {
-                    // sortedLyrGroup[_i] = proj_layerGroup[_k];
+                // sortedLyrGroup[_i] = proj_layerGroup[_k];
                 // }
 
-				
+
                 jQuery("#ProjectTemplateForm").tmpl(data, {}).appendTo("#projectGeneralBody");
+                $("#projectGeneralBody").i18n();
                 jQuery("#projectConfigurationTemplate").tmpl(data, {}).appendTo("#projectConfigurationBody");
-			    jQuery("#projectLayergroupBody").empty();
+                $("#projectConfigurationBody").i18n();
+                jQuery("#projectLayergroupBody").empty();
                 jQuery("#ProjectTemplateLayergroup").tmpl(proj_layerGroup, {}).appendTo("#projectLayergroupBody");
                 jQuery("#projectBaselayerBody").empty();
                 jQuery("#ProjectTemplateBaselayer").tmpl(proj_baselayer, {}).appendTo("#projectBaselayerBody");
-				
-				jQuery("#ProjectTemplateDisclaimer").tmpl(data, {}).appendTo("#projectDisclaimerBody");
+
+                jQuery("#ProjectTemplateDisclaimer").tmpl(data, {}).appendTo("#projectDisclaimerBody");
+                $("#projectDisclaimerBody").i18n();
                 jQuery("#projectUserList").empty();
                 jQuery("#ProjectTemplateUser").tmpl(userroledata).appendTo("#projectUserList");
-				
-               
-                jQuery.each(proj_country, function (i, value) {
-                  jQuery("#countryId").append(jQuery("<option></option>").attr("value", value.hierarchyid).text(value.name));
-               });
-				
-		        jQuery.each(proj_units, function (i, value) {
-					jQuery("#project_unit").append(jQuery("<option></option>").attr("value", value.unitid).text(value.unitEn));
-				});
 
-				jQuery.each(proj_formats, function (i, value) {
-					jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.documentformatid).text(value.documentformatEn));
-				});
-				
-				 jQuery.each(proj_projection, function (i, value) {
-					 jQuery("#projection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
-					 jQuery("#displayProjection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
-				 });
-				 
-		  		 
-		         jQuery("#project_outputFormat").val(data.outputformat.documentformatid);
-				 jQuery("#project_unit").val(data.unit.unitid);
-                 jQuery("#projection_code").val(data.projection.projectionid);
-				 jQuery("#displayProjection_code").val(data.projection.projectionid);
-               
-				 
-				jQuery("#hid_idseq").val(data.projectnameid);
+
+                jQuery.each(proj_country, function (i, value) {
+                    jQuery("#countryId").append(jQuery("<option></option>").attr("value", value.hierarchyid).text(value.name));
+                });
+
+                jQuery.each(proj_units, function (i, value) {
+                    jQuery("#project_unit").append(jQuery("<option></option>").attr("value", value.unitid).text(value.unitEn));
+                });
+
+                jQuery.each(proj_formats, function (i, value) {
+                    jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.documentformatid).text(value.documentformatEn));
+                });
+
+                jQuery.each(proj_projection, function (i, value) {
+                    jQuery("#projection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
+                    jQuery("#displayProjection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
+                });
+
+
+                jQuery("#project_outputFormat").val(data.outputformat.documentformatid);
+                jQuery("#project_unit").val(data.unit.unitid);
+                jQuery("#projection_code").val(data.projection.projectionid);
+                jQuery("#displayProjection_code").val(data.projection.projectionid);
+
+
+                jQuery("#hid_idseq").val(data.projectnameid);
 
                 if (data.projectArea.length > 0) {
-				   
-					if(data.projectArea[0].laSpatialunitgroupHierarchy1!=null){
-						jQuery("#countryId").val(data.projectArea[0].laSpatialunitgroupHierarchy1.hierarchyid);
-					    getRegionOnCountryChange(data.projectArea[0].laSpatialunitgroupHierarchy1.hierarchyid);
-                        }
+
+                    if (data.projectArea[0].laSpatialunitgroupHierarchy1 != null) {
+                        jQuery("#countryId").val(data.projectArea[0].laSpatialunitgroupHierarchy1.hierarchyid);
+                        getRegionOnCountryChange(data.projectArea[0].laSpatialunitgroupHierarchy1.hierarchyid);
+                    }
                     jQuery("#hid_id").val(data.projectArea[0].projectareaid);
-					
-                    if(data.projectArea[0].laSpatialunitgroupHierarchy2!=null){
-                    jQuery("#regionId").val(data.projectArea[0].laSpatialunitgroupHierarchy2.hierarchyid);
-					getDistrictOnRegionChange(data.projectArea[0].laSpatialunitgroupHierarchy2.hierarchyid)
-					}
-					
-					if(data.projectArea[0].laSpatialunitgroupHierarchy3!=null){
-                    jQuery("#districtId").val(data.projectArea[0].laSpatialunitgroupHierarchy3.hierarchyid);
-					getCommuneOnProvinceChange(data.projectArea[0].laSpatialunitgroupHierarchy3.hierarchyid)
-					}
-                   
-				   if(data.projectArea[0].laSpatialunitgroupHierarchy4!=null){
-                    jQuery("#CommuneId").val(data.projectArea[0].laSpatialunitgroupHierarchy4.hierarchyid);
-					getHamletOnVillageChange(data.projectArea[0].laSpatialunitgroupHierarchy4.hierarchyid)
-					}
-					
-					
-					if(data.projectArea[0].laSpatialunitgroupHierarchy5!=null){
-                    jQuery("#placeId").val(data.projectArea[0].laSpatialunitgroupHierarchy5.hierarchyid);
-					}
-					
-					
+
+                    if (data.projectArea[0].laSpatialunitgroupHierarchy2 != null) {
+                        jQuery("#regionId").val(data.projectArea[0].laSpatialunitgroupHierarchy2.hierarchyid);
+                        getDistrictOnRegionChange(data.projectArea[0].laSpatialunitgroupHierarchy2.hierarchyid)
+                    }
+
+                    if (data.projectArea[0].laSpatialunitgroupHierarchy3 != null) {
+                        jQuery("#districtId").val(data.projectArea[0].laSpatialunitgroupHierarchy3.hierarchyid);
+                        getCommuneOnProvinceChange(data.projectArea[0].laSpatialunitgroupHierarchy3.hierarchyid)
+                    }
+
+                    if (data.projectArea[0].laSpatialunitgroupHierarchy4 != null) {
+                        jQuery("#CommuneId").val(data.projectArea[0].laSpatialunitgroupHierarchy4.hierarchyid);
+                        getHamletOnVillageChange(data.projectArea[0].laSpatialunitgroupHierarchy4.hierarchyid)
+                    }
+
+
+                    if (data.projectArea[0].laSpatialunitgroupHierarchy5 != null) {
+                        jQuery("#placeId").val(data.projectArea[0].laSpatialunitgroupHierarchy5.hierarchyid);
+                    }
+
+
                     jQuery("#villagechairmanId").val(data.projectArea[0].authorizedmember);
                     showSignature("SignatureVillageChairman", data.projectArea[0].authorizedmembersignature);
                     showSignature("SignatureVillageExecutive", data.projectArea[0].executiveofficersignature);
@@ -311,30 +316,30 @@ var createEditProject = function (_name) {
                 }
 
 
-               // populateAdjudicators();
+                // populateAdjudicators();
 
-               /* if (hamletList.length > 0)
-                {
-                    checkHamletEdit = true;
-                    hamletDetails = [];
-                    for (var i = 0; i < hamletList.length; i++) {
-                        HamletName = hamletList[i].hamletName;
-                        HamletAlias = hamletList[i].hamletNameSecondLanguage;
-                        HamletCode = hamletList[i].hamletCode;
-                        hamletLeaderName = hamletList[i].hamletLeaderName;
-                        hamletDetails.push(HamletName);
-                        hamletDetails.push(HamletAlias);
-                        hamletDetails.push(HamletCode);
-                        hamletDetails.push(hamletLeaderName);
-                    }
-                    addHamlet('new');
-                }*/
+                /* if (hamletList.length > 0)
+                 {
+                 checkHamletEdit = true;
+                 hamletDetails = [];
+                 for (var i = 0; i < hamletList.length; i++) {
+                 HamletName = hamletList[i].hamletName;
+                 HamletAlias = hamletList[i].hamletNameSecondLanguage;
+                 HamletCode = hamletList[i].hamletCode;
+                 hamletLeaderName = hamletList[i].hamletLeaderName;
+                 hamletDetails.push(HamletName);
+                 hamletDetails.push(HamletAlias);
+                 hamletDetails.push(HamletCode);
+                 hamletDetails.push(hamletLeaderName);
+                 }
+                 addHamlet('new');
+                 }*/
 
                 jQuery('#name').attr('readonly', true);
 
                 $('[class^="tr-"]').hide();
 
-             
+
 
                 if (data.disclaimer != null && data.disclaimer != "") {
                     jQuery("#chkDisclaimer").attr('checked', true);
@@ -348,62 +353,62 @@ var createEditProject = function (_name) {
 
                 // var layergrouporder = {};
                 // jQuery.each(data.projectLayergroups, function (i, layergroupList) {
-                    // layergrouporder[layergroupList.grouporder] = layergroupList.layergroups.name;
+                // layergrouporder[layergroupList.grouporder] = layergroupList.layergroups.name;
                 // });
 
-				
+
                 // for (var i = 1; i <= data.projectLayergroups.length; i++) {
-                    // jQuery("#addedLayerGroupList").append(jQuery("<option></option>").attr("value", layergrouporder[i]).text(layergrouporder[i]));
-                    // jQuery("#layerGroupList option[value=" + layergrouporder[i] + "]").remove();
+                // jQuery("#addedLayerGroupList").append(jQuery("<option></option>").attr("value", layergrouporder[i]).text(layergrouporder[i]));
+                // jQuery("#layerGroupList option[value=" + layergrouporder[i] + "]").remove();
                 // }
-                
-				$.each(data.projectLayergroups, function (i, ob) {
-						$.each(ob, function (ind, obj) {
-							if(ind=="layergroupBean"){
-								$.each(obj, function (ind1, obj1) {
-									if(ind1!="layerLayergroups" && ind1=="layergroupid"){
-										 jQuery("#" + obj1).attr('checked', true);
-										 
-									}
-								
-								});
-							}
-							
-						});
-					});
+
+                $.each(data.projectLayergroups, function (i, ob) {
+                    $.each(ob, function (ind, obj) {
+                        if (ind == "layergroupBean") {
+                            $.each(obj, function (ind1, obj1) {
+                                if (ind1 != "layerLayergroups" && ind1 == "layergroupid") {
+                                    jQuery("#" + obj1).attr('checked', true);
+
+                                }
+
+                            });
+                        }
+
+                    });
+                });
 
                 if (data.projectBaselayers.length > 0) {
 
-                 for (_i = 0; _i < data.projectBaselayers.length; _i++) {				
-						if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("Google_") > -1) {
-							populatebaselayer('Google', data);
-						} else if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("Bing") > -1) {
-							populatebaselayer('Bing', data);
-						} else if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("Open_") > -1) {
-							populatebaselayer('Open', data);
-						} else if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("MapQuest") > -1) {
-							populatebaselayer('MapQuest', data);
-						}
-			         }
-					
+                    for (_i = 0; _i < data.projectBaselayers.length; _i++) {
+                        if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("Google_") > -1) {
+                            populatebaselayer('Google', data);
+                        } else if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("Bing") > -1) {
+                            populatebaselayer('Bing', data);
+                        } else if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("Open_") > -1) {
+                            populatebaselayer('Open', data);
+                        } else if (data.projectBaselayers[_i].baselayers.baselayerEn.indexOf("MapQuest") > -1) {
+                            populatebaselayer('MapQuest', data);
+                        }
+                    }
+
                 } else {
                     populatebaselayer('Google', '');
                 }
 
-				$.each(data.projectBaselayers, function (i, ob) {
-						$.each(ob, function (ind, obj) {
-							if(ind=="baselayers"){
-								$.each(obj, function (ind1, obj1) {
-									if( ind1=="baselayerid"){
-										 jQuery("#" + obj1).attr('checked', true);
-									}
-								
-								});
-							}
-							
-						});
-					});
-               // GetActiveLayer('default', '');
+                $.each(data.projectBaselayers, function (i, ob) {
+                    $.each(ob, function (ind, obj) {
+                        if (ind == "baselayers") {
+                            $.each(obj, function (ind1, obj1) {
+                                if (ind1 == "baselayerid") {
+                                    jQuery("#" + obj1).attr('checked', true);
+                                }
+
+                            });
+                        }
+
+                    });
+                });
+                // GetActiveLayer('default', '');
 
                 //Setting activelayer and Overview layer
                 $('#activelayer').val(data.activelayer);
@@ -426,10 +431,12 @@ var createEditProject = function (_name) {
         });
     } else {
         jQuery("#ProjectTemplateForm").tmpl(null, {}).appendTo("#projectGeneralBody");
+        $("#projectGeneralBody").i18n();
         jQuery("#ProjectTemplateLayergroup").tmpl(null, {}).appendTo("#projectLayergroupBody");
         jQuery("#projectConfigurationTemplate").tmpl(null, {}).appendTo("#projectConfigurationBody");
+        $("#projectConfigurationBody").i18n();
         jQuery("#ProjectTemplateDisclaimer").tmpl(null, {}).appendTo("#projectDisclaimerBody");
-
+        $("#projectDisclaimerBody").i18n();
         // add value for project configuration end 
         jQuery("#projectLayergroupBody").empty();
         jQuery("#ProjectTemplateLayergroup").tmpl(proj_layerGroup, {}).appendTo("#projectLayergroupBody");
@@ -445,13 +452,13 @@ var createEditProject = function (_name) {
         jQuery("#ProjectTemplateUser").tmpl(userroledata).appendTo("#projectUserList");
         jQuery('#name').removeAttr('readonly');
         jQuery('#numzoomlevels').val(18);
-       
-	   
-         jQuery.each(proj_country, function (i, value) {
-             jQuery("#countryId").append(jQuery("<option></option>").attr("value", value.hierarchyid).text(value.name));
-         });
-		
-		  
+
+
+        jQuery.each(proj_country, function (i, value) {
+            jQuery("#countryId").append(jQuery("<option></option>").attr("value", value.hierarchyid).text(value.name));
+        });
+
+
         jQuery.each(proj_units, function (i, value) {
             jQuery("#project_unit").append(jQuery("<option></option>").attr("value", value.unitid).text(value.unitEn));
         });
@@ -459,14 +466,14 @@ var createEditProject = function (_name) {
         jQuery.each(proj_formats, function (i, value) {
             jQuery("#project_outputFormat").append(jQuery("<option></option>").attr("value", value.documentformatid).text(value.documentformatEn));
         });
-		
-		 jQuery.each(proj_projection, function (i, value) {
-             jQuery("#projection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
-			 jQuery("#displayProjection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
-         });
-		
-		
-       // jQuery("#temporaryAdjDiv").empty();
+
+        jQuery.each(proj_projection, function (i, value) {
+            jQuery("#projection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
+            jQuery("#displayProjection_code").append(jQuery("<option></option>").attr("value", value.projectionid).text(value.projection));
+        });
+
+
+        // jQuery("#temporaryAdjDiv").empty();
         //jQuery("#temporaryHamletDiv").empty();
     }
 
@@ -517,8 +524,8 @@ function GetActiveLayer(type, selectedGroup) {
             url: "layergroupName/" + selectedGroup + "?" + token,
             async: false,
             success: function (data) {
-				//for (var j = 0; j < data[0].layers.length; j++) {
-                for (var j = 0; j < data[0].layerLayergroups.length; j++) {       
+                //for (var j = 0; j < data[0].layers.length; j++) {
+                for (var j = 0; j < data[0].layerLayergroups.length; j++) {
                     if (type == 'add') {
                         jQuery('#activelayer').empty();
                         jQuery('#overlaymap').empty();
@@ -537,8 +544,8 @@ function GetActiveLayer(type, selectedGroup) {
         jQuery('#activelayer').empty();
         jQuery('#overlaymap').empty();
 
-        jQuery('#activelayer').append(jQuery("<option></option>").attr("value", '').text('Please Select'));
-        jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", '').text('Please Select'));
+        jQuery('#activelayer').append(jQuery("<option></option>").attr("value", '').text($.i18n("gen-please-select")));
+        jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", '').text($.i18n("gen-please-select")));
 
         $('#projectLayergroupBody input[type="checkbox"]:checked').each(function () {
             var lyrGrp = $(this).val();
@@ -546,28 +553,28 @@ function GetActiveLayer(type, selectedGroup) {
                 url: "layergroupName/" + lyrGrp + "?" + token,
                 async: false,
                 success: function (data) {
-					if(data.length>0)
-					{
-						$.each(data, function (i, ob) {
-						$.each(ob, function (ind, obj) {
-							if(ind=="layerLayergroups"){
-								$.each(obj, function (ind1, obj1) {
-									if( ind1=="layers"){
-										$.each(obj1, function (ind2, obj2) {
-											if( ind1=="alias"){
-											 jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", obj2).text(obj2));
-											}
-										});	
-									}
-								
-								});
-							}
-							
-						});
-					});
-					}
-					
-					
+                    if (data.length > 0)
+                    {
+                        $.each(data, function (i, ob) {
+                            $.each(ob, function (ind, obj) {
+                                if (ind == "layerLayergroups") {
+                                    $.each(obj, function (ind1, obj1) {
+                                        if (ind1 == "layers") {
+                                            $.each(obj1, function (ind2, obj2) {
+                                                if (ind1 == "alias") {
+                                                    jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", obj2).text(obj2));
+                                                }
+                                            });
+                                        }
+
+                                    });
+                                }
+
+                            });
+                        });
+                    }
+
+
                 }
             });
         });
@@ -586,8 +593,8 @@ function GetActiveLayer(type, selectedGroup) {
     jQuery('#activelayer').empty();
     jQuery('#overlaymap').empty();
 
-    jQuery('#activelayer').append(jQuery("<option></option>").attr("value", '').text('Please Select'));
-    jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", '').text('Please Select'));
+    jQuery('#activelayer').append(jQuery("<option></option>").attr("value", '').text($.i18n("gen-please-select")));
+    jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", '').text($.i18n("gen-please-select")));
 
     for (var i = 0; i < optVals.length; i++) {
         var lyrGrp = optVals[i];
@@ -596,12 +603,12 @@ function GetActiveLayer(type, selectedGroup) {
             async: false,
             success: function (data) {
                 //for (var j = 0; j < data[0].layers.length; j++)
-					//layers[j].layer
-					
-			    for (var j = 0; j < data[0].layerLayergroups.length; j++)
-				{
-						
-						//jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", data[0].layerLayergroups[j].layers.alias).text(data[0].layerLayergroups[j].layers.alias));
+                //layers[j].layer
+
+                for (var j = 0; j < data[0].layerLayergroups.length; j++)
+                {
+
+                    //jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", data[0].layerLayergroups[j].layers.alias).text(data[0].layerLayergroups[j].layers.alias));
                     jQuery('#activelayer').append(jQuery("<option></option>").attr("value", data[0].layerLayergroups[j].layers.alias).text(data[0].layerLayergroups[j].layers.alias));
                     jQuery('#overlaymap').append(jQuery("<option></option>").attr("value", data[0].layerLayergroups[j].layers.alias).text(data[0].layerLayergroups[j].layers.alias));
                 }
@@ -617,23 +624,23 @@ var saveProjectData = function () {
         data: jQuery("#projectForm").serialize(),
         success: function (result) {
             if (result == 'ProjectAdded') {
-                jAlert('Data Successfully Saved', 'Project');
-				//return false;
+                jAlert($.i18n("gen-data-saved"), $.i18n("gen-info"));
+                //return false;
                 displayRefreshedProject();
             }
 
             if (result == 'DuplicateName') {
-                jAlert('Project Name already Exists', 'Project');
+                jAlert($.i18n("err-proj-exists"), $.i18n("err-alert"));
             }
 
             if (result == 'EnterName') {
-                jAlert('Please Enter Project Name', 'Project');
+                jAlert($.i18n("err-enter-proj-name"), $.i18n("err-alert"));
             }
 
             if (result == 'false') {
-                jAlert('Error in Saving Data', 'Project');
-				//return false;
-               displayRefreshedProject();
+                jAlert($.i18n("err-not-saved"), $.i18n("err-alert"));
+                //return false;
+                displayRefreshedProject();
             }
 
         },
@@ -653,7 +660,7 @@ var saveProject = function () {
             "name": "required",
             "activelayer": "required",
             "projection_code": "required",
-			"displayProjection_code":"required",
+            "displayProjection_code": "required",
             "project_unit": "required",
             "maxextent": "required",
             "minextent": "required",
@@ -666,92 +673,92 @@ var saveProject = function () {
             "project_outputFormat": "required",
             "overlaymap": "required",
             "countryId": "required",
-			 "regionId":"required",
-			 "districtId":"required",
-			 "CommuneId":"required",
-			 "regioncode": "required"
+            "regionId": "required",
+            "districtId": "required",
+            "CommuneId": "required",
+            "regioncode": "required"
         },
         messages: {
-            "name": "Please Enter Name",
-            "projection_code": "Please enter  Projection ",
-			"displayProjection_code": "Please enter Display Projection ",
-            "project_unit": "Please Select  Unit ",
-            "maxextent": "Please Enter  MaxExtent",
-            "minextent": "Please Enter  MinExtent",
-            "restrictedextent": "Please Enter  RestrictedExtent ",
+            "name": $.i18n("err-enter-name"),
+            "projection_code": $.i18n("err-enter-proj"),
+            "displayProjection_code": $.i18n("err-enter-display-proj"),
+            "project_unit": $.i18n("err-select-layer-unit"),
+            "maxextent": $.i18n("err-enter-max-ext"),
+            "minextent": $.i18n("err-enter-min-ext"),
+            "restrictedextent": $.i18n("err-enter-restr-ext"),
             "numzoomlevels": {
-                required: "Please Enter NumZoomLevels",
-                digits: "Please Enter a valid number.  "
+                required: $.i18n("err-enter-zoom-levels"),
+                digits: $.i18n("err-enter-valid-num")
             },
-            "displayProjection.code": "Please Enter  DisplayProjection  ",
-            "project_outputFormat": "Please Enter  OutputFormat  ",
-            "activelayer": "Please Select Active Layer",
-            "overlaymap": "Please Select Overview Layer",
-            "countryId": "Please Select Country Name",
-			"regionId": "Please Select Region Name",
-			"districtId":"Please Select Province Name",
-			"CommuneId":"Please Select Commune Name",
-            "regioncode": "Please enter Region Code"
+            "displayProjection.code": $.i18n("err-enter-display-proj"),
+            "project_outputFormat": $.i18n("err-enter-out-format"),
+            "activelayer": $.i18n("err-select-active-layer"),
+            "overlaymap": $.i18n("err-select-overview-layer"),
+            "countryId": $.i18n("err-select-country"),
+            "regionId": $.i18n("err-select-region"),
+            "districtId": $.i18n("err-select-province"),
+            "CommuneId": $.i18n("err-select-commune"),
+            "regioncode": $.i18n("err-enter-region-code")
         }
     });
 
     if ($("#projectForm").valid()) {
-		
+
         // if (adjList.length >= 2) {
-            // if (!$('#temporaryHamletDiv').is(':empty')) {
-                // if (jQuery('#active').val() == "") {
-                    // jQuery('#active').val("false");
-                // }
-
-                // if (jQuery('#cosmetic').val() == "") {
-                    // jQuery('#cosmetic').val("false");
-                // }
-
-                // if ($("#chkDisclaimer").attr('checked')) {
-                    // if (!$('#Disclaimer').val()) {
-                        // jAlert('Enter Disclaimer ', 'Project');
-                        // return;
-                    // }
-                // }
-
-                // if (!jQuery("#chkDisclaimer").attr('checked')) {
-                    // $('#Disclaimer').val("");
-                // }
-
-                // if (jQuery('#addedLayerGroupList option').size() > 0) {
-                    // jQuery("#addedLayerGroupList option").attr("selected", "selected");
-                    // saveProjectData();
-                // }
-
-                // if ($('.userCheckbox').filter(":checked").length > 0) {
-                    // saveProjectData();
-                // } else {
-                    // jAlert('Select atleast one user Form Assign user section ', 'Project');
-                // }
-            // } else {
-                // jAlert("Add atleast one hamlet");
-            // }
-        // } else {
-            // jAlert("Add atleast two adjudicator");
-            // checkAdjEdit = true;
+        // if (!$('#temporaryHamletDiv').is(':empty')) {
+        // if (jQuery('#active').val() == "") {
+        // jQuery('#active').val("false");
         // }
-    	
-    	saveProjectData();
-		
+
+        // if (jQuery('#cosmetic').val() == "") {
+        // jQuery('#cosmetic').val("false");
+        // }
+
+        // if ($("#chkDisclaimer").attr('checked')) {
+        // if (!$('#Disclaimer').val()) {
+        // jAlert('Enter Disclaimer ', 'Project');
+        // return;
+        // }
+        // }
+
+        // if (!jQuery("#chkDisclaimer").attr('checked')) {
+        // $('#Disclaimer').val("");
+        // }
+
+        // if (jQuery('#addedLayerGroupList option').size() > 0) {
+        // jQuery("#addedLayerGroupList option").attr("selected", "selected");
+        // saveProjectData();
+        // }
+
+        // if ($('.userCheckbox').filter(":checked").length > 0) {
+        // saveProjectData();
+        // } else {
+        // jAlert('Select atleast one user Form Assign user section ', 'Project');
+        // }
+        // } else {
+        // jAlert("Add atleast one hamlet");
+        // }
+        // } else {
+        // jAlert("Add atleast two adjudicator");
+        // checkAdjEdit = true;
+        // }
+
+        saveProjectData();
+
     }
     if (!$("#projectForm").valid() == true) {
-        jAlert('Please Fill details in All Tabs', 'Project');
+        jAlert($.i18n("err-fill-details-intabs"), $.i18n("err-alert"));
     }
 };
 
-var deleteProject = function (_projectName,_projectId) {
+var deleteProject = function (_projectName, _projectId) {
 
-    jConfirm('Are You Sure You Want To Delete : <strong>' + _projectName + '</strong>', 'Delete Confirmation', function (response) {
+    jConfirm($.i18n("viewer-confirm-delete-object", _projectName), $.i18n("gen-confirm-delete"), function (response) {
         if (response) {
             jQuery.ajax({
                 url: "project/delete/" + _projectId + "?" + token,
                 success: function () {
-                    jAlert('Data Successfully Deleted', 'Project');
+                    jAlert($.i18n("gen-data-saved"), $.i18n("gen-info"));
                     //back to the list page 
                     displayRefreshedProject();
                 },
@@ -870,22 +877,22 @@ function manageProjLink(_this) {
 }
 
 function getRegionOnCountryChange(id) {
-	
-		$("#districtId").empty();
-		jQuery("#districtId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
-		$("#CommuneId").empty();
-		jQuery("#CommuneId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
-		$("#placeId").empty();
-		jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
-		$("#regionId").empty();
-	    jQuery("#regionId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
+
+    $("#districtId").empty();
+    jQuery("#districtId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+    $("#CommuneId").empty();
+    jQuery("#CommuneId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+    $("#placeId").empty();
+    jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+    $("#regionId").empty();
+    jQuery("#regionId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
 
     if (id != '') {
-		jQuery.ajax({
+        jQuery.ajax({
             url: "projectregion/" + id,
             async: false,
             success: function (regiondata) {
@@ -896,26 +903,26 @@ function getRegionOnCountryChange(id) {
             }
         });
     }
-	
-    
+
+
 
 }
 
 function getDistrictOnRegionChange(id) {
-	
-		$("#CommuneId").empty();
-		jQuery("#CommuneId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
-		$("#placeId").empty();
-		jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
-	    $("#districtId").empty();
-	    jQuery("#districtId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-	
-	
-		
+
+    $("#CommuneId").empty();
+    jQuery("#CommuneId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+    $("#placeId").empty();
+    jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+    $("#districtId").empty();
+    jQuery("#districtId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+
+
     if (id != '') {
-	
+
         jQuery.ajax({
             url: "projectdistrict/" + id,
             async: false,
@@ -927,25 +934,25 @@ function getDistrictOnRegionChange(id) {
             }
         });
     }
-	
-	
-	}
-	
-	
-	
+
+
+}
+
+
+
 function getCommuneOnProvinceChange(id) {
-	
-	$("#CommuneId").empty();
-	jQuery("#CommuneId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-	
-	$("#placeId").empty();
-    jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
-		
-		
+
+    $("#CommuneId").empty();
+    jQuery("#CommuneId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+    $("#placeId").empty();
+    jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
+
+
     if (id != '') {
-		
-		
+
+
         jQuery.ajax({
             url: "projectvillage/" + id,
             async: false,
@@ -957,16 +964,16 @@ function getCommuneOnProvinceChange(id) {
             }
         });
     }
-	
-	
-	}
-	function getHamletOnVillageChange(id) {
-		
-	$("#placeId").empty();
-	jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text("Select"));
-		
+
+
+}
+function getHamletOnVillageChange(id) {
+
+    $("#placeId").empty();
+    jQuery("#placeId").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
+
     if (id != '') {
-		
+
         jQuery.ajax({
             url: "projecthamlet/" + id,
             async: false,
@@ -978,11 +985,11 @@ function getCommuneOnProvinceChange(id) {
             }
         });
     }
-	
-	
-	}
-	
-	
+
+
+}
+
+
 function addTempAdjudicator(id) {
     adjudicatorDialog = $("#adjudicator-dialog-form").dialog({
         autoOpen: false,
@@ -1006,292 +1013,292 @@ function addTempAdjudicator(id) {
 }
 
 // function addPersonAdjudicator(id) {
-	 // if (adjList === "")  {
-        // adjList = [];
-    // }
+// if (adjList === "")  {
+// adjList = [];
+// }
 
-    // adjName = $('#adjudicator_name').val();
-    // if (id === 'new') {
-        // // Add new adjudicator
-    	// adjList.push({adjudicatorName: adjName, id: 0 - adjList.length, signaturePath: '', projectName: ''});
-    // } else {
-        // // Update
-        // adjList[id].adjudicatorName = adjName;
-    // }
+// adjName = $('#adjudicator_name').val();
+// if (id === 'new') {
+// // Add new adjudicator
+// adjList.push({adjudicatorName: adjName, id: 0 - adjList.length, signaturePath: '', projectName: ''});
+// } else {
+// // Update
+// adjList[id].adjudicatorName = adjName;
+// }
 
-    // populateAdjudicators();
+// populateAdjudicators();
 // }
 
 // function populateAdjudicators() {
-    // jQuery("#temporaryAdjDiv").empty();
-    // var content1 = "";
-    // for (var i = 0; i < adjList.length; i++) {
-        // content = '<tr><td><label>' + "" + adjList[i].adjudicatorName + "" + '</label>' +
-                // '<input type="hidden" name="project_adjudicatorhid" id= "project_adjudicatorhid" value="' + adjList[i].adjudicatorName + '"> ' + '</td>';
-        // content += '<td><img src="" id="imgSignatureAdjudicator' + i + '" alt="Signature" class="signatureImage" />' +
-                // '<a href="#" id="linkDeleteSignatureAdjudicator' + i + '" class="deleteLink" onclick="deleteSignature(\'SignatureAdjudicator' + i + '\')" style="margin-left: 10px;display: none;">' +
-                // '<i class="fa fa-times"></i> Delete</a>' +
-                // '<a href="#" id="linkAddSignatureAdjudicator' + i + '" class="addLink" onclick="uploadSignature(\'SignatureAdjudicator' + i + '\')">' +
-                // '<i class="fa fa-plus"></i> Add</a>' +
-                // '<input type="hidden" id="hSignatureAdjudicator' + i + '" name="hSignatureAdjudicator" /></td>';
-        // content += '<td align="center">' + '<div><a href ="#" title="Edit" onclick="javascript:addTempAdjudicator(' + i + ');"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
-        // content += '<td align="center">' + '<div><a href="javascript:deleteAdjudicator(' + i + ');"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
-        // content1 = content1 + content;
-    // }
-    
-    // if (adjList.length > 0) {
-        // jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Signature</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>" + content1 + "</table>");
-        // for (var i = 0; i < adjList.length; i++) {
-            // showSignature("SignatureAdjudicator" + i, adjList[i].signaturePath);
-            // $("#hSignatureAdjudicator" + i).change({ind: i}, function (event) {
-                // var hId = $(this).attr('id');
-                // //hId = hId.substr();
-                // adjList[event.data.ind].signaturePath = $("#hSignatureAdjudicator" + event.data.ind).val();
-            // });
-        // }
-    // }
+// jQuery("#temporaryAdjDiv").empty();
+// var content1 = "";
+// for (var i = 0; i < adjList.length; i++) {
+// content = '<tr><td><label>' + "" + adjList[i].adjudicatorName + "" + '</label>' +
+// '<input type="hidden" name="project_adjudicatorhid" id= "project_adjudicatorhid" value="' + adjList[i].adjudicatorName + '"> ' + '</td>';
+// content += '<td><img src="" id="imgSignatureAdjudicator' + i + '" alt="Signature" class="signatureImage" />' +
+// '<a href="#" id="linkDeleteSignatureAdjudicator' + i + '" class="deleteLink" onclick="deleteSignature(\'SignatureAdjudicator' + i + '\')" style="margin-left: 10px;display: none;">' +
+// '<i class="fa fa-times"></i> Delete</a>' +
+// '<a href="#" id="linkAddSignatureAdjudicator' + i + '" class="addLink" onclick="uploadSignature(\'SignatureAdjudicator' + i + '\')">' +
+// '<i class="fa fa-plus"></i> Add</a>' +
+// '<input type="hidden" id="hSignatureAdjudicator' + i + '" name="hSignatureAdjudicator" /></td>';
+// content += '<td align="center">' + '<div><a href ="#" title="Edit" onclick="javascript:addTempAdjudicator(' + i + ');"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
+// content += '<td align="center">' + '<div><a href="javascript:deleteAdjudicator(' + i + ');"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+// content1 = content1 + content;
+// }
+
+// if (adjList.length > 0) {
+// jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Signature</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>" + content1 + "</table>");
+// for (var i = 0; i < adjList.length; i++) {
+// showSignature("SignatureAdjudicator" + i, adjList[i].signaturePath);
+// $("#hSignatureAdjudicator" + i).change({ind: i}, function (event) {
+// var hId = $(this).attr('id');
+// //hId = hId.substr();
+// adjList[event.data.ind].signaturePath = $("#hSignatureAdjudicator" + event.data.ind).val();
+// });
+// }
+// }
 // }
 
 
 // function deleteAdjudicator(id) {
-    // jConfirm('Are You Sure You Want To Delete : <strong>' + "adjudicator" + '</strong>', 'Delete Confirmation', function (response) {
-        // if (response) {
-            // adjList = $.grep(adjList, function (item, index) {
-                // return id !== index;
-            // });
-            // populateAdjudicators();
-            // if (adjList.length > 0)
-                // jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>" + content1 + "</table>");
-            // jAlert("Data deleted successfully", "Delete");
-        // }
-    // });
+// jConfirm('Are You Sure You Want To Delete : <strong>' + "adjudicator" + '</strong>', 'Delete Confirmation', function (response) {
+// if (response) {
+// adjList = $.grep(adjList, function (item, index) {
+// return id !== index;
+// });
+// populateAdjudicators();
+// if (adjList.length > 0)
+// jQuery("#temporaryAdjDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Adjudicator Name</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>" + content1 + "</table>");
+// jAlert("Data deleted successfully", "Delete");
+// }
+// });
 // }
 
 // function validateAdjudicator(id) {
-    // $("#adjudicatorformID").validate({
-        // rules: {
-            // adjudicator_name: "required",
-        // },
-        // messages: {
-            // adjudicator_name: "Please enter Adjudicator Name",
-        // }
-    // });
+// $("#adjudicatorformID").validate({
+// rules: {
+// adjudicator_name: "required",
+// },
+// messages: {
+// adjudicator_name: "Please enter Adjudicator Name",
+// }
+// });
 
-    // if ($("#adjudicatorformID").valid()) {
-        // // Check name exists
-        // adjName = $('#adjudicator_name').val();
-        // if (adjName !== '') {
-            // for (var i = 0; i < adjList.length; i++) {
-                // if (adjList[i].adjudicatorName === adjName) {
-                    // if (id === 'new' || id !== i) {
-                        // jAlert("Name already exists");
-                        // return;
-                    // }
-                // }
-            // }
-        // }
-        // addPersonAdjudicator(id);
-        // adjudicatorDialog.dialog("close");
-    // }
+// if ($("#adjudicatorformID").valid()) {
+// // Check name exists
+// adjName = $('#adjudicator_name').val();
+// if (adjName !== '') {
+// for (var i = 0; i < adjList.length; i++) {
+// if (adjList[i].adjudicatorName === adjName) {
+// if (id === 'new' || id !== i) {
+// jAlert("Name already exists");
+// return;
+// }
+// }
+// }
+// }
+// addPersonAdjudicator(id);
+// adjudicatorDialog.dialog("close");
+// }
 // }
 
 // function newHamlet(hamlet) {
-    // if (hamlet == 'new')
-        // checkeditHam = false;
-    // hamletDialog = $("#hamlet-dialog-form").dialog({
-        // autoOpen: false,
-        // height: 390,
-        // width: 300,
-        // resizable: false,
-        // modal: true,
-        // buttons: {
-            // "Save": function ()
-            // {
-                // validateHamlet(hamlet);
-            // },
-            // "Cancel": function ()
-            // {
-                // hamletDialog.dialog("destroy");
-                // hamletDialog.dialog("close");
-            // }
-        // },
-        // close: function () {
-            // hamletDialog.dialog("destroy");
-            // hamletDialog.dialog("close");
-        // }
-    // });
-    // if (hamlet != 'new') {
-        // $('#hamlet_name').val(hamlet.name);
-        // $('#hamlet_alias').val(hamlet.alias);
-        // $('#hamlet_code').val(hamlet.code);
-        // $('#hamlet_leader_name').val(hamlet.leader);
-    // } else {
-        // $("#hamlet_name").val("");
-        // $("#hamlet_alias").val("");
-        // $("#hamlet_code").val("");
-        // $("#hamlet_leader_name").val("");
-    // }
+// if (hamlet == 'new')
+// checkeditHam = false;
+// hamletDialog = $("#hamlet-dialog-form").dialog({
+// autoOpen: false,
+// height: 390,
+// width: 300,
+// resizable: false,
+// modal: true,
+// buttons: {
+// "Save": function ()
+// {
+// validateHamlet(hamlet);
+// },
+// "Cancel": function ()
+// {
+// hamletDialog.dialog("destroy");
+// hamletDialog.dialog("close");
+// }
+// },
+// close: function () {
+// hamletDialog.dialog("destroy");
+// hamletDialog.dialog("close");
+// }
+// });
+// if (hamlet != 'new') {
+// $('#hamlet_name').val(hamlet.name);
+// $('#hamlet_alias').val(hamlet.alias);
+// $('#hamlet_code').val(hamlet.code);
+// $('#hamlet_leader_name').val(hamlet.leader);
+// } else {
+// $("#hamlet_name").val("");
+// $("#hamlet_alias").val("");
+// $("#hamlet_code").val("");
+// $("#hamlet_leader_name").val("");
+// }
 
-    // hamletDialog.dialog("open");
+// hamletDialog.dialog("open");
 // }
 
 // function addHamlet(hamlet) {
-    // if (!checkHamletEdit) {
-        // checkHamletEdit = true;
-        // hamletDetails = [];
-    // }
+// if (!checkHamletEdit) {
+// checkHamletEdit = true;
+// hamletDetails = [];
+// }
 
-    // hamlet_name = document.getElementById("hamlet_name").value;
-    // hamlet_alias = document.getElementById("hamlet_alias").value;
-    // hamlet_code = document.getElementById("hamlet_code").value;
-    // hamlet_leader = document.getElementById("hamlet_leader_name").value;
+// hamlet_name = document.getElementById("hamlet_name").value;
+// hamlet_alias = document.getElementById("hamlet_alias").value;
+// hamlet_code = document.getElementById("hamlet_code").value;
+// hamlet_leader = document.getElementById("hamlet_leader_name").value;
 
-    // jQuery("#hamlet_name").val("");
-    // jQuery("#hamlet_alias").val("");
-    // jQuery("#hamlet_code").val("");
-    // $("#hamlet_leader_name").val("");
+// jQuery("#hamlet_name").val("");
+// jQuery("#hamlet_alias").val("");
+// jQuery("#hamlet_code").val("");
+// $("#hamlet_leader_name").val("");
 
-    // if (checkeditHam) {
-        // var k = parseInt(hamlet.id);
-        // hamletDetails[k] = hamlet_name;
-        // hamletDetails[k + 1] = hamlet_alias;
-        // hamletDetails[k + 2] = hamlet_code;
-        // hamletDetails[k + 3] = hamlet_leader;
-    // } else if (hamlet_name != "" && hamletDetails.indexOf(hamlet_name) == -1) {
-        // hamletDetails.push(hamlet_name);
-        // hamletDetails.push(hamlet_alias);
-        // hamletDetails.push(hamlet_code);
-        // hamletDetails.push(hamlet_leader);
-    // } else if (hamlet_name != "" && hamletDetails.indexOf(hamlet_name) > -1) {
-        // jAlert("Name already exists");
-    // }
+// if (checkeditHam) {
+// var k = parseInt(hamlet.id);
+// hamletDetails[k] = hamlet_name;
+// hamletDetails[k + 1] = hamlet_alias;
+// hamletDetails[k + 2] = hamlet_code;
+// hamletDetails[k + 3] = hamlet_leader;
+// } else if (hamlet_name != "" && hamletDetails.indexOf(hamlet_name) == -1) {
+// hamletDetails.push(hamlet_name);
+// hamletDetails.push(hamlet_alias);
+// hamletDetails.push(hamlet_code);
+// hamletDetails.push(hamlet_leader);
+// } else if (hamlet_name != "" && hamletDetails.indexOf(hamlet_name) > -1) {
+// jAlert("Name already exists");
+// }
 
-    // jQuery("#temporaryHamletDiv").empty();
-    // var content1 = "";
-    // for (var i = 0; i < (hamletDetails.length); i++) {
-        // HamletName = hamletDetails[i];
-        // HamletAlias = hamletDetails[i + 1];
-        // HamletCode = hamletDetails[i + 2];
-        // hamletLeaderName = hamletDetails[i + 3];
-        
-        // if( hamletLeaderName ) {
-        	 // hamletLeaderName = hamletLeaderName.replace(/"/g, "&quot;");
-             // hamletLeaderNameEsc = hamletLeaderName.replace(/'/g, "\\'");
+// jQuery("#temporaryHamletDiv").empty();
+// var content1 = "";
+// for (var i = 0; i < (hamletDetails.length); i++) {
+// HamletName = hamletDetails[i];
+// HamletAlias = hamletDetails[i + 1];
+// HamletCode = hamletDetails[i + 2];
+// hamletLeaderName = hamletDetails[i + 3];
 
-        // }else
-        	// {
-        	// hamletLeaderNameEsc ="";
-        	// }
-       
-        // content = '<tr><td>' + '<label id="hamlet_name' + "" + i + "" + '">' + "" + HamletName + "" + '</label><input type="hidden" name="hamletName" value=' + "" + HamletName + "" + '> ' + '</td>';
-        // content += '<td>' + '<label id="hamlet_alias' + "" + i + "" + '">' + "" + HamletAlias + "" + '</label><input type="hidden" name="hamletAlias" value=' + "" + HamletAlias + "" + '> ' + '</td>';
-        // content += '<td>' + '<label id="hamlet_code' + "" + i + "" + '">' + "" + HamletCode + "" + '</label><input type="hidden" name="hamletCode" value=' + "" + HamletCode + "" + '> ' + '</td>';
-        // content += '<td>' + '<label id="hamlet_leader' + "" + i + "" + '">' + "" + hamletLeaderName + "" + '</label><input type="hidden" name="hamletLeaderName" value="' + hamletLeaderName + '"> ' + '</td>';
-        // content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:editHamlet({code: \'' + HamletCode + '\', name: \'' + HamletName + '\', alias: \'' + HamletAlias + '\', leader: \'' + hamletLeaderNameEsc + '\', id: \'' + i + '\'});"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
-        // content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:deleteHamet({code: \'' + HamletCode + '\', id: \'' + i + '\'});"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+// if( hamletLeaderName ) {
+// hamletLeaderName = hamletLeaderName.replace(/"/g, "&quot;");
+// hamletLeaderNameEsc = hamletLeaderName.replace(/'/g, "\\'");
 
-        // content1 = content1 + content;
-        // i = i + 3;
-    // }
+// }else
+// {
+// hamletLeaderNameEsc ="";
+// }
 
-    // if (hamletDetails.length > 0)
-        // jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Leader Name</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>" + content1 + "</table>");
-    // if (hamlet != 'new')
-        // jAlert("Data successfully saved", "Hamlet Info");
+// content = '<tr><td>' + '<label id="hamlet_name' + "" + i + "" + '">' + "" + HamletName + "" + '</label><input type="hidden" name="hamletName" value=' + "" + HamletName + "" + '> ' + '</td>';
+// content += '<td>' + '<label id="hamlet_alias' + "" + i + "" + '">' + "" + HamletAlias + "" + '</label><input type="hidden" name="hamletAlias" value=' + "" + HamletAlias + "" + '> ' + '</td>';
+// content += '<td>' + '<label id="hamlet_code' + "" + i + "" + '">' + "" + HamletCode + "" + '</label><input type="hidden" name="hamletCode" value=' + "" + HamletCode + "" + '> ' + '</td>';
+// content += '<td>' + '<label id="hamlet_leader' + "" + i + "" + '">' + "" + hamletLeaderName + "" + '</label><input type="hidden" name="hamletLeaderName" value="' + hamletLeaderName + '"> ' + '</td>';
+// content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:editHamlet({code: \'' + HamletCode + '\', name: \'' + HamletName + '\', alias: \'' + HamletAlias + '\', leader: \'' + hamletLeaderNameEsc + '\', id: \'' + i + '\'});"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
+// content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:deleteHamet({code: \'' + HamletCode + '\', id: \'' + i + '\'});"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+
+// content1 = content1 + content;
+// i = i + 3;
+// }
+
+// if (hamletDetails.length > 0)
+// jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Leader Name</th><th class='tableHeader'>Edit</th><th class='tableHeader'>Delete</th>" + content1 + "</table>");
+// if (hamlet != 'new')
+// jAlert("Data successfully saved", "Hamlet Info");
 // }
 
 // function deleteHamet(hamlet) {
-    // var checkdelete = true;
-    // jConfirm('Are You Sure You Want To Delete : <strong>' + hamlet.code + '</strong>', 'Delete Confirmation', function (response) {
+// var checkdelete = true;
+// jConfirm('Are You Sure You Want To Delete : <strong>' + hamlet.code + '</strong>', 'Delete Confirmation', function (response) {
 
-        // if (response) {
-            // if (editableProject != undefined) {
-                // jQuery.ajax({
-                    // type: 'GET',
-                    // async: false,
-                    // url: "project/delethamlet/" + hamlet.code + "/" + editableProject,
-                    // success: function (result)
-                    // {
-                        // checkdelete = result;
-                    // }
-                // });
-            // }
-            // if (checkdelete) {
-                // hamletDetails.splice(hamlet.id, 4);
-                // jQuery("#temporaryHamletDiv").empty();
-                // var content1 = "";
-                // for (var i = 0; i < (hamletDetails.length); i++) {
+// if (response) {
+// if (editableProject != undefined) {
+// jQuery.ajax({
+// type: 'GET',
+// async: false,
+// url: "project/delethamlet/" + hamlet.code + "/" + editableProject,
+// success: function (result)
+// {
+// checkdelete = result;
+// }
+// });
+// }
+// if (checkdelete) {
+// hamletDetails.splice(hamlet.id, 4);
+// jQuery("#temporaryHamletDiv").empty();
+// var content1 = "";
+// for (var i = 0; i < (hamletDetails.length); i++) {
 
-                    // HamletName = hamletDetails[i];
-                    // HamletAlias = hamletDetails[i + 1];
-                    // HamletCode = hamletDetails[i + 2];
-                    // hamletLeaderName = hamletDetails[i + 3];
-                    // hamletLeaderName = hamletLeaderName.replace(/"/g, "&quot;");
-                    // hamletLeaderNameEsc = hamletLeaderName.replace(/'/g, "\\'");
+// HamletName = hamletDetails[i];
+// HamletAlias = hamletDetails[i + 1];
+// HamletCode = hamletDetails[i + 2];
+// hamletLeaderName = hamletDetails[i + 3];
+// hamletLeaderName = hamletLeaderName.replace(/"/g, "&quot;");
+// hamletLeaderNameEsc = hamletLeaderName.replace(/'/g, "\\'");
 
-                    // content = '<tr><td>' + '<label id="hamlet_name' + "" + i + "" + '">' + "" + HamletName + "" + '</label><input type="hidden" name="hamletName" value=' + "" + HamletName + "" + '> ' + '</td>';
-                    // content += '<td>' + '<label id="hamlet_alias' + "" + i + "" + '">' + "" + HamletAlias + "" + '</label><input type="hidden" name="hamletAlias" value=' + "" + HamletAlias + "" + '> ' + '</td>';
-                    // content += '<td>' + '<label id="hamlet_code' + "" + i + "" + '">' + "" + HamletCode + "" + '</label><input type="hidden" name="hamletCode" value=' + "" + HamletCode + "" + '> ' + '</td>';
-                    // content += '<td>' + '<label id="hamlet_leader' + "" + i + "" + '">' + "" + hamletLeaderName + "" + '</label><input type="hidden" name="hamletLeaderName" value=' + "" + hamletLeaderName + "" + '> ' + '</td>';
-                    // content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:editHamlet({code: \'' + HamletCode + '\', name: \'' + HamletName + '\', alias: \'' + HamletAlias + '\', leader: \'' + hamletLeaderNameEsc + '\', id: \'' + i + '\'});"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
-                    // content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:deleteHamet({code: \'' + HamletCode + '\', id: \'' + i + '\'});"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
+// content = '<tr><td>' + '<label id="hamlet_name' + "" + i + "" + '">' + "" + HamletName + "" + '</label><input type="hidden" name="hamletName" value=' + "" + HamletName + "" + '> ' + '</td>';
+// content += '<td>' + '<label id="hamlet_alias' + "" + i + "" + '">' + "" + HamletAlias + "" + '</label><input type="hidden" name="hamletAlias" value=' + "" + HamletAlias + "" + '> ' + '</td>';
+// content += '<td>' + '<label id="hamlet_code' + "" + i + "" + '">' + "" + HamletCode + "" + '</label><input type="hidden" name="hamletCode" value=' + "" + HamletCode + "" + '> ' + '</td>';
+// content += '<td>' + '<label id="hamlet_leader' + "" + i + "" + '">' + "" + hamletLeaderName + "" + '</label><input type="hidden" name="hamletLeaderName" value=' + "" + hamletLeaderName + "" + '> ' + '</td>';
+// content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:editHamlet({code: \'' + HamletCode + '\', name: \'' + HamletName + '\', alias: \'' + HamletAlias + '\', leader: \'' + hamletLeaderNameEsc + '\', id: \'' + i + '\'});"><img src="resources/images/studio/edit.png" title="Edit"/></a></div>' + '</td>';
+// content += '<td align="center">' + '<div><a href ="#" id= ' + i + ' onclick="javascript:deleteHamet({code: \'' + HamletCode + '\', id: \'' + i + '\'});"><img src="resources/images/studio/delete.png" title="Delete"/></a></div>' + '</td></tr>';
 
-                    // content1 = content1 + content;
-                    // i = i + 3;
-                // }
-                // if (hamletDetails.length > 0)
-                    // jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Leader Name</th><th class='tableHeader'>Delete</th><th class='tableHeader'>Edit</th>" + content1 + "</table>");
-                // jAlert("Data deleted successfully", "Delete");
-            // } else {
-                // jAlert("Hamlet is mapped with spatial unit", "Delete Hamlet");
-            // }
-        // }
-    // });
+// content1 = content1 + content;
+// i = i + 3;
+// }
+// if (hamletDetails.length > 0)
+// jQuery("#temporaryHamletDiv").append("<table class='temporaryDivTable'><th class='tableHeader'>Hamlet Name</th><th class='tableHeader'>Hamlet Name(Second Language)</th><th class='tableHeader'>Hamlet Code</th><th class='tableHeader'>Leader Name</th><th class='tableHeader'>Delete</th><th class='tableHeader'>Edit</th>" + content1 + "</table>");
+// jAlert("Data deleted successfully", "Delete");
+// } else {
+// jAlert("Hamlet is mapped with spatial unit", "Delete Hamlet");
+// }
+// }
+// });
 // }
 
 // function validateHamlet(hamlet) {
-    // $("#hamletformID").validate({
-        // rules: {
-            // hamlet_name: "required",
-            // hamlet_alias: "required",
-            // hamlet_code: "required",
-            // hamlet_leader_name: "required"
-        // },
-        // messages: {
-            // hamlet_name: "Enter Hamlet Name",
-            // hamlet_alias: "Enter Hamlet Alias",
-            // hamlet_code: "Enter Hamlet Code",
-            // hamlet_leader_name: "Enter leader name"
-        // }
-    // });
+// $("#hamletformID").validate({
+// rules: {
+// hamlet_name: "required",
+// hamlet_alias: "required",
+// hamlet_code: "required",
+// hamlet_leader_name: "required"
+// },
+// messages: {
+// hamlet_name: "Enter Hamlet Name",
+// hamlet_alias: "Enter Hamlet Alias",
+// hamlet_code: "Enter Hamlet Code",
+// hamlet_leader_name: "Enter leader name"
+// }
+// });
 
-    // if ($("#hamletformID").valid()) {
-        // addHamlet(hamlet);
-        // hamletDialog.dialog("destroy");
-        // hamletDialog.dialog("close");
-    // }
+// if ($("#hamletformID").valid()) {
+// addHamlet(hamlet);
+// hamletDialog.dialog("destroy");
+// hamletDialog.dialog("close");
+// }
 // }
 
 // function editHamlet(hamlet) {
-    // checkeditHam = true;
+// checkeditHam = true;
 
-    // if (editableProject != undefined) {
-        // jQuery.ajax({
-            // type: 'GET',
-            // async: false,
-            // url: "project/delethamlet/" + hamlet.code + "/" + editableProject,
-            // success: function (result)
-            // {
-                // checkeditHam = result;
-            // }
-        // });
-    // }
+// if (editableProject != undefined) {
+// jQuery.ajax({
+// type: 'GET',
+// async: false,
+// url: "project/delethamlet/" + hamlet.code + "/" + editableProject,
+// success: function (result)
+// {
+// checkeditHam = result;
+// }
+// });
+// }
 
-    // if (checkeditHam) {
-        // newHamlet(hamlet);
-    // } else {
-        // jAlert("Hamlet is mapped with spatial unit", "Edit Hamlet");
-    // }
+// if (checkeditHam) {
+// newHamlet(hamlet);
+// } else {
+// jAlert("Hamlet is mapped with spatial unit", "Edit Hamlet");
+// }
 // }
 
 function uploadSignature(name) {
@@ -1307,57 +1314,57 @@ function uploadSignature(name) {
         buttons: {
             "Upload": function () {
                 if ($("#fileSignature").val() === '') {
-                    jAlert("Select signature for upload.");
+                    jAlert($.i18n("err-select-signature"));
                     return;
                 }
 
                 var formData = new FormData();
-				var flag= true;
-				
-				$.each($('#fileSignature')[0].files[0], function (ind3, obj3) {
-                                                                  	if( ind3=="type"){
-																	   
-																	   if(obj3=="image/png"  || obj3=="image/jpeg"  || obj3=="image/gif"){
-																	     flag =true;
-																	     $("#extention").val(obj3);
-																		 return false;
-																		 
-																	   }else{
-																		flag =true;
-																		jAlert("Select File should be of type png,jpeg,gif.");
-																		 return false;
-																	    }
-																	}
-																	
-                                                            });
-															
-						
-                 if(flag)
-				 {
-					
-				 formData.append("signature", $('#fileSignature')[0].files[0]);	
-                $.ajax({
-                    type: "POST",
-                    url: "project/uploadsignature",
-                    mimeType: "multipart/form-data",
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (data) {
-                        if (data) {
-                            signatureDialog.dialog("close");
-                            showSignature(name, data);
+                var flag = true;
+
+                $.each($('#fileSignature')[0].files[0], function (ind3, obj3) {
+                    if (ind3 == "type") {
+
+                        if (obj3 == "image/png" || obj3 == "image/jpeg" || obj3 == "image/gif") {
+                            flag = true;
+                            $("#extention").val(obj3);
+                            return false;
+
                         } else {
-                            jAlert('Failed to upload signature');
+                            flag = true;
+                            jAlert($.i18n("err-file-type"));
+                            return false;
                         }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        jAlert('Failed to upload signature');
                     }
+
                 });
-				 }				 
-               
+
+
+                if (flag)
+                {
+
+                    formData.append("signature", $('#fileSignature')[0].files[0]);
+                    $.ajax({
+                        type: "POST",
+                        url: "project/uploadsignature",
+                        mimeType: "multipart/form-data",
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data) {
+                            if (data) {
+                                signatureDialog.dialog("close");
+                                showSignature(name, data);
+                            } else {
+                                jAlert($.i18n("err-failed-upload-signature"));
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            jAlert($.i18n("err-failed-upload-signature"));
+                        }
+                    });
+                }
+
 
             }
         }
@@ -1377,11 +1384,11 @@ function showSignature(name, fileName) {
             url: "project/signatureexists/" + fileName,
             success: function (response) {
                 if (response) {
-				   $("#img" + name).attr('src', '/mast/studio/project/getsignature/' + fileName);
-				   $("#h" + name).val(fileName).trigger('change');
-					showHideSignature(false, name);
-					result = true;
-                   
+                    $("#img" + name).attr('src', '/mast/studio/project/getsignature/' + fileName);
+                    $("#h" + name).val(fileName).trigger('change');
+                    showHideSignature(false, name);
+                    result = true;
+
                 }
             }
         });
@@ -1395,7 +1402,7 @@ function showSignature(name, fileName) {
 }
 
 function deleteSignature(name) {
-    jConfirm('Are you sure?', 'Confirmation', function (response) {
+    jConfirm($.i18n("gen-confirm-question"), $.i18n("gen-confirmation"), function (response) {
         if (response) {
             $.ajax({
                 type: 'GET',
@@ -1406,11 +1413,11 @@ function deleteSignature(name) {
                         $("#h" + name).val('').trigger('change');
                         showHideSignature(true, name);
                     } else {
-                        jAlert('Failed to delete signature');
+                        jAlert($.i18n("err-failed-delete-signature"));
                     }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    jAlert('Failed to delete signature');
+                    jAlert($.i18n("err-failed-delete-signature"));
                 }
             });
         }
@@ -1429,24 +1436,24 @@ function showHideSignature(hide, name) {
     }
 }
 
-function RunTopologyChecks() 
+function RunTopologyChecks()
 {
-	activeProject = "New";
+    activeProject = "New";
     $.ajax({
         type: "GET",
         url: "landrecords/runtopology/" + activeProject,
         async: false,
-        success: function (result) 
+        success: function (result)
         {
-        	 if (result === "OK") 
-        	 {
-        		 //jAlert("Topology ran scuccessfully");  
-        		 jAlert('Topology ran scuccessfully', 'Topology');
-        	 }
-        	
+            if (result === "OK")
+            {
+                //jAlert("Topology ran scuccessfully");  
+                jAlert($.i18n("admin-topology-run-success"), $.i18n("gen-info"));
+            }
+
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            jAlert('Failed to run topology checks');
+            jAlert($.i18n("err-failed-run-topology"));
         }
     });
 }

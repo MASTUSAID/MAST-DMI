@@ -1,0 +1,26 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%
+    String qString = request.getQueryString();
+    String rqUrl = "";
+    if(request.getAttribute("javax.servlet.forward.request_uri") != null){
+        rqUrl = request.getAttribute("javax.servlet.forward.request_uri").toString();
+    } else {
+        rqUrl = request.getRequestURI();
+    }
+    if (qString != null) {
+        // Preserve URL params only if request is not forwarded
+        rqUrl = rqUrl + "?" + qString;
+    }
+%>
+<c:if test="${not empty langs and fn:length(langs) gt 1}">
+    <form method="POST" action="<%=rqUrl%>">
+        <select id="lang" name="lang" onchange="submit()" style="width: 100%;padding: 0 !important; margin: 0 !important;">
+            <c:forEach items="${langs}" var="l">
+                <option value="${l.code}" ${l.code eq langCode ? 'selected' : ''}>${l.val}</option>
+            </c:forEach>
+        </select>
+    </form>
+</c:if>

@@ -127,7 +127,7 @@ function previousRecords_Res(){
     if (records_from_Res >= 0) {
         RegistrationRecords_Res(records_from_Res);
     } else {
-        alert("No records found");
+        alert($.i18n("err-no-records"));
     }
 	
 }
@@ -142,7 +142,7 @@ function nextRecords_Res(){
            RegistrationRecords_Res(records_from_Res);
 		
     } else {
-        alert("No records found");
+        alert($.i18n("err-no-records"));
     }
 	
 }
@@ -182,9 +182,9 @@ function ActionfillResource(landid,geomType){
 		$(".containerDiv").empty();
 		
 	    var html="";
-    	html+="<li> <a title='Edit Attribute' id='' name=''  href='#' onclick='viewAttribute("+landid+")'>Edit Attribute</a></li>";
-		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=viewOnMap("+landid+",'"+geomType+"')>Edit Spatial</a></li>";
-		html+="<li> <a title='Edit Spatial' id='' name=''  href='#' onclick=getFarmReport("+landid+","+projectId+",'"+geomType+"')>Farm Report</a></li>";
+    	html+="<li> <a title='" + $.i18n("viewer-edit-attr") + "' id='' name=''  href='#' onclick='viewAttribute("+landid+")'>" + $.i18n("viewer-edit-attr") + "</a></li>";
+		html+="<li> <a title='" + $.i18n("viewer-edit-spatial") + "' id='' name=''  href='#' onclick=viewOnMap("+landid+",'"+geomType+"')>" + $.i18n("viewer-edit-spatial") + "</a></li>";
+		html+="<li> <a title='" + $.i18n("viewer-farm-report") + "' id='' name=''  href='#' onclick=getFarmReport("+landid+","+projectId+",'"+geomType+"')>" + $.i18n("viewer-farm-report") + "</a></li>";
 		
 		$(""+appid+"").append('<div class="signin_menu"><div class="signin"><ul>'+html+'</ul></div></div>');
 
@@ -334,7 +334,7 @@ function zoomToResource(geom) {
 		 $('#mainTabs').tabs("option", "active", $('#mainTabs a[href="#landresource-div"]').parent().index());
         $('#sidebar').hide();
         $('#collapse').hide();
-        jAlert('Site not found on Map', 'Alert'); 
+        jAlert($.i18n("err-site-not-found"), $.i18n("err-error")); 
 		 
 	 }
 }
@@ -399,27 +399,27 @@ function viewAttribute(usin)
     	 $("#totalExpenditure").val(""); 
     	 $("#totalsales").val("");
     	 
-    	 jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+    	 jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
 			
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cocoa").text("Cocoa"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Plantain").text("Plantain"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Rice").text("Rice"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Oil Palm").text("Oil Palm"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Pepper").text("Pepper"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Ground Nuts").text("Ground Nuts"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cassava").text("Cassava"));
-		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", "Cow Peas").text("Cow Peas"));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-coca")).text($.i18n("res-coca")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-plantain")).text($.i18n("res-plantain")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-rise")).text($.i18n("res-rise")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-oil-palm")).text($.i18n("res-oil-palm")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-pepper")).text($.i18n("res-pepper")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-ground-nuts")).text($.i18n("res-ground-nuts")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-cassava")).text($.i18n("res-cassava")));
+		jQuery("#priamaryCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-cow-peas")).text($.i18n("res-cow-peas")));
 		
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "").text("Please Select"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "").text($.i18n("gen-please-select")));
 		
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cocoa").text("Cocoa"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Plantain").text("Plantain"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Rice").text("Rice"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Oil Palm").text("Oil Palm"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Pepper").text("Pepper"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Ground Nuts").text("Ground Nuts"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cassava").text("Cassava"));
-		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", "Cow Peas").text("Cow Peas"));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-coca").text($.i18n("res-coca")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-plantain")).text($.i18n("res-plantain")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-rise")).text($.i18n("res-rise")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-oil-palm")).text($.i18n("res-oil-palm")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-pepper")).text($.i18n("res-pepper")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-ground-nuts")).text($.i18n("res-ground-nuts")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-cassava")).text($.i18n("res-cassava")));
+		jQuery("#secCrop").append(jQuery("<option></option>").attr("value", $.i18n("res-cow-peas")).text($.i18n("res-cow-peas")));
 			
 			
 			
@@ -454,34 +454,6 @@ function viewAttribute(usin)
 			 }
 			
 			 }
-			/* var persondata ={
-	        			"landid"   :LandId,
-		    			"Primary Crop":  Custom1,
-		    			"Plant Date (Primary Crop)":  Custom2,
-		    			"Duration (Primary Crop)":  Custom3,
-		    			"Secondary Crop":Custom4,
-		    			"Plant Date (Secondary Crop)":Custom5,
-		    			"Duration (Secondary Crop)":Custom6,
-		    			"Total Expenditures (Farmer)":Custom7,
-		    			"Total Sales (Farmer)":Custom8,
-		    			"Name of Enterprise Farm": Custom9
-		    			
-		    		};*/
-			 
-			/* var persondata ={
-	        			"landid"   :LandId,
-		    			"Color of sky":  Custom1,
-		    			"Color of bear":  Custom2,
-		    			"Color of soil":  Custom3
-		    			
-		    			
-		    		};*/
-					
-				/*	persondataArray.push(persondata);
-			
-
-
-			 return persondataArray;*/	
     });
 	
 	FillResourcePersonDataNew();
@@ -502,7 +474,7 @@ function viewAttribute(usin)
         },
 
 		buttons: [{
-			text : "Save",
+			text : $.i18n("gen-save"),
 			"id" : "comment_Save",
 			
 			click : function()
@@ -514,7 +486,7 @@ function viewAttribute(usin)
 
 		},
 		{
-			text : "Save",
+			text : $.i18n("gen-save"),
 			"id" : "Custom_Save",
 			
 			click : function()
@@ -526,7 +498,7 @@ function viewAttribute(usin)
 
 		},
 		{
-			text: "Cancel",
+			text: $.i18n("gen-cancel"),
 			"id": "comment_cancel",
 				click: function () {
 				 setInterval(function(){ 
@@ -549,7 +521,7 @@ function viewAttribute(usin)
 
 		}
 	});
-	$("#comment_cancel").html('<span class="ui-button-text">cancel</span>');
+	$("#comment_cancel").html('<span class="ui-button-text">' + $.i18n("gen-cancel") + '</span>');
 	attributeHistoryDialog.dialog( "open" );
 	$("#comment_Save").prop("disabled",false).hide();
 	$("#Custom_Save").prop("disabled",false).hide();
@@ -633,15 +605,7 @@ function FillResourcePersonDataNew()
 						val.filtering= false;
 						val.name = name_Columns[ctr];
 					}
-//					else if(id==1017 || id==1035 || id==1063 || id==1079 || id==1088 || id==1097 || id==1108){
-//						val.index = 2;
-//					}
-//					else if(id==1018 || id==1036 || id==1065 || id==1080 || id==1089 || id==1109 || id==1098){
-//						val.index = 3;
-//					}
-//					else if(id==1019 || id==1037 || id==1066 || id==1081 || id==1090 || id==1099 || id==1110){
-//						val.index = 4;
-//					}
+
 					else if(id==1022 || id==1064 || id==1116){
 						$.ajax({
 							url :"resource/alloptions/" + id,
@@ -757,33 +721,11 @@ function FillResourcePersonDataNew()
         pageSize: 50,
         pageButtonCount: 20,
         fields: myColumns1
-//        	[
-//            {type: "control", deleteButton: false},
-//			{name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"} },
-//            {name: "firstname", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
-//            {name: "middlename", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
-//            {name: "lastname", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
-//			{name: "mobNo", title: "ContactNo", align: "left", type: "text", width: 80,editing: true, filtering: false},
-//			{name:"groupId", title:"GroupId", align:"left", type:"number",  width: 120,editing: false, hidden:true,  validate: {validator: "required", message: "Enter GroupId"} },
-//
-//			//            {name:"age", title:"Age", align:"left", type:"number",  width: 120, validate: {validator: "required", message: "Enter Age"} },
-////		    {name: "maritalstatus", title: "Marital Status", type: "text", width: 80,editing: true, filtering: false},
-////			{name: "citizenship", title: "Citizenship", type: "text", width: 80,editing: true, filtering: false},
-////			{name: "ethnicity", title: "Ethnicity", type: "text", width: 80,editing: true, filtering: false},
-////		    {name: "resident", title: "Resident", type: "text", width: 80,editing: true, filtering: false},
-////            {name: "address", title: "Address", type: "text", width: 120, validate: {validator: "required", message: "Enter Address"}},
-////            {name: "mobileno", title: "Mobile Number", type: "text", width: 120},
-////			{name: "groupId", title: "GroupId", type: "number", width: 120},
-//           
-//
-//        ]
     });
 
     $("#ResourcepersonsEditingGrid0 .jsgrid-table th:first-child :button").click();
    
     $("#ResourcepersonsEditingGrid0").jsGrid("loadData");
-    
-    
 }
 
 
@@ -809,26 +751,7 @@ var personsEditingControllerForResourcePerson = {
 	        	 $("#institute").hide();
 //	        	 $("#reg_date_td").hide();
 	        	 $("#regNo").hide();
-//	        	 $("#tenure_occupancy").hide();
-	        	 
-	        	 
-	        	
-	        	 
-	        	
-//	        	var Firstname = "";
-//	        	var Middlename = "";
-//	        	var Lastname= "";
-//	        	var Mobile = "";
-//	        	var Dob = "";
-//	        	var Maritalstatus =""; 
-//	        	var GroupId="";
-//	        	var genderid="";
-//	        	var  Citizenship="";
-//	        	var Ethnicity="";
-//	        	var Resident_of_Community="";
-//	        	var Address="";
-	        	
-				
+
 				$.each( result, function(index,value){
 					 
 					 for(var i in value){
@@ -885,10 +808,6 @@ var personsEditingControllerForResourcePerson = {
 					    		if(Dob!=null && Dob!='')
 					    		{
 					    			  var date = new Date(Dob);
-					    			
-					    			
-					    			
-//					    			dob = date.getFullYear()+ '-' + date.getMonth() + '-' + date.getDate();
 					    		}
 					    	}
 					 }
@@ -947,12 +866,6 @@ var personsEditingControllerForResourcePerson = {
 					    		if(Registration_Date!=null && Registration_Date!='')
 					    		{
 					    			  var registartion_date_date = new Date(Registration_Date);
-					    			
-//					    			  $("#reg_date").val(registartion_date_date);
-//					    			  $("#reg_date_td").show();
-//					    				 $("#tenure_occupancy").show();
-					    			
-//					    			dob = date.getFullYear()+ '-' + date.getMonth() + '-' + date.getDate();
 					    		}
 					    	}
 					 
@@ -1080,223 +993,6 @@ function addNewPerson(){
 
 }
 
-
-
-
-
-
-
-
-
-/*function FillResourceCustoAttributes()
-{
-	var name_Columns = [];
-	var myColumns = [];	
-	var myColumns1 = [];
-	var data = [];
-	myColumns1[0] = {type: "control", deleteButton: false};
-	myColumns1[1] = {name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"} };
-
-	$.ajax({
-		url :"resource/allCustomAttribtesDatatype/" + landId+ "/" + projectId,
-		 async: false,
-		success : function(data1) {
-			
-			if(data1 == ""){
-				$("#CustomAttributeEditingGrid0").hide();
-//				$("#CustomAttributes").hide();
-			}
-			else{
-				$("#CustomAttributeEditingGrid0").show();
-//				$("#CustomAttributes").show();
-				
-			data=data1;
-		console.log(data);
-			
-			var ctr = 2;
-			
-			var lastsel;
-			for ( var i = 0; i < data.length; ++i) {
-					name_Columns[ctr] = data[i][0];
-					var id = data[i][1];
-					
-					var val = new Object();
-					val.name = name_Columns[ctr];
-					
-					
-					val.index = ctr;
-					val.width = 120;
-					val.editable = true;
-					val.type= "text";
-					
-					
-					myColumns1[ctr] = val;
-					ctr++;
-					
-
-			}
-			}
-			}
-
-	});
-		
-//
-//		
-//			
-////			var rowHeight = 200;
-
-	
-	
-	// Init editing grid
-    $("#CustomAttributeEditingGrid0").jsGrid({
-        width: "100%",
-        height: "200px",
-        inserting: false,
-        editing: true,
-        sorting: false,
-        filtering: false,
-        paging: true,
-        autoload: false,
-        controller: ControllerForResourceCustomAttributes,
-        pageSize: 50,
-        pageButtonCount: 20,
-        fields: myColumns1
-//        	[
-//            {type: "control", deleteButton: false},
-//			{name:"landid", title:"LandId", align:"left", type:"number",  width: 120,editing: false, validate: {validator: "required", message: "Enter LandId"} },
-//            {name: "firstname", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
-//            {name: "middlename", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
-//            {name: "lastname", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
-//			{name: "mobNo", title: "ContactNo", align: "left", type: "text", width: 80,editing: true, filtering: false},
-//			{name:"groupId", title:"GroupId", align:"left", type:"number",  width: 120,editing: false, hidden:true,  validate: {validator: "required", message: "Enter GroupId"} },
-//
-//			//            {name:"age", title:"Age", align:"left", type:"number",  width: 120, validate: {validator: "required", message: "Enter Age"} },
-////		    {name: "maritalstatus", title: "Marital Status", type: "text", width: 80,editing: true, filtering: false},
-////			{name: "citizenship", title: "Citizenship", type: "text", width: 80,editing: true, filtering: false},
-////			{name: "ethnicity", title: "Ethnicity", type: "text", width: 80,editing: true, filtering: false},
-////		    {name: "resident", title: "Resident", type: "text", width: 80,editing: true, filtering: false},
-////            {name: "address", title: "Address", type: "text", width: 120, validate: {validator: "required", message: "Enter Address"}},
-////            {name: "mobileno", title: "Mobile Number", type: "text", width: 120},
-////			{name: "groupId", title: "GroupId", type: "number", width: 120},
-//           
-//
-//        ]
-    });
-
-    $("#CustomAttributeEditingGrid0 .jsgrid-table th:first-child :button").click();
-   
-    $("#CustomAttributeEditingGrid0").jsGrid("loadData");
-    
-    
-}
-
-
-var ControllerForResourceCustomAttributes = {
-	    loadData: function (filter) {
-	        return $.ajax({
-	            type: "GET",
-	            url: "resource/allCustomAttribue/" + landId+ "/" + projectId,
-	            data: filter,
-				async: false,
-	            success: function(data)
-	            {
-	            }
-	        }).then(function(result){
-	        	var persondataArray=[];
-	        	
-					 
-					 for(var i=0; i<result.length; i++){
-					 if(result[i].fieldname == "103"){
-						 LandId = result[0].landid;
-						 Custom1 = result[i].attributevalue;
-						 $("#priamaryCrop").val(result[i].attributevalue);
-						 
-					 }
-					 else if(result[i].fieldname == "104"){
-						 $("#primaryplantdate").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "105"){
-						 $("#primaryduration").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "116"){
-						  $("#secCrop").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "117"){
-						 $("#secplantdate").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "118"){
-						 $("#secduration").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "119"){
-						 $("#totalExpenditure").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "120"){
-						 $("#totalsales").val(result[i].attributevalue);
-					 }
-					 else if(result[i].fieldname == "100"){
-						 $("#totalsales").val(result[i].attributevalue);
-					 }
-					
-					 }
-					 var persondata ={
-			        			"landid"   :LandId,
-				    			"Primary Crop":  Custom1,
-				    			"Plant Date (Primary Crop)":  Custom2,
-				    			"Duration (Primary Crop)":  Custom3,
-				    			"Secondary Crop":Custom4,
-				    			"Plant Date (Secondary Crop)":Custom5,
-				    			"Duration (Secondary Crop)":Custom6,
-				    			"Total Expenditures (Farmer)":Custom7,
-				    			"Total Sales (Farmer)":Custom8,
-				    			"Name of Enterprise Farm": Custom9
-				    			
-				    		};
-					 
-					 var persondata ={
-			        			"landid"   :LandId,
-				    			"Color of sky":  Custom1,
-				    			"Color of bear":  Custom2,
-				    			"Color of soil":  Custom3
-				    			
-				    			
-				    		};
-							
-							persondataArray.push(persondata);
-					
-
-
-					 return persondataArray;	
-	        });
-	       
-	    },
-	    insertItem: function (item) {
-	        return false;
-	    },
-	    updateItem: function (item) {
-	    
-	    	
-	    	
-	        return $.ajax({
-	            type: "POST",
-//	            contentType: "application/json; charset=utf-8",
-	            traditional: true,
-	            url: "landrecords/saveResourceCustomAttributes",
-	            data: item,
-				success:function(){
-					FillResourceCustoAttributes();
-				},
-	            error: function (request, textStatus, errorThrown) {
-	                jAlert(request.responseText);
-	            }
-	        });
-	    },
-	    deleteItem: function (item) {
-	        return false;
-	    }
-	};*/
-
-
-
 function loadResourcePersonsOfEditingForEditing() {
 	 
 	  var name_Columns = [];
@@ -1402,23 +1098,6 @@ function loadResourcePersonsOfEditingForEditing() {
 		        pageSize: 50,
 		        pageButtonCount: 20,
 		        fields: myColumns1
-		        	
-		        	/*[
-		            {type: "control", deleteButton: false},
-		            {name: "firstName", title: "First name", type: "text", width: 120, validate: {validator: "required", message: "Enter first name"}},
-		            {name: "middleName", title: "Middle name", type: "text", width: 120, validate: {validator: "required", message: "Enter middle name"}},
-		            {name: "lastName", title: "Last name", type: "text", width: 120, validate: {validator: "required", message: "Enter last name"}},
-		            {name: "gender", title: "Gender", type: "select", items: [{id: 1, name: "Male"}, {id: 2, name: "Female"}, {id: 3, name: "Other"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
-		            {name: "dob", title: "Date of birth", type: "date", width: 120 ,validate: {validator: "required", message: "Enter first name"}},
-		            {name: "relation", title: "Relation", type: "select", items: [{id: 1, name: "Spouse"}, {id: 2, name: "Son"}, {id: 3, name: "Daughter"}, {id: 4, name: "Grandson"}, {id: 5, name: "Granddaughter"}, {id: 6, name: "Brother"},
-		                                                                          {id: 7, name: "Sister"}, {id: 8, name: "Father"}, {id: 9, name: "Mother"}, {id: 10, name: "Grandmother"}, {id: 11, name: "Grandfather"}, {id: 12, name: "Aunt"},
-		                                                                          {id: 13, name: "Uncle"}, {id: 14, name: "Niece"}, {id: 15, name: "Nephew"}, {id: 16, name: "Other"}, {id: 17, name: "Other relatives"}, {id: 18, name: "Associate"},
-		                                                                          {id: 19, name: "Parents and children"}, {id: 20, name: "Siblings"}], valueField: "id", textField: "name", width: 120, validate: {validator: "required", message: "Enter first name"}},
-		            {name: "landid", title: "LandID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
-		            {name: "id", title: "ID", type: "number", width: 70, align: "left", editing: false, filtering: true, visible: false},
-
-
-		        ]*/
 		    });
 		 $("#ResourcePOIGrid .jsgrid-table th:first-child :button").click();
 		$("#ResourcePOIGrid").jsGrid("loadData");
@@ -1437,13 +1116,8 @@ function loadResourcePersonsOfEditingForEditing() {
 	       }).then(function(result){
 	       	var persondataArray=[];
 	       	var gid=0;
-	       /*	var poiFirstName = "";
-	       	var poiMiddleName = "";
-	       	var poiLastName ="";
-	       	var poiDob= "";
-	       	var poiRelation= "";
-	       	var poiGender="";*/
-	       	$.each( result, function(index,value){
+
+               $.each( result, function(index,value){
 	       	 for(var i in value){
 					
 					 if(value[i].poiattributevalueid == "1"){
@@ -1499,18 +1173,7 @@ function loadResourcePersonsOfEditingForEditing() {
 	      
 	   },
 	   updateItem: function (item) {
-	   	
-	  /* 	var ajaxdata = {
-	   			"firstName": item.firstName,
-	   			"middleName": item.middleName,
-	   			"lastName": item.lastName,
-	   			"gender": item.gender,
-	   			"dob": item.dob,
-	   			"relation": item.relation,
-	   			"id": item.id
-	   			
-					}*/
-	   
+
 	       return $.ajax({
 	           type: "POST",
 //	           contentType: "application/json; charset=utf-8",
@@ -1817,7 +1480,7 @@ function getFarmReport(land_id,projectId,geomType)
 													jQuery('#mapImageId').append('<img  src='+url1+'>');
 
 																									    var _html="";
-													var _th="<tr><th>Latitude</th><th>Longitude </th></tr>"
+													var _th="<tr><th>" + $.i18n("viewer-latitude") + "</th><th>" + $.i18n("viewer-longitude") + " </th></tr>"
 													 for (i = 0; i < features[0].geometryChangeKey_.target.flatCoordinates.length/2; i++) {
 														 var j=i;
 														_html =_html+ "<tr><td>"+features[0].geometryChangeKey_.target.flatCoordinates[i] +"</td><td>"+features[0].geometryChangeKey_.target.flatCoordinates[j++] + "</td><tr>";

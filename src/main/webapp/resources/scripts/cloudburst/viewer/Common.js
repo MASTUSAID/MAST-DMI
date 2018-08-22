@@ -570,6 +570,7 @@ function addTab(tool,_template){
         $("<li><a href='#tabs-Tool'>" + tool + "</a></li>").appendTo("#sidebar .ui-tabs-nav");
         $("#sidebar").tabs("refresh");
         $("#tabs-Tool").append(_template);
+        $("#tabs-Tool").i18n();
         $('#sidebar').tabs("option", "active", $('#sidebar a[href="#tabs-Tool"]').parent().index());
 }
 
@@ -910,38 +911,38 @@ function getActionType(gid, actions){
 }
 
 function attachmentLabelTranslations(){
-	$('#attachment_header').html($._('attachment'));
-	$('#attachment_desc').html($._('description'));
-	$('#attachment_file').html($._('filename'));
-	$('#btnupload').attr("value", $._('attach'));
-	$('#attached_files').html($._('attached_files'));
-	$('#attchmt_file').html($._('file'));
-	$('#attchmt_action').html($._('action'));
+	$('#attachment_header').html($.i18n('attachment'));
+	$('#attachment_desc').html($.i18n('description'));
+	$('#attachment_file').html($.i18n('filename'));
+	$('#btnupload').attr("value", $.i18n('attach'));
+	$('#attached_files').html($.i18n('attached_files'));
+	$('#attchmt_file').html($.i18n('file'));
+	$('#attchmt_action').html($.i18n('action'));
 	
 	//Job
-	$('#job_attached_files').html($._('attached_files'));
-	$('#job_attchmt_file').html($._('file'));
-	$('#job_attchmt_action').html($._('action'));
+	$('#job_attached_files').html($.i18n('attached_files'));
+	$('#job_attchmt_file').html($.i18n('file'));
+	$('#job_attchmt_action').html($.i18n('action'));
 	
 	//Legal
-	$('#legal_attached_files').html($._('attached_files'));
-	$('#legal_attchmt_file').html($._('file'));
-	$('#legal_attchmt_action').html($._('action'));
+	$('#legal_attached_files').html($.i18n('attached_files'));
+	$('#legal_attchmt_file').html($.i18n('file'));
+	$('#legal_attchmt_action').html($.i18n('action'));
 	
 	//Access Land
-	$('#al_attach_files').html($._('attached_files'));
-	$('#al_file').html($._('file'));
-	$('#al_action').html($._('action'));
+	$('#al_attach_files').html($.i18n('attached_files'));
+	$('#al_file').html($.i18n('file'));
+	$('#al_action').html($.i18n('action'));
 	
 	//Furniture
-	$('#issue_attached_file').html($._('attached_files'));
-	$('#issue_file').html($._('file'));
-	$('#issue_action').html($._('action'));
+	$('#issue_attached_file').html($.i18n('attached_files'));
+	$('#issue_file').html($.i18n('file'));
+	$('#issue_action').html($.i18n('action'));
 	
 	//Surface
-	$('#surface_attached_files').html($._('attached_files'));
-	$('#surface_file').html($._('file'));
-	$('#surface_action').html($._('action'));
+	$('#surface_attached_files').html($.i18n('attached_files'));
+	$('#surface_file').html($.i18n('file'));
+	$('#surface_action').html($.i18n('action'));
 }
 
 function getPathConditionIssueCount(_rowId){
