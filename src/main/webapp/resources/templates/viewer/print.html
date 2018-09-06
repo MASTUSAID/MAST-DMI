@@ -1,28 +1,28 @@
 <div id="printdiv" class="dialog-v">
     <form id="printForm" method="post" action="print/" target="_blank">
-        <div id="printTmpl" class="lab-int">
-            <div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('printdiv');"></div>
-            <div id="print-help" class="span-h" data-i18n="[title]gen-help" onclick="javascript:openHelpWindow('print_help');"></div>
-            <div class="lineBreak05p"></div>
-
-            <div class="formPattern">
-                <dl class="styleForm">
-
-                    <dd><label for="tit" id="map_title" data-i18n="gen-title"></label></dd>
-                    <dd><input type ="text" value = "" class="int" id ="title" name="title"/></dd>	
-
-                </dl>
-
-            </div>
-
-        </div>
-        <br/>
-        <div class="buttons btn-holder-float">
-
-            <span class="lesserbtn">
-                <input id="btnPrint" type="button" data-i18n="[value]gen-print" onclick="javascript:printMapDetails();" /> 
-            </span>
-
-        </div>
-    </form>	
+	<div id="printTmpl" class="lab-int">
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('printdiv');"></div>
+		<div id="print-help" class="span-h" title="Help for Print"  onclick="javascript:openHelpWindow('print_help');"></div>
+		<div class="lineBreak05p"></div>
+		
+		<div class="formPattern">
+			<dl class="styleForm">
+				
+				<dd><label for="tit" id="map_title">Map Title</label></dd>
+				<dd><input type ="text" value = "" class="int" id ="title" name="title"/></dd>	
+				
+			</dl>
+			
+			</div>
+            
+</div>
+<br/>
+<div class="buttons btn-holder-float">
+	
+	<span class="lesserbtn">
+		<input id="btnPrint" type="button" value="Print" onclick="javascript:printMapDetails();" /> 
+		</span>
+		
+	</div>
+</form>	
 </div>

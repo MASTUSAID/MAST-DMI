@@ -48,7 +48,7 @@ Cloudburst.Editing = function (_map, _searchdiv) {
     jQuery.get('resources/templates/viewer/editing.html', function (template) {
       $("#tabs-Tool").empty();
         //Add tad
-        addTab($.i18n("viewer-edit"), template);
+        addTab('Editing', template);
         $("#editing-help").tipTip({defaultPosition: "right"});
 
         $("#options-s-d").hide();
@@ -243,12 +243,12 @@ Cloudburst.Editing = function (_map, _searchdiv) {
                             featureState = "insert";
                             toggleEditControl('polygon');
                         } else {
-                            jAlert($.i18n("err-layer-not-polygon-type"), $.i18n("err-error"));
+                            jAlert("Layer selected is not polygon type", "Error");
                         }
                         break;
                 }
             } else {
-                jAlert($.i18n("err-select-layer"), $.i18n("err-error"));
+                jAlert("Please Selected Layer", "Error");
             }
 
         });
@@ -258,7 +258,7 @@ Cloudburst.Editing = function (_map, _searchdiv) {
         	if (blade && polygons) {
         		var claimtype= polygons.array_[0].getProperties().claimtypeid;
 				if(claimtype==3 && claimtype==4){
-					 jAlert($.i18n("err-cant-split-unclaimed"));
+					 jAlert("UnClaim and Disputed parcel can't be Splitted.");
 				   map.removeInteraction(selectSingleClick);
 				   map.removeInteraction(drawLine);
 				   setTimeout(
@@ -272,7 +272,7 @@ Cloudburst.Editing = function (_map, _searchdiv) {
 					split(polygons, blade);
 				}
         	}else{
-				   jAlert($.i18n("err-select-feature-for-split"));
+				   jAlert("Please Select Feature before Split");
 				   map.removeInteraction(selectSingleClick);
 				   map.removeInteraction(drawLine);
 				   setTimeout(
@@ -343,7 +343,7 @@ Cloudburst.Editing = function (_map, _searchdiv) {
 				  insertedArr=[],
 			      updateArr=[];
 				  featureArr=[];
-				  jAlert($.i18n("err-split-into-2"), $.i18n("err-error"));
+				  jAlert("Please Split parcel into two parts", "Error");
 				   setTimeout(
 					  function() 
 					  {
@@ -408,7 +408,7 @@ Cloudburst.Editing = function (_map, _searchdiv) {
 function populateEditableLayers() {
 
  $('#edit_layer').empty();
-    $('#edit_layer').append($("<option></option>").attr("value", "").text($.i18n("viewer-select-layer")));
+    $('#edit_layer').append($("<option></option>").attr("value", "").text("Select Layer"));
          for (var i=0;i<map.getLayers().getLength();i++) {
 			 layer =map.getLayers().getArray()[i];
 			  if (layer.getSource() instanceof ol.source.Vector) {
@@ -680,7 +680,7 @@ function modifyMode(mode) {
 		
 		 deleteInteraction.getFeatures().clear();
 		 
-		 var _confirm=confirm($.i18n("viewer-confirm-delete-feature"));
+		 var _confirm=confirm('Are you sure you want to delete this feature?');
 if (_confirm) {
        
 	  
@@ -709,7 +709,7 @@ function saveEdit() {
 			 updateArr[i].values_.geometry.flatCoordinates[1]!= updateArr[i].values_.geometry.flatCoordinates[updateArr[i].values_.geometry.flatCoordinates.length-1] 
 		   
 		   ){
-			   alert($.i18n("err-invalid-geom"));
+			   alert("Invalid Geometry");
 			    insertedArr = [];
 				updateArr = [];
 				deleteArr = [];
@@ -799,12 +799,12 @@ function saveEdit() {
 }
 
 function onSave(event) {
-    jAlert($.i18n("gen-data-saved"));
+    jAlert("Data Successfully Saved");
     objLayer.redraw(true);
 }
 
 function onSaveFailed(event) {
-    jAlert($.i18n("err-not-saved"));
+    jAlert("Failed to save data");
     objLayer.redraw(true);
 }
 
@@ -990,6 +990,9 @@ function toggleSnap(_this) {
             target[type + "Tolerance"] = Number($('#edit_tolerance_two').val()) || 0;
         }
     }
+
+
+
 }
 function toggleSnapAttr(_this) {
     //alert(_this.value+"-"+_this.checked);		

@@ -53,6 +53,33 @@ var selectedFeaturesExport=null;
 var draw;
 var drawLine=null;
 var selectSingleClick=null;
+
+var styles = [
+              // style for the polygon
+              new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                  color: 'blue',
+                  width: 3
+                }),
+                fill: new ol.style.Fill({
+                  color: 'rgba(0, 0, 255, 0.1)'
+                })
+              }),
+              // style for the vertices
+              new ol.style.Style({
+                image: new ol.style.Circle({
+                  radius: 5,
+                  fill: new ol.style.Fill({
+                    color: 'orange'
+                  })
+                }),
+                geometry: function(feature) {
+                  // return the coordinates of the first ring of the polygon
+                  var coordinates = feature.getGeometry().getCoordinates()[0];
+                  return new ol.geom.MultiPoint(coordinates);
+                }
+              })
+            ];
 var selectInteraction = new ol.interaction.Select({
                 condition: ol.events.condition.never
             });
@@ -78,7 +105,7 @@ var zOut = new ol.interaction.DragBox({
 		
 		
 var intraction_dragBox =new ol.interaction.DragBox({
-                style: new ol.style.Style({
+                style:new ol.style.Style({
                     stroke: new ol.style.Stroke({
                         color: [250, 25, 25, 1]
                     })
@@ -102,8 +129,9 @@ var intraction_dragBox =new ol.interaction.DragBox({
             });
 			
 var selectInteraction_edit  = new ol.interaction.Select({
-                condition: ol.events.condition.never
-			});	
+                condition: ol.events.condition.never,
+				style:styles
+           });	
 	 
 var  modifyInteraction = new ol.interaction.Modify({
       features: selectInteraction_edit.getFeatures()
@@ -570,7 +598,6 @@ function addTab(tool,_template){
         $("<li><a href='#tabs-Tool'>" + tool + "</a></li>").appendTo("#sidebar .ui-tabs-nav");
         $("#sidebar").tabs("refresh");
         $("#tabs-Tool").append(_template);
-        $("#tabs-Tool").i18n();
         $('#sidebar').tabs("option", "active", $('#sidebar a[href="#tabs-Tool"]').parent().index());
 }
 
@@ -911,38 +938,38 @@ function getActionType(gid, actions){
 }
 
 function attachmentLabelTranslations(){
-	$('#attachment_header').html($.i18n('attachment'));
-	$('#attachment_desc').html($.i18n('description'));
-	$('#attachment_file').html($.i18n('filename'));
-	$('#btnupload').attr("value", $.i18n('attach'));
-	$('#attached_files').html($.i18n('attached_files'));
-	$('#attchmt_file').html($.i18n('file'));
-	$('#attchmt_action').html($.i18n('action'));
+	$('#attachment_header').html($._('attachment'));
+	$('#attachment_desc').html($._('description'));
+	$('#attachment_file').html($._('filename'));
+	$('#btnupload').attr("value", $._('attach'));
+	$('#attached_files').html($._('attached_files'));
+	$('#attchmt_file').html($._('file'));
+	$('#attchmt_action').html($._('action'));
 	
 	//Job
-	$('#job_attached_files').html($.i18n('attached_files'));
-	$('#job_attchmt_file').html($.i18n('file'));
-	$('#job_attchmt_action').html($.i18n('action'));
+	$('#job_attached_files').html($._('attached_files'));
+	$('#job_attchmt_file').html($._('file'));
+	$('#job_attchmt_action').html($._('action'));
 	
 	//Legal
-	$('#legal_attached_files').html($.i18n('attached_files'));
-	$('#legal_attchmt_file').html($.i18n('file'));
-	$('#legal_attchmt_action').html($.i18n('action'));
+	$('#legal_attached_files').html($._('attached_files'));
+	$('#legal_attchmt_file').html($._('file'));
+	$('#legal_attchmt_action').html($._('action'));
 	
 	//Access Land
-	$('#al_attach_files').html($.i18n('attached_files'));
-	$('#al_file').html($.i18n('file'));
-	$('#al_action').html($.i18n('action'));
+	$('#al_attach_files').html($._('attached_files'));
+	$('#al_file').html($._('file'));
+	$('#al_action').html($._('action'));
 	
 	//Furniture
-	$('#issue_attached_file').html($.i18n('attached_files'));
-	$('#issue_file').html($.i18n('file'));
-	$('#issue_action').html($.i18n('action'));
+	$('#issue_attached_file').html($._('attached_files'));
+	$('#issue_file').html($._('file'));
+	$('#issue_action').html($._('action'));
 	
 	//Surface
-	$('#surface_attached_files').html($.i18n('attached_files'));
-	$('#surface_file').html($.i18n('file'));
-	$('#surface_action').html($.i18n('action'));
+	$('#surface_attached_files').html($._('attached_files'));
+	$('#surface_file').html($._('file'));
+	$('#surface_action').html($._('action'));
 }
 
 function getPathConditionIssueCount(_rowId){

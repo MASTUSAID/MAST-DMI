@@ -1100,14 +1100,21 @@ padding:0;
 }
 
 .home-separator {
-	background: url(../images/home-separator.png) no-repeat center;
-	
+	background: url(../images/home-separator.png) no-repeat right;
+	padding-right: 20px!important;
+
+
+
+
 }
 .home{
   background: url(../images/home-icon.png) no-repeat;
   display: inline-block;
   width: 24px;
   height: 24px;
+  margin-right: 20px;
+
+
 }
 
 .logout{
@@ -1259,21 +1266,4 @@ margin-left: 15px;
 
 color: #fff;
 text-align: center;
-}
-
-.homeDiv, .languageDiv, .logoutDiv {
-    float: left;
-}
-
-.homeDiv{
-    width: 45px;
-}
-
-.languageDiv {
-    min-width: 90px;
-    margin-top: 2px;
-}
-
-.logoutDiv {
-    min-width: 110px;
 }

@@ -42,7 +42,7 @@ Cloudburst.Query = function(_showResultsinDialog) {
 	jQuery.get('resources/templates/viewer/NewQueryBuilder.html', function(template) {
     	//$('#sidebar').append(template);
 		//Add tad
-		addTab($.i18n('qrybuilder_query'),template);
+		addTab($._('qrybuilder_query'),template);
 		$("#query-help").tipTip({defaultPosition:"right"});
     	
     	$('#layers').change(onLayerChange);
@@ -76,19 +76,19 @@ Cloudburst.Query = function(_showResultsinDialog) {
 }
 
 function translateQueryStrings(){
-	$('#qrybldr_selectlayer').html($.i18n('Select Layer'));
-	$('#qry_fields').html($.i18n('Fields'));
-	$('#qry_operators').html($.i18n('Operators'));
-	$('#qry_values').html($.i18n('Values'));
-	$('#displayValues').html($.i18n('More'));
-	$('#qry_loadquery').html($.i18n('Load Query'));
-	$('#qry_whereclause').html($.i18n('Where Clause'));
-	$('#saveQueryLnk').html($.i18n('Save Query'));
-	$('#btnClear').html($.i18n('Clear'));
-	$('#lblqryName').html($.i18n('Query Name'));
-	$('#qryDesc').html($.i18n('Query Desc'));
-	$('#btnSaveQry').attr("value", $.i18n('Save Query'));
-	$('#btnRunQry').attr("value", $.i18n('Run Query'));
+	$('#qrybldr_selectlayer').html($._('Select Layer'));
+	$('#qry_fields').html($._('Fields'));
+	$('#qry_operators').html($._('Operators'));
+	$('#qry_values').html($._('Values'));
+	$('#displayValues').html($._('More'));
+	$('#qry_loadquery').html($._('Load Query'));
+	$('#qry_whereclause').html($._('Where Clause'));
+	$('#saveQueryLnk').html($._('Save Query'));
+	$('#btnClear').html($._('Clear'));
+	$('#lblqryName').html($._('Query Name'));
+	$('#qryDesc').html($._('Query Desc'));
+	$('#btnSaveQry').attr("value", $._('Save Query'));
+	$('#btnRunQry').attr("value", $._('Run Query'));
 }
 
 function populateFeatureLayers() {
@@ -104,8 +104,8 @@ function populateFeatureLayers() {
                     if (map.layers[i].queryable) {
                         $('#layers').append($("<option></option>").attr("value", map.layers[i].name).text(
                         		//map.layers[i].name));
-                        		($.i18n(map.layers[i].name) == "")?
-                        				map.layers[i].name:$.i18n(map.layers[i].name)));
+                        		($._(map.layers[i].name) == "")?
+                        				map.layers[i].name:$._(map.layers[i].name)));
                         $('#relateLayer').append($("<option></option>").attr("value", map.layers[i].name).text(
                         		map.layers[i].name));
                     }
@@ -242,8 +242,8 @@ function populateFields(_data) {
                 }
                 $('#fields_1').append($("<option></option>").attr("value", featureTypes[0].properties[i].name).text(
                 		//featureTypes[0].properties[i].name));
-                		($.i18n(featureTypes[0].properties[i].name) == "")?
-                				featureTypes[0].properties[i].name:$.i18n(featureTypes[0].properties[i].name)));
+                		($._(featureTypes[0].properties[i].name) == "")?
+                				featureTypes[0].properties[i].name:$._(featureTypes[0].properties[i].name)));
             }
         },
         error: function (xhr, status) {

@@ -43,7 +43,7 @@ Cloudburst.TextStyle = function (_map, _searchdiv) {
        // $("#" + searchdiv).append(template);
     	
     	//Add tad
-		addTab($.i18n("home_page_textstyle"),template);
+		addTab($._("home_page_textstyle"),template);
 		
 		$("#textstyle-help").tipTip({defaultPosition:"right"});
 		//set default
@@ -208,16 +208,16 @@ Cloudburst.TextStyle = function (_map, _searchdiv) {
 			}			
         });
         
-        $('#text_column').html($.i18n('column') + ':');
-        $('#text_font').html($.i18n('font'));
-        $('#text_fontname').html($.i18n('Name') + ':');
-        $('#text_color').html($.i18n('color') + ':');
-        $('#text_size').html($.i18n('size') + ':');
-        $('#text_halo').html($.i18n('halo'));
-        $('#text_radius').html($.i18n('radius') + ':');
-        $('#text_fill').html($.i18n('theme_fill') + ':');
-        $('#opacity').html($.i18n('theme_opacity') + ':');
-        $('#textstyle_apply').attr("value", $.i18n('theme_apply'));
+        $('#text_column').html($._('column') + ':');
+        $('#text_font').html($._('font'));
+        $('#text_fontname').html($._('Name') + ':');
+        $('#text_color').html($._('color') + ':');
+        $('#text_size').html($._('size') + ':');
+        $('#text_halo').html($._('halo'));
+        $('#text_radius').html($._('radius') + ':');
+        $('#text_fill').html($._('theme_fill') + ':');
+        $('#opacity').html($._('theme_opacity') + ':');
+        $('#textstyle_apply').attr("value", $._('theme_apply'));
     });
     
 };

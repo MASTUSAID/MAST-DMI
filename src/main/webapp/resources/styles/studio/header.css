@@ -14,11 +14,11 @@ html,body{font: normal 14px 'titilliumregular', sans-serif!important;}
 .header-top
 {
 
-    margin: 0;
-    min-height: 90px;
-    padding: 0;
-    width: 100%;
-    background:#362d59;
+	margin: 0;
+	min-height: 90px;
+	padding: 0;
+	width: 100%;
+	background:#362d59;
     border-bottom:2px solid #00b7bd;
     box-shadow: 0 3px 3px rgba(0,0,0,.5);
 	 
@@ -96,14 +96,21 @@ padding:0;
 }
 
 .home-separator {
-	background: url(../../images/home-separator.png) no-repeat center;
+	background: url(../../images/home-separator.png) no-repeat right;
+	padding-right: 20px!important;
+
+
+
+
 }
 .home{
   background: url(../../images/home-icon.png) no-repeat;
   display: inline-block;
   width: 24px;
   height: 24px;
-  padding: 0 !important;
+  margin-right: 20px;
+
+
 }
 
 .logout{
@@ -115,21 +122,4 @@ padding:0;
   border-radius: 3px;
   font-size: 14px;
 
-}
-
-.homeDiv, .languageDiv, .logoutDiv {
-    float: left;
-}
-
-.homeDiv{
-    width: 45px;
-}
-
-.languageDiv {
-    min-width: 90px;
-    margin-top: 2px;
-}
-
-.logoutDiv {
-    min-width: 110px;
 }

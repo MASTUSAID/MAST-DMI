@@ -22,7 +22,7 @@ Cloudburst.Bookmark = function(_map, _searchdiv) {
             		
             		//$("#"+searchdiv).append(template);
             		//Add tad
-            		addTab($.i18n('viewer-bookmarks'),template);
+            		addTab($._('bookmark'),template);
             		
             		$("#bookmark-help").tipTip({defaultPosition:"right"});
             		
@@ -57,9 +57,9 @@ Cloudburst.Bookmark = function(_map, _searchdiv) {
 };
 
 function translateBookmarks(){
-	$('.bk-s').html($.i18n('gen-save'));
-	$('.zoomlink-s').html($.i18n('viewer-zoom'));
-	$('.removebklink-s').html($.i18n('gen-remove'));
+	$('.bk-s').html($._('Save'));
+	$('.zoomlink-s').html($._('bookmark_zoom'));
+	$('.removebklink-s').html($._('bookmark_remove'));
 }
 
 var zoomBookmark = function(bookmarkName) {
@@ -82,7 +82,7 @@ var createBookmark = function() {
     var currentExtent = map.getView().calculateExtent(map.getSize())
 
     if ($("#name").val() == '') {        
-        jAlert($.i18n("err-bookmark-name-mepty"), $.i18n("viewer-bookmark"));
+        jAlert('Enter Bookmark Name', 'Bookmark');
 		return;
     }
     
@@ -120,7 +120,7 @@ var removeBookmark = function(bookmarkid,bookmarkName) {
     //var bookmarkName = $("#Bookmark").val();         
     if (bookmarkName) {
 
-        jConfirm($.i18n("viewer-confirm-delete-bookmark", bookmarkName), $.i18n("gen-confirm-delete"), function (r) {
+        jConfirm('Are You Sure You Want To Delete : <strong>' + bookmarkName + '</strong>', 'Delete Confirmation', function (r) {
 
             if (r) {
                 $.ajax({
@@ -132,7 +132,7 @@ var removeBookmark = function(bookmarkid,bookmarkName) {
                         
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        alert($.i18n("err-error"), $.i18n("viewer-bookmark"));
+                        alert('Error', 'Bookmark');
                     }
                 });
            }
@@ -159,7 +159,7 @@ var removeAll = function() {
                     $("#Bookmark").empty(); 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert($.i18n("err-error"), $.i18n("viewer-bookmark"));
+                    alert('Error', 'Bookmark');
                 }
             });
     //   }

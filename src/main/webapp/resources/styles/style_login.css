@@ -1,16 +1,16 @@
 
 
 html {
-    height: 100%;
-    box-sizing: border-box;
+  height: 100%;
+  box-sizing: border-box;
 }
 *,
 *:before,
 *:after {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }   
-
-
+   
+ 
 @font-face {
     font-family: 'titilliumregular';
     src: url('fonts/titillium-regular-webfont.woff2') format('woff2'), url('fonts/titillium-regular-webfont.woff') format('woff');
@@ -20,183 +20,175 @@ html {
 
 body {
 
-    margin: 0px;
+  margin: 0px;
 
-    width:100%;
+   width:100%;
 
-    background-image:url(../images/homebg.jpg) ;/*your background image*/  
-    background-repeat:no-repeat;/*we want to have one single image not a repeated one*/  
-    background-size:cover;/*this sets the image to fullscreen covering the whole screen*/  
-    /*css hack for ie*/     
-    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.image.jpg',sizingMethod='scale');
-    -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='image.jpg',sizingMethod='scale')";
-    position:relative;
-
-    min-height:100%;
-
-    font: normal 14px 'titilliumregular', sans-serif;
+   background-image:url(../images/homebg.jpg) ;/*your background image*/  
+   background-repeat:no-repeat;/*we want to have one single image not a repeated one*/  
+   background-size:cover;/*this sets the image to fullscreen covering the whole screen*/  
+   /*css hack for ie*/     
+   filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.image.jpg',sizingMethod='scale');
+   -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='image.jpg',sizingMethod='scale')";
+  position:relative;
+ 
+  min-height:100%;
+  
+  font: normal 14px 'titilliumregular', sans-serif;
 
 }
 
 .demo {
-    margin: 0 auto;
+  margin: 0 auto;
 
 
-    width: 100%;
+  width: 100%;
 }
 
 
 .footer {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
-    background-color: rgb(0, 0, 0);
+   background-color: rgb(0, 0, 0);
     /* RGBa with 0.6 opacity */
     background-color: rgba(0, 0, 0, 0.6);
     /* For IE 5.5 - 7*/
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     /* For IE 8*/
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
-    text-align: center;
-    min-height: 75px;
-
+  text-align: center;
+  min-height: 75px;
+  
 }
 
 .copyright-text{
-    color: #fff;
-    float: right;
-    line-height: 20px;
-    padding: 28px 15px;
+  color: #fff;
+  float: right;
+  line-height: 20px;
+  padding: 28px 15px;
 }
 
 .header_bluebar_top {
-    width: 100%;
-    background: url(../images/bluebar.png);
-    height: 27px;
-    clear: both;
+  width: 100%;
+  background: url(../images/bluebar.png);
+  height: 27px;
+  clear: both;
 }
 
 
 
 .header_bluebar_bottom {
-    width: 100%;
-    background: url(../images/bluebar_thin.png);
-    height: 17px;
-    clear: both;
+  width: 100%;
+  background: url(../images/bluebar_thin.png);
+  height: 17px;
+  clear: both;
 }
 
 .header_wrapper {
-
-    height: 98px;
-    clear: both;
-    background:#362d59;
-    border-bottom:2px solid #00b7bd;
-    box-shadow: 0 3px 3px rgba(0,0,0,.5);
-}
-
-
-#languageBarWrapper {
-    float: right;
-    right: 20px;
-    top: 40px;
-    position: absolute;
+ 
+  height: 98px;
+  clear: both;
+  background:#362d59;
+  border-bottom:2px solid #00b7bd;
+  box-shadow: 0 3px 3px rgba(0,0,0,.5);
 }
 
 #usaid_logo {
-    width: 128px;
-    background: url(../images/usaid_logo_300.png) no-repeat;
-    height: 51px;
-    float: left;
-    margin-top: 20px;
-    margin-left: 15px;
-    display: inline-block;
-    position: absolute;
-    left: 15px;}
+width: 128px;
+background: url(../images/usaid_logo_300.png) no-repeat;
+height: 51px;
+float: left;
+margin-top: 20px;
+margin-left: 15px;
+display: inline-block;
+position: absolute;
+left: 15px;}
 
 .header_title {
+ 
+font-size: 22px;
+padding-top: 15px;
+margin-left: 15px;
 
-    font-size: 22px;
-    padding-top: 15px;
-    margin-left: 15px;
-
-    color: #fff;
-    text-align: center;
+color: #fff;
+text-align: center;
 }
 
 .header_menu_option {
-    color: #FFF;
-    font-size: 14pt;
+  color: #FFF;
+  font-size: 14pt;
 }
 
 #menu_option_login {
-    float: right;
-    margin-top: 4px;
-    margin-right: 33px;
+  float: right;
+  margin-top: 4px;
+  margin-right: 33px;
 }
 
 #menu_option_login:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .home_background {
-    width: 990px;
-    margin:0 auto;
+  width: 990px;
+  margin:0 auto;
 }
 
 .homebox_title {
-    font-size: 14pt;
-    font-weight: bold;
-    margin-bottom: 5px;
-    margin-left: 10px;
+  font-size: 14pt;
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-left: 10px;
 }
 
 .homebox1_title {
-    font-size: 20px;
+  font-size: 20px;
 
-    margin-bottom: 20px;
-    margin-top: 20px;
-    color: #f2b43e;
-    text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  color: #f2b43e;
+  text-align: center;
 }
 
 .vlabel { color: #fff; margin-bottom: 5px;}
 
 .form-login {
-    width: 100%;	
+  width: 100%;	
 }
 
 .lg-login-form-row {
-    margin-bottom: 25px;	
+  margin-bottom: 25px;	
 }
 .lg-login-form-row input[type="text"], .lg-login-form-row input[type="password"]{
-    background: none;
-    outline: none;
-    border: 1px solid #fff;
-    border-radius: 3px;
-    padding: 5px;
-    color: #eee;
-    box-shadow: 0 1px 3px inset;
-    line-height: 20px;
+background: none;
+outline: none;
+border: 1px solid #fff;
+border-radius: 3px;
+padding: 5px;
+color: #eee;
+box-shadow: 0 1px 3px inset;
+line-height: 20px;
 }
 
 
 .login-btn{
-    background: #f2b43e;
-    outline: none;
-    border: 1px solid #f2b43e;
-    border-radius: 3px;
-    padding: 5px;
-    color: #333;
+  background: #f2b43e;
+outline: none;
+border: 1px solid #f2b43e;
+border-radius: 3px;
+padding: 5px;
+color: #333;
 
-    line-height: 20px;
-    width: 100%;	
-    cursor: pointer;
+line-height: 20px;
+width: 100%;	
+cursor: pointer;
 }
 .homebox {
-    width: 625px;
-    border: 1px solid #cfcfcf;
+  width: 625px;
+  border: 1px solid #cfcfcf;
     background-color: rgb(247, 247, 247);
     /* RGBa with 0.6 opacity */
     background-color: rgba(247, 247, 247, 0.6);
@@ -204,96 +196,96 @@ body {
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     /* For IE 8*/
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
-    padding: 10px;
-    margin: 120px 0px 0px 0px;
-    border-radius: 5px;
-    border-left: 3px solid #342b58;
-
-    float: left;
-    min-height: 330px;
+  padding: 10px;
+  margin: 120px 0px 0px 0px;
+  border-radius: 5px;
+  border-left: 3px solid #342b58;
+  
+  float: left;
+  min-height: 330px;
 }
 
 .auth { color: #eee;}
 
 .homebox1 {
-    width: 355px;
-    border: 1px solid #cfcfcf;
-    background-color: rgb(0, 0, 0);
+  width: 355px;
+  border: 1px solid #cfcfcf;
+  background-color: rgb(0, 0, 0);
     /* RGBa with 0.6 opacity */
     background-color: rgba(0, 0, 0, 0.6);
     /* For IE 5.5 - 7*/
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
     /* For IE 8*/
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
-    padding: 10px;
-    margin: 120px 0px 0px 0px;
-    border-radius: 5px;
-
-    float: left;
-    min-height: 330px;
+  padding: 10px;
+  margin: 120px 0px 0px 0px;
+  border-radius: 5px;
+  
+  float: left;
+  min-height: 330px;
 }
 
 .homebox p {
-    margin-bottom: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
-    line-height: 16px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  line-height: 16px;
 }
 
 
 
 #homebox_projects {
-    float: right;
-    margin-right: 0px;
-    margin-left: 10px;
+  float: right;
+  margin-right: 0px;
+  margin-left: 10px;
 }
 
 #ccg_logo {
-    width: 221px;
-    height: 24px;
-    background: url(../images/ccg_logo.png);
-    margin-right: 33px;
-    margin-top: 5px;
-    float: right;
+  width: 221px;
+  height: 24px;
+  background: url(../images/ccg_logo.png);
+  margin-right: 33px;
+  margin-top: 5px;
+  float: right;
 }
 
 #rmsi_logo {
-    width: 77px;
-    height: 24px;
-    background: url(../images/RMSI_logo.png);
-    margin-right: 15px;
-    margin-top: 5px;
-    float: right;
+  width: 77px;
+  height: 24px;
+  background: url(../images/RMSI_logo.png);
+  margin-right: 15px;
+  margin-top: 5px;
+  float: right;
 }
 
 #android_logo {
-    width: 162px;
-    height: 56px;
-    background: url(../images/android.png) no-repeat;
-    float: left;
-    margin-top: 10px;
+  width: 162px;
+  height: 56px;
+  background: url(../images/android.png) no-repeat;
+  float: left;
+  margin-top: 10px;
 
 }
 
 #brochure_button {
-    width: 173px;
-    height: 85px;
-    background: url(../images/brochure.png) no-repeat;
-    margin-left: 15px;
-    margin-top: -12px;
-    float: left;
+ width: 173px;
+height: 85px;
+background: url(../images/brochure.png) no-repeat;
+margin-left: 15px;
+margin-top: -12px;
+float: left;
 }
 
 #ccg_logo:hover, #rmsi_logo:hover, #usaid_logo:hover, #android_logo:hover, #brochure_button:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #copyright {
-    font-size: 8pt;
-    color: #999;
-    float: left;
-    margin-top: 5px;
-    margin-left: 50px;
+  font-size: 8pt;
+  color: #999;
+  float: left;
+  margin-top: 5px;
+  margin-left: 50px;
 }
 
 

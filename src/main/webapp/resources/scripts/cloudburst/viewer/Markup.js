@@ -629,7 +629,7 @@ Cloudburst.Markup = function (map, _searchdiv) {
     	//$("#" + searchdiv).append(template);
     	
     	//Add tag
-		addTab($.i18n('markup'),template);
+		addTab($._('markup'),template);
 		
 		$("#markup-help").tipTip({defaultPosition:"right"});
         
@@ -1179,69 +1179,69 @@ Cloudburst.Markup = function (map, _searchdiv) {
 };
 
 function translateMarkupToolbarStrings(){
-	$('#newmarkup').attr("title",$.i18n('new_markup'));
-	$('#save').attr("title",$.i18n('Save'));
-	$('#deletemarkup').attr("title",$.i18n('delete_markup'));
-	$('#deleteall').attr("title",$.i18n('delete_all_markup'));
-	$('#point').attr("title",$.i18n('point'));
-	$('#line').attr("title",$.i18n('line'));
-	$('#polygon').attr("title",$.i18n('polygon'));
-	$('#circle').attr("title",$.i18n('circle'));
-	$('#rectangle').attr("title",$.i18n('rectangle'));
-	$('#text').attr("title",$.i18n('text'));
+	$('#newmarkup').attr("title",$._('new_markup'));
+	$('#save').attr("title",$._('Save'));
+	$('#deletemarkup').attr("title",$._('delete_markup'));
+	$('#deleteall').attr("title",$._('delete_all_markup'));
+	$('#point').attr("title",$._('point'));
+	$('#line').attr("title",$._('line'));
+	$('#polygon').attr("title",$._('polygon'));
+	$('#circle').attr("title",$._('circle'));
+	$('#rectangle').attr("title",$._('rectangle'));
+	$('#text').attr("title",$._('text'));
 }
 
 function translatePointMarkupformLabels(){
-	$('#lbl_markup_fill').html($.i18n('fill'));
-	$('#lbl_markup_fillcolor').html($.i18n('fill_color'));
-	$('#lbl_markup_fillopacity').html($.i18n('fill_opacity'));
-	$('#lbl_markup_pointradius').html($.i18n('point_radius'));
-	$('#lbl_markup_stroke').html($.i18n('stroke'));
-	$('#lbl_markup_strokecolor').html($.i18n('stroke_color'));
-	$('#lbl_markup_strokeopacity').html($.i18n('stroke_opacity'));
-	$('#lbl_markup_strokewidth').html($.i18n('stroke_width'));
-	$('#lbl_markup_strokelinecap').html($.i18n('stroke_linecap'));
+	$('#lbl_markup_fill').html($._('fill'));
+	$('#lbl_markup_fillcolor').html($._('fill_color'));
+	$('#lbl_markup_fillopacity').html($._('fill_opacity'));
+	$('#lbl_markup_pointradius').html($._('point_radius'));
+	$('#lbl_markup_stroke').html($._('stroke'));
+	$('#lbl_markup_strokecolor').html($._('stroke_color'));
+	$('#lbl_markup_strokeopacity').html($._('stroke_opacity'));
+	$('#lbl_markup_strokewidth').html($._('stroke_width'));
+	$('#lbl_markup_strokelinecap').html($._('stroke_linecap'));
 	
-	$('#stroke_linecap_point').append($("<option></option>").attr("value", "square").text($.i18n('square')));
-	$('#stroke_linecap_point').append($("<option></option>").attr("value", "star").text($.i18n('star')));
+	$('#stroke_linecap_point').append($("<option></option>").attr("value", "square").text($._('square')));
+	$('#stroke_linecap_point').append($("<option></option>").attr("value", "star").text($._('star')));
 	$('#stroke_linecap_point').append($("<option></option>").attr("value", "x").text("x"));
-	$('#stroke_linecap_point').append($("<option></option>").attr("value", "cross").text($.i18n('cross')));
-	$('#stroke_linecap_point').append($("<option></option>").attr("value", "triangle").text($.i18n('triangle')));
+	$('#stroke_linecap_point').append($("<option></option>").attr("value", "cross").text($._('cross')));
+	$('#stroke_linecap_point').append($("<option></option>").attr("value", "triangle").text($._('triangle')));
 }
 
 function translateLineMarkupformLabels(){
-	$('#lbl_linemarkup_stroke').html($.i18n('stroke'));
-	$('#lbl_linemarkup_strokecolor').html($.i18n('stroke_color'));
-	$('#lbl_linemarkup_strokeopacity').html($.i18n('stroke_opacity'));
-	$('#lbl_linemarkup_strokewidth').html($.i18n('stroke_width'));
-	$('#lbl_linemarkup_strokelinecap').html($.i18n('stroke_linecap'));
+	$('#lbl_linemarkup_stroke').html($._('stroke'));
+	$('#lbl_linemarkup_strokecolor').html($._('stroke_color'));
+	$('#lbl_linemarkup_strokeopacity').html($._('stroke_opacity'));
+	$('#lbl_linemarkup_strokewidth').html($._('stroke_width'));
+	$('#lbl_linemarkup_strokelinecap').html($._('stroke_linecap'));
 	
-	$('#stroke_linecap_line').append($("<option></option>").attr("value", "square").text($.i18n('square')));
-	$('#stroke_linecap_line').append($("<option></option>").attr("value", "round").text($.i18n('round')));
-	$('#stroke_linecap_line').append($("<option></option>").attr("value", "butt").text($.i18n('butt')));
+	$('#stroke_linecap_line').append($("<option></option>").attr("value", "square").text($._('square')));
+	$('#stroke_linecap_line').append($("<option></option>").attr("value", "round").text($._('round')));
+	$('#stroke_linecap_line').append($("<option></option>").attr("value", "butt").text($._('butt')));
 }
 
 function translatePolyMarkupformLabels(){
-	$('#lbl_polymarkup_fill').html($.i18n('fill'));
-	$('#lbl_polymarkup_fillcolor').html($.i18n('fill_color'));
-	$('#lbl_polymarkup_fillopacity').html($.i18n('fill_opacity'));
-	$('#lbl_polymarkup_pointradius').html($.i18n('point_radius'));
-	$('#lbl_polymarkup_stroke').html($.i18n('stroke'));
-	$('#lbl_polymarkup_strokecolor').html($.i18n('stroke_color'));
-	$('#lbl_polymarkup_strokeopacity').html($.i18n('stroke_opacity'));
-	$('#lbl_polymarkup_strokewidth').html($.i18n('stroke_width'));
-	$('#lbl_polymarkup_strokelinecap').html($.i18n('stroke_linecap'));
-	$('#stroke_linecap_poly').append($("<option></option>").attr("value", "square").text($.i18n('square')));
-	$('#stroke_linecap_poly').append($("<option></option>").attr("value", "round").text($.i18n('round')));
-	$('#stroke_linecap_poly').append($("<option></option>").attr("value", "butt").text($.i18n('butt')));
+	$('#lbl_polymarkup_fill').html($._('fill'));
+	$('#lbl_polymarkup_fillcolor').html($._('fill_color'));
+	$('#lbl_polymarkup_fillopacity').html($._('fill_opacity'));
+	$('#lbl_polymarkup_pointradius').html($._('point_radius'));
+	$('#lbl_polymarkup_stroke').html($._('stroke'));
+	$('#lbl_polymarkup_strokecolor').html($._('stroke_color'));
+	$('#lbl_polymarkup_strokeopacity').html($._('stroke_opacity'));
+	$('#lbl_polymarkup_strokewidth').html($._('stroke_width'));
+	$('#lbl_polymarkup_strokelinecap').html($._('stroke_linecap'));
+	$('#stroke_linecap_poly').append($("<option></option>").attr("value", "square").text($._('square')));
+	$('#stroke_linecap_poly').append($("<option></option>").attr("value", "round").text($._('round')));
+	$('#stroke_linecap_poly').append($("<option></option>").attr("value", "butt").text($._('butt')));
 }
 
 function translateTextMarkupformLabels(){
-	$('#lbl_textmarkup_font').html($.i18n('font'));
-	$('#lbl_textmarkup_fontstyle').html($.i18n('font-style'));
-	$('#lbl_textmarkup_fontweight').html($.i18n('font-weight'));
-	$('#lbl_textmarkup_color').html($.i18n('color'));
-	$('#lbl_textmarkup_size').html($.i18n('size'));
+	$('#lbl_textmarkup_font').html($._('font'));
+	$('#lbl_textmarkup_fontstyle').html($._('font-style'));
+	$('#lbl_textmarkup_fontweight').html($._('font-weight'));
+	$('#lbl_textmarkup_color').html($._('color'));
+	$('#lbl_textmarkup_size').html($._('size'));
 }
 
 function applyMarkupStyle(markup) {

@@ -6,7 +6,7 @@
         <div class="formPattern">
             <!--start:suboptions-->
             <div class="celladjust_one">
-                <span id="lbl_edit_layer" data-i18n="layer-layer"></span>:
+                <span id="lbl_edit_layer">Layer :</span>
 
                 <!--span id="edit_layer_visible"> </span><span id="edit_layer" style="display:none;"> </span-->
             </div>
@@ -20,20 +20,40 @@
                 <table width="46%" cellpadding="1" cellspacing="1">
                     <tr>
                         <td>
-                            <button id="selectionBox" data-i18n="[title]viewer-select-by-rect" 
+                            <button id="selectionBox" title="Select By Rectangle" 
                                     class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
                                 <img src="resources/images/viewer/navi/select-rectangle.png" />
                             </button>
                         </td>
                         <td>
-                            <button id="clearselection" data-i18n="[title]viewer-clear" 
+                            <button id="clearselection" title="Clear Selection" 
                                     class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
                                 <img src="resources/images/viewer/toolbar/clear_selection.png" />
                             </button>
                         </td>
-                      
+                        <!--<td>
+                            <button id="selectionPoly" title="Select By Polygon" 
+                                                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                                                    <img src="resources/images/viewer/navi/select-polygon.png" />
+                                                    </button>
+                        </td>-->
+						<!--
                         <td>
-                            <button id="selectSave" data-i18n="[title]gen-save" 
+                            <button id="selectUndo" title="Undo" 
+                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                <img src="resources/images/viewer/toolbar/undo.png" />
+                            </button>
+                        </td>
+                        <td>
+                            <button id="selectRedo" title="Redo" 
+                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+                                <img src="resources/images/viewer/toolbar/redo.png" />
+                            </button>
+                        </td>
+						
+						-->
+                        <td>
+                            <button id="selectSave" title="Save" 
                                     class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
                                 <img src="resources/images/viewer/toolbar/save.png" />
                             </button>
@@ -47,13 +67,13 @@
             <!--start:suboptions-->
             <div id="subcelladjustedit" class="subcelladjust blueSwitch">
                 <div class="editing-options-m">
-                    <a id="options1-s-t" href="#" data-i18n="gen-edit"></a>
+                    <a id="options1-s-t" href="#">Edit</a>
                 </div>	
                 <div id="options1-s-d" class="search-options-b">					
                     <table cellpadding="1" cellspacing="1">
                         <tr>
                             <td>
-                                <button  id="move" data-i18n="[title]gen-move"
+                                <button  id="move" title="Move"
                                          class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
                                          oldtitle="Point" aria-describedby="ui-tooltip-11">
                                     <img src="resources/images/viewer/navi/move.png">
@@ -81,7 +101,7 @@
 							-->
                             <td>
 							
-                                <button id="reshape" data-i18n="[title]viewer-reshape"
+                                <button id="reshape" title="Reshape"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
                                         oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
                                     <img src="resources/images/viewer/navi/reshape.png">
@@ -99,7 +119,7 @@
                             </td>
 							-->
                             <td>
-                                <button id="removeFeature" data-i18n="[title]viewer-remove-feat"
+                                <button id="removeFeature" title="Remove Feature"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
                                         oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
                                     <img src="resources/images/viewer/navi/delete-feature.png">
@@ -114,20 +134,20 @@
 		<!--start:suboptions-->
             <div id="subcelladjustcreate" class="subcelladjust blueSwitch">
                 <div class="editing-options-m">
-                    <a id="options-s-t" href="#" data-i18n="viewer-parcel-split"></a>
+                    <a id="options-s-t" href="#">Parcel Split</a>
                 </div>	
                 <div id="options-s-d" class="search-options-b">					
                     <table cellpadding="1" cellspacing="1">
                         <tr>
                              <td>
-                                 <button id="point" data-i18n="[title]viewer-point"
+                                <button id="point" title="Point"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
                                         oldtitle="Point" aria-describedby="ui-tooltip-11">
                                     <img src="resources/images/viewer/navi/select-rectangle-small.png">
                                 </button>
                             </td> 
                             <td>
-                                <button id="line" data-i18n="[title]viewer-line"
+                                <button id="line" title="Line"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
                                         oldtitle="Line" aria-describedby="ui-tooltip-11">
                                     <img src="resources/images/viewer/navi/lineselectsmall.png">

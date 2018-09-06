@@ -1,26 +1,26 @@
 <div id="userprojectsdiv" title="User Projects" class="dialog-v">
     <div id="userprojectsTmpl" class="lab-int">
-        <div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('userprojectsdiv');"></div>
-        <div id="userprojects-help" class="span-h" data-i18n="[title]gen-help"></div>
-        <div class="lineBreak05p"></div>
+		<div id="span-close" class="span-c" title="Close" onclick="javascript:closeDialog('userprojectsdiv');"></div>
+		<div id="userprojects-help" class="span-h" title="This is Search help for userprojects"  ></div>
+		<div class="lineBreak05p"></div>
+	
+	 <div class="formPattern" id="userProjectsBody">
+	  <label for="project_name">Project</label>
+	  <select name="user_projectID" id="user_projectID" onchange="getprojectval(this);" >
+            <option  value="">Please Select</option>      
+      </select>
+	 
+	 </div> 
+	
+	
 
-        <div class="formPattern" id="userProjectsBody">
-            <label for="project_name" data-i18n="viewer-report-project"></label>
-            <select name="user_projectID" id="user_projectID" onchange="getprojectval(this);" >
-                <option  value="" data-i18n="gen-please-select"></option>      
-            </select>
-
-        </div> 
+  <script type="text/javascript">
+        function getprojectval(sel) {
+            openProject(sel.value);
+        }
+    </script>
 
 
 
-        <script type="text/javascript">
-            function getprojectval(sel) {
-                openProject(sel.value);
-            }
-        </script>
-
-
-
-    </div>
+</div>
 </div>

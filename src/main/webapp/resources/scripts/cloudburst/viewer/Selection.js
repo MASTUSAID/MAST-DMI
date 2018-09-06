@@ -40,7 +40,7 @@ function getGeomType(layer) {
         	if(layerMap[layer.name].indexOf("OSMM_") > -1){
         		jAlert("WFS operation on " + layerMap[layer.name] + " layer is restricted");
         	}else{
-        		jAlert($.i18n("err-failed-handling-request"));
+        		jAlert('Sorry, there is a problem!');
         	}
         }
     });
@@ -73,7 +73,7 @@ function getGeomFieldName(){
         	if(layerMap[activeLayer.name].indexOf("OSMM_") > -1){
         		jAlert("WFS operation on " + layerMap[activeLayer.name] + " layer is restricted");
         	}else{
-        		jAlert($.i18n("err-failed-handling-request"));
+        		jAlert('Sorry, there is a problem!');
         	}
         }
     });
@@ -287,7 +287,7 @@ function createSelectionSLD(filter, style, layerType, activeLayer){
 		      };
     
     var rule = new OpenLayers.Rule({
-        title: $.i18n("viewer-feature-selected"),
+        title: "Feature Selected",
         symbolizer: highlightSymbolizer,
         filter: filter
     });
@@ -308,7 +308,7 @@ function createSelectionSLD(filter, style, layerType, activeLayer){
     	
     	 
     	  var rule = new OpenLayers.Rule({
-    	        title: $.i18n("viewer-feature-selected"),
+    	        title: "Feature Selected",
     	        symbolizer: highlightSymbolizer,
     	        filter: myfilter
     	    });

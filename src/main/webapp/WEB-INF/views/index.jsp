@@ -1,113 +1,287 @@
+
 <%@page contentType="text/html;charset=UTF-8"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page session="true"%>
-
-<fmt:setLocale value="${langCode}" />
-
 <%
-    response.setHeader("Cache-Control", "no-store"); //HTTP 1.1
-    response.setHeader("Pragma", "no-cache"); //HTTP 1.0
-    response.setDateHeader("Expires", 0); //prevents caching at the proxy server 
-
-    java.lang.String s = null;
-    try {
-        org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        java.util.Collection<org.springframework.security.core.GrantedAuthority> authorities = user.getAuthorities();
-
-        java.lang.StringBuffer sb = new java.lang.StringBuffer();
-        for (java.util.Iterator<org.springframework.security.core.GrantedAuthority> itr = authorities.iterator(); itr.hasNext();) {
-            org.springframework.security.core.GrantedAuthority authority = itr.next();
-            sb.append(authority.getAuthority()).append(", ");
-        }
-        s = sb.toString();
-        s = s.substring(0, s.length() - 2);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+	response.setHeader("Cache-Control","no-store"); //HTTP 1.1
+	response.setHeader("Pragma","no-cache"); //HTTP 1.0
+	response.setDateHeader("Expires", 0); //prevents caching at the proxy server 
+	
+	String queryString = request.getQueryString();
+	String token = (String)request.getSession().getAttribute("auth");
+	//(String)request.getSession().getAttribute("lang");
+	String lang_2 = "en";
+	if(((String)request.getSession().getAttribute("lang"))!=null){
+		
+		lang_2=(String)request.getSession().getAttribute("lang").toString();	
+	}	
+	java.lang.String s = null;
+	java.lang.String principal = null;
+	
+	try{
+		org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User)org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		principal = user.getUsername();
+		//java.util.Collection<org.springframework.security.core.GrantedAuthority> authorities = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+		
+		java.util.Collection<org.springframework.security.core.GrantedAuthority> authorities  = user.getAuthorities();
+		
+	 	java.lang.StringBuffer sb = new java.lang.StringBuffer();
+		for (java.util.Iterator<org.springframework.security.core.GrantedAuthority> itr = authorities.iterator(); itr.hasNext();) {       
+			org.springframework.security.core.GrantedAuthority authority = itr.next();
+			sb.append(authority.getAuthority()).append(", ");
+		} 
+		s = sb.toString();
+		s = s.substring(0, s.length() - 2);
+		
+	}catch(Exception e){
+		e.printStackTrace();
+	}
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title data-i18n="gen-app-title"></title>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MTP</title>
+ 
+<link rel="stylesheet" type="text/css" href="./resources/styles/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="./resources/styles/cloudMain.css"/>
 
-        <link rel="stylesheet" type="text/css" href="./resources/styles/font-awesome.min.css" />
-        <link rel="stylesheet" type="text/css" href="./resources/styles/cloudMain.css" />
-        <link rel="stylesheet"
-              href="<c:url value="resources/styles/header.css" />"
-              type="text/css" media="screen, projection" />
-        <script src="<c:url value="./resources/scripts/jquery-1.7.1/jquery-1.7.1.min.js"  />" type="text/javascript"></script>
-        <%@include file="../jspf/HeaderResources.jspf" %>
-        
-        <script type="text/javascript">
-            var url;
-            var qryString;
-        </script>
-        <%
-            if (request.getSession().getAttribute("url") != null) {
-        %>	
-        <script type="text/javascript">
-                var url = "<%=request.getSession().getAttribute("url")%>";
-                document.location.href = url;
-        </script>
+<script type="text/javascript">
+	var url;
+	var qryString;
+</script>
+	<%
+	if(request.getSession().getAttribute("url") != null){
+		//System.out.println(" ------- URL on Landing " + request.getSession().getAttribute("url"));
+	%>	
+		<script type="text/javascript">
+			var url = "<%=request.getSession().getAttribute("url")%>";
+			qryString = "<%=request.getSession().getAttribute("lang")%>";
+			var url = url + "?lang=" + qryString;
+			document.location.href = url;
+		</script>
+		
+	<%
+	}else if(s.equalsIgnoreCase("ROLE_PUBLICUSER") || s.equalsIgnoreCase("ROLE_USER")){
+		System.out.println("---Authorities: " + s);
+	%>
+		<script type="text/javascript">
+			var studio_url = window.location.href;
+			var pos = studio_url.indexOf("index");
+			studio_url = studio_url.substring(0, pos - 1);
+			qryString = "<%=request.getSession().getAttribute("lang")%>";
+			if(qryString==null || qryString=='null')qryString = 'en';
+			studio_url = studio_url + "/viewer/?lang=" + qryString;
+			document.location.href = studio_url;
+		</script>
+	<%
+	}
+	%>
+</head>
 
-        <%
-        } else if (s.equalsIgnoreCase("ROLE_PUBLICUSER") || s.equalsIgnoreCase("ROLE_USER")) {
-        %>
-        <script type="text/javascript">
-            var studio_url = window.location.href;
-            var pos = studio_url.indexOf("index");
-            studio_url = studio_url.substring(0, pos - 1);
-            studio_url = studio_url + "/viewer/";
-            document.location.href = studio_url;
-        </script>
-        <%
-            }
-        %>
-    </head>
-
-    <body>
-        <div id="wrapper">
-            
-            <%@include file="../jspf/Header.jspf" %>
-            
-            <div class="pageContent">
-                <div class="items-container clearfix">
-                    
-                    <div class="dashboard-item">
-                        <a href="studio/"  class="dashboard-content clearfix">
-                            <span class="icon-img"><img src="./resources/images/administration.png" height="40"></span>
-                            <span class="dashboard-title"><h2 class="margin-top-35" data-i18n="home-admin"></h2></span>
-                        </a>
-                    </div>
-
-                    <div class="dashboard-item">
-                        <a href = "mobileconfig/" class="dashboard-content clearfix">
-                            <span class="icon-img-2"><img src="./resources/images/mobile.png" height="40"></span>
-                            <span class="dashboard-title"><h2 class="margin-top-35" data-i18n="home-mobile"></h2></span>
-                        </a>
-                    </div>
-
-                    <div class="dashboard-item">
-                        <a href="viewer/" class="dashboard-content clearfix">
-                            <span class="icon-img-3"><img src="./resources/images/data.png" height="40"></span>
-                            <span class="dashboard-title"><h2 class="margin-top-35" data-i18n="home-dmi"></h2></span>
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-                            
-            <div class="footer"> 
-                <span class="copyright-text" data-i18n="[html]gen-copyright"></span>
-            </div>
+<body>
+    <div id="wrapper">
+      <div class="header">
+            <div id="usaid_logo" onClick="window.location = 'http://usaid.gov/land-tenure';"></div>
+                    <div class="header_title">Mobile Application to Secure Tenure (MAST)<br />Data Management Infrastructure</div>
+            <!--/subHead-->
+			
+<!-- <div class="loginInfo">
+               <div class="userText">
+               <div class="dropdown" style="cursor:pointer">
+    				<i class="fa fa-user"></i>
+             		  Welcome <span class="username"><%=principal%></span>
+               	&nbsp;&nbsp;          </div>
+               <span class="logoutApp"><a href="/mast/j_spring_security_logout">Logout</a></span>
         </div>
-    </body>
+               
+               <img src="./resources/images/userInfo.png"/>
+            </div> -->
+			<div class="userinfo" >
+      <ul>
+        <li   class="username">
+             				   <span ><%=principal%></span></li>
+        <li style="float: right; margin-top: 0px;"><a href="index" class="home"><span class="home-separator">&nbsp;</span></a><a href="/mast/j_spring_security_logout" class="logout">Logout</a></li>
+        
+        
+        
+      </ul>
+    </div>
+
+            <!--/loginInfo-->
+         </div>
+           <div class="pageContent">
+           
+           
+               <div class="items-container clearfix">
+          
+                 <div class="dashboard-item">
+                   <a href="studio/"  class="dashboard-content clearfix">
+                       <span class="icon-img"><img src="./resources/images/administration.png" height="40"></span><!--./icon-img-->
+                       <span class="dashboard-title"><h2 class="margin-top-35">Administration Tool</h2></span>
+                    </a>
+                 </div><!--/dashboard-item-->
+                 
+                   
+                 <div class="dashboard-item">
+                  <a href = "mobileconfig/" class="dashboard-content clearfix">
+                   <span class="icon-img-2"><img src="./resources/images/mobile.png" height="40"></span><!--./icon-img-->
+                   <span class="dashboard-title"><h2 class="margin-top-35">Mobile Configuration Tool</h2></span>
+                 </a>
+                 </div><!--/dashboard-item-->
+                 
+                 
+                   
+                 <div class="dashboard-item">
+                  <a href="#" onclick="invokeViewer();"  class="dashboard-content clearfix">
+                   <span class="icon-img-3"><img src="./resources/images/data.png" height="40"></span><!--./icon-img-->
+                   <span class="dashboard-title"><h2 class="margin-top-35">Data Management</h2></span>
+                 </a>
+                     
+                 </div><!--/dashboard-item-->
+    
+    
+             
+    
+      
+    
+      </div><!--./dashboardItems-->
+           
+            <div class="toolBoxes" style="display:none;">
+               <div class="Bx-container">
+                  <div class="row">
+                     <div class="span4">
+                        <div class="infoBox">
+                           <div class="toolsHd">
+                              <img src="./resources/images/icon-wrench.png"/>
+                              <h2>Administration Tool</h2>
+                           </div>
+                           <div class="toolsDec">
+                              <p>Manage survey projects, manage data layers, layer groups and also to manage users who will be accessing mobile and web applications of MTP System.</p>
+                           </div>
+                           <div class="PanelBottom">
+                              <div class="BtmText">
+                                 <a href="studio/" class="launch-text">
+                                 <i class="fa fa-chevron-right ico-ft"></i> Launch 
+                                 </a>
+                              </div>
+                           </div>
+                           <!--/PanelBottom-->
+                        </div>
+                        <!--/infoBox-->
+                     </div>
+                     <div class="span4">
+                        <div class="infoBox">
+                           <div class="toolsHd">
+                              <img src="./resources/images/icon-mobile.png" style="height:64px"/>
+                              <h2>Mobile Configuration Tool</h2>
+                           </div>
+                           <div class="toolsDec">
+                              <p>Configure mobile data capture application for project specific data collection attributes.</p>
+                           </div>
+                           <div class="PanelBottom">
+                              <div class="BtmText">
+                                 <a href = "mobileconfig/" class="launch-text">
+                                 <i class="fa fa-chevron-right ico-ft"></i> Launch 
+                                 </a>
+                              </div>
+                           </div>
+                           <!--/PanelBottom-->
+                        </div>
+                        <!--/infoBox-->
+                     </div>
+                     <div class="span4">
+                        <div class="infoBox">
+                           <div class="toolsHd">
+                              <img src="./resources/images/icon-data-layer.png" style="height:64px"/>
+                              <h2>Data Management</h2>
+                           </div>
+                           <div class="toolsDec">
+                              <p>Land Data management tool to validate, view, edit and approve the land rights data collected in the field.</p>
+                           </div>
+                           <div class="PanelBottom">
+                              <div class="BtmText">
+                                 <a href="#" onclick="invokeViewer();" class="launch-text">
+                                 <i class="fa fa-chevron-right ico-ft"></i> Launch 
+                                 </a>
+                              </div>
+                           </div>
+                           <!--/PanelBottom-->
+                        </div>
+                        <!--/infoBox-->
+                     </div>
+                  </div>
+                  <!--/row-->
+                  <div class="space-10"></div>
+                  <div class="row" style="display:none;">
+                     <div class="span4 offset4">
+                        <div class="infoBox">
+                           <div class="toolsHd">
+                              <img src="./resources/images/report.png" style="height:64px"/>
+                              <h2>Reports</h2>
+                           </div>
+                           <div class="toolsDec">
+                              <p>Generate Land Adjudication Form and CCRO certificate for selected property.</p>
+                           </div>
+                           <div class="PanelBottom">
+                              <div class="BtmText">
+                                 <a href = "report/" class="launch-text">
+                                 <i class="fa fa-chevron-right ico-ft"></i> Launch 
+                                 </a>
+                              </div>
+                           </div>
+                           <!--/PanelBottom-->
+                        </div>
+                        <!--/infoBox-->
+                     </div>
+                  </div>
+               </div>
+               <!--/Bx-container-->
+            </div>
+            <!--/toolBoxes-->
+         </div>
+           <div class="footer"> 
+           	<!-- <div id="brochure_button" onClick="window.open('./resources/pdf/MAST_Brochure_web.pdf');">
+           	</div>
+            <div id="android_logo">
+            </div> -->
+            <span class="copyright-text">&copy; 2018. All Rights Reserved.</span>
+            
+            </div>
+      </div>
+<script type="text/javascript">
+	var qryString = "<%=request.getSession().getAttribute("lang")%>";
+	if(qryString == null){
+		var _lang = "<%=request.getHeader("accept-language")%>";
+		var pos = _lang.indexOf(",");
+		if(pos > -1){
+			_lang = _lang.substring(0, pos);
+		}else{
+			_lang = "en";
+		}
+	}else{
+		_lang = qryString;
+	}
+	
+	var studio = document.getElementById("studio");
+	var viewer = document.getElementById("viewer");
+	var studio_link = document.getElementById("studiolink");
+	var viewer_link = document.getElementById("viewerlink");
+
+	function invokeViewer(){
+		qryString = "<%=request.getSession().getAttribute("lang")%>";
+		if(qryString == "null"){
+			qryString = "en";
+		}
+		var url = "viewer/?lang=" + qryString;
+		document.location.href = url;
+	}
+</script>
+</body>
 </html>

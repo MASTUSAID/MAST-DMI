@@ -2,24 +2,24 @@
     $(function () {
         $("#tabs_res").tabs();
     });
-
-
-
-    /*  $(function() {
-     $("#reg_date").datepicker();
-     }); */
-
-    $(function () {
-        $("#Institution_id,#members").on('change', function () {
-            $(this).addClass('addBg');
-            $("#comment_Save").prop("disabled", false).show();
-
-        });
-    })
-</script>
-
-
-<div class="container-fluid">
+    
+  
+    
+   /*  $(function() {
+		$("#reg_date").datepicker();
+	}); */
+	
+	 $(function(){
+	        $("#Institution_id,#members").on('change',function () {
+	            $(this).addClass('addBg');
+	            $("#comment_Save").prop("disabled", false).show();
+	           
+	        });
+	    })
+    </script>
+    
+    
+    <div class="container-fluid">
 
     <div id="resourceRecordsFormdiv" style="visibility: hidden">
 
@@ -30,48 +30,49 @@
                 <div class="project-details">
                     <div class="project-details-label">
                         <div class="row-fluid">
-
+                          
                         </div>
                     </div>
                 </div>
 
                 <!-- <div class="gray-panel"> -->
-                <!-- <form id="registryrecordsform" action="" onsubmit="return false;"> -->
-                <!-- <table class="filter-details"> -->
-                <!-- <tr> -->
-                <!-- <td> -->
-                <!-- <label>Reference NO</label>  -->
-                <!-- <input type="text" name="usinstr_id_R" id="usinstr_id_R" value="" class="input-medium"> -->
-                <!-- </td> -->
-                <!-- <td> -->
-                <!-- <label>Application Type</label> -->
-                <!-- <select name="claim_type_R" id="claim_type_R" class="input-medium"></select> -->
-                <!-- </td> -->
+                    <!-- <form id="registryrecordsform" action="" onsubmit="return false;"> -->
+                        <!-- <table class="filter-details"> -->
+                            <!-- <tr> -->
+                                <!-- <td> -->
+                                    <!-- <label>Reference NO</label>  -->
+                                    <!-- <input type="text" name="usinstr_id_R" id="usinstr_id_R" value="" class="input-medium"> -->
+                                <!-- </td> -->
+                                <!-- <td> -->
+                                    <!-- <label>Application Type</label> -->
+                                    <!-- <select name="claim_type_R" id="claim_type_R" class="input-medium"></select> -->
+                                <!-- </td> -->
+                              
+                                <!-- <td> -->
+                                    <!-- <button class="btn1 v-top-18" onclick="javascript:search_R();">Search</button> -->
+                                    <!-- <button class="btn v-top-24" onclick="clearSearch_R();">Clear</button> -->
+                                <!-- </td> -->
+                            <!-- </tr> -->
+                        <!-- </table> -->
 
-                <!-- <td> -->
-                <!-- <button class="btn1 v-top-18" onclick="javascript:search_R();">Search</button> -->
-                <!-- <button class="btn v-top-24" onclick="clearSearch_R();">Clear</button> -->
-                <!-- </td> -->
-                <!-- </tr> -->
-                <!-- </table> -->
-
-                <!-- </form> -->
+                    <!-- </form> -->
                 <!-- </div> -->
 
                 <div class="scrollbarxy">
                     <table class="tablesorter" id="registryRecordsTable" cellpadding="0" cellspacing="0">
                         <thead>
                             <tr>
-                                <th class="no-sort" data-i18n="reg-landid"></th>
-                                <th class="no-sort" data-i18n="res-primary-contact"></th>
-                                <th class="no-sort" data-i18n="res-tenure-type"></th>
-                                <th class="no-sort" data-i18n="res-classif-name"></th>
-                                <th class="no-sort" data-i18n="res-subclass-name"></th>
-                                <th class="no-sort" data-i18n="res-geom-type"></th>
-
-                                <th class="no-sort" data-i18n="gen-action">
+                                 <th class="no-sort">Land Id</th>
+                                <th class="no-sort">Primary Holder/Point of Contact</th>
+                                <th class="no-sort">Occupancy/Tenure Type</th>
+                                <th class="no-sort">Classification Name</th>
+                                <th class="no-sort">Subclassification Name</th>
+								<th class="no-sort">Geometry Type</th>
+                                
+                                <th class="no-sort">
+                                    Action
                                 </th> 
-
+								
                             </tr>
                         </thead>
 
@@ -84,17 +85,17 @@
                                     <div id="spatialunitDiv_R">
                                         <a href="javascript:previousRecords_Res();"><img
                                                 class="img-prev" src="resources/images/studio/previous.png"
-                                                data-i18n="[title]gen-previous" /></a> 
+                                                title="Previous" /></a> 
                                         <input type="text" readonly="readonly"
                                                name="records_from_Res" id="records_from_Res" value=""
-                                               class="input-medium"> <span data-i18n="gen-to"></span> <input type="text"
+                                               class="input-medium"> To <input type="text"
                                                name="records_to_Res" id="records_to_Res" value=""
-                                               class="input-medium" readonly="readonly"> <span data-i18n="gen-of"></span> <input
+                                               class="input-medium" readonly="readonly"> Of <input
                                                type="text" name="records_all_Res" id="records_all_Res" value=""
                                                class="input-medium" readonly="readonly"><a
                                                href="javascript:nextRecords_Res();">
                                             <img class="img-next"
-                                                 src="resources/images/studio/next.png" data-i18n="[title]gen-next">
+                                                 src="resources/images/studio/next.png" title="Next">
                                         </a>
                                     </div>
                                 </td>
@@ -104,40 +105,40 @@
 
                     <script id="resourceRecordsAttrTemplate1" type="text/x-jquery-tmpl">
                         <tr>
-                        <td>
-                        ${landid}
+						 <td>
+						${landid}
                         </td> 
-
+						
                         <td>
-                        ${personName}
+						${personName}
                         </td> 
                         <td>
-                        ${categoryName}
+                       ${categoryName}
                         </td>
                         <td>
-                        ${classificationName}
+                       ${classificationName}
                         </td> 
                         <td>
-                        ${subclassificationName}
+                       ${subclassificationName}
                         </td>                     
-
-                        <td>
+                           
+                         <td>
                         ${geometryName}
-                        </td>
+                         </td>
+						
+                      
+						<td>
+						
+						<div class="single-drop-down">   
+						<div class="topnav"> <a href="#" onclick="ActionfillResource(${landid},'${geometryName}');" class="signin">
+						<span key="Action" class="langchange">Action</span></a><div class="containerDiv" id="${landid}_resource">
+						</div>
+						</div>
+						</div>
+						
 
-
-                        <td>
-
-                        <div class="single-drop-down">   
-                        <div class="topnav"> <a href="#" onclick="ActionfillResource(${landid},'${geometryName}');" class="signin">
-                        <span key="Action" class="langchange" data-i18n="gen-action"></span></a><div class="containerDiv" id="${landid}_resource">
-                        </div>
-                        </div>
-                        </div>
-
-
-                        </td>		
-
+						</td>		
+					
                         </tr>
                     </script>
                 </div>
@@ -145,239 +146,242 @@
 
 
 
-            <div id="editattribute-res-dialog-form" data-i18n="[title]viewer-edit-attr"
-                 style="display: none;">
+			<div id="editattribute-res-dialog-form" title="Edit Attribute"
+				style="display: none;">
 
-                <form class="cmxform" id="editAttributeformID_res" action=""
-                      onsubmit="return false;">
-                    <input type="hidden" name="general_length" id="general_length"
-                           value="">
+				<form class="cmxform" id="editAttributeformID_res" action=""
+					onsubmit="return false;">
+					<input type="hidden" name="general_length" id="general_length"
+						value="">
+						
+						<input type="hidden" name="landId" id="landId"
+												value=" ">
 
-                    <input type="hidden" name="landId" id="landId"
-                           value=" ">
+					<div id="tabs_res">
+						<ul>
+							<li><a href="#tabGeneralInfo">General Info</a></li>
+							<li id="liPoi_res" onclick="issavedisabled();"><a
+								class="linkliPoi" href="#tabs-2c-res">Person</a></li>
+								<li><a href="#tab-Custom-attributes">Custom Attributes</a></li>
+								
 
-                    <div id="tabs_res">
-                        <ul>
-                            <li><a href="#tabGeneralInfo" data-i18n="gen-geninfo"></a></li>
-                            <li id="liPoi_res" onclick="issavedisabled();"><a
-                                    class="linkliPoi" href="#tabs-2c-res" data-i18n="reg-person"></a></li>
-                            <li><a href="#tab-Custom-attributes" data-i18n="reg-custom-attr"></a></li>
+						</ul>
+						<div id="tabGeneralInfo">
+							<div class="tab-pane landrecords22" id="land-record">
+								<div style="margin: 0 10px;">
+									<!-- <div class="project-details in">
+										<div class="project-details-label">
+											<div class="row-fluid">
+												<div class="span3 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Parcel
+														ID: </span> <span class="deatails-label-value" id="spatialid"></span>
+													<input type="hidden" name="primary" id="primary" value="">
+												</div>
+												<div class="span3 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Transaction
+														Id : </span> <span class="deatails-label-value" id="claimUka"></span>
+												</div>
+												<div class="span3 project-details-block">
+													<span class="deatails-label" style="color: #0088cc">Claim
+														Type: </span> <span class="deatails-label-value" id="claimType"></span>
+												</div>
+											</div>
+										</div>
+									</div> -->
 
-
-                        </ul>
-                        <div id="tabGeneralInfo">
-                            <div class="tab-pane landrecords22" id="land-record">
-                                <div style="margin: 0 10px;">
-                                    <!-- <div class="project-details in">
-                                            <div class="project-details-label">
-                                                    <div class="row-fluid">
-                                                            <div class="span3 project-details-block">
-                                                                    <span class="deatails-label" style="color: #0088cc">Parcel
-                                                                            ID: </span> <span class="deatails-label-value" id="spatialid"></span>
-                                                                    <input type="hidden" name="primary" id="primary" value="">
-                                                            </div>
-                                                            <div class="span3 project-details-block">
-                                                                    <span class="deatails-label" style="color: #0088cc">Transaction
-                                                                            Id : </span> <span class="deatails-label-value" id="claimUka"></span>
-                                                            </div>
-                                                            <div class="span3 project-details-block">
-                                                                    <span class="deatails-label" style="color: #0088cc">Claim
-                                                                            Type: </span> <span class="deatails-label-value" id="claimType"></span>
-                                                            </div>
-                                                    </div>
-                                            </div>
-                                    </div> -->
-
-                                    <table style="width: 100%" id="tableGeneralAttributes"
-                                           class="landrecords22 ">
-
-
-
-                                        <tr>
-                                            <td class="borderedBottom" colspan="4">
-                                                <h3>
-                                                    <label class="no-margin-bottom" data-i18n="res-land-class"></label>
-                                                </h3>
-                                            </td>
-                                        </tr>
+									<table style="width: 100%" id="tableGeneralAttributes"
+										class="landrecords22 ">
 
 
 
-                                        <tr id="rowClaimNumber">
-
-                                            <td><label data-i18n="res-class"></label> 
-                                                <input type="text"
-                                                    name="Classification_id" id="Classification_id" value=""
-                                                    class="text ui-widget-content ui-corner-all" readonly>
-                                            </td>
-
-                                            <td><label data-i18n="res-prop-size-acres"></label> <input type="text"
-                                                                                           name="size_id" id="size_id" value=""
-                                                                                           class="text ui-widget-content ui-corner-all" readonly>
-                                            </td>
-
-                                            <td><label data-i18n="reg-landid"></label> <input type="text"
-                                                                             name="landid" id="landid" value=""
-                                                                             class="text ui-widget-content ui-corner-all" readonly>
-                                            </td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <td><label data-i18n="res-subclass"></label> <input
-                                                    type="text" name="subClassification_id" id="subClassification_id" value=""
-                                                    class="text ui-widget-content ui-corner-all" readonly>
-                                            </td>
-
-                                        </tr>
+										<tr>
+											<td class="borderedBottom" colspan="4">
+												<h3>
+													<label class="no-margin-bottom">Land Classification</label>
+												</h3>
+											</td>
+										</tr>
 
 
 
-                                        <tr id="tenure_occupancy">
-                                            <td class="borderedBottom" colspan="4">
-                                                <h3>
-                                                    <label class="no-margin-bottom" data-i18n="res-tenure-type"></label>
-                                                </h3>
-                                            </td>
-                                        </tr>
+										<tr id="rowClaimNumber">
 
-                                        <tr>
+											<td><label>Classification</label> <input type="text"
+												name="Classification_id" id="Classification_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
+											
+											<td><label>Property Size (Acre)</label> <input type="text"
+												name="size_id" id="size_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
+											
+											<td><label>LandId</label> <input type="text"
+												name="landid" id="landid" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
 
-                                            <td><label data-i18n="reg-tenure"></label> <input type="text" name="tenure_type_res"
-                                                                             id="tenure_type_res" value="" 
-                                                                             class="text ui-widget-content ui-corner-all" readonly></td>
+										</tr>
 
-                                        </tr>
-                                        <tr id="regNo">
+										<tr>
+											<td><label>Sub-Classification </label> <input
+												type="text" name="subClassification_id" id="subClassification_id" value=""
+												class="text ui-widget-content ui-corner-all" readonly>
+											</td>
 
-                                            <td><label data-i18n="res-regno"></label> <input
-                                                    type="text" name="reg_no" id="reg_no"
-                                                    class="text ui-widget-content ui-corner-all read-tenure" readonly></td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <td id="institute"><label data-i18n="res-org-name"></label> <input
-                                                    type="text" name="Institution_id" id="Institution_id"
-                                                    class="text ui-widget-content ui-corner-all read-tenure">
-
-                                                <input type="hidden" name="Institution_id_id" id="Institution_id_id"
-                                                       value=" ">
-                                            </td>
-                                            <td id="reg_date_td"><label data-i18n="reg-reg-date"></label> <input type="text"
-                                                                                                         name="reg_date" id="reg_date"
-                                                                                                         class="text ui-widget-content ui-corner-all"  
-                                                                                                         readonly>
-                                            </td>
-                                        </tr>
-
-                                        <tr id="members_tr">
-                                            <td><label data-i18n="res-members-count"> </label> <input type="text"
-                                                                                         name="members" id="members"
-                                                                                         class="text ui-widget-content ui-corner-all read-tenure">
-
-                                                <input type="hidden" name="members_id" id="members_id"
-                                                       value=" ">
-                                            </td>
-
-                                        </tr>
+										</tr>
 
 
 
+										<tr id="tenure_occupancy">
+											<td class="borderedBottom" colspan="4">
+												<h3>
+													<label class="no-margin-bottom">Tenure/Occupancy</label>
+												</h3>
+											</td>
+										</tr>
 
-                                    </table>
+										<tr>
 
-                                    <div>
-                                        <!-- <button id="parcelsavebutton" class="btn hideNew" onclick="javascript:updateattributesGen();">
-  Save
-</button> -->
-                                    </div>
-                                </div>
-                                <!-- Tenure info -->
-                                <div style="margin: 0 10px;"></div>
+											<td><label>Tenure</label> <input type="text" name="tenure_type_res"
+												id="tenure_type_res" value="" 
+												class="text ui-widget-content ui-corner-all" readonly></td>
 
-                            </div>
-                        </div>
+										</tr>
+										<tr id="regNo">
 
-                        <!-- <div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;"> -->
-                        <div id="tabs-2c-res">
-                            <div id="attributeDialog" data-i18n="[title]res-resource-attr">
-                                <!--  <div><lable>Resource Attributes</lable></div> -->
-                                <div>
-                                    <table style="width: 100%; margin-bottom: 23px;">
-                                        <tr>
-                                            <td class="borderedBottom" colspan="4"><h3>
-                                                    <label class="no-margin-bottom" data-i18n="res-resource-attr"></label>
-                                                </h3></td>
-                                        </tr>
-                                    </table>
+											<td><label>Registration No</label> <input
+												type="text" name="reg_no" id="reg_no"
+												class="text ui-widget-content ui-corner-all read-tenure" readonly></td>
 
-                                    <button id="addPersonbutton" onclick="javascript:addNewPerson();" data-i18n="reg-add-person">
+										</tr>
+
+										<tr>
+											<td id="institute"><label>Institution/OrganizationName</label> <input
+												type="text" name="Institution_id" id="Institution_id"
+												class="text ui-widget-content ui-corner-all read-tenure">
+												
+												<input type="hidden" name="Institution_id_id" id="Institution_id_id"
+												value=" ">
+											</td>
+											<td id="reg_date_td"><label>Registration Date</label> <input type="text"
+												name="reg_date" id="reg_date"
+												class="text ui-widget-content ui-corner-all"  
+												readonly>
+											</td>
+										</tr>
+
+										<tr id="members_tr">
+											<td><label>How many members? </label> <input type="text"
+												name="members" id="members"
+												class="text ui-widget-content ui-corner-all read-tenure">
+												
+												<input type="hidden" name="members_id" id="members_id"
+												value=" ">
+											</td>
+
+										</tr>
+
+
+
+
+									</table>
+
+									<div>
+										<!-- <button id="parcelsavebutton" class="btn hideNew" onclick="javascript:updateattributesGen();">
+                                          Save
+                                        </button> -->
+									</div>
+								</div>
+								<!-- Tenure info -->
+								<div style="margin: 0 10px;"></div>
+
+							</div>
+						</div>
+
+						<!-- <div id="attributeDialog" title="Attribute Resource" class="langchange" style="display: none;"> -->
+						<div id="tabs-2c-res">
+							<div id="attributeDialog" title="Attribute Resource">
+								<!--  <div><lable>Resource Attributes</lable></div> -->
+								<div>
+									<table style="width: 100%; margin-bottom: 23px;">
+										<tr>
+											<td class="borderedBottom" colspan="4"><h3>
+													<label class="no-margin-bottom">Resource Attributes</label>
+												</h3></td>
+										</tr>
+									</table>
+									
+									<button id="addPersonbutton" onclick="javascript:addNewPerson();">
+                                          AddPerson
+                                        </button>
+								</div>
+								<div id="ResourcepersonsEditingGrid0"></div>
+								
+								
+								<div  id="ResourcePOI" style="margin-top: -80px;">
+									<table style="width: 100%; margin-bottom: 23px;">
+										<tr>
+											<td class="borderedBottom" colspan="4"><h3>
+													<label class="no-margin-bottom">POI</label>
+												</h3></td>
+										</tr>
+									</table>
+									
+									<button id="addPersonbutton" onclick="javascript:addNewResourcePOI();">
+                                          AddPOI
+                                        </button>
                                         
-                                    </button>
-                                </div>
-                                <div id="ResourcepersonsEditingGrid0"></div>
+								</div>
+								<!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
+								<div id="ResourcePOIGrid"></div>
+								
+							</div>
+						</div>
+						
+						<div id="tab-Custom-attributes">
+						<div id="CustomAttributes">
+									<table style="width: 100%; margin-bottom: 23px;">
+										<tr>
+											<td class="borderedBottom" colspan="4"><h3>
+													<label class="no-margin-bottom">Custom Attributes</label>
+												</h3></td>
+										</tr>
+									</table>
+								</div>
+								<!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
+								<div id="CustomAttributeEditingGrid0"></div>
+						</div>
+					</div>
+				</form>
+			</div>
 
 
-                                <div  id="ResourcePOI" style="margin-top: -80px;">
-                                    <table style="width: 100%; margin-bottom: 23px;">
-                                        <tr>
-                                            <td class="borderedBottom" colspan="4"><h3>
-                                                    <label class="no-margin-bottom">POI</label>
-                                                </h3></td>
-                                        </tr>
-                                    </table>
 
-                                    <button id="addPersonbutton" onclick="javascript:addNewResourcePOI();" data-i18n="reg-add-poi">
-                                        
-                                    </button>
 
-                                </div>
-                                <!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
-                                <div id="ResourcePOIGrid"></div>
 
-                            </div>
-                        </div>
+			<script id="attributetemplate" type="text/x-jquery-tmpl">
+ <tr> 
+<td>
+	${attributemaster.fieldname}
+  </td>                                                                       
+  <td>
+${attributevalue}
+	
+  </td>
 
-                        <div id="tab-Custom-attributes">
-                            <div id="CustomAttributes">
-                                <table style="width: 100%; margin-bottom: 23px;">
-                                    <tr>
-                                        <td class="borderedBottom" colspan="4"><h3>
-                                                <label class="no-margin-bottom" data-i18n="reg-custom-attr"></label>
-                                            </h3></td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <!-- <div id ="CustomAttributes"><lable>Custom Attributes</lable></div> -->
-                            <div id="CustomAttributeEditingGrid0"></div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <script id="attributetemplate" type="text/x-jquery-tmpl">
-                <tr> 
-                <td>
-                ${attributemaster.fieldname}
-                </td>                                                                       
-                <td>
-                ${attributevalue}
-
-                </td>
-
-                </tr>
-            </script>
+ </tr>
+</script>
 
 
 
         </div>
     </div>
-    <div id="dialog-confirm" data-i18n="[title]res-update-attr">
+    <div id="dialog-confirm" title="Validate and Update Attributes">
         <p id="validationCheck" style="display: none">
             <span class="ui-icon ui-icon-alert"
-                  style="float: left; margin: 0 7px 20px 0;"></span>
-                  <span data-i18n="res-update-attr-confirm"></span>
+                  style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you
+            want to update the attributes?
         </p>
     </div>
 </div>

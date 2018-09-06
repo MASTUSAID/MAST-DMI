@@ -9,7 +9,7 @@ Cloudburst.ZoomToXY =  function(_map, _searchdiv) {
     searchdiv = _searchdiv;
     $("#tabs-Tool").empty();
 	jQuery.get('resources/templates/viewer/zoomtoxy.html', function(template) {
-		addTab($.i18n("viewer-zoomtoxy"),template);
+		addTab($._("zoom"),template);
     	$("#zoomtoxy-help").tipTip({defaultPosition:"right"});
 		$("#options-s-d").hide();
 		$("#options-s-t").click(function() {
@@ -20,12 +20,12 @@ Cloudburst.ZoomToXY =  function(_map, _searchdiv) {
 };
 
 function translateZoomToXYStrings(){
-	$('#longitude').html($.i18n('viewer-longitude'));
-	$('#latitude').html($.i18n('viewer-latitude'));
-	$('#btnZoom_To').attr("value", $.i18n('viewer-zoomto'));
-	$('#btnPan_To').attr("value", $.i18n('viewer-panto'));
-	$('#btnCalLatLong').attr("value", $.i18n('calculate'));
-	$('#osref').html($.i18n('os grid reference'));
+	$('#longitude').html($._('longitude'));
+	$('#latitude').html($._('latitude'));
+	$('#btnZoom_To').attr("value", $._('zoom_to'));
+	$('#btnPan_To').attr("value", $._('pan_to'));
+	$('#btnCalLatLong').attr("value", $._('calculate'));
+	$('#osref').html($._('os grid reference'));
 }
 
 var Pan = function(x,y) 
@@ -34,7 +34,7 @@ var Pan = function(x,y)
 	   
 	   if(!$.isNumeric(x) || !$.isNumeric(y))
 	   {
-		   jAlert($.i18n("err-xy-numeric"), $.i18n("err-alert"));
+		   jAlert('X and Y should be Numeric', 'Zoom To XY');
             return;
 	   }
 				  var vectorSource = new ol.source.Vector({
@@ -74,7 +74,7 @@ var Pan = function(x,y)
        
     }
     else {
-        jAlert($.i18n("err-enter-xy"), $.i18n("err-alert"));
+        jAlert('Please enter X and Y values both', 'Zoom To XY');
         return;
     }
 };
@@ -85,7 +85,7 @@ var Zoom = function(x, y) {
 		
 	 if(!$.isNumeric(x) ||  !$.isNumeric(y))
 	   {
-		   jAlert($.i18n("err-xy-numeric"), $.i18n("err-alert"));
+		   jAlert('X and Y should be Numeric', 'Zoom To XY');
             return;
 	   }
 	   
@@ -96,7 +96,7 @@ var Zoom = function(x, y) {
     }
     else {
     
-        jAlert($.i18n("err-enter-xy"), $.i18n("err-alert"));
+        jAlert('Please enter X and Y values both', 'Zoom To XY');
         return;
     }
 };

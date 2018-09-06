@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  */
 
 @Entity
-@Table(name="la_lease")
+@Table(name="la_rrr_lease")
 public class LaLease implements Serializable{
 	
 	/**
@@ -30,7 +30,7 @@ public class LaLease implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@SequenceGenerator(name="pk_la_lease",sequenceName="la_lease_leaseid_seq", allocationSize=1) 
+	@SequenceGenerator(name="pk_la_lease",sequenceName="la_rrr_rrrid_seq", allocationSize=1) 
 	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_lease") 
 	private Integer leaseid;
 	

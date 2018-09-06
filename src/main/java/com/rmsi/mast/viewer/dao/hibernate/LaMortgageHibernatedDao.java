@@ -58,7 +58,7 @@ public class LaMortgageHibernatedDao extends GenericHibernateDAO<LaMortgage, Int
 	public LaMortgage getMortgageByLandIdandprocessId(Long landId,
 			Long processId) {
 		try{
-			 String strQuery = "select * from la_mortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where lm.isactive= true and trans.applicationstatusid=1 and lm.landid= "+landId+" and trans.processid="+processId;
+			 String strQuery = "select * from la_rrr_mortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where lm.isactive= true and trans.applicationstatusid=1 and lm.landid= "+landId+" and trans.processid="+processId;
 				List<LaMortgage> laMortgage = getEntityManager().createNativeQuery(strQuery,LaMortgage.class).getResultList();
 			if(laMortgage.size()>0){
 			return laMortgage.get(0);
@@ -96,7 +96,7 @@ public class LaMortgageHibernatedDao extends GenericHibernateDAO<LaMortgage, Int
 	@Override
 	public LaMortgage getMortgageByLandandTransactionId(Long landId, Integer transactionid) {
 		try{
-			 String strQuery = "select * from la_mortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where  lm.landid= "+landId+" and trans.transactionid="+transactionid+" and trans.processid=3";
+			 String strQuery = "select * from la_rrr_mortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where  lm.landid= "+landId+" and trans.transactionid="+transactionid+" and trans.processid=3";
 				List<LaMortgage> laMortgage = getEntityManager().createNativeQuery(strQuery,LaMortgage.class).getResultList();
 			if(laMortgage.size()>0){
 			return laMortgage.get(0);

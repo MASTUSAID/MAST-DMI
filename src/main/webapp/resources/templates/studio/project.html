@@ -1,16 +1,16 @@
 <div id="ProjectFormDiv" style="visibility: hidden">
 
     <form class="cmxform" id="projectForm" action="" onsubmit="return false;">
-
-        <input type="hidden" name="extention" id="extention" value="">
+    
+    <input type="hidden" name="extention" id="extention" value="">
 
         <div class="topmenu">
             <a class="btn02" id="project_btnNew"
-               onclick="javascript:createEditProject();"><span class="NewBTN" data-i18n="gen-new"></span></a>
+               onclick="javascript:createEditProject();"><span class="NewBTN">New</span></a>
             <a class="btn02" id="project_btnSave"
-               onclick="javascript:saveProject();"><span class="saveBTN" data-i18n="gen-save"></span></a>
+               onclick="javascript:saveProject();"><span class="saveBTN">Save</span></a>
             <a class="btn02" id="project_btnBack"
-               onclick="javascript:displayProjectNew();"><span class="BackBTN" data-i18n="gen-back"></span></a>
+               onclick="javascript:displayProjectNew();"><span class="BackBTN">Back</span></a>
         </div>
 
         <table id="projectTable" class="tablesorter" cellpadding="0"
@@ -22,10 +22,10 @@
                                class="project_table_adjust">
                             <tr>
                                 <td class="project_cell_adjust styleForm"><label
-                                        class="searchLbl" data-i18n="gen-search"></label>&nbsp; <input
+                                        class="searchLbl">Search:</label>&nbsp; <input
                                         id="project_txtSearch" value="" maxlength="30" size="30"
                                         type="text" />
-                                    <button value="Submit" onclick="displayRefreshedProject();" data-i18n="gen-clear"></button>
+                                    <button value="Submit" onclick="displayRefreshedProject();">Clear</button>
                                 </td>
                             </tr>
                         </table>
@@ -33,11 +33,11 @@
                 </tr>
 
                 <tr>
-                    <th class="header1" data-i18n="reg-name"></th>
-                    <th data-i18n="reg-country"></th>
-                    <th data-i18n="reg-region"></th>
-                    <th data-i18n="reg-district"></th>
-                    <th data-i18n="reg-village"></th>
+                    <th class="header1">Name</th>
+                    <th>Country</th>
+                    <th>Region</th>
+                    <th>District</th>
+                    <th>Village</th>
                     <th class="no-sort">&nbsp;</th>
                     <th class="no-sort">&nbsp;</th>
                 </tr>
@@ -55,18 +55,18 @@
                                         <tr>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/first.png"
-                                                    class="first" data-i18n="[title]gen-first" /></td>
+                                                    class="first" title="First" /></td>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/prev.png"
-                                                    class="prev" data-i18n="[title]gen-previous" /></td>
+                                                    class="prev" title="Previous" /></td>
                                             <td class="cell_adjustone"><input type="text"
                                                                               class="pagedisplay" readonly="readonly" /></td>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/next.png"
-                                                    class="next" data-i18n="[title]gen-next" /></td>
+                                                    class="next" title="Next" /></td>
                                             <td class="cell_adjust"><img
                                                     src="resources/scripts/tablesorter/addons/pager/icons/last.png"
-                                                    class="last" data-i18n="[title]gen-last" /></td>
+                                                    class="last" title="Last" /></td>
                                             <td class="cell_adjustone"><select class="pagesize">
                                                     <option selected="selected" value="10">10</option>
                                                     <option value="20" style="padding-top: 4px;">20</option>
@@ -96,14 +96,14 @@
             </div>
 
             <h3>
-                <a href="#" data-i18n="admin-layer-group"></a>
+                <a href="#">Layer Group</a>
             </h3>
 
             <div style="height: 250px; overflow: hidden;" class="styleForm">
                 <div id="project_select_op">
                     <select name="lyr_type" id="lyr_type"
                             onchange="populatebaselayer(this.value);">
-                        <option value="" data-i18n="gen-please-select"></option>
+                        <option value="">Please Select</option>
                         <option value="Google">Google</option>
                         <option value="Bing">Bing</option>
                         <option value="Open">Open Street Map</option>
@@ -114,7 +114,7 @@
                 <div id="project_lg">
                     <div class="layerg_outer_left">
                         <fieldset class="fielesetstyle">
-                            <legend class="fielesetstyle_legend" data-i18n="admin-layer-group"></legend>
+                            <legend class="fielesetstyle_legend">Layergroup</legend>
                             <div style="width: 100%">
                                 <div class="layerg_inner">
                                     <div id="layer_group_project">
@@ -131,7 +131,7 @@
 
                     <div class="layerg_outer_right">
                         <fieldset class="fielesetstyle">
-                            <legend class="fielesetstyle_legend" data-i18n="admin-baselayer"></legend>
+                            <legend class="fielesetstyle_legend">Baselayer</legend>
                             <div style="width: 100%">
                                 <div class="layerg_inner">
                                     <div id="layer_group_project">
@@ -149,7 +149,7 @@
             </div>
 
             <h3>
-                <a href="#" data-i18n="admin-proj-conf"></a>
+                <a href="#">Project Configuration</a>
             </h3>
             <div style="height: 150px">
                 <table class="styleForm inputint">
@@ -159,8 +159,8 @@
                 </table>
             </div>
 
-
-            <!---
+			
+			<!---
             <h3>
                 <a href="#">Hamlet</a>
             </h3>
@@ -181,12 +181,12 @@
                 <div id=temporaryAdjDiv></div>
 
             </div>
-                        
-            -->
-
+			
+			-->
+			
 
             <h3>
-                <a href="#" data-i18n="admin-disclaimer"></a>
+                <a href="#">Disclaimer</a>
             </h3>
             <div style="height: 150px">
                 <table>
@@ -197,7 +197,7 @@
             </div>
 
             <h3>
-                <a href="#" data-i18n="admin-assign-user"></a>
+                <a href="#">Assign user</a>
             </h3>
             <div style="height: 250px">
                 <table>
@@ -205,10 +205,10 @@
                         <tr>
                             <td colspan="4"><a id="all" href="#"
                                                style="color: #1491FF; text-decoration: none;"
-                                               onclick="javascript:toggleUserChecked(true);" data-i18n="gen-select-all"></a>
+                                               onclick="javascript:toggleUserChecked(true);">Select All</a>
                                 &nbsp;&nbsp; <a id="none" href="#"
                                                 style="color: #1491FF; text-decoration: none;"
-                                                onclick="javascript:toggleUserChecked(false);" data-i18n="gen-deselect-all"></a>
+                                                onclick="javascript:toggleUserChecked(false);">Deselect All</a>
                             </td>
                         </tr>
                     </tbody>
@@ -252,46 +252,46 @@
             ${name}
             </td>         
             <td>
-            {{if (projectArea.length)}}
+			 {{if (projectArea.length)}}
             {{if (projectArea[0].laSpatialunitgroup1!=null)}}
-            {{if (projectArea[0].laSpatialunitgroupHierarchy1!=null)}}
-            ${projectArea[0].laSpatialunitgroupHierarchy1.nameEn}
-            {{/if}}
-            {{/if}}
-            {{/if}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy1!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy1.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>
             <td>
-            {{if (projectArea.length)}}
+			 {{if (projectArea.length)}}
             {{if (projectArea[0].laSpatialunitgroup2!=null)}}
-            {{if (projectArea[0].laSpatialunitgroupHierarchy2!=null)}}
-            ${projectArea[0].laSpatialunitgroupHierarchy2.nameEn}
-            {{/if}}
-            {{/if}}
-            {{/if}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy2!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy2.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>
             <td>
-            {{if (projectArea.length)}}
+			 {{if (projectArea.length)}}
             {{if (projectArea[0].laSpatialunitgroup3!=null)}}
-            {{if (projectArea[0].laSpatialunitgroupHierarchy3!=null)}}
-            ${projectArea[0].laSpatialunitgroupHierarchy3.nameEn}
-            {{/if}}
-            {{/if}}
-            {{/if}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy3!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy3.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>
             <td>
-            {{if (projectArea.length)}}
+			 {{if (projectArea.length)}}
             {{if (projectArea[0].laSpatialunitgroup3!=null)}}
-            {{if (projectArea[0].laSpatialunitgroupHierarchy4!=null)}}
-            ${projectArea[0].laSpatialunitgroupHierarchy4.nameEn}
-            {{/if}}
-            {{/if}}
-            {{/if}}
+			   {{if (projectArea[0].laSpatialunitgroupHierarchy4!=null)}}
+                   ${projectArea[0].laSpatialunitgroupHierarchy4.nameEn}
+               {{/if}}
+			{{/if}}
+			{{/if}}
             </td>  
             <td align="center">
-            <a href="javascript:createEditProject('${name}');"><img src="resources/images/studio/edit.png" data-i18n="[title]gen-edit" /></a>
+            <a href="javascript:createEditProject('${name}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
             </td>
             <td align="center">
-            <a href="javascript:deleteProject('${name}', '${projectnameid}');"><img src="resources/images/studio/delete.png" data-i18n="[title]gen-delete" /></a>
+            <a href="javascript:deleteProject('${name}', '${projectnameid}');"><img src="resources/images/studio/delete.png" title="Delete"/></a>
             </td>
             <!--td align="center">
             <a href="javascript:openProjectMapTab('${name}');"><img src="../Content/images/admin/map_preview.png" /></a>
@@ -301,13 +301,13 @@
 
         <script id="ProjectTemplateFormNew" type="text/x-jquery-tmpl">        
             <tr>
-            <td><span data-i18n="reg-name"></span>
+            <td>Name
             <input type="hidden" name="hid_name" id="hid_name" value="${hid_name}" /> 
             </td>
             <td>
             <input type="textbox" name="name" id="name" value="${name}"/>    	
             </td>  
-            <td data-i18n="reg-country"></td>
+            <td>Country Name</td>
             <td><input type="textbox" name="country"  id="country" value="${projectAreas.countryName}"/></td>
             </tr>
         </script>
@@ -315,7 +315,7 @@
         <script id="ProjectTemplateForm" type="text/x-jquery-tmpl">
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-name"></label>
+            <label class="lblint">Name</label>
             <input type="hidden" name="hid_idseq" id="hid_idseq" /> 
             <input type="hidden" name="hamlets_length" id="hamlets_length" /> 
             </td>
@@ -323,7 +323,7 @@
             <input type="textbox" name="name" id="name" value="${name}" />
             </td>    
             <td>
-            <label class="lblint" data-i18n="gen-desc"></label>
+            <label class="lblint">Description</label>
             </td>
             <td>    
             <input type="text" name="description" id="description" value="${description}" />          
@@ -332,35 +332,35 @@
 
             <tr>    
             <td>
-            <label class="lblint" data-i18n="viewer-proj"></label>
+            <label class="lblint">Projection</label>
             </td>
             <td>    
-            <!--
+			<!--
             {{if (projection)}}
             <input type="textbox" name="projection.code" id="projection" value="${projection.code}" />    
             {{else}}
             <input type="textbox" name="projection.code" id="project_Projection" value="" />        
             {{/if}}
-            -->
-
-            <select name="projection_code" id = "projection_code">
-            <option  value="" data-i18n="gen-please-select"></option>         
+			-->
+			
+			<select name="projection_code" id = "projection_code">
+              <option  value="">Please Select</option>         
             </select>
             </td>
 
             <td>
-            <label class="lblint" data-i18n="viewer-display-proj"></label>
+            <label class="lblint">Display Projection</label>
             </td>
             <td>
-            <!--
+			<!--
             {{if (displayProjection)}}  
             <input type="textbox" name="displayProjection.code" id="displayProjection" value="${displayProjection.code}" /> 
             {{else}}
             <input type="textbox" name="displayProjection.code" id="displayProjection" value="" />
             {{/if}}          
-            -->
-            <select name="displayProjection_code" id = "displayProjection_code">
-            <option  value="" data-i18n="gen-please-select"></option>         
+			-->
+			<select name="displayProjection_code" id = "displayProjection_code">
+              <option  value="">Please Select</option>         
             </select>
             </td>
 
@@ -370,13 +370,13 @@
 
             <tr>
             <td>
-            <label class="lblint" data-i18n="admin-max-extent"></label>
+            <label class="lblint">Max Extent</label>
             </td>
             <td>
             <input type="textbox" name="maxextent" id="maxextent" value="${maxextent}" />
             </td>
             <td>
-            <label class="lblint" data-i18n="admin-min-extent"></label>
+            <label class="lblint">Min Extent</label>
             </td>
             <td>
             <input type="textbox" name="minextent" id="minextent" value="${minextent}" />
@@ -385,14 +385,14 @@
             </tr>
             <tr>
             <td>
-            <label class="lblint" data-i18n="admin-zoom-levels"></label>
+            <label class="lblint">Zoom Levels</label>
             </td>
             <td>
             <input type="textbox" name="numzoomlevels" id="numzoomlevels" value="${zoomlevelextent}" />        
 
             </td>
             <td>
-            <label class="lblint" data-i18n="admin-restricted-extent"></label>
+            <label class="lblint">Restricted Extent</label>
             </td>
             <td>
             <input type="textbox" name="restrictedextent" id="restrictedextent" value="${minextent}" />
@@ -401,20 +401,20 @@
             </tr>
             <tr>
             <td>
-            <label class="lblint" data-i18n="admin-out-format"></label>
+            <label class="lblint">Output Format</label>
             </td>
             <td>
             <select name="project_outputFormat" id="project_outputFormat">
-            <option  value="" data-i18n="gen-please-select"></option>         
+            <option  value="">Please Select</option>         
             </select>
             </td>
             <td>
-            <label class="lblint" data-i18n="gen-unit"></label>
+            <label class="lblint">Unit</label>
             </td>
 
             <td>
             <select name="project_unit" id="project_unit">
-            <option  value="" data-i18n="gen-please-select"></option>			
+            <option  value="">Please Select</option>			
 
             </select>
             </td>    
@@ -422,15 +422,15 @@
             <input type="hidden" name="copyright" id="copyright" value="" />
             <input type="hidden" name="watermask" id="watermask" value="" />
             <!--tr>
-            <td data-i18n="gen-copyright-lbl">
-            
+            <td>
+            CopyRight
             </td>
             <td>
             <input type="textbox" name="copyright" id="copyright" value="${copyright}" />
             </td>
 
-            <td data-i18n="gen-watermark">
-            
+            <td>
+            Water Mask
             </td>
             <td>
             <input type="textbox" name="watermask" id="watermask" value="${watermask}" />
@@ -438,10 +438,10 @@
 
             </tr-->
 
-            <!--
+			<!--
             <tr>
             <td>&nbsp;</td>
-            <td>
+			<td>
             <input type="hidden" id="active" name="active" value="${active}" />
             {{if (active)}}       
             <input type="checkbox" id="active1" name="active1" value="${active}"  CHECKED onClick="changeActiveValue(this);" />   Active        
@@ -467,15 +467,15 @@
             </td>
             </tr>
 
-            -->
-
+			-->
+			
             <!-- <tr>
             <td>
             <label class="lblint">Active Layer</label>
             </td>
             <td >
             <select name="activelayer" id = "activelayer">
-            <option SELECTED value="" data-i18n="gen-please-select"></option>
+            <option SELECTED value="">Please Select</option>
             </td>
 
             <td>
@@ -483,7 +483,7 @@
             </td>
             <td>
             <select name="overlaymap" id = "overlaymap">
-            <option SELECTED value="" data-i18n="gen-please-select"></option>
+            <option SELECTED value="">Please Select</option>
             </td>
 
             </tr> -->
@@ -492,7 +492,7 @@
         <script id="ProjectTemplateDisclaimer" type="text/x-jquery-tmpl">
             <tr>
             <td colspan="4">
-            <p><input type="checkbox" id="chkDisclaimer" name="chkDisclaimer"  onchange="toggleDisclaimer(this);"  /> <span data-i18n="admin-disclaimer"></span> </p>
+            <p><input type="checkbox" id="chkDisclaimer" name="chkDisclaimer"  onchange="toggleDisclaimer(this);"  />   Disclaimer </p>
 
             <textarea spellcheck="false" name="disclaimer" id="Disclaimer" value="${disclaimer}" cols=118 rows=2 style="visibility: hidden; height:70px;width:700px;"></textarea>
             </td>
@@ -531,128 +531,128 @@
         <script id="projectConfigurationTemplate" type="text/x-jquery-tmpl">
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-country"></label>
-            <input type="hidden" name="hid_id" id="hid_id" /> 
+                <label class="lblint">Country</label>
+                <input type="hidden" name="hid_id" id="hid_id" /> 
             </td>
             <td>
-            <select class="pagesize" id="countryId" name="countryId" onchange="getcountryval(this);">
-            <option selected="selected"  value="" data-i18n="gen-please-select"></option>           
-            </select>
+                <select class="pagesize" id="countryId" name="countryId" onchange="getcountryval(this);">
+                <option selected="selected"  value="">select</option>           
+                </select>
             </td>    
             <td>
-            <label class="lblint" data-i18n="reg-region"></label>    
+                <label class="lblint">Region</label>    
             </td>
             <td>    
-            <select class="pagesize" id="regionId" name="regionId" onchange="getregionval(this);">
-            <option selected="selected"  value="" data-i18n="gen-please-select"></option>            
-            </select>  
+                <select class="pagesize" id="regionId" name="regionId" onchange="getregionval(this);">
+                <option selected="selected"  value="">select</option>            
+                </select>  
             </td>
             </tr>
-
+    
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-province"></label>  
+                <label class="lblint">Province</label>  
             </td>
             <td>
-            <select class="pagesize" id="districtId" name="districtId" onchange="getcommunetval(this);" >
-            <option selected="selected"  value="" data-i18n="gen-please-select"></option>           
-            </select>
+                <select class="pagesize" id="districtId" name="districtId" onchange="getcommunetval(this);" >
+                <option selected="selected"  value="">select</option>           
+                </select>
             </td>
             <td>
-            <!-- <label class="lblint">Region </label> -->
-            <label class="lblint" data-i18n="reg-commune"></label>  
+                <!-- <label class="lblint">Region </label> -->
+				  <label class="lblint">Commune</label>  
             </td>
             <td>    
-            <!-- <input type="textbox" name="regioncode" id="regioncode" value="" />  -->
-            <select class="pagesize" id="CommuneId" name="CommuneId" onchange="getplaceval(this);" >
-            <option selected="selected"  value="" data-i18n="gen-please-select"></option>           
-            </select>
+                <!-- <input type="textbox" name="regioncode" id="regioncode" value="" />  -->
+				<select class="pagesize" id="CommuneId" name="CommuneId" onchange="getplaceval(this);" >
+                <option selected="selected"  value="">select</option>           
+                </select>
             </td>
             </tr>
 
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-place"></label>
+                <label class="lblint">place</label>
             </td>
             <td>    
-            <select class="pagesize" id="placeId" name="placeId">
-            <option selected="selected"  value="" data-i18n="gen-please-select"></option>
-            </select>  
+                <select class="pagesize" id="placeId" name="placeId">
+                <option selected="selected"  value="">select</option>
+                </select>  
             </td>
             <td>
-            <label class="lblint" data-i18n="reg-cert-num"></label> <!--Village certificate number -->
-
+               <label class="lblint">Certificate number</label> <!--Village certificate number -->
+				
             </td>
             <td>
-            <input type="textbox" name="villagecode" id="villagecode" value="" /> 
-
+                 <input type="textbox" name="villagecode" id="villagecode" value="" /> 
+				
             </td>
             </tr>
 
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-postal-code"></label> <!-- Village Postal Code-->
+                <label class="lblint">Postal Code</label> <!-- Village Postal Code-->
             </td>
             <td>
-            <input type="textbox" name="villagepostalcode" id="villagepostalcode" value="" />
+                <input type="textbox" name="villagepostalcode" id="villagepostalcode" value="" />
             </td>
             <td>
-            <label class="lblint" data-i18n="reg-va-meeting-date"></label> 
+                <label class="lblint">VA meeting date</label> 
             </td>
             <td>
-            <input type="textbox" name="vcmeetingdate" id="vcmeetingdate" class="datepicker" readonly="readonly" value="" />
+                <input type="textbox" name="vcmeetingdate" id="vcmeetingdate" class="datepicker" readonly="readonly" value="" />
             </td>
             </tr>
-
+    
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-auth-chairman"></label> <!-- Village Chairman-->
+                <label class="lblint">Authorized Chairman</label> <!-- Village Chairman-->
             </td>
             <td>
-            <input type="textbox" name="villagechairman" id="villagechairmanId" value="" />
+                <input type="textbox" name="villagechairman" id="villagechairmanId" value="" />
             </td>
             <td>
-            <label class="lblint" data-i18n="reg-exec-officer"></label>
+                <label class="lblint">Executive Officer</label>
             </td>
             <td>
-            <input type="textbox" name="executiveofficer" id="executiveofficerId" value="" />
+                <input type="textbox" name="executiveofficer" id="executiveofficerId" value="" />
             </td>
             </tr>
-
+    
             <tr>
             <td>
-            <label class="lblint" data-i18n="reg-auth-chairman-sign"></label> <!-- Village Chairman Signature-->
+                <label class="lblint">Authorized Chairman Signature</label> <!-- Village Chairman Signature-->
             </td>
             <td>
-            <img src="" id="imgSignatureVillageChairman" alt="Signature" class="signatureImage" />
-            <a href="#" id="linkDeleteSignatureVillageChairman" class="deleteLink" onclick="deleteSignature('SignatureVillageChairman')" style="margin-left: 10px;display: none;">
-            <i class="fa fa-times"></i> <span data-i18n="gen-delete"></span>
-            </a>
-
-            <a href="#" id="linkAddSignatureVillageChairman" class="addLink" onclick="uploadSignature('SignatureVillageChairman')">
-            <i class="fa fa-plus"></i> <span data-i18n="gen-add"></span>
-            </a>
-            <input type="hidden" id="hSignatureVillageChairman" name="hSignatureVillageChairman" />
+                <img src="" id="imgSignatureVillageChairman" alt="Signature" class="signatureImage" />
+                <a href="#" id="linkDeleteSignatureVillageChairman" class="deleteLink" onclick="deleteSignature('SignatureVillageChairman')" style="margin-left: 10px;display: none;">
+                    <i class="fa fa-times"></i> Delete
+                </a>
+        
+                <a href="#" id="linkAddSignatureVillageChairman" class="addLink" onclick="uploadSignature('SignatureVillageChairman')">
+                    <i class="fa fa-plus"></i> Add
+                </a>
+                <input type="hidden" id="hSignatureVillageChairman" name="hSignatureVillageChairman" />
             </td>
-
+           
             </tr>
-
+    
             <tr>
-            <td>
-            <label class="lblint" data-i18n="reg-land-officier"></label> <!-- District Land Officer-->
-            </td>
-            <td>
-            <input type="textbox" name="districtofficer" id="districtofficerId" value="" />
-            </td>
-            <td>
+                <td>
+                    <label class="lblint">Land Officer</label> <!-- District Land Officer-->
+                </td>
+                <td>
+                    <input type="textbox" name="districtofficer" id="districtofficerId" value="" />
+                </td>
+                <td>
 
-            </td>
-            <td>
+                </td>
+                <td>
 
-            </td>
+                </td>
             </tr>
-
-        </script>
+    
+           </script>
     </form>
     <script type="text/javascript">
         function getcountryval(sel) {
@@ -686,11 +686,11 @@
 
 </div>
 
-<div id="adjudicator-dialog-form" data-i18n="[title]reg-proj-adj"
+<div id="adjudicator-dialog-form" title="Project Adjudicator"
      style="display: none;">
     <form  id="adjudicatorformID" action="" onsubmit="return false;">
         <fieldset>
-            <label for="email" data-i18n="reg-name"></label> <input name="adjudicator_name"
+            <label for="email">Name</label> <input name="adjudicator_name"
                                                    id="adjudicator_name" value="" /><br>
         </fieldset>
     </form>
@@ -698,16 +698,16 @@
 <div id="hamlet-dialog-form" title="Hamlet" style="display: none;">
     <form  id="hamletformID" action="" onsubmit="return false;">
         <fieldset>
-            <label for="email" data-i18n="reg-name"></label> 
+            <label for="email">Name</label> 
             <input name="hamlet_name" id="hamlet_name" value="" class="text ui-widget-content ui-corner-all"/> 
             <br>
-            <label for="email" data-i18n="mob-alias-other-lang"></label> 
+            <label for="email">Alias Other Language</label> 
             <input name="hamlet_alias" id="hamlet_alias" value="" class="text ui-widget-content ui-corner-all" />
             <br> 
-            <label for="email" data-i18n="reg-hamlet-code"></label> 
+            <label for="email">Hamlet Code</label> 
             <input name="hamlet_code" id="hamlet_code" value="" class="text ui-widget-content ui-corner-all"/>
             <br>
-            <label for="email" data-i18n="reg-leader-name"></label> 
+            <label for="email">Leader Name</label> 
             <input name="hamlet_leader_name" id="hamlet_leader_name" value="" class="text ui-widget-content ui-corner-all"/> 
         </fieldset>
     </form>

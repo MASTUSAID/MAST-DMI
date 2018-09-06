@@ -1,135 +1,110 @@
-@font-face {
-    font-family: 'titilliumregular';
-    src: url('fonts/titillium-regular-webfont.woff2') format('woff2'), url('fonts/titillium-regular-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-
-html,body{font: normal 14px 'titilliumregular', sans-serif!important;}
-
-
-
-.header-top
+.header
 {
+	background-image: url(../images/header_bkg.jpg);
+	background-repeat: no-repeat;
+	margin: 0;
+	min-height: 90px;
+	padding: 0;
+	width: 100%;
+	 background-color: #0180dd;
+}
+.subHead
+{
+	color: #FFF;
+	float: left;
+	font-size: 24px;
+	margin-left: 20px;
+	padding: 20px 0 20px 0;
+}
+.loginInfo
+{
+	float: right;
+	margin: 0;
+	position: relative;
+	top: -1px;
+}
+.userText
+{
+	font-size: 90%;
+	margin-left: 38px;
+	position: absolute;
+	top: 1px;
+}
+.logoutApp
+{
+	margin-left: 50px;
+	color:#7eaada;
+	font-size:12px;
+}
 
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    display: none;
     margin: 0;
-    min-height: 90px;
+
+    /****************
+     ** NEW STYLES **
+     ****************/
+
+    list-style: none; /** Remove list bullets */
+    width: 100%; /** Set the width to 100% of it's parent */
     padding: 0;
-    width: 100%;
-    background:#362d59;
-    border-bottom:2px solid #00b7bd;
-    box-shadow: 0 3px 3px rgba(0,0,0,.5);
-	 
-}
-#usaid_logo {
-width: 128px;
-background: url(../images/usaid_logo_300.png) no-repeat;
-height: 51px;
-float: left;
-margin-top: 20px;
-margin-left: 15px;
-display: inline-block;
-position: absolute;
-left: 15px;
 }
 
-
-.header_title {
- 
-font-size: 22px;
-padding-top: 15px;
-margin-left: 15px;
-
-color: #fff;
-text-align: center;
+.dropdown:hover .dropdown-menu {
+    display: block;
 }
 
+/** List Item Styles **/
+.dropdown a {
+    display: block;
+    padding: 0.2em 0.8em;
+    text-decoration: none;
+    background: #efefef;
+    color: #333333;
+	text-align:center;
+	min-width: 130px;
+	font-size:12px;
+	border-bottom: 1px solid #ddd;
+}
 .userinfo
 {
 background-image: url(../images/userInfo.png);
 position:absolute;
 right:0px;
 top:0px;
-height:90px;
+height:20px;
 background-repeat:no-repeat;
-padding:0.1em 0 0 2.5em;
+padding:0.1em 0 0 1em;
 color: #fff;
 }
 .userinfo ul {
 list-style:none;
 margin:0;
-padding:0;
 }
 .userinfo ul li{
-
-
-  font-size: 16px;
-  color: #000;
-  margin: 10px;
-  border-bottom: 1px solid #000;
+  float: left;
+  background: url(../images/separator-cb.png) no-repeat right 3px;
 }
-.userinfo ul li a{ text-decoration: none; color: #000;}
-
 .userinfo ul li:last-child {
-  border: none;
+  background: none;
 }
 .userinfo ul li span{
   color: #393939;
   padding: 0 6px;
 }
 .userinfo ul li a{
-  color: #000;
+  color: #1491FF;
   padding: 0 6px;
 }
 .userinfo ul li a:hover{
-  color: #352d59;
+  color: #393939;
   
 
-}
-
-.username {
-  background: url(../images/user.png) no-repeat;
-  margin-left: 20px!important;	
-  padding-left: 24px;
-}
-
-.home-separator {
-	background: url(../images/home-separator.png) no-repeat center;
-}
-.home{
-  background: url(../images/home-icon.png) no-repeat;
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  padding: 0 !important;
-}
-
-.logout{
-  background: #352d59 url(../images/logout-icon.png) no-repeat 10px 5px;
-  display: inline-block;
-  padding: 0 10px 0 30px!important;
-  line-height: 24px;
-  color: #fff!important;
-  border-radius: 3px;
-  font-size: 14px;
-
-}
-
-.homeDiv, .languageDiv, .logoutDiv {
-    float: left;
-}
-
-.homeDiv{
-    width: 45px;
-}
-
-.languageDiv {
-    min-width: 90px;
-    margin-top: 2px;
-}
-
-.logoutDiv {
-    min-width: 110px;
 }

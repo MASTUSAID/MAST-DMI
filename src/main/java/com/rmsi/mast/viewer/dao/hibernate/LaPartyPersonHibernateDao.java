@@ -315,7 +315,7 @@ implements LaPartyPersonDao{
 		
 		
 		try {
-			String strQuery= "select LP.personid,LP.monthid from la_lease LP where landid = " + landid +" and isactive = true";
+			String strQuery= "select LP.personid,LP.monthid from la_rrr_lease LP where landid = " + landid +" and isactive = true";
 			List<Object[]> lst = getEntityManager().createNativeQuery(strQuery).getResultList();
 			if(lst.size()>0){
 				Object[] arrObj = lst.get(0);
@@ -332,7 +332,7 @@ implements LaPartyPersonDao{
 							+ " left join la_partygroup_gender LG on LP.genderid = LG.genderid"
 							+ " left join la_partygroup_maritalstatus LM on  LP.maritalstatusid = LM.maritalstatusid"
 							+ " left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid"
-							+ " left join la_lease lea on  LP.personid=lea.personid"
+							+ " left join la_rrr_lease lea on  LP.personid=lea.personid"
 							+ " left join la_ext_month lam on lam.monthid = lea.monthid"
 							+ " where LP.personid =  " + partyId +" and lea.landid= "+ landid;
 					
@@ -550,7 +550,7 @@ implements LaPartyPersonDao{
 		
 		List<LaPartyPerson> personlist= new ArrayList<LaPartyPerson>();
 		try {
-			String strQuery= "select LP.personid,LP.monthid from la_lease LP inner join la_ext_transactiondetails trans on  trans.moduletransid=LP.leaseid where trans.transactionid = " + transid;
+			String strQuery= "select LP.personid,LP.monthid from la_rrr_lease LP inner join la_ext_transactiondetails trans on  trans.moduletransid=LP.leaseid where trans.transactionid = " + transid;
 			List<Object[]> lst = getEntityManager().createNativeQuery(strQuery).getResultList();
 			if(lst.size()>0){
 //				Object[] arrObj = lst.get(0);
@@ -570,7 +570,7 @@ implements LaPartyPersonDao{
 							+ " left join la_partygroup_gender LG on LP.genderid = LG.genderid"
 							+ " left join la_partygroup_maritalstatus LM on  LP.maritalstatusid = LM.maritalstatusid"
 							+ " left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid"
-							+ " left join la_lease lea on  LP.personid=lea.personid"
+							+ " left join la_rrr_lease lea on  LP.personid=lea.personid"
 							+ " left join la_ext_month lam on lam.monthid = lea.monthid"
 							+ " where LP.personid =  " + partyId +" and lea.landid= "+ landid;
 					
@@ -694,7 +694,7 @@ implements LaPartyPersonDao{
 		
 		List<LaPartyPerson> personlist= new ArrayList<LaPartyPerson>();
 		try {
-			String strQuery= "select LP.personid,LP.monthid from la_lease LP where landid = " + landid +" and isactive = true";
+			String strQuery= "select LP.personid,LP.monthid from la_rrr_lease LP where landid = " + landid +" and isactive = true";
 			List<Object[]> lst = getEntityManager().createNativeQuery(strQuery).getResultList();
 			if(lst.size()>0){
 //				Object[] arrObj = lst.get(0);
@@ -714,7 +714,7 @@ implements LaPartyPersonDao{
 							+ " left join la_partygroup_gender LG on LP.genderid = LG.genderid"
 							+ " left join la_partygroup_maritalstatus LM on  LP.maritalstatusid = LM.maritalstatusid"
 							+ " left join la_partygroup_identitytype LI on LP.identitytypeid = Li.identitytypeid"
-							+ " left join la_lease lea on  LP.personid=lea.personid"
+							+ " left join la_rrr_lease lea on  LP.personid=lea.personid"
 							+ " left join la_ext_month lam on lam.monthid = lea.monthid"
 							+ " where LP.personid =  " + partyId +" and lea.landid= "+ landid;
 					

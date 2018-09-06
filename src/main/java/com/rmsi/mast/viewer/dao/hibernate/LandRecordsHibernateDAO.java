@@ -55,6 +55,7 @@ import com.rmsi.mast.studio.util.ClaimsSorter;
 import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.dao.LaPartyDao;
 import com.rmsi.mast.viewer.dao.LandRecordsDao;
+import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 @Repository
 public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTable, Long>
@@ -2185,7 +2186,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
-					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
+					+ " from la_rrr_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " where ld.landid="+ landid + "order by lea.createddate desc;";
 			
@@ -2220,7 +2221,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
-					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
+					+ " from la_rrr_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2256,7 +2257,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
-					+ " from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
+					+ " from la_rrr_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2292,7 +2293,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
-					+ " from la_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " from la_rrr_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
 					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"					 
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2329,7 +2330,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
-					+ " from la_surrendermortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " from la_rrr_surrendermortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
 					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"					 
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2367,7 +2368,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
-					+ " from la_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " from la_rrr_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
 					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
 					+ " where ld.landid="+ landid + " order by mor.createddate desc;";
 			
@@ -2439,7 +2440,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			sql = " select row_number() OVER () as rnum,transactiontype,landid,applicantname,ownername,createddate,transactionid,personid from "
 					+ "( select distinct on (lea.personid) 'Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
 					+ " lea.createddate,td.transactionid,lea.personid"
-					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
+					+ " from la_rrr_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
 					+ " left join la_Party_person ps1 on ps1.personid=lea.personid "
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid "
@@ -2448,7 +2449,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ "	Union"
 					+ "	select distinct on (personid) 'Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
-					+ "	from la_mortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
+					+ "	from la_rrr_mortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"
@@ -2457,7 +2458,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " Union"	
 					+ "	select distinct on (personid) 'Surrender Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
-					+ "	from la_surrendermortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
+					+ "	from la_rrr_surrendermortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"
@@ -2541,7 +2542,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " group by transactiontype,landid,createddate,transactionid,personid)"					
 					+ " Union "
 					+ " Select distinct on (lea.personid) 'Surrender Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
-					+ " lea.createddate,td.transactionid,lea.personid 	from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
+					+ " lea.createddate,td.transactionid,lea.personid 	from la_rrr_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
 					+ " left join la_Party_person ps1 on ps1.personid=lea.personid "
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
