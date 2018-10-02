@@ -864,7 +864,7 @@ var personsEditingControllerForResourcePerson = {
                 }
                 var persondata = {
                     "landid": LandId,
-                    "firstname": Firstname + "QQQ",
+                    "firstname": Firstname,
                     "middlename": Middlename,
                     "lastname": Lastname,
                     "Mobile No": Mobile,
