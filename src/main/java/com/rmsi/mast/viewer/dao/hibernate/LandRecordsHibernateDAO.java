@@ -55,6 +55,7 @@ import com.rmsi.mast.studio.util.ClaimsSorter;
 import com.rmsi.mast.studio.util.StringUtils;
 import com.rmsi.mast.viewer.dao.LaPartyDao;
 import com.rmsi.mast.viewer.dao.LandRecordsDao;
+import com.sun.org.apache.bcel.internal.generic.LSTORE;
 
 @Repository
 public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTable, Long>
@@ -89,7 +90,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
     public boolean updateApprove(Long id) {
 
         try {
-            Query query = getEntityManager().createQuery("UPDATE SpatialUnitTable su SET su.status.workflowStatusId = :statusId  where su.usin = :usin");
+            Query query = getEntityManager().createQuery("UPDATE LandApplicationStatus su SET su.workflowstatusid = :statusId  where su.landid = :usin");
             int updateFinal = query.setParameter("statusId", Status.STATUS_APPROVED).setParameter("usin", id).executeUpdate();
 
             if (updateFinal > 0) {
@@ -167,7 +168,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 
         try {
             int finalstatus = 5;
-            Query query = getEntityManager().createQuery("UPDATE SpatialUnitTable su SET su.status.workflowStatusId = :statusId  where su.usin = :usin");
+            Query query = getEntityManager().createQuery("UPDATE LandApplicationStatus su SET su.workflowstatusid = :statusId  where su.landid = :usin");
             int rejectStatus = query.setParameter("statusId", finalstatus).setParameter("usin", id).executeUpdate();
 
             if (rejectStatus > 0) {
@@ -190,7 +191,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 
         ArrayList<Long> newUsin = new ArrayList<>();
         try {
-            StringBuilder queryStr = new StringBuilder("Select su from SpatialUnitTable su where su.project = :project_name and su.active=true ");
+            StringBuilder queryStr = new StringBuilder("Select su from ClaimBasic su where su.project = :project_name and su.active=true ");
             if (!"".equals(ukaNumber)) {
                 queryStr.append("and su.propertyno like :propertyno ");
             }
@@ -572,7 +573,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 
         try {
             int finalstatus = 7;
-            Query query = getEntityManager().createQuery("UPDATE SpatialUnitTable su SET su.status.workflowStatusId = :statusId  where su.usin = :usin");
+            Query query = getEntityManager().createQuery("UPDATE LandApplicationStatus su SET su.workflowstatusid = :statusId  where su.landid = :usin");
             int updateFinal = query.setParameter("statusId", finalstatus).setParameter("usin", id).executeUpdate();
 
             if (updateFinal > 0) {
@@ -593,7 +594,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 
         try {
             int finalstatus = 2;
-            Query query = getEntityManager().createQuery("UPDATE SpatialUnitTable su SET su.status.workflowStatusId = :statusId  where su.usin = :usin");
+            Query query = getEntityManager().createQuery("UPDATE LandApplicationStatus su SET su.workflowstatusid = :statusId  where su.landid = :usin");
             int updateFinal = query.setParameter("statusId", finalstatus).setParameter("usin", id).executeUpdate();
 
             if (updateFinal > 0) {
@@ -784,7 +785,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+   
 				           " inner Join  la_party_person LP on PL.partyid = LP.personid   "+  
 				           " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+   
-				           " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1 and LD.projectnameid = " +defaultProject +"  "+ 
+				           " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1 and LD.projectnameid = " +defaultProject +"  "+ 
 				           " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
 				           " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union  "+  
 				           " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
@@ -796,14 +797,14 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+   
 				           " inner Join  la_party_person LP on PL.partyid = LP.personid   "+ 
 				           " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+   
-				           " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  =" +defaultProject + "union "+
+				           " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  =" +defaultProject + "union "+
 				           " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address,  "+ 
 				           " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
 				           " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+ 
 				           " inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+ 
 				           " inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+ 
 				           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+ 
-				           " where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +defaultProject +"  union  "+
+				           " where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +defaultProject +"  union  "+
 				           " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+
 				           " string_agg(LP.firstname||' '||LP.lastname,' / ' order by LP.firstname,LP.lastname) firstname,null as lastname, null as address ,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
 				           " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid   "+
@@ -813,49 +814,53 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
 				           " inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+
 				          " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid   "+
-			              " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +defaultProject +" group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
+			              " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +defaultProject +" group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
                           " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype order by landid DESC ";*/
 
 			String hql1 ="Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,"+     
-			            " LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+       
-			            "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+ 
+			            " LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+       
+			            " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid " +
+			            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 			            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+ 
-			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+      
-			            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+   
+			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+      
+			            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+   
 			            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+      
 			            "inner Join  la_party_person LP on PL.partyid = LP.personid "+    
 			            "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+      
-			            "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1 and LP.ownertype=1 and  LD.projectnameid = " +defaultProject +"  "+    
+			            "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1 and LP.ownertype=1 and  LD.projectnameid = " +defaultProject +"  "+    
 			            "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, LP.firstname,  LP.lastname, "+    
-			            "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+      
+			            "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+      
 			            "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+    
-			            "LP.firstname||' '||LP.lastname as firstname, null as lastname, LP.address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+      
-			            "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid "+     
+			            "LP.firstname||' '||LP.lastname as firstname, null as lastname, LP.address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+      
+			            "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid "+  
+			            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 			            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+     
-			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+     
-			            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+    
+			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+     
+			            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+    
 			            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+     
 			            "inner Join  la_party_person LP on PL.partyid = LP.personid "+    
 			            "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+    
-			            "where Pl.isactive=true and LP.ownertype=1  and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +"  union  "+
+			            "where Pl.isactive=true and LP.ownertype=1  and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +"  union  "+
 			            "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address, "+  
-			            "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
-			            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+
-			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+
-			            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+ 
+			            "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
+			            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
+			            " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+
+			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+
+			            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+ 
 			            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+  
-			            "where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +"  union  "+
+			            "where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +"  union  "+
 			            "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+
-			            "LP.firstname||' '|| LP.lastname as firstname ,null as lastname, null as address ,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+  
+			            "LP.firstname||' '|| LP.lastname as firstname ,null as lastname, null as address ,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+  
 			            "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+  
+			            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 			            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid   "+
-			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+
-			            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+
+			            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid  "+
+			            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+
 			            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
 			            "inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+
 			            "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid   "+
-		                "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +"   group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  LP.firstname, "+ 
-	                    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.lastname  order by landid DESC ";
+		                "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +defaultProject +"   group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  LP.firstname, "+ 
+	                    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.lastname  order by landid DESC ";
 			 
 			List<Object[]> arrObject = getEntityManager().createNativeQuery(hql1).setFirstResult(startfrom).setMaxResults(15).getResultList();
             
@@ -913,7 +918,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		String strWhereClause = "";
 		String strWhereClause1 = "";
 		if(status != null && status != 0){
-			strWhere = strWhere + "and LD.applicationstatusid = " + status;
+			strWhere = strWhere + "and las.applicationstatusid = " + status;
 		}
 		
 			if(claimType > 0){
@@ -970,7 +975,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 		 " inner Join  la_party_person LP on PL.partyid = LP.personid   "+ 
 		 " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-		 " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and  LD.projectnameid =  " +project +"  and " + strWhereClause +
+		 " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and  LD.projectnameid =  " +project +"  and " + strWhereClause +
 		 " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
 		 " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+  
 		 " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
@@ -980,7 +985,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		 " inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+   
 		 " inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
 		 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
-		 " where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " +
+		 " where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " +
 		 " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
 		 " string_agg(LP.firstname||' '||LP.lastname,' / ' order by LP.firstname,LP.lastname) firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en  ,TR.transactionid , ST.landsharetype  from la_spatialunit_land LD "+    
 		 " Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+ 
@@ -990,7 +995,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 		 " inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 		 " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-		 " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +
+		 " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +
 		 " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
 		 " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  union "+  
 		 " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
@@ -1002,55 +1007,59 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+      
 		 " inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+ 
 		 " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid   "+ 
-		 " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
+		 " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
 		 " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
 		 " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype "; 
 */                               
                                
                                
 	hql1= "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
-		  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en  ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
+		  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en  ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
 		  "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid  "+
+		  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 		  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+
-		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+
-		  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
+		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+
+		  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+ 
 		  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+  
 		  "inner Join  la_party_person LP on PL.partyid = LP.personid "+  
 		  "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+  
-		  "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and LP.ownertype=1  and  LD.projectnameid  =  " +project +"  and " + strWhereClause + 
+		  "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and LP.ownertype=1  and  LD.projectnameid  =  " +project +"  and " + strWhereClause + 
 		  "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
-		  "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype , LP.firstname , LP.lastname Union "+  
-		  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, '' as firstname, '' as lastname, '' as address,  la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid , ST.landsharetype "+   
+		  "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype , LP.firstname , LP.lastname Union "+  
+		  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, '' as firstname, '' as lastname, '' as address,  las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en ,0  as transactionid , ST.landsharetype "+   
 		  "from la_spatialunit_land LD "+ 
+		  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 		  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+    
-		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+
-		  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+  
+		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid  "+
+		  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+  
 		  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
-		  "where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " + 
+		  "where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " + 
 		  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
-		  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en  ,TR.transactionid , ST.landsharetype  from la_spatialunit_land LD  "+   
+		  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en  ,TR.transactionid , ST.landsharetype  from la_spatialunit_land LD  "+   
 		  "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+ 
+		  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 		  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+  
-		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+  
-		  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+
+		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid  "+  
+		  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+
 		  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
 		  "inner Join  la_party_person LP on PL.partyid = LP.personid  "+
 		  "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+
-		  "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LP.ownertype=1  and   LD.projectnameid =  " +project +" " + strWhereClause1 +
+		  "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LP.ownertype=1  and   LD.projectnameid =  " +project +" " + strWhereClause1 +
 		  "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
-		  "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname,LP.lastname union  "+
+		  "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname,LP.lastname union  "+
 		  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
-		  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
+		  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
 		  "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid   "+
+		  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 		  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+  
-		  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid   "+ 
-		  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+
+		  "inner Join la_ext_applicationstatus la on las.applicationstatusid =  las.applicationstatusid   "+ 
+		  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+
 		  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+      
 		  "inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+
 		  "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+  
-		  "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
+		  "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
 		  "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
-		  "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname, LP.lastname " ;
+		  "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname, LP.lastname " ;
 		 
 		try {
 			List<Object[]> arrObject = getEntityManager().createNativeQuery(hql1).setFirstResult(startpos).setMaxResults(15).getResultList();
@@ -1236,7 +1245,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			String query="select hr.name as Commune_Name,count(*) as parcels, "
 					+ " round(((count(*)*100)/(select count(*) from la_spatialunit_land where isactive='1' and projectnameid= :projectnameid)\\:\\:numeric),2) as total_percentage,"
 					+ " sum(ld.area) as Total_Area_Mapped, sum(ld.area)/count(*) as Parcel_Average_Size, "
-					+ " (select count(*) from la_spatialunit_land where applicationstatusid=2 and isactive='1') as APFR_Issued "
+					+ " (select count(*) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid   where las.applicationstatusid=2 and LD.isactive='1') as APFR_Issued "
 					+ " from la_spatialunit_land ld inner join la_spatialunitgroup_hierarchy hr on hr.hierarchyid=ld.hierarchyid4"
 					+ " where ld.isactive='1' and hr.isactive='1' and ld.projectnameid= :projectnameid"					
 					+ " group by hr.name";
@@ -1270,7 +1279,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			
 			String query="select lst.landsharetype_en Tenure_Type,gd.gender_en,count(*) parcels, "					
 					+ " round(((count(*)*100)/(select count(*) from la_spatialunit_land where isactive='1' and projectnameid= :projectnameid)\\:\\:numeric),2) as total_percentage,"
-					+ " sum(ld.area) Total_Area_Mapped, sum(ld.area)/count(*) Parcel_Average_Size, (select count(*) from la_spatialunit_land where applicationstatusid=2 and isactive='1') APFR_Issued"
+					+ " sum(ld.area) Total_Area_Mapped, sum(ld.area)/count(*) Parcel_Average_Size, (select count(*) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid where las.applicationstatusid=2 and LD.isactive='1') APFR_Issued"
 					+ " from la_spatialunit_land ld inner join la_right_landsharetype lst on lst.landsharetypeid=ld.landsharetypeid inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " inner join la_party_person ps on ps.personid=plm.partyid inner join la_partygroup_gender gd on gd.genderid=ps.genderid "
 					+ " where plm.persontypeid=1 and plm.isactive='1' and ld.isactive='1' and lst.isactive='1' and ld.projectnameid= :projectnameid group by lst.landsharetype_en,gd.gender_en;";
@@ -1300,10 +1309,10 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		{
 			List<Object> spatialUnit;
 			
-			String query="select distinct (select count(applicationstatusid) from la_spatialunit_land where applicationstatusid=1) New_application,(select count(applicationstatusid) from la_spatialunit_land where applicationstatusid=2) Approved_application,"
-					+ " (select count(applicationstatusid) from la_spatialunit_land where applicationstatusid=3) reject_application,(select count(applicationstatusid) from la_spatialunit_land where applicationstatusid=4) Pending_application,"
-					+ " (select count(applicationstatusid) from la_spatialunit_land where applicationstatusid=5) registred_application from la_spatialunit_land ld"
-					+ " where ld.isactive='1' and ld.projectnameid=" + projectnameid;
+			String query="select distinct (select count(las.applicationstatusid) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid where las.applicationstatusid=1) New_application,(select count(las.applicationstatusid) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid  where las.applicationstatusid=2) Approved_application,"
+					+ " (select count(las.applicationstatusid) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid where las.applicationstatusid=3) reject_application,(select count(las.applicationstatusid) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid where las.applicationstatusid=4) Pending_application,"
+					+ " (select count(las.applicationstatusid) from la_spatialunit_land LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid where las.applicationstatusid=5) registred_application from la_spatialunit_land  LD inner join la_ext_landapplicationstatus las on las.landid = LD.landid "
+					+ " where LD.isactive='1' and LD.projectnameid=" + projectnameid;
 
 
 			Query executeQuery = getEntityManager().createNativeQuery(query);
@@ -1362,7 +1371,9 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			List<Object> spatialUnit;
 			
 			String query="select ld.landno,ld.createddate Capture_Data, lw1.statuschangedate Processing_Date, lw2.statuschangedate Approval_Date, plm.certificateissuedate certificate_date  from la_spatialunit_land ld"
-					+ " inner join la_ext_personlandmapping plm on plm.landid=ld.landid and plm.isactive='1' inner join la_ext_landworkflowhistory lw1 on lw1.landid=ld.landid and lw1.workflowid=2"
+					+ " inner join la_ext_personlandmapping plm on plm.landid=ld.landid and plm.isactive='1' "
+					+ " inner join la_ext_landapplicationstatus las on las.landid = ld.landid "
+					+ "inner join la_ext_landworkflowhistory lw1 on lw1.landid=ld.landid and lw1.workflowid=2"
 					+ " inner join la_ext_landworkflowhistory lw2 on lw2.landid=ld.landid and lw2.applicationstatusid=2 where ld.isactive='1' and ld.projectnameid=" + projectnameid;
 
 
@@ -1525,13 +1536,14 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			List<Object> spatialUnit;
 			
 			String query="select lst.landsharetype_en Tenure_Type,gd.gender_en,hr.name Commune_Name,count(*) parcels,"
-					+ " round(((count(*)*100)/(select count(*) from la_spatialunit_land where isactive='1' and hierarchyid= :hierarchyid)\\:\\:numeric),2) as total_percentage,"
-					+ " sum(ld.area) Total_Area_Mapped, sum(ld.area)/count(*) Parcel_Average_Size, (select count(*) from la_spatialunit_land where applicationstatusid=2 and isactive='1') APFR_Issued from la_spatialunit_land ld"
-					+ " inner join la_right_landsharetype lst on lst.landsharetypeid=ld.landsharetypeid inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
-					+ " inner join la_party_person ps on ps.personid=plm.partyid inner join la_partygroup_gender gd on gd.genderid=ps.genderid "
-					+ " inner join la_spatialunitgroup_hierarchy hr on hr.hierarchyid=ld.hierarchyid4 "
-					+ " where plm.persontypeid=1 and plm.isactive='1' and ld.isactive='1' and lst.isactive='1' and hr.isactive='1' and hr.hierarchyid= :hierarchyid"
-					+ " group by lst.landsharetype_en,gd.gender_en,hr.name,hr.hierarchyid;";
+					+ "  round(((count(*)*100)/(select count(*) from la_spatialunit_land where isactive='1' and hierarchyid= :hierarchyid)\\:\\:numeric),2) as total_percentage,"
+					+ "  sum(ld.area) Total_Area_Mapped, sum(ld.area)/count(*) Parcel_Average_Size, (select count(*) from la_spatialunit_land ld  inner join la_ext_landapplicationstatus las on las.landid = ld.landid where las.applicationstatusid=2 and ld.isactive='1') APFR_Issued from la_spatialunit_land ld"
+					+ "  inner join la_ext_landapplicationstatus las on las.landid = ld.landid "
+					+ "  inner join la_right_landsharetype lst on lst.landsharetypeid=ld.landsharetypeid inner join la_ext_personlandmapping plm on plm.landid=ld.landid"
+					+ "  inner join la_party_person ps on ps.personid=plm.partyid inner join la_partygroup_gender gd on gd.genderid=ps.genderid "
+					+ "  inner join la_spatialunitgroup_hierarchy hr on hr.hierarchyid=ld.hierarchyid4 "
+					+ "  where plm.persontypeid=1 and plm.isactive='1' and ld.isactive='1' and lst.isactive='1' and hr.isactive='1' and hr.hierarchyid= :hierarchyid"
+					+ "  group by lst.landsharetype_en,gd.gender_en,hr.name,hr.hierarchyid;";
 
 			Query executeQuery = getEntityManager().createNativeQuery(query);
 			executeQuery.setParameter("hierarchyid", Integer.parseInt(hierarchyid));
@@ -1566,7 +1578,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+   
 			           " inner Join  la_party_person LP on PL.partyid = LP.personid   "+  
 			           " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+   
-			           " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1  and LD.projectnameid = " +project +
+			           " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1  and LD.projectnameid = " +project +
 			           " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
 			           " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union  "+  
 			           " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
@@ -1578,14 +1590,14 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+   
 			           " inner Join  la_party_person LP on PL.partyid = LP.personid   "+ 
 			           " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+   
-			           " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  =" +project + "union "+
+			           " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  =" +project + "union "+
 			           " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address,  "+ 
 			           " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
 			           " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+ 
 			           " inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+ 
 			           " inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+ 
 			           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+ 
-			           " where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +project +"  union  "+
+			           " where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +project +"  union  "+
 			           " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+
 			           " string_agg(LP.firstname||' '||LP.lastname,' / ' order by LP.firstname,LP.lastname) firstname,null as lastname, null as address ,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
 			           " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid   "+
@@ -1595,50 +1607,54 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			           " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
 			           " inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+
 			          " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid   "+
-		              " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +project +" group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
+		              " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid  = " +project +" group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
                    " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype order by landid DESC) as t1";
 */
 			
 			String hql1 ="select count(*) from ( Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,"+     
-		            " LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+       
-		            "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+ 
+		            " LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+       
+		            "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+
+		            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 		            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+ 
-		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+      
-		            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+   
+		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+      
+		            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+   
 		            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+      
 		            "inner Join  la_party_person LP on PL.partyid = LP.personid "+    
 		            "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+      
-		            "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1 and LP.ownertype=1 and  LD.projectnameid = " +project +"  "+    
+		            "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and PL.persontypeid=1 and LP.ownertype=1 and  LD.projectnameid = " +project +"  "+    
 		            "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, LP.firstname,  LP.lastname, "+    
-		            "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+      
+		            "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+      
 		            "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+    
-		            "LP.firstname||' '||LP.lastname as firstname, null as lastname, LP.address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+      
-		            "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid "+     
+		            "LP.firstname||' '||LP.lastname as firstname, null as lastname, LP.address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+      
+		            "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid "+  
+		            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 		            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+     
-		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+     
-		            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+    
+		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+     
+		            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+    
 		            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+     
 		            "inner Join  la_party_person LP on PL.partyid = LP.personid "+    
 		            "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+    
-		            "where Pl.isactive=true and LP.ownertype=1  and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +project +"  union  "+
+		            "where Pl.isactive=true and LP.ownertype=1  and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +project +"  union  "+
 		            "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address, "+  
-		            "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
+		            "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype from la_spatialunit_land LD  "+ 
+		            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 		            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+
-		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+
-		            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+ 
+		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+
+		            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+ 
 		            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+  
-		            "where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +project +"  union  "+
+		            "where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +project +"  union  "+
 		            "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+
-		            "LP.firstname||' '|| LP.lastname as firstname ,null as lastname, null as address ,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+  
+		            "LP.firstname||' '|| LP.lastname as firstname ,null as lastname, null as address ,la.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD "+  
 		            "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+  
+		            " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+ 
 		            "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid   "+
-		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+
-		            "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+
+		            "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid  "+
+		            "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+
 		            "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
 		            "inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+
 		            "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid   "+
-	                "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +project +"   group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  LP.firstname, "+ 
-                    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.lastname  order by landid DESC) as t1 ";
+	                "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid = " +project +"   group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  LP.firstname, "+ 
+                    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.lastname  order by landid DESC) as t1 ";
 			
 			List<BigInteger> arrObject = getEntityManager().createNativeQuery(hql1).getResultList();
 			
@@ -1666,7 +1682,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		String strWhereClause = "";
 		String strWhereClause1 = "";
 		if(status != null && status != 0){
-			strWhere = strWhere + "and LD.applicationstatusid = " + status;
+			strWhere = strWhere + "and las.applicationstatusid = " + status;
 		}
 		
 				if(claimType > 0){
@@ -1724,7 +1740,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 					 " inner Join  la_party_person LP on PL.partyid = LP.personid   "+ 
 					 " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-					 " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and  LD.projectnameid =  " +project +"  and " + strWhereClause +
+					 " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and  LD.projectnameid =  " +project +"  and " + strWhereClause +
 					 " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
 					 " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+  
 					 " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
@@ -1734,7 +1750,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					 " inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+   
 					 " inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
 					 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
-					 " where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " +
+					 " where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " +
 					 " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
 					 " string_agg(LP.firstname||' '||LP.lastname,' / ' order by LP.firstname,LP.lastname) firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en  ,TR.transactionid , ST.landsharetype  from la_spatialunit_land LD "+    
 					 " Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+ 
@@ -1744,7 +1760,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 					 " inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 					 " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-					 " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +
+					 " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +
 					 " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
 					 " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  union "+  
 					 " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
@@ -1756,55 +1772,59 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					 " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+      
 					 " inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+ 
 					 " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid   "+ 
-					 " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
+					 " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
 					 " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
 					 " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  ) as t1 "; 
 */
 			
 			
 			hql1=     "select count(*) from ( Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
-					  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en  ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
+					  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en  ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
 					  "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid  "+
+					  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 					  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+
-					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+
-					  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
+					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+
+					  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+ 
 					  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+  
 					  "inner Join  la_party_person LP on PL.partyid = LP.personid "+  
 					  "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+  
-					  "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and LP.ownertype=1  and  LD.projectnameid  =  " +project +"  and " + strWhereClause + 
+					  "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and  PL.persontypeid=1 and LP.ownertype=1  and  LD.projectnameid  =  " +project +"  and " + strWhereClause + 
 					  "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
-					  "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype , LP.firstname , LP.lastname Union "+  
-					  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, '' as firstname, '' as lastname, '' as address,  la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid , ST.landsharetype "+   
+					  "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype , LP.firstname , LP.lastname Union "+  
+					  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, '' as firstname, '' as lastname, '' as address,  las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en ,0  as transactionid , ST.landsharetype "+   
 					  "from la_spatialunit_land LD "+ 
+					  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 					  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "+    
-					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+
-					  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+  
+					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid  "+
+					  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+  
 					  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
-					  "where LD.isactive=true AND LD.claimtypeid=4 and LD.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " + 
+					  "where LD.isactive=true AND LD.claimtypeid=4 and las.workflowstatusid!=6 and LD.isactive=true and   LD.projectnameid =  " +project +" " + strWhereClause1 +"Union " + 
 					  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
-					  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en  ,TR.transactionid , ST.landsharetype  from la_spatialunit_land LD  "+   
+					  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en  ,TR.transactionid , ST.landsharetype  from la_spatialunit_land LD  "+   
 					  "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+ 
+					  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 					  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+  
-					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+  
-					  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+
+					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid  "+  
+					  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+
 					  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+
 					  "inner Join  la_party_person LP on PL.partyid = LP.personid  "+
 					  "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+
-					  "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LP.ownertype=1  and   LD.projectnameid =  " +project +" " + strWhereClause1 +
+					  "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LP.ownertype=1  and   LD.projectnameid =  " +project +" " + strWhereClause1 +
 					  "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
-					  "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname,LP.lastname union  "+
+					  "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname,LP.lastname union  "+
 					  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
-					  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
+					  "LP.firstname||' '|| LP.lastname as firstname,null as lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype from la_spatialunit_land LD  "+   
 					  "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid   "+
+					  " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 					  "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+  
-					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid   "+ 
-					  "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+
+					  "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid   "+ 
+					  "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+
 					  "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+      
 					  "inner Join  la_party_organization LP on PL.partyid = LP.organizationid  "+
 					  "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+  
-					  "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
+					  "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true  and LD.projectnameid =  " +project +" " + strWhereClause1 +
 					  "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+  
-					  "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname, LP.lastname  ) as t1 ";
+					  "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype ,LP.firstname, LP.lastname  ) as t1 ";
 			
 			
 			
@@ -1863,7 +1883,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
         
         String strWhereCls = "";
         if(!resultwrk.isEmpty()){
-        	strWhereCls  = strWhereCls + " LD.workflowstatusid in (" + resultwrk +")"; 
+        	strWhereCls  = strWhereCls + " las.workflowstatusid in (" + resultwrk +")"; 
         }
 		 if(!resultClm.isEmpty()){
 		        if(strWhereCls .isEmpty())
@@ -1890,7 +1910,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				   " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 				   " inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 				   " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-				   " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LD.projectnameid = " +project +" and " + strWhereCls +" "+ 
+				   " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LD.projectnameid = " +project +" and " + strWhereCls +" "+ 
 				   " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
 				   " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union  "+ 
 				   " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address,  "+ 
@@ -1899,7 +1919,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				   " inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+ 
 				   " inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
 				   " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+ 
-				   " where LD.isactive=true AND LD.claimtypeid=4  and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
+				   " where LD.isactive=true AND LD.claimtypeid=4  and las.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
 				   " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
 				   " string_agg(LP.firstname||' '||LP.lastname,' / ' order by LP.firstname,LP.lastname) firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+    
 				   " Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+ 
@@ -1909,42 +1929,45 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 				   " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 				   " inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 				   " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-				   " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid =  " +project +" and " + strWhereCls +" "+ 
+				   " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid =  " +project +" and " + strWhereCls +" "+ 
 				   " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
 				   " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype "+ 
 				   " order by landid DESC ) as t1 ";*/
 				                                   
 		 hql1 =     "select count(*) from ( Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+  
-				    "LP.firstname||' '|| LP.lastname as firstname ,  LP.lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+     
-				    "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+   
+				    "LP.firstname||' '|| LP.lastname as firstname ,  LP.lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+     
+				    "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid " +
+				    " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+   
 				    "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid   "+ 
-				    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+    
-				    "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+   
+				    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+    
+				    "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+   
 				    "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+    
 				    "inner Join  la_party_person LP on PL.partyid = LP.personid   "+ 
 				    "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+   
-				    "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LP.ownertype=1  and LD.projectnameid = " +project +" and " + strWhereCls +" "+    
+				    "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LP.ownertype=1  and LD.projectnameid = " +project +" and " + strWhereCls +" "+    
 				    "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  LP.firstname,  LP.lastname, "+ 
-				    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+   
+				    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+   
 				    "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address, "+   
-				    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype  from la_spatialunit_land LD "+    
+				    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype  from la_spatialunit_land LD "+    
+				    " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 				    "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+   
-				    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+   
-				    "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+  
+				    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+   
+				    "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+  
 				    "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+  
-				    "where LD.isactive=true AND LD.claimtypeid=4  and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union " +    
+				    "where LD.isactive=true AND LD.claimtypeid=4  and las.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union " +    
 				    "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+   
-				    "LP.firstname||' '|| LP.lastname as firstname,LP.lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+    
+				    "LP.firstname||' '|| LP.lastname as firstname,LP.lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+    
 				    "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid   "+
+				    " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 				    "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+ 
-				    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+   
-				    "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
+				    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+   
+				    "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+ 
 				    "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 				    "inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 				    "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-				    "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  LP.ownertype=1 and  LD.projectnameid =  " +project +" and " + strWhereCls +" "+    
+				    "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and  LP.ownertype=1 and  LD.projectnameid =  " +project +" and " + strWhereCls +" "+    
 				    "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
-				    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  , LP.firstname,LP.lastname "+
+				    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  , LP.firstname,LP.lastname "+
 				    "order by landid DESC  ) as t1 " ;
 		 
 	
@@ -2006,7 +2029,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
         
         String strWhereCls = "";
         if(!resultwrk.isEmpty()){
-        	strWhereCls  = strWhereCls + " LD.workflowstatusid in (" + resultwrk +")"; 
+        	strWhereCls  = strWhereCls + " las.workflowstatusid in (" + resultwrk +")"; 
         }
 		 if(!resultClm.isEmpty()){
 		        if(strWhereCls .isEmpty())
@@ -2016,9 +2039,9 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		 }
 		 if(!resultsts.isEmpty()){
 			 if(strWhereCls .isEmpty())
-		        	strWhereCls  = strWhereCls + " LD.applicationstatusid in (" + resultsts +")"; 
+		        	strWhereCls  = strWhereCls + " las.applicationstatusid in (" + resultsts +")"; 
 		        else 					
-		        	strWhereCls  = strWhereCls + " and LD.applicationstatusid in (" + resultsts +")"; 
+		        	strWhereCls  = strWhereCls + " and las.applicationstatusid in (" + resultsts +")"; 
 		 }
         
 		try {
@@ -2033,7 +2056,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					   " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 					   " inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 					   " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-					   " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LD.projectnameid = " +project +" and " + strWhereCls +" "+ 
+					   " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LD.projectnameid = " +project +" and " + strWhereCls +" "+ 
 					   " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
 					   " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union  "+ 
 					   " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address,  "+ 
@@ -2042,7 +2065,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					   " inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid  "+ 
 					   " inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
 					   " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+ 
-					   " where LD.isactive=true AND LD.claimtypeid=4  and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
+					   " where LD.isactive=true AND LD.claimtypeid=4  and las.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union "+
 					   " Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+ 
 					   " string_agg(LP.firstname||' '||LP.lastname,' / ' order by LP.firstname,LP.lastname) firstname,null as lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+    
 					   " Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid  "+ 
@@ -2052,42 +2075,45 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					   " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 					   " inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 					   " inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-					   " where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid =  " +project +" and " + strWhereCls +" "+ 
+					   " where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid =  " +project +" and " + strWhereCls +" "+ 
 					   " group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
 					   " la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype "+ 
 					   " order by landid DESC ";*/
 					     
 			        hql1 =  "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  "+  
-						    "LP.firstname||' '|| LP.lastname as firstname ,  LP.lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+     
-						    "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+   
+						    "LP.firstname||' '|| LP.lastname as firstname ,  LP.lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+     
+						    "Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "+  
+						    " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 						    "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid   "+ 
-						    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+    
-						    "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid "+   
+						    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+    
+						    "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid "+   
 						    "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+    
 						    "inner Join  la_party_person LP on PL.partyid = LP.personid   "+ 
 						    "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid  "+   
-						    "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LP.ownertype=1  and LD.projectnameid = " +project +" and " + strWhereCls +" "+    
+						    "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and PL.persontypeid=1 and LP.ownertype=1  and LD.projectnameid = " +project +" and " + strWhereCls +" "+    
 						    "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,  LP.firstname,  LP.lastname, "+ 
-						    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+   
+						    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype Union "+   
 						    "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en,'' as firstname, '' as lastname, '' as address, "+   
-						    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype  from la_spatialunit_land LD "+    
+						    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en ,0  as transactionid ,ST.landsharetype  from la_spatialunit_land LD "+    
+						    " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 						    "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+   
-						    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+   
-						    "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+  
+						    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+   
+						    "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+  
 						    "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid  "+  
-						    "where LD.isactive=true AND LD.claimtypeid=4  and LD.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union " +    
+						    "where LD.isactive=true AND LD.claimtypeid=4  and las.workflowstatusid!=6 and LD.isactive=true and LD.projectnameid = " +project +" and " + strWhereCls +" Union " +    
 						    "Select LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+   
-						    "LP.firstname||' '|| LP.lastname as firstname,LP.lastname, null as address,la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+    
+						    "LP.firstname||' '|| LP.lastname as firstname,LP.lastname, null as address,las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid, ST.landsharetype from la_spatialunit_land LD "+    
 						    "Inner join la_ext_disputelandmapping PL on LD.landid = PL.landid   "+
+						    " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "+
 						    "inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid  "+ 
-						    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  LD.applicationstatusid "+   
-						    "inner Join la_ext_workflow lf on lf.workflowid =  LD.workflowstatusid  "+ 
+						    "inner Join la_ext_applicationstatus la on la.applicationstatusid =  las.applicationstatusid "+   
+						    "inner Join la_ext_workflow lf on lf.workflowid =  las.workflowstatusid  "+ 
 						    "inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "+   
 						    "inner Join  la_party_person LP on PL.partyid = LP.personid  "+ 
 						    "inner join la_ext_transactiondetails TR on PL.transactionid = TR.transactionid "+   
-						    "where Pl.isactive=true and LD.workflowstatusid!=6 and LD.isactive=true and  LP.ownertype=1 and  LD.projectnameid =  " +project +" and " + strWhereCls +" "+    
+						    "where Pl.isactive=true and las.workflowstatusid!=6 and LD.isactive=true and  LP.ownertype=1 and  LD.projectnameid =  " +project +" and " + strWhereCls +" "+    
 						    "group by LD.landid, LD.landno, LC.claimtypeid, LC.claimtype_en, LD.area, la.applicationstatus_en, "+ 
-						    "la.applicationstatusid ,LD.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  , LP.firstname,LP.lastname "+
+						    "las.applicationstatusid ,las.workflowstatusid ,lf.workflow_en   ,TR.transactionid ,ST.landsharetype  , LP.firstname,LP.lastname "+
 						    "order by landid DESC " ;
 				         		
 			 
@@ -2185,7 +2211,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
-					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
+					+ " from la_rrr_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " where ld.landid="+ landid + "order by lea.createddate desc;";
 			
@@ -2220,7 +2246,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
-					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
+					+ " from la_rrr_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2256,7 +2282,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,ps.firstname,ps.middlename,ps.lastname,ps.address,ps.identityno,lea.leaseyear, (lea.leaseyear *12 + lea.monthid) as monthid,lea.leaseamount,lea.createddate,lea.leasestartdate, lea.leaseenddate"
-					+ " from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
+					+ " from la_rrr_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid "
 					+ " inner join la_Party_person ps on ps.personid=lea.personid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2292,7 +2318,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
-					+ " from la_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " from la_rrr_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
 					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"					 
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2329,7 +2355,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
-					+ " from la_surrendermortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " from la_rrr_surrendermortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
 					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"					 
 					+ " where ld.landid="+ landid + "and td.transactionid="+ transactionid ;
@@ -2367,7 +2393,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 		try 
 		{
 			sql = " select row_number() OVER () as rnum,ld.landid,fin.financialagency,mor.mortgagefrom,mor.mortgageto,mor.mortgageamount"
-					+ " from la_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
+					+ " from la_rrr_mortgage mor inner join la_spatialunit_land ld on ld.landid=mor.landid "
 					+ " inner join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid "
 					+ " where ld.landid="+ landid + " order by mor.createddate desc;";
 			
@@ -2439,7 +2465,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			sql = " select row_number() OVER () as rnum,transactiontype,landid,applicantname,ownername,createddate,transactionid,personid from "
 					+ "( select distinct on (lea.personid) 'Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
 					+ " lea.createddate,td.transactionid,lea.personid"
-					+ " from la_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
+					+ " from la_rrr_lease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
 					+ " left join la_Party_person ps1 on ps1.personid=lea.personid "
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid "
@@ -2448,7 +2474,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ "	Union"
 					+ "	select distinct on (personid) 'Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
-					+ "	from la_mortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
+					+ "	from la_rrr_mortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"
@@ -2457,7 +2483,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " Union"	
 					+ "	select distinct on (personid) 'Surrender Mortgage' as transactiontype,ld.landid,fin.financialagency as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,mor.createddate,td.transactionid,"
 					+ " mor.financialagencyid as personid"
-					+ "	from la_surrendermortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
+					+ "	from la_rrr_surrendermortgage mor left join la_spatialunit_land ld on ld.landid=mor.landid"
 					+ " left join la_ext_financialagency fin on fin.financialagencyid=mor.financialagencyid"
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid"
 					+ " left join la_ext_transactiondetails td on td.moduletransid=mor.mortgageid"
@@ -2541,7 +2567,7 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 					+ " group by transactiontype,landid,createddate,transactionid,personid)"					
 					+ " Union "
 					+ " Select distinct on (lea.personid) 'Surrender Lease' as transactiontype, ld.landid,ps1.firstname||' '||ps1.middlename||' '||ps1.lastname as applicantname,ps2.firstname||' '||ps2.middlename||' '||ps2.lastname as ownername,"
-					+ " lea.createddate,td.transactionid,lea.personid 	from la_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
+					+ " lea.createddate,td.transactionid,lea.personid 	from la_rrr_surrenderlease lea inner join la_spatialunit_land ld on ld.landid=lea.landid"
 					+ " left join la_Party_person ps1 on ps1.personid=lea.personid "
 					+ " left join la_ext_personlandmapping plm on plm.landid=ld.landid "
 					+ " left join la_ext_transactiondetails td on td.moduletransid=lea.leaseid"
@@ -2648,9 +2674,10 @@ public class LandRecordsHibernateDAO extends GenericHibernateDAO<SpatialUnitTabl
 			try 
 			{
 				sql = " Select Distinct on(LD.landid) LD.landid, LD.landno, TR.transactionid ,ST.landsharetype as landsharetype , LC.claimtype_en as claimtype, LT.landusetype_en as landusetype ,PU.landusetype_en as proposedused, LU.landtype_en as landtype, "
-						+ "TC.tenureclass_en as tenureclasstype ,LD.area,LD.neighbor_east,LD.neighbor_west,LD.neighbor_north,LD.neighbor_south,LD.occupancylength, LD.claimno, PR.projectname,LD.createddate as claimdate,"
+						+ "TC.tenureclass_en as tenureclasstype ,LD.area,LD.neighbor_east,LD.neighbor_west,LD.neighbor_north,LD.neighbor_south,las.occupancylength, LD.claimno, PR.projectname,LD.createddate as claimdate,"
 						+ " hie1.name as  county , hie2.name as region,hie3.name as province,hie4.name as commune,hie5.name as place, PL.partyid, case when LD.other_use  is null then ' ' else LD.other_use  end as other_use from la_spatialunit_land LD"
-						+ " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid"
+						+ " Inner join la_ext_personlandmapping PL on LD.landid = PL.landid "
+						+ " inner join la_ext_landapplicationstatus las on las.landid = LD.landid "
 						+ " inner Join la_right_claimtype LC on LD.claimtypeid=LC.claimtypeid "
 						+ " inner Join la_right_landsharetype ST on LD.landsharetypeid =  ST.landsharetypeid "
 						+ " inner join la_baunit_landusetype LT on LD.landusetypeid=LT.landusetypeid"

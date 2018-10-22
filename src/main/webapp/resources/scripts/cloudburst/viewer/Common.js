@@ -53,6 +53,33 @@ var selectedFeaturesExport=null;
 var draw;
 var drawLine=null;
 var selectSingleClick=null;
+
+var styles = [
+              // style for the polygon
+              new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                  color: 'blue',
+                  width: 3
+                }),
+                fill: new ol.style.Fill({
+                  color: 'rgba(0, 0, 255, 0.1)'
+                })
+              }),
+              // style for the vertices
+              new ol.style.Style({
+                image: new ol.style.Circle({
+                  radius: 5,
+                  fill: new ol.style.Fill({
+                    color: 'orange'
+                  })
+                }),
+                geometry: function(feature) {
+                  // return the coordinates of the first ring of the polygon
+                  var coordinates = feature.getGeometry().getCoordinates()[0];
+                  return new ol.geom.MultiPoint(coordinates);
+                }
+              })
+            ];
 var selectInteraction = new ol.interaction.Select({
                 condition: ol.events.condition.never
             });
@@ -102,7 +129,8 @@ var intraction_dragBox =new ol.interaction.DragBox({
             });
 			
 var selectInteraction_edit  = new ol.interaction.Select({
-                condition: ol.events.condition.never
+                condition: ol.events.condition.never,
+				style:styles
 			});	
 	 
 var  modifyInteraction = new ol.interaction.Modify({

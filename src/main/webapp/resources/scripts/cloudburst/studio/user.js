@@ -139,7 +139,7 @@ var CreateEditUser = function (_userId) {
             type: 'GET',
             url: "user/userid/" + _userId,
             success: function (data) {
-                user_role = data.roles;
+                user_role = data.userRole;
 
                 jQuery("#UserTemplateForm").tmpl(data, {
                     addDatePicker: function () {
@@ -193,6 +193,7 @@ var CreateEditUser = function (_userId) {
                 showSignature("SignatureUser", data.signaturePath);
                 jQuery('.accessKey').show();
                 jQuery('#name').attr('readonly', true);
+                jQuery("#functionalRole").val(data.userRole[0].roleBean.name);
 
             },
             cache: false

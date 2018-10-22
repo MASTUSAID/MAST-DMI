@@ -58,7 +58,7 @@ public interface SpatialUnitDao extends GenericDAO<SpatialUnit, Long> {
 	 * 
 	 * @return
 	 */
-	List<SpatialUnit> findSpatialUnitByStatusId(String projectId, int statusId);
+	List<ClaimBasic> findSpatialUnitByStatusId(String projectId, int statusId);
         
         List<ClaimBasic> getClaimsBasicByStatus(Integer projectId, int statusId);
         

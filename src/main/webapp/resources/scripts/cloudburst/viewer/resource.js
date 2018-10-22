@@ -101,6 +101,7 @@ function displayRefreshedResourceRecords() {
 
                 if (dataList.length != 0 && dataList.length != undefined) {
                     jQuery("#resourceRecordsAttrTemplate1").tmpl(dataList).appendTo("#resourceRecordsRowData1");
+                    projectId =  dataList[0].projectId;
                     jQuery("#resourceRecordsRowData1").i18n();
                     $('#records_from_Res').val(records_from_Res + 1);
                     $('#records_to_Res').val(totalRecords_Res);

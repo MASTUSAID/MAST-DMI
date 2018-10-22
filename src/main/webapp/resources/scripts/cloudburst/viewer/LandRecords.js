@@ -510,7 +510,7 @@ function editAttribute(id) {
             }
 
             if (data[0].occupancylength !== null) {
-                jQuery("#tenureDuration").val(data[0].occupancylength);
+                jQuery("#tenureDuration").val(data[0].landapplicationstatusid.occupancylength);
             }
 
             if (data[0].tenureclassid !== null) {
@@ -3128,7 +3128,7 @@ function FillPersonDataNew()
             {name: "ethnicity", title: $.i18n("reg-ethnicity"), type: "select", items: [{id: 1, name: "Ethnicity 1"}, {id: 2, name: "Ethnicity 2"}, {id: 3, name: "Ethnicity 3"}, {id: 4, name: "Ethnicity 4"}], valueField: "id", textField: "name", width: 300, editing: true, filtering: false},
             {name: "resident", title: $.i18n("reg-resident"), type: "select", items: [{id: 1, name: "Yes"}, {id: 2, name: "No"}], valueField: "name", textField: "name", width: 300, editing: true, filtering: false},
             {name: "laPartygroupEducationlevel.educationlevelid", title: $.i18n("reg-edulevel"), type: "select", items: [{id: 1, name: "None"}, {id: 2, name: "Primary"}, {id: 3, name: "Secondary"}, {id: 4, name: "University"}], valueField: "id", textField: "name", width: 300, editing: true, filtering: false},
-            {name: "laPartygroupOccupation.occupationid", title: $.i18n("reg-occupation"), type: "select", items: [{id: 1, name: "Agriculture"}, {id: 2, name: "Livestock/Pastoralist"}, {id: 3, name: "Small Business"}, {id: 4, name: "Skilled Labor (carpentry, masonry, etc)"}, {id: 5, name: "Professional/administrative/office"}, {id: 6, name: "Public employee"}, {id: 7, name: "Homekeeper"}], valueField: "id", textField: "name", width: 300, editing: true, filtering: false}
+            {name: "laPartygroupOccupation.occupationid", title: $.i18n("reg-occupation"), type: "select", items: [{id: 1, name: "Agriculture"}, {id: 2, name: "Livestock/Pastoralist"}, {id: 3, name: "Small Business"}, {id: 4, name: "Skilled Labor (carpentry, masonry, etc)"}, {id: 5, name: "Professional/administrative/office"}, {id: 6, name: "Public employee"}, {id: 7, name: "Homekeeper"}, {id: 8, name: "Other"}], valueField: "id", textField: "name", width: 300, editing: true, filtering: false}
         ]
     });
 

@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,6 +28,7 @@ import com.rmsi.mast.studio.domain.AcquisitionType;
 import com.rmsi.mast.studio.domain.ClaimType;
 import com.rmsi.mast.studio.domain.LaExtDisputelandmapping;
 import com.rmsi.mast.studio.domain.LaSpatialunitgroup;
+import com.rmsi.mast.studio.domain.LandApplicationStatus;
 import com.rmsi.mast.studio.domain.LandType;
 import com.rmsi.mast.studio.domain.LandUseType;
 import com.rmsi.mast.studio.domain.Project;
@@ -53,6 +55,10 @@ public class ClaimBasic implements Serializable {
 
 	@Column(name="oldlandid")
 	private Long oldlandid;
+	
+	 @OneToOne(mappedBy = "landid", cascade = CascadeType.ALL, 
+             fetch = FetchType.LAZY, optional = false)
+   private LandApplicationStatus landapplicationstatusid;
 	
 	
 	
@@ -97,11 +103,11 @@ public class ClaimBasic implements Serializable {
 	@Column(name="neighbor_west")
 	private String neighborWest;
 	
-	@Column(name="applicationstatusid")
+	/*@Column(name="applicationstatusid")
 	private Integer applicationstatusid;
 	
 	@Column(name="workflowstatusid")
-	private Integer workflowstatusid;
+	private Integer workflowstatusid;*/
 	
 	@Column(name="projectnameid")
 	private Integer projectnameid;
@@ -260,7 +266,7 @@ public class ClaimBasic implements Serializable {
 	private ProjectRegion laSpatialunitgroupHierarchy6;
     
 	
-	private Integer occupancylength;
+	/*private Integer occupancylength;*/
 	
 	private Integer tenureclassid;
     
@@ -270,10 +276,10 @@ public class ClaimBasic implements Serializable {
 	 
 	 
 
-	 public Integer getApplicationstatusid() {
+	/* public Integer getApplicationstatusid() {
 		return applicationstatusid;
 	}
-
+*/
 
 
 
@@ -305,7 +311,7 @@ public class ClaimBasic implements Serializable {
 
 
 
-	public void setApplicationstatusid(Integer applicationstatusid) {
+	/*public void setApplicationstatusid(Integer applicationstatusid) {
 		this.applicationstatusid = applicationstatusid;
 	}
 
@@ -322,7 +328,7 @@ public class ClaimBasic implements Serializable {
 	public void setWorkflowstatusid(Integer workflowstatusid) {
 		this.workflowstatusid = workflowstatusid;
 	}
-
+*/
 
 
 
@@ -754,7 +760,7 @@ public class ClaimBasic implements Serializable {
 
 
 
-	public Integer getOccupancylength() {
+	/*public Integer getOccupancylength() {
 		return occupancylength;
 	}
 
@@ -763,7 +769,7 @@ public class ClaimBasic implements Serializable {
 
 	public void setOccupancylength(Integer occupancylength) {
 		this.occupancylength = occupancylength;
-	}
+	}*/
 
 
 
@@ -805,6 +811,21 @@ public class ClaimBasic implements Serializable {
 
 	public void setUdparcelno(String udparcelno) {
 		this.udparcelno = udparcelno;
+	}
+
+
+
+
+	public LandApplicationStatus getLandapplicationstatusid() {
+		return landapplicationstatusid;
+	}
+
+
+
+
+	public void setLandapplicationstatusid(
+			LandApplicationStatus landapplicationstatusid) {
+		this.landapplicationstatusid = landapplicationstatusid;
 	}
 
 

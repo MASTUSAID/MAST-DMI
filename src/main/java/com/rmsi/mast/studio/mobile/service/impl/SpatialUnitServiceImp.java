@@ -155,12 +155,12 @@ return null;
 
         List<Long> usinList = new ArrayList<Long>();
 
-        List<SpatialUnit> spatialUnit = spatialUnitDao
+        List<ClaimBasic> spatialUnit = spatialUnitDao
                 .findSpatialUnitByStatusId(projectId, statusId);
 
         if (spatialUnit != null) {
 
-            Iterator<SpatialUnit> spatialUnitIter = spatialUnit.iterator();
+            Iterator<ClaimBasic> spatialUnitIter = spatialUnit.iterator();
 
             while (spatialUnitIter.hasNext()) {
 
@@ -257,6 +257,19 @@ return null;
 	@Override
 	public List<ClaimBasic> getClaimsBasicByLandId(Long landid) {
 		
-		return spatialUnitDao.getClaimsBasicByLandId(landid);
+		 try {
+	        	List<ClaimBasic> listobject= new ArrayList<ClaimBasic>();
+				 listobject=spatialUnitDao.getClaimsBasicByLandId(landid);
+				 if(null!=listobject){
+					 return listobject;
+				 }else{
+				 return null;
+				 }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		
 	}
 }

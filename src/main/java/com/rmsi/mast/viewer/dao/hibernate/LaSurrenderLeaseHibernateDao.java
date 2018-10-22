@@ -35,7 +35,7 @@ public class LaSurrenderLeaseHibernateDao extends GenericHibernateDAO<LaSurrende
 	public LaSurrenderLease getSurrenderleaseByLandandProcessId(Long landId,
 			Long processId) {
 		try{
-			 String strQuery = "select * from la_surrenderlease ls left join la_ext_transactiondetails trans on ls.leaseid = trans.moduletransid where ls.isactive= true and trans.applicationstatusid=1 and ls.landid= "+landId+" and trans.processid="+processId;
+			 String strQuery = "select * from la_rrr_surrenderlease ls left join la_ext_transactiondetails trans on ls.leaseid = trans.moduletransid where ls.isactive= true and trans.applicationstatusid=1 and ls.landid= "+landId+" and trans.processid="+processId;
 				List<LaSurrenderLease> laSurenderLeaseobj = getEntityManager().createNativeQuery(strQuery,LaSurrenderLease.class).getResultList();
 			if(laSurenderLeaseobj.size()>0){
 			return laSurenderLeaseobj.get(0);
@@ -68,7 +68,7 @@ public class LaSurrenderLeaseHibernateDao extends GenericHibernateDAO<LaSurrende
 	public LaSurrenderLease getSurrenderleaseByLandandTransId(Long landId,
 			Integer transactionid) {
 		try{
-			 String strQuery = "select * from la_surrenderlease ls left join la_ext_transactiondetails trans on ls.leaseid = trans.moduletransid where ls.landid= "+landId+" and trans.transactionid"+transactionid +" and trans.processid= 5";
+			 String strQuery = "select * from la_rrr_surrenderlease ls left join la_ext_transactiondetails trans on ls.leaseid = trans.moduletransid where ls.landid= "+landId+" and trans.transactionid"+transactionid +" and trans.processid= 5";
 				List<LaSurrenderLease> laSurenderLeaseobj = getEntityManager().createNativeQuery(strQuery,LaSurrenderLease.class).getResultList();
 			if(laSurenderLeaseobj.size()>0){
 			return laSurenderLeaseobj.get(0);

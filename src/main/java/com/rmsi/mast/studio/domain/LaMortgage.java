@@ -20,7 +20,7 @@ import javax.persistence.TemporalType;
  *
  */
 @Entity
-@Table(name="la_mortgage")
+@Table(name="la_rrr_mortgage")
 public class LaMortgage implements Serializable{
 
 	/**
@@ -29,7 +29,7 @@ public class LaMortgage implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="pk_la_mortgage",sequenceName="la_mortgage_mortgageid_seq", allocationSize=1) 
+	@SequenceGenerator(name="pk_la_mortgage",sequenceName="la_rrr_rrrid_seq", allocationSize=1) 
 	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_mortgage") 
 	private Integer mortgageid;
 	

@@ -46,7 +46,7 @@ public class LaMortgageSurrenderHibernatedDao extends GenericHibernateDAO<LaSurr
 	public LaSurrenderMortgage getMortgageByLandIdandprocessId(Long landId,
 			Long processId) {
 		try{
-			 String strQuery = "select * from la_surrendermortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where lm.isactive= true and trans.applicationstatusid=1 and lm.landid= "+landId+" and trans.processid="+processId;
+			 String strQuery = "select * from la_rrr_surrendermortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where lm.isactive= true and trans.applicationstatusid=1 and lm.landid= "+landId+" and trans.processid="+processId;
 				List<LaSurrenderMortgage> lasurrenderMortgage = getEntityManager().createNativeQuery(strQuery,LaSurrenderMortgage.class).getResultList();
 			if(lasurrenderMortgage.size()>0){
 			return lasurrenderMortgage.get(0);
@@ -63,7 +63,7 @@ public class LaMortgageSurrenderHibernatedDao extends GenericHibernateDAO<LaSurr
 	@Override
 	public LaSurrenderMortgage getMortgageByLandIdandTransId(Long landId, Integer transactionId) {
 		try{
-			 String strQuery = "select * from la_surrendermortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where  lm.landid= "+landId+" and trans.transactionid="+transactionId+" and trans.processid=9";
+			 String strQuery = "select * from la_rrr_surrendermortgage lm left join la_ext_transactiondetails trans on lm.mortgageid = trans.moduletransid where  lm.landid= "+landId+" and trans.transactionid="+transactionId+" and trans.processid=9";
 				List<LaSurrenderMortgage> lasurrenderMortgage = getEntityManager().createNativeQuery(strQuery,LaSurrenderMortgage.class).getResultList();
 			if(lasurrenderMortgage.size()>0){
 			return lasurrenderMortgage.get(0);

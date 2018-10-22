@@ -114,17 +114,17 @@ public class SpatialUnitHibernateDao extends
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<SpatialUnit> findSpatialUnitByStatusId(String projectId,
+    public List<ClaimBasic> findSpatialUnitByStatusId(String projectId,
             int statusId) {
         ArrayList<Integer> staList = new ArrayList<Integer>();
         staList.add(6);
         staList.add(7);
-        String query = "select su from SpatialUnit su where "
-                + "su.status.workflowStatusId in :statusId and "
-                + "su.project =:projectId";
+        String query = "select su from ClaimBasic su where "
+                + "su.landapplicationstatusid.workflowstatusid in :statusId and "
+                + "su.projectnameid =:projectId";
 
         try {
-            List<SpatialUnit> spatialUnitList = null;
+            List<ClaimBasic> spatialUnitList = null;
             if (statusId != 7) {
 
                 spatialUnitList = getEntityManager()
@@ -145,7 +145,7 @@ public class SpatialUnitHibernateDao extends
             logger.error(ex);
             System.out.println("Exception while fetching SPATIAL UNIT:::: " + ex);
         }
-        return new ArrayList<SpatialUnit>();
+        return new ArrayList<ClaimBasic>();
     }
 
     @Override

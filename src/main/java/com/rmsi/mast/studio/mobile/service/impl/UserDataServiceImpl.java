@@ -10,6 +10,7 @@ import com.rmsi.mast.studio.dao.DocumentTypeDao;
 import com.rmsi.mast.studio.dao.IdTypeDao;
 import com.rmsi.mast.studio.dao.LaExtDisputeDAO;
 import com.rmsi.mast.studio.dao.LaExtDisputelandmappingDAO;
+import com.rmsi.mast.studio.dao.LandApplicationStatusDAO;
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.dao.ResourceLandClassificationMappingDAO;
 
@@ -58,6 +59,7 @@ import com.rmsi.mast.studio.domain.LaExtDisputelandmapping;
 import com.rmsi.mast.studio.domain.LaExtPersonLandMapping;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaParty;
+import com.rmsi.mast.studio.domain.LandApplicationStatus;
 import com.rmsi.mast.studio.domain.NaturalPerson;
 import com.rmsi.mast.studio.domain.NonNaturalPerson;
 import com.rmsi.mast.studio.domain.PersonType;
@@ -83,6 +85,7 @@ import com.rmsi.mast.studio.domain.Surveyprojectattribute;
 import com.rmsi.mast.studio.domain.Unit;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.WorkflowStatusHistory;
+import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
 import com.rmsi.mast.studio.domain.fetch.DisputeBasic;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.domain.fetch.SpatialunitDeceasedPerson;
@@ -335,6 +338,9 @@ public class UserDataServiceImpl implements UserDataService {
    @Autowired
    ResourceSourceDocumentDao resourceSourceDocumentdao;
    
+   @Autowired
+   LandApplicationStatusDAO landApplicationStatusDAO;
+   
     
 //    @Autowired
 //    DisputeBasicDAO disputeBasicDao;
@@ -482,9 +488,9 @@ public class UserDataServiceImpl implements UserDataService {
                 unit.setUnitid(1);
                 spatialUnit.setLaExtUnit(unit);
                 spatialUnit.setIsactive(true);
-                spatialUnit.setApplicationstatusid(1);
+               
                 spatialUnit.setClaimno(Integer.parseInt(prop.getPolygonNumber()));
-                spatialUnit.setWorkflowstatusid(1);
+               
                 spatialUnit.setModifiedby(userId);
                 spatialUnit.setModifieddate(new Date());
             	spatialUnit.setNeighborEast("a");
@@ -541,6 +547,28 @@ public class UserDataServiceImpl implements UserDataService {
             	spatialUnit.setArea( Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
                 serverPropId = spatialUnitDao.addSpatialUnit(spatialUnit).getLandid();
                 spatialUnitDao.clear();
+                
+                try{
+                	LandApplicationStatus landApplicationStatusobject= new LandApplicationStatus();
+
+                	landApplicationStatusobject.setApplicationstatusid(1);
+                	ClaimBasic spatialunitobj = new ClaimBasic();
+                	spatialunitobj.setLandid(serverPropId);
+                	landApplicationStatusobject.setLandid(spatialunitobj);
+                	landApplicationStatusobject.setOccupancylength(1);
+                	landApplicationStatusobject.setWorkflowstatusid(1);
+                	if (prop.getRight() != null) {
+                		for (Attribute attribute : prop.getRight().getAttributes()) {
+                			if(attribute.getId() == 13){
+                				landApplicationStatusobject.setOccupancylength(Integer.parseInt(attribute.getValue()));
+                			}
+                		}
+                	}
+                	 landApplicationStatusDAO.makePersistent(landApplicationStatusobject);
+                }
+                catch(Exception e){
+                	e.printStackTrace();
+                }
                 
                 
                 LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
@@ -1244,9 +1272,9 @@ public class UserDataServiceImpl implements UserDataService {
                 	   parcel.setLaBaunitLandusetype(landUseTypeDao.getLandUseTypeById(attOptions.getParentid()));
                        break;
                    }
-                if(attribute.getId() == 13){
+               /* if(attribute.getId() == 13){
                 	parcel.setOccupancylength(Integer.parseInt(attribute.getValue()));
-                }
+                }*/
                 
                 if(attribute.getId()==23){
                 	AttributeOptions attOptions = attributeOptionsDao.getAttributeOptionsId(Integer.parseInt(attribute.getValue()));

@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.rmsi.mast.studio.dao.DocumentTypeDao;
+import com.rmsi.mast.studio.dao.LaRrrDAO;
 import com.rmsi.mast.studio.dao.OutputformatDAO;
 import com.rmsi.mast.studio.dao.ProjectDAO;
 import com.rmsi.mast.studio.dao.SocialTenureRelationshipDAO;
@@ -49,6 +50,7 @@ import com.rmsi.mast.studio.domain.LaLease;
 import com.rmsi.mast.studio.domain.LaMortgage;
 import com.rmsi.mast.studio.domain.LaParty;
 import com.rmsi.mast.studio.domain.LaPartyPerson;
+import com.rmsi.mast.studio.domain.LaRrr;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.LaSurrenderLease;
 import com.rmsi.mast.studio.domain.LaSurrenderMortgage;
@@ -149,6 +151,9 @@ public class RegistrationRecordsController {
 	 
 	 @Autowired
 	 LaExtRegistrationLandShareTypeService laExtRegistrationLandShareTypeservice;
+	
+	 @Autowired
+	 LaRrrDAO laRrrdao;
 	
 
 	@RequestMapping(value = "/viewer/registryrecords/spatialunit/{project}/{startfrom}", method = RequestMethod.GET)
@@ -1197,7 +1202,7 @@ public class RegistrationRecordsController {
 			}
 //			
 			
-				if(leaseeobjList.size() > 0 && leaseepersonid != 0){
+				if(null!=leaseeobjList && leaseeobjList.size() > 0 && leaseepersonid != 0){
 					leaseeobj= leaseeobjList.get(0);
 //					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseeobj.getPersonid());
 					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseepersonid.longValue());
@@ -1227,7 +1232,7 @@ public class RegistrationRecordsController {
 					
 						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
 				}
-				else if(leaseeobjList.size() > 0 && personId != 0){
+				else if(null!=leaseeobjList && leaseeobjList.size() > 0 && personId != 0){
 					leaseeobj= leaseeobjList.get(0);
 //					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(leaseeobj.getPersonid());
 					  naturalPerson = (NaturalPerson) laPartyDao.getPartyIdByID(personId.longValue());
@@ -1258,7 +1263,7 @@ public class RegistrationRecordsController {
 						laExtTransactiondetail = transactionDao.getLaExtTransactionByLeaseeid(leaseeobj.getLeaseid().longValue());
 				}
 			
-				else if(leaseeobjList.size() >= 0 && personId==0){
+				else if((null==leaseeobjList || leaseeobjList.size() >= 0) && personId==0){
 			
 			 naturalPerson = new NaturalPerson();
 			naturalPerson.setContactno(contact_no);
@@ -1352,6 +1357,15 @@ public class RegistrationRecordsController {
 			laExtTransactiondetail.setModuletransid(leaseeobj.getLeaseid());
 			
 			laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+			
+			if(editflag==0){
+				LaRrr larrrobject= new LaRrr();
+				larrrobject.setRrrid(leaseeobj.getLeaseid());
+				larrrobject.setRrrtype("Lease");
+				larrrobject.setRrrtypeid(2);
+				laRrrdao.addLaRrr(larrrobject);
+				
+			}
 		
 				}
 if(null!=laExtTransactiondetail){
@@ -1514,6 +1528,15 @@ if(null!=laExtTransactiondetail){
 			laExtTransactiondetail.setModuletransid(laLease.getLeaseid());
 			
 			laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+			
+			if(editflag==0){
+				LaRrr larrrobject= new LaRrr();
+				larrrobject.setRrrid(laLease.getLeaseid());
+				larrrobject.setRrrtype("Surrender of Lease");
+				larrrobject.setRrrtypeid(5);
+				laRrrdao.addLaRrr(larrrobject);
+				
+			}
 		}
 
 			return laExtTransactiondetail.getTransactionid().toString();
@@ -1654,6 +1677,15 @@ if(null!=laExtTransactiondetail){
 			laExtTransactiondetail.setModuletransid(laMortgage.getMortgageid());
 			
 			laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+			
+			if(editflag==0){
+				LaRrr larrrobject= new LaRrr();
+				larrrobject.setRrrid(laMortgage.getMortgageid());
+				larrrobject.setRrrtype("Mortgage");
+				larrrobject.setRrrtypeid(3);
+				laRrrdao.addLaRrr(larrrobject);
+				
+			}
 			 }
 			 if(null!=laExtTransactiondetail){
 
@@ -3362,6 +3394,16 @@ if(null!=laExtTransactiondetail){
 				laExtTransactiondetail.setModuletransid(laMortgage.getMortgageid());
 				
 				laExtTransactiondetail = registrationRecordsService.saveTransaction(laExtTransactiondetail);
+				
+				if(editflag==0){
+					LaRrr larrrobject= new LaRrr();
+					larrrobject.setRrrid(laMortgage.getMortgageid());
+					larrrobject.setRrrtype("Surrender of Mortgage");
+					larrrobject.setRrrtypeid(9);
+					laRrrdao.addLaRrr(larrrobject);
+					
+				}
+				
 				 }
 
 				return laExtTransactiondetail.getTransactionid().toString();

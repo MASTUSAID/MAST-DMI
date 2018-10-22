@@ -111,7 +111,7 @@ public class LaLeaseHibernateDao extends GenericHibernateDAO<LaLease, Integer> i
 	public List<LaLease> getleaseeListByLandId(Long landId) {
 		
 		try {
-			Query query = getEntityManager().createQuery("select la from LaLease la where la.landid = :landid and isactive=true");
+			Query query = getEntityManager().createQuery("select la from LaLease la where la.landid = :landid and la.isactive=true");
 			@SuppressWarnings("unchecked")
 			List<LaLease> lstLaExtFinancialagency = query.setParameter("landid", landId).getResultList();
 
@@ -125,7 +125,7 @@ public class LaLeaseHibernateDao extends GenericHibernateDAO<LaLease, Integer> i
 	@Override
 	public LaLease getleaseobjbylandandprocessid(Long landId, Long processId) {
 		try{
-			 String strQuery = "select * from la_lease l left join la_ext_transactiondetails trans on l.leaseid = trans.moduletransid where l.isactive= true and trans.applicationstatusid=1 and l.landid= "+landId+" and trans.processid="+processId;
+			 String strQuery = "select * from la_rrr_lease l left join la_ext_transactiondetails trans on l.leaseid = trans.moduletransid where l.isactive= true and trans.applicationstatusid=1 and l.landid= "+landId+" and trans.processid="+processId;
 				List<LaLease> laLease = getEntityManager().createNativeQuery(strQuery,LaLease.class).getResultList();
 			if(laLease.size()>0){
 			return laLease.get(0);
@@ -159,7 +159,7 @@ public class LaLeaseHibernateDao extends GenericHibernateDAO<LaLease, Integer> i
 	public List<LaLease> getleaseobjbylandandprocessidList(Long landId,
 			Long processId) {
 		try{
-			 String strQuery = "select * from la_lease l left join la_ext_transactiondetails trans on l.leaseid = trans.moduletransid where l.isactive= true and trans.applicationstatusid=1 and l.landid= "+landId+" and trans.processid="+processId;
+			 String strQuery = "select * from la_rrr_lease l left join la_ext_transactiondetails trans on l.leaseid = trans.moduletransid where l.isactive= true and trans.applicationstatusid=1 and l.landid= "+landId+" and trans.processid="+processId;
 				List<LaLease> laLease = getEntityManager().createNativeQuery(strQuery,LaLease.class).getResultList();
 			if(laLease.size()>0){
 			return laLease;

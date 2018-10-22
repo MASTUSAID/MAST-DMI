@@ -72,9 +72,10 @@ public class ProjectDataHibernateDAO extends GenericHibernateDAO<ProjectSpatialD
 		}
 	
 		else {
-			Query query = getEntityManager().createQuery("Select c from ProjectSpatialData c where c.name = :name") ;
-		
-			query.setParameter("name",name);
+			//Query query = getEntityManager().createQuery("Select c from ProjectSpatialData c where c.fileName = :name") ;
+			Query query = getEntityManager().createQuery("Select c from ProjectSpatialData c") ;
+
+			
 		List<ProjectSpatialData> selectedattachment = query.getResultList();		
 		
 		if(selectedattachment.size() > 0){

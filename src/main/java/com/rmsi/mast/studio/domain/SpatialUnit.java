@@ -108,9 +108,9 @@ public class SpatialUnit implements Serializable {
 	@Column(name="neighbor_west")
 	private String neighborWest;
 
-	private Integer applicationstatusid;
+/*	private Integer applicationstatusid;
 	
-	private Integer workflowstatusid;
+	private Integer workflowstatusid;*/
 	
 	/*@ManyToOne
 	@JoinColumn(name="projectnameid")*/
@@ -293,8 +293,8 @@ public class SpatialUnit implements Serializable {
 		this.tenureclassid = tenureclassid;
 	}
 
-	private Integer occupancylength;
-	
+/*	private Integer occupancylength;
+*/	
 	private Integer tenureclassid;
 	
     public SpatialUnit(){
@@ -308,13 +308,13 @@ public class SpatialUnit implements Serializable {
 		return landid;
 	}
 
-	public Integer getOccupancylength() {
+	/*public Integer getOccupancylength() {
 		return occupancylength;
 	}
 
 	public void setOccupancylength(Integer occupancylength) {
 		this.occupancylength = occupancylength;
-	}
+	}*/
 
 	public void setLandid(Long landid) {
 		this.landid = landid;
@@ -676,7 +676,7 @@ public class SpatialUnit implements Serializable {
 	}
 
 
-	public Integer getApplicationstatusid() {
+	/*public Integer getApplicationstatusid() {
 		return applicationstatusid;
 	}
 
@@ -694,7 +694,7 @@ public class SpatialUnit implements Serializable {
 	public void setWorkflowstatusid(Integer workflowstatusid) {
 		this.workflowstatusid = workflowstatusid;
 	}
-
+*/
 	public String getGeomStr() {
 		return geomStr;
 	}

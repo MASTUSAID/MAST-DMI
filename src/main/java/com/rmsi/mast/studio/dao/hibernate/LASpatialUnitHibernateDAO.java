@@ -19,7 +19,8 @@ public class LASpatialUnitHibernateDAO extends GenericHibernateDAO<SpatialUnit, 
 		
 		
 		try {
-			Query query = getEntityManager().createQuery("UPDATE SpatialUnit sp SET  sp.applicationstatusid = :statusid , sp.workflowstatusid = :workflowid  where  sp.landid = :landid");
+			
+			Query query = getEntityManager().createQuery("UPDATE LandApplicationStatus sp SET  sp.applicationstatusid = :statusid , sp.workflowstatusid = :workflowid  where  sp.landid.landid = :landid");
 			
 			query.setParameter("statusid",applicationstatusid);
 			query.setParameter("workflowid",workflowstatusid);
