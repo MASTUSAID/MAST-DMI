@@ -1,8 +1,9 @@
 /**
- * 
+ *
  */
 package com.rmsi.mast.studio.mobile.service;
 
+import com.rmsi.mast.studio.domain.BoundaryPointDoc;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
@@ -20,109 +21,119 @@ import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.mobile.transferobjects.Property;
 
-
 /**
  * @author shruti.thakur
  *
  */
 public interface UserDataService {
 
-	/**
-	 * This will do authentication based on email id
-	 * 
-	 * @param email
-	 * @param passwd
-	 * @return
-	 */
-	User authenticateByEmail(String email, String passwd);
+    /**
+     * This will do authentication based on email id
+     *
+     * @param email
+     * @param passwd
+     * @return
+     */
+    User authenticateByEmail(String email, String passwd);
 
-	/**
-	 * This method is used to get User Project based on UserId
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	String getDefaultProjectByUserId(int userId);
+    /**
+     * This method is used to get User Project based on UserId
+     *
+     * @param userId
+     * @return
+     */
+    String getDefaultProjectByUserId(int userId);
 
-	/**
-	 * This will be used to insert data in Source Document and Save Files
-	 * 
-	 * @param sourceDocument
-	 * @param mpFile
-	 * @param documentsDir
-	 * @return
-	 */
-	SourceDocument uploadMultimedia(SourceDocument sourceDocument,
-			MultipartFile mpFile, File documentsDir);
+    /**
+     * This will be used to insert data in Source Document and Save Files
+     *
+     * @param sourceDocument
+     * @param mpFile
+     * @param documentsDir
+     * @return
+     */
+    SourceDocument uploadMultimedia(SourceDocument sourceDocument, MultipartFile mpFile, String fileFolder);
 
-        /** 
-         * Saves claim/property and returns property ID, generated on the server. 
-         * @param prop Property object to save
-         * @param projectName Project name/ID
-         * @param userId User ID who created the claim
-         * @return 
-         */
-        Map<String, String> saveClaims(List<Property> properties, String projectName, int userId) throws Exception;
+    /**
+     * Saves claim/property and returns property ID, generated on the server.
+     *
+     * @param prop Property object to save
+     * @param projectName Project name/ID
+     * @param userId User ID who created the claim
+     * @return
+     */
+    Map<String, String> saveClaims(List<Property> properties, String projectName, int userId) throws Exception;
 
-        /** 
-         * Saves claim/property and returns property ID, generated on the server. 
-         * @param prop Property object to save
-         * @param projectName Project name/ID
-         * @param userId User ID who created the claim
-         * @return 
-         */
-        Map<String, String> saveResource(List<Property> resource, String projectName, int userId) throws Exception;
-     
-        
-	/**
-	 * This will be used to fetch record from source document if USIN and
-	 * FielName matches
-	 * 
-	 * @param fileName
-	 * @param usin
-	 * @return
-	 */
-	SourceDocument findMultimedia(String fileName, Long usin);
+    /**
+     * Saves claim/property and returns property ID, generated on the server.
+     *
+     * @param prop Property object to save
+     * @param projectName Project name/ID
+     * @param userId User ID who created the claim
+     * @return
+     */
+    Map<String, String> saveResource(List<Property> resource, String projectName, int userId) throws Exception;
 
-	/**
-	 * It will fetch person based on mobile group id and Usin
-	 * 
-	 * @param mobileGroupId
-	 * @return
-	 */
-	Long findPersonByMobileGroupId(String mobileGroupId, Long usin);
+    /**
+     * Saves claim/property and returns property ID, generated on the server.
+     *
+     * @param points List of points to save
+     * @param projectName Project name/ID
+     * @param userId User ID who created the claim
+     * @return
+     * @throws java.lang.Exception
+     */
+    Map<String, String> saveBoundaryPoints(List<Property> points, String projectName, int userId) throws Exception;
+    
+    /**
+     * This will be used to fetch record from source document if USIN and
+     * FielName matches
+     *
+     * @param fileName
+     * @param usin
+     * @return
+     */
+    SourceDocument findMultimedia(String fileName, Long usin);
 
-	@Transactional
-	boolean updateNaturalPersonAttribValues(NaturalPerson naturalPerson,
-			String project);
+    /**
+     * It will fetch person based on mobile group id and Usin
+     *
+     * @param mobileGroupId
+     * @return
+     */
+    Long findPersonByMobileGroupId(String mobileGroupId, Long usin);
 
-	@Transactional
-	boolean updateTenureAttribValues(SocialTenureRelationship socialTenure,
-			String project);
+    @Transactional
+    boolean updateNaturalPersonAttribValues(NaturalPerson naturalPerson,
+            String project);
 
-	@Transactional
-	boolean updateNonNaturalPersonAttribValues(
-			NonNaturalPerson nonnaturalPerson, String project);
+    @Transactional
+    boolean updateTenureAttribValues(SocialTenureRelationship socialTenure,
+            String project);
 
-	@Transactional
-	boolean updateGeneralAttribValues(SpatialUnitTable spatialUnit,
-			String project);
+    @Transactional
+    boolean updateNonNaturalPersonAttribValues(
+            NonNaturalPerson nonnaturalPerson, String project);
 
-	@Transactional
-	boolean updateMultimediaAttribValues(SourceDocument sourcedocument,
-			String project);
+    @Transactional
+    boolean updateGeneralAttribValues(SpatialUnitTable spatialUnit,
+            String project);
 
-	/**
-	 * Update the status of SpatialUnit
-	 * 
-	 * @param userId
-	 * @param usin
-	 * @return
-	 */
-	List<Long> updateAdjudicatedData(Long userId, List<Long> usin);
+    @Transactional
+    boolean updateMultimediaAttribValues(SourceDocument sourcedocument,
+            String project);
 
-	ResourceSourceDocument uploadResourceMultimedia(
-			ResourceSourceDocument sourceDocument, MultipartFile mpFile,
-			File documentsDir);
+    /**
+     * Update the status of SpatialUnit
+     *
+     * @param userId
+     * @param usin
+     * @return
+     */
+    List<Long> updateAdjudicatedData(Long userId, List<Long> usin);
+
+    ResourceSourceDocument uploadResourceMultimedia(ResourceSourceDocument sourceDocument, MultipartFile mpFile, String fileFolder);
+    
+    BoundaryPointDoc uploadBoundaryPointDoc(BoundaryPointDoc doc, MultipartFile mpFile, String fileFolder);
 
 }

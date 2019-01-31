@@ -594,7 +594,7 @@ public class ProjectController {
                
                 fileName = uid + "." + fileName.substring(fileName.indexOf(".") + 1, fileName.length()).toLowerCase();
 
-                String outDirPath = FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures";
+                String outDirPath = FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures";
                 File outDir = new File(outDirPath);
                 if (!outDir.exists()) {
                     (new File(outDirPath)).mkdirs();
@@ -619,9 +619,9 @@ public class ProjectController {
     @RequestMapping(value = "/studio/project/signatureexists/{fileName}", method = RequestMethod.GET)
     @ResponseBody
     public boolean checkSignatureExists(@PathVariable String fileName, HttpServletRequest request) {
-        File signature = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
-        File signature2 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
-        File signature3 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpg");
+        File signature = new File(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
+        File signature2 = new File(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
+        File signature3 = new File(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpg");
         if(signature.exists() ||signature2.exists() ||signature3.exists() ){
         	
         	return true;
@@ -638,7 +638,7 @@ public class ProjectController {
     public void getSignature(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) {
         try {
         	byte[] data = null ;
-            Path path = Paths.get(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpeg");
+            Path path = Paths.get(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpeg");
 
             try {
 				if (path.toFile().exists()) {
@@ -654,7 +654,7 @@ public class ProjectController {
 				e.printStackTrace();
 			}
             
-            Path path1 = Paths.get(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
+            Path path1 = Paths.get(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
             
             try {
 				if (path1.toFile().exists()) {
@@ -670,7 +670,7 @@ public class ProjectController {
 				e.printStackTrace();
 			}
             
-            Path path2 = Paths.get(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
+            Path path2 = Paths.get(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
             
             try {
 				if (path2.toFile().exists()) {
@@ -704,7 +704,7 @@ public class ProjectController {
     @RequestMapping(value = "/studio/project/deletesignature/{fileName}", method = RequestMethod.GET)
     @ResponseBody
     public boolean deleteSignature(@PathVariable String fileName, HttpServletRequest request) {
-        File signature = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
+        File signature = new File(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".gif");
         if (signature.exists()) {
             try {
                 signature.delete();
@@ -714,7 +714,7 @@ public class ProjectController {
             }
         }
         
-        File signature1 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
+        File signature1 = new File(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".png");
         if (signature1.exists()) {
             try {
             	signature1.delete();
@@ -725,7 +725,7 @@ public class ProjectController {
         }
         
         
-        File signature2 = new File(FileUtils.getFielsFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpeg");
+        File signature2 = new File(FileUtils.getFilesFolder(request) + "resources" + File.separator + "signatures" + File.separator + fileName + ".jpeg");
         if (signature2.exists()) {
             try {
             	signature2.delete();

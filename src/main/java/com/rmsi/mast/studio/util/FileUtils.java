@@ -12,7 +12,7 @@ public class FileUtils {
      * @param request HttpServletRequest object to extract context path
      * @return  
      */
-    public static String getFielsFolder(HttpServletRequest request){
+    public static String getFilesFolder(HttpServletRequest request){
         return request.getSession().getServletContext().getRealPath(".") + File.separator + ".." + File.separator + "mast_files" + File.separator;
     }
     

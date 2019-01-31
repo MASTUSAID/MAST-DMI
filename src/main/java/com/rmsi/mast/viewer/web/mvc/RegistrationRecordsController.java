@@ -1353,7 +1353,7 @@ public class RegistrationRecordsController {
 					e.printStackTrace();
 				}
 
-				String outDirPath = FileUtils.getFielsFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
+				String outDirPath = FileUtils.getFilesFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
 				File outDir = new File(outDirPath);
 				boolean exists = outDir.exists();
 
@@ -1447,7 +1447,7 @@ public class RegistrationRecordsController {
 					e.printStackTrace();
 				}
 
-				String outDirPath = FileUtils.getFielsFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
+				String outDirPath = FileUtils.getFilesFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
 				File outDir = new File(outDirPath);
 				boolean exists = outDir.exists();
 
@@ -1533,7 +1533,7 @@ public class RegistrationRecordsController {
 					originalFileName=originalFileName.substring(0, originalFileName.indexOf(".")) + "_" + transactionid + originalFileName.substring(originalFileName.indexOf("."), originalFileName.length());
 				}
 
-				String outDirPath = FileUtils.getFielsFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
+				String outDirPath = FileUtils.getFilesFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
 				File outDir = new File(outDirPath);
 				boolean exists = outDir.exists();
 
@@ -1631,7 +1631,7 @@ public class RegistrationRecordsController {
 					originalFileName=originalFileName.substring(0, originalFileName.indexOf(".")) + "_" + transactionid + originalFileName.substring(originalFileName.indexOf("."), originalFileName.length());
 				}
 
-				String outDirPath = FileUtils.getFielsFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
+				String outDirPath = FileUtils.getFilesFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
 				File outDir = new File(outDirPath);
 				boolean exists = outDir.exists();
 
@@ -2049,7 +2049,7 @@ public class RegistrationRecordsController {
 			}
 			
 			
-			String outDirPath = FileUtils.getFielsFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
+			String outDirPath = FileUtils.getFilesFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
 			File outDir = new File(outDirPath);
 			boolean exists = outDir.exists();
 			Date uploadDate = null;
@@ -2154,7 +2154,7 @@ public class RegistrationRecordsController {
 			String doc_date_sale = ServletRequestUtils.getRequiredStringParameter(request, "doc_date_split");
 			
 			
-			String outDirPath = FileUtils.getFielsFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
+			String outDirPath = FileUtils.getFilesFolder(request)+ "resources" + File.separator + "documents"+ File.separator + "Registry" + File.separator+ "webupload";
 			File outDir = new File(outDirPath);
 			boolean exists = outDir.exists();
 			Date uploadDate = null;
@@ -2523,7 +2523,7 @@ public class RegistrationRecordsController {
 					 doc = sourceDocumentDAO.findDocumentByDocumentId(documentId.longValue());
 			    	if(doc==null){
 			    		//String filepath = "/storage/emulated/0/MAST/multimedia/" +originalFileName;
-			    		String filepath = FileUtils.getFielsFolder(request) +"/storage/emulated/0/MAST/multimedia/Parcel_Media";
+			    		String filepath = FileUtils.getFilesFolder(request) +"/storage/emulated/0/MAST/multimedia/Parcel_Media";
 				        filepath =  filepath.replace("\\mast\\..", "");
 				        Path path = Paths.get(filepath);
 				        File existingdr =new File(filepath);
@@ -2565,7 +2565,7 @@ public class RegistrationRecordsController {
 						
 
 			    	}
-			        String filepath = FileUtils.getFielsFolder(request) +"/storage/emulated/0/MAST/multimedia/Parcel_Media";
+			        String filepath = FileUtils.getFilesFolder(request) +"/storage/emulated/0/MAST/multimedia/Parcel_Media";
 			        filepath =  filepath.replace("\\mast\\..", "");
 			        Path path = Paths.get(filepath);
 			        File existingdr =new File(filepath);
@@ -2633,7 +2633,7 @@ public class RegistrationRecordsController {
 	    	 if(doc==null){
 	    		 response.setContentLength(data.length);
 	    	 }
-	        String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation()
+	        String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation()
 	                +"/"+ doc.getDocumentname();
 	         filepath =  filepath.replace("\\mast\\..", "");
 	        Path path = Paths.get(filepath);

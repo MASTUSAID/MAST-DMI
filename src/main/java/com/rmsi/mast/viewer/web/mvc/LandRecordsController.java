@@ -1,7 +1,6 @@
 package com.rmsi.mast.viewer.web.mvc;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -43,7 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +66,7 @@ import com.rmsi.mast.studio.dao.UserRoleDAO;
 import com.rmsi.mast.studio.domain.AcquisitionType;
 import com.rmsi.mast.studio.domain.AttributeCategory;
 import com.rmsi.mast.studio.domain.AttributeValues;
+import com.rmsi.mast.studio.domain.BoundaryPointDoc;
 import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.ClaimType;
 import com.rmsi.mast.studio.domain.Dispute;
@@ -83,7 +82,6 @@ import com.rmsi.mast.studio.domain.LaExtDisputelandmapping;
 import com.rmsi.mast.studio.domain.LaExtTransactionHistory;
 import com.rmsi.mast.studio.domain.LaExtTransactiondetail;
 import com.rmsi.mast.studio.domain.LaParty;
-import com.rmsi.mast.studio.domain.LaPartyPerson;
 import com.rmsi.mast.studio.domain.LaSpatialunitLand;
 import com.rmsi.mast.studio.domain.LandType;
 import com.rmsi.mast.studio.domain.LandUseType;
@@ -97,9 +95,7 @@ import com.rmsi.mast.studio.domain.PersonType;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ProjectArea;
 import com.rmsi.mast.studio.domain.ProjectHamlet;
-import com.rmsi.mast.studio.domain.ProjectSpatialData;
 import com.rmsi.mast.studio.domain.RelationshipType;
-import com.rmsi.mast.studio.domain.ResourceAttributeValues;
 import com.rmsi.mast.studio.domain.ShareType;
 import com.rmsi.mast.studio.domain.SlopeValues;
 import com.rmsi.mast.studio.domain.SocialTenureRelationship;
@@ -109,12 +105,10 @@ import com.rmsi.mast.studio.domain.SpatialUnitPersonWithInterest;
 import com.rmsi.mast.studio.domain.Status;
 import com.rmsi.mast.studio.domain.TenureClass;
 import com.rmsi.mast.studio.domain.User;
-import com.rmsi.mast.studio.domain.UserRole;
 import com.rmsi.mast.studio.domain.fetch.AllocateUser;
 import com.rmsi.mast.studio.domain.fetch.AttributeValuesFetch;
 import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
 import com.rmsi.mast.studio.domain.fetch.Commune;
-import com.rmsi.mast.studio.domain.fetch.FarmReport;
 import com.rmsi.mast.studio.domain.fetch.LaExtDisputeDTO;
 import com.rmsi.mast.studio.domain.fetch.La_spatialunit_aoi;
 import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
@@ -131,9 +125,6 @@ import com.rmsi.mast.studio.mobile.dao.EducationLevelDao;
 import com.rmsi.mast.studio.mobile.dao.GenderDao;
 import com.rmsi.mast.studio.mobile.dao.GroupTypeDao;
 import com.rmsi.mast.studio.mobile.dao.NaturalPersonDao;
-import com.rmsi.mast.studio.mobile.dao.NonNaturalPersonDao;
-import com.rmsi.mast.studio.mobile.dao.SocialTenureDao;
-import com.rmsi.mast.studio.mobile.dao.SpatialUnitPersonWithInterestDao;
 import com.rmsi.mast.studio.mobile.service.SpatialUnitService;
 import com.rmsi.mast.studio.mobile.service.UserDataService;
 import com.rmsi.mast.studio.service.ClaimBasicService;
@@ -150,6 +141,7 @@ import com.rmsi.mast.viewer.dao.LaPartyPersonDao;
 import com.rmsi.mast.viewer.dao.SocialTenureRelationshipDao;
 import com.rmsi.mast.viewer.dao.SourceDocumentsDao;
 import com.rmsi.mast.viewer.report.ReportsSerivce;
+import com.rmsi.mast.viewer.service.BoundaryService;
 import com.rmsi.mast.viewer.service.LaExtDisputeService;
 import com.rmsi.mast.viewer.service.LaExtDisputelandmappingService;
 import com.rmsi.mast.viewer.service.LandRecordsService;
@@ -158,17 +150,11 @@ import com.rmsi.mast.viewer.service.RegistrationRecordsService;
 import com.rmsi.mast.viewer.service.ResourceAttributeValuesService;
 import com.rmsi.mast.viewer.service.SpatialunitPersonwithinterestService;
 
-/**
- * 
- * @author Abhay.Pandey
- *
- */
-
 @Controller
 public class LandRecordsController {
 
     private static final Logger logger = Logger.getLogger(LandRecordsController.class);
-    
+
     @Autowired
     NaturalPersonDao naturalPersonDao;
 
@@ -183,7 +169,6 @@ public class LandRecordsController {
 
     @Autowired
     private SpatialUnitService spatialUnitService;
-    
 
     @Autowired
     private UserDataService userDataService;
@@ -193,48 +178,43 @@ public class LandRecordsController {
 
     @Autowired
     private ReportsSerivce reportsService;
-    
+
     @Autowired
-    private DisputeTypeDao disputeTypeDao;  
-    
+    private DisputeTypeDao disputeTypeDao;
+
     @Autowired
     private ClaimBasicService claimBasicService;
 
-    
     @Autowired
-	RegistrationRecordsService registrationRecordsService;
-	
+    RegistrationRecordsService registrationRecordsService;
+
     @Autowired
     SocialTenureRelationshipDao socialTenureRelationshipDao;
-  
-   
+
     @Autowired
     LaExtDisputelandmappingDAO laExtDisputelandmappingDAO;
-    
+
     @Autowired
     LaPartyDao laPartyDao;
-    
+
     @Autowired
     LaExtDisputelandmappingService laExtDisputelandmappingService;
-    
+
     @Autowired
     SpatialunitPersonwithinterestService spatialunitPersonwithinterestService;
-    
+
     @Autowired
     LaExtDisputeService laExtDisputeService;
-    
+
     @Autowired
     ProjectAreaDAO projectAreaDAO;
 
-    
     @Autowired
     GroupTypeDao groupTypeDao;
-    
-    
+
     @Autowired
     UserRoleDAO userRoleDAO;
-    
-    
+
     @Autowired
     AllocateUserDao allocateUserDao;
 
@@ -243,71 +223,67 @@ public class LandRecordsController {
 
     @Autowired
     LaPartyPersonDao laPartyPersonDao;
-    
+
     @Autowired
-    NonNaturalPersonService  nonNaturalPersonService;
-    
+    NonNaturalPersonService nonNaturalPersonService;
+
     @Autowired
-    ProjectDAO projectDAO; 
-    
-    
+    ProjectDAO projectDAO;
+
     @Autowired
     ShareTypeDAO ShareTypeDao;
-    
+
     @Autowired
     ResourceAttributeValuesService resourceAttributeValuesservice;
-    
+
     @Autowired
     EducationLevelDao educationLevelDao;
-    
+
     @Autowired
     LaExtTransactiondetailDao laExtTransactiondetailDao;
-    
+
     @Autowired
     SourceDocumentsDao sourceDocumentsDao;
-    
+
     @Autowired
-	OutputformatDAO Outputformatdao;
-    
+    OutputformatDAO Outputformatdao;
+
     @Autowired
     SocialTenureRelationshipDAO socialTenureRelationshipDAO;
-    
+
     @Autowired
     LaExtTransactionHistoryDao laExtTransactionHistorydao;
-    
+
     @Autowired
     GenderDao Genderdao;
-    
+
     @Autowired
     SourceDocumentDAO sourcedocdao;
-    
-    
+
     @Autowired
-	ResourceCustomAttributesDAO resourceCustomAttributesdao;
-    
-    
-   
+    ResourceCustomAttributesDAO resourceCustomAttributesdao;
+
+    @Autowired
+    BoundaryService boundaryService;
     
     public static final String RESPONSE_OK = "OK";
-
 
     @RequestMapping(value = "/viewer/landrecords/allprojects/", method = RequestMethod.GET)
     @ResponseBody
     public List<String> getAllProjects() {
         return projectService.getAllProjectNames();
     }
-    
+
     @RequestMapping(value = "/viewer/landrecordsdetails/getAllProjectsdetailsCall/", method = RequestMethod.GET)
     @ResponseBody
     public List<Project> getdAllProjectsdetails() {
         return projectService.getdAllProjectsdetails();
     }
-    
-    
+
     @RequestMapping(value = "/viewer/landrecords/personsforediting/{projectName}", method = RequestMethod.GET)
     @ResponseBody
     public List<PersonForEditing> getPersonsForEditing(HttpServletRequest request, @PathVariable String projectName) {
-    	String firstName = ServletRequestUtils.getStringParameter(request, "firstName", "");
+        String firstName = ServletRequestUtils.getStringParameter(request, "firstName", "");
         String lastName = ServletRequestUtils.getStringParameter(request, "lastName", "");
         String middleName = ServletRequestUtils.getStringParameter(request, "middleName", "");
         String idNumber = ServletRequestUtils.getStringParameter(request, "idNumber", "");
@@ -334,77 +310,92 @@ public class LandRecordsController {
         }
     }
 
-    
     @RequestMapping(value = "/viewer/landrecords/savePersonOfInterestForEditing/{landId}", method = RequestMethod.POST)
     @ResponseBody
     public SpatialUnitPersonWithInterest savePersonOfInterestForEditing(HttpServletRequest request, @PathVariable Long landId, Principal principal) {
-        
-    	SpatialUnitPersonWithInterest personinterest =null;
-    	Date date1 =null;
-    	try {
-        	Integer PoiId =0;
-        	Integer genderid =0;
-        	Integer realtionid =0;
-        	String dateofbirth ="";
-        	String firstname ="";
-        	String middlename ="";
-        	String lastname ="";
-        	
-        	
-			try{firstname =  ServletRequestUtils.getRequiredStringParameter(request, "firstName");}catch(Exception e){}
-			try{middlename =ServletRequestUtils.getRequiredStringParameter(request, "middleName");}catch(Exception e){}
-			try{lastname =ServletRequestUtils.getRequiredStringParameter(request, "lastName");}catch(Exception e){}
-			try{genderid =ServletRequestUtils.getRequiredIntParameter(request, "gender");}catch(Exception e){}
-			try{realtionid= ServletRequestUtils.getRequiredIntParameter(request, "relation");}catch(Exception e){}
-			try{dateofbirth=ServletRequestUtils.getRequiredStringParameter(request, "dob");}catch(Exception e){}
-			try{PoiId=ServletRequestUtils.getRequiredIntParameter(request, "id");}catch(Exception e){}
-			
-			if(dateofbirth != ""){
-				
-				 DateFormat inputFormat = new SimpleDateFormat(
-					        "E MMM dd yyyy HH:mm:ss 'GMT'z", Locale.ENGLISH);
-					     date1 = inputFormat.parse(dateofbirth);
-    		
-    		
-//			 date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
-			}
 
-			personinterest = spatialUnitPersonWithInterestService.findSpatialUnitPersonWithInterestById(PoiId.longValue());
-        	
-			if(null ==personinterest){
-            	personinterest = new SpatialUnitPersonWithInterest();
-            	 personinterest.setFirstName(firstname);
-                 personinterest.setMiddleName(middlename);
-                 personinterest.setLastName(lastname);
-                 personinterest.setDob(date1);
-                 personinterest.setGender(genderid);
-                 personinterest.setRelation(realtionid);
- 	           personinterest.setLandid(landId);
- 	          personinterest.setCreatedby(1);
- 	         personinterest.setCreateddate(new Date());
- 	        personinterest.setIsactive(true);
+        SpatialUnitPersonWithInterest personinterest = null;
+        Date date1 = null;
+        try {
+            Integer PoiId = 0;
+            Integer genderid = 0;
+            Integer realtionid = 0;
+            String dateofbirth = "";
+            String firstname = "";
+            String middlename = "";
+            String lastname = "";
+
+            try {
+                firstname = ServletRequestUtils.getRequiredStringParameter(request, "firstName");
+            } catch (Exception e) {
             }
-            else{
-            personinterest.setFirstName(firstname);
-            personinterest.setMiddleName(middlename);
-            personinterest.setLastName(lastname);
-            personinterest.setDob(date1);
-            personinterest.setGender(genderid);
-            personinterest.setRelation(realtionid);
+            try {
+                middlename = ServletRequestUtils.getRequiredStringParameter(request, "middleName");
+            } catch (Exception e) {
             }
-    		
-			spatialUnitPersonWithInterestService.save(personinterest);
-        	
+            try {
+                lastname = ServletRequestUtils.getRequiredStringParameter(request, "lastName");
+            } catch (Exception e) {
+            }
+            try {
+                genderid = ServletRequestUtils.getRequiredIntParameter(request, "gender");
+            } catch (Exception e) {
+            }
+            try {
+                realtionid = ServletRequestUtils.getRequiredIntParameter(request, "relation");
+            } catch (Exception e) {
+            }
+            try {
+                dateofbirth = ServletRequestUtils.getRequiredStringParameter(request, "dob");
+            } catch (Exception e) {
+            }
+            try {
+                PoiId = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            } catch (Exception e) {
+            }
+
+            if (dateofbirth != "") {
+
+                DateFormat inputFormat = new SimpleDateFormat(
+                        "E MMM dd yyyy HH:mm:ss 'GMT'z", Locale.ENGLISH);
+                date1 = inputFormat.parse(dateofbirth);
+
+//			 date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
+            }
+
+            personinterest = spatialUnitPersonWithInterestService.findSpatialUnitPersonWithInterestById(PoiId.longValue());
+
+            if (null == personinterest) {
+                personinterest = new SpatialUnitPersonWithInterest();
+                personinterest.setFirstName(firstname);
+                personinterest.setMiddleName(middlename);
+                personinterest.setLastName(lastname);
+                personinterest.setDob(date1);
+                personinterest.setGender(genderid);
+                personinterest.setRelation(realtionid);
+                personinterest.setLandid(landId);
+                personinterest.setCreatedby(1);
+                personinterest.setCreateddate(new Date());
+                personinterest.setIsactive(true);
+            } else {
+                personinterest.setFirstName(firstname);
+                personinterest.setMiddleName(middlename);
+                personinterest.setLastName(lastname);
+                personinterest.setDob(date1);
+                personinterest.setGender(genderid);
+                personinterest.setRelation(realtionid);
+            }
+
+            spatialUnitPersonWithInterestService.save(personinterest);
+
             return personinterest;
         } catch (Exception e) {
             logger.error(e);
             return null;
         }
     }
-    
-    
+
     // Non-Natural Person Update
-    
     @RequestMapping(value = "/viewer/landrecords/saveNonNaturalPersonForEditing", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity saveNonNaturalPersonForEditing(HttpServletResponse response, @RequestBody NonNaturalPerson pfe) {
@@ -417,47 +408,38 @@ public class LandRecordsController {
                     .body("Failed to save record - " + e.getMessage());
         }
     }
-    
-    
-    
-    
-    
-    
-    
+
     @RequestMapping(value = "/viewer/landrecords/tenuretype/", method = RequestMethod.GET)
     @ResponseBody
     public List<ShareType> tenureList() {
-    
-    	List<ShareType> sharetype = new ArrayList<ShareType>();
-    	List<ShareType> sharetypelist = landRecordsService.findAllTenureList();
-    	for(ShareType obj: sharetypelist){
-    		if(obj.getIsactive()){
-    			sharetype.add(obj);
-    		}
-    		
-    	}
-    	
-        return sharetype;
 
-         
+        List<ShareType> sharetype = new ArrayList<ShareType>();
+        List<ShareType> sharetypelist = landRecordsService.findAllTenureList();
+        for (ShareType obj : sharetypelist) {
+            if (obj.getIsactive()) {
+                sharetype.add(obj);
+            }
+
+        }
+
+        return sharetype;
 
     }
 
     @RequestMapping(value = "/viewer/landrecords/socialtenure/{id}", method = RequestMethod.GET)
     @ResponseBody
     public List<SocialTenureRelationship> socialTenureList(@PathVariable Long id) {
-  
-    	 List<SocialTenureRelationship>  lst= new ArrayList<SocialTenureRelationship>();
-    	 lst= landRecordsService.findAllSocialTenureByUsin(id);;
-    	 if(lst.size()>0)
-    	 {
-    		 for(SocialTenureRelationship obj:lst){
-    			 
-    			 LaParty objLaParty=laPartyDao.getPartyIdByID(obj.getPartyid()); 
-    			 obj.setLaParty(objLaParty);
-    		 }
-    	 }
-    	 
+
+        List<SocialTenureRelationship> lst = new ArrayList<SocialTenureRelationship>();
+        lst = landRecordsService.findAllSocialTenureByUsin(id);;
+        if (lst.size() > 0) {
+            for (SocialTenureRelationship obj : lst) {
+
+                LaParty objLaParty = laPartyDao.getPartyIdByID(obj.getPartyid());
+                obj.setLaParty(objLaParty);
+            }
+        }
+
         return lst;
     }
 
@@ -486,68 +468,60 @@ public class LandRecordsController {
             int proposedUse = ServletRequestUtils.getRequiredIntParameter(request, "proposed_use");
             int claimNumber = ServletRequestUtils.getRequiredIntParameter(request, "claimNumber");
             int aquisitiontype = ServletRequestUtils.getRequiredIntParameter(request, "aquisition_id");
-          //  int length_general = ServletRequestUtils.getRequiredIntParameter(request, "general_length");
-        
-        
+            //  int length_general = ServletRequestUtils.getRequiredIntParameter(request, "general_length");
+
             String neighbour_north = ServletRequestUtils.getRequiredStringParameter(request, "neighbor_north");
             String neighbour_south = ServletRequestUtils.getRequiredStringParameter(request, "neighbor_south");
             String neighbour_east = ServletRequestUtils.getRequiredStringParameter(request, "neighbor_east");
             String neighbour_west = ServletRequestUtils.getRequiredStringParameter(request, "neighbor_west");
             int landType = ServletRequestUtils.getRequiredIntParameter(request, "land_type");
-            int tenureType=ServletRequestUtils.getRequiredIntParameter(request, "tenure_type"); // share 
-            int tenureclass_id=ServletRequestUtils.getRequiredIntParameter(request, "tenureclass_id"); //TenureClass
-            int tenureDuration =ServletRequestUtils.getRequiredIntParameter(request, "tenureDuration"); 
-            String Area =ServletRequestUtils.getRequiredStringParameter(request, "area"); 
+            int tenureType = ServletRequestUtils.getRequiredIntParameter(request, "tenure_type"); // share 
+            int tenureclass_id = ServletRequestUtils.getRequiredIntParameter(request, "tenureclass_id"); //TenureClass
+            int tenureDuration = ServletRequestUtils.getRequiredIntParameter(request, "tenureDuration");
+            String Area = ServletRequestUtils.getRequiredStringParameter(request, "area");
             ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(Usin).get(0);
-            
+
             Double area = new Double(Area);
-            
-            
-            if(tenureType>0){
-            	ShareType objShareType=	ShareTypeDao.getShareTypeById(tenureType);
-            	spatialUnit.setLaRightLandsharetype(objShareType);
+
+            if (tenureType > 0) {
+                ShareType objShareType = ShareTypeDao.getShareTypeById(tenureType);
+                spatialUnit.setLaRightLandsharetype(objShareType);
             }
-            if(aquisitiontype>0){
-            	AcquisitionType aquisitionobj= new AcquisitionType();
-            	aquisitionobj.setAcquisitiontypeid(aquisitiontype);
-            	spatialUnit.setLaRightAcquisitiontype(aquisitionobj);
+            if (aquisitiontype > 0) {
+                AcquisitionType aquisitionobj = new AcquisitionType();
+                aquisitionobj.setAcquisitiontypeid(aquisitiontype);
+                spatialUnit.setLaRightAcquisitiontype(aquisitionobj);
             }
-            if(tenureclass_id>0){
-            	spatialUnit.setTenureclassid(tenureclass_id);
+            if (tenureclass_id > 0) {
+                spatialUnit.setTenureclassid(tenureclass_id);
             }
-            
-            if(tenureDuration>0){
-            	spatialUnit.setOccupancylength(tenureDuration);
+
+            if (tenureDuration > 0) {
+                spatialUnit.setOccupancylength(tenureDuration);
             }
-            
+
             spatialUnit.setClaimno(claimNumber);
-            
-            if(proposedUse>0){
-            	spatialUnit.setProposedused(proposedUse);
+
+            if (proposedUse > 0) {
+                spatialUnit.setProposedused(proposedUse);
             }
-            
+
             spatialUnit.setNeighborEast(neighbour_east);
             spatialUnit.setNeighborNorth(neighbour_north);
             spatialUnit.setNeighborSouth(neighbour_south);
             spatialUnit.setNeighborWest(neighbour_west);
             spatialUnit.setArea(area);
-         
 
             if (existingUse != 0) {
                 LandUseType existingObj = landRecordsService.findLandUseById(existingUse);
                 spatialUnit.setLaBaunitLandusetype(existingObj);
             }
 
-            
-
-          if (landType != 0) {
+            if (landType != 0) {
                 LandType landTypeObj = landRecordsService.findLandType(landType);
                 spatialUnit.setLaBaunitLandtype(landTypeObj);
             }
 
-
-
-            
             claimBasicService.saveClaimBasicDAO(spatialUnit);
             return true;
         } catch (Exception e) {
@@ -642,12 +616,12 @@ public class LandRecordsController {
     public List<ClaimType> getClaimTypes() {
         List<ClaimType> list = new ArrayList<>();
         try {
-        	List<ClaimType>  ClaimTypelist = landRecordsService.getClaimTypes();
-        	for(ClaimType obj: ClaimTypelist){
-        		if(obj.isActive()){
-        		list.add(obj);
-        		}
-        	}
+            List<ClaimType> ClaimTypelist = landRecordsService.getClaimTypes();
+            for (ClaimType obj : ClaimTypelist) {
+                if (obj.isActive()) {
+                    list.add(obj);
+                }
+            }
         } catch (Exception e) {
             logger.error(e);
             return list;
@@ -726,13 +700,13 @@ public class LandRecordsController {
         long disputeId;
         int idTypeCode;
         String idNumber;
-        String address="";
-        
+        String address = "";
+
         String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
-		
-		Long user_id = userObj.getId();
-		
+        User userObj = userService.findByUniqueName(username);
+
+        Long user_id = userObj.getId();
+
         NaturalPerson person = new NaturalPerson();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -749,13 +723,13 @@ public class LandRecordsController {
                 logger.error(e);
             }
 
-           // parentNonNaturalId = ServletRequestUtils.getLongParameter(request, "parentNonNaturalId", 0);
+            // parentNonNaturalId = ServletRequestUtils.getLongParameter(request, "parentNonNaturalId", 0);
             disputeId = ServletRequestUtils.getLongParameter(request, "personDisputeId", 0);
             first_name = ServletRequestUtils.getRequiredStringParameter(request, "fname");
             middle_name = ServletRequestUtils.getRequiredStringParameter(request, "mname");
             last_name = ServletRequestUtils.getRequiredStringParameter(request, "lname");
             mobile_number = ServletRequestUtils.getRequiredStringParameter(request, "mobile_natural");
-            address  =  ServletRequestUtils.getRequiredStringParameter(request, "address");    
+            address = ServletRequestUtils.getRequiredStringParameter(request, "address");
             try {
                 dob = ServletRequestUtils.getRequiredStringParameter(request, "dob");
                 if (!StringUtils.isEmpty(dob)) {
@@ -770,9 +744,9 @@ public class LandRecordsController {
             idNumber = ServletRequestUtils.getRequiredStringParameter(request, "idNumber");
             maritalid = ServletRequestUtils.getRequiredIntParameter(request, "marital_status");
             genderid = ServletRequestUtils.getRequiredIntParameter(request, "gender");
-           // length_natural = ServletRequestUtils.getRequiredIntParameter(request, "natual_length");
+            // length_natural = ServletRequestUtils.getRequiredIntParameter(request, "natual_length");
             project_name = ServletRequestUtils.getRequiredStringParameter(request, "projectname_key");
-            
+
             LaParty laParty = new LaParty();
             try {
                 newnatural_length = ServletRequestUtils.getRequiredIntParameter(request, "newnatural_length");
@@ -780,30 +754,27 @@ public class LandRecordsController {
                 logger.error(e);
             }
 
-            if (disputeId ==0){
-            PersonType personType = registrationRecordsService.getPersonTypeById(3);
-            laParty.setLaPartygroupPersontype(personType);
-        	person.setLaPartygroupPersontype(personType);
-            }else
-            {
-            	PersonType personType = registrationRecordsService.getPersonTypeById(10);
+            if (disputeId == 0) {
+                PersonType personType = registrationRecordsService.getPersonTypeById(3);
                 laParty.setLaPartygroupPersontype(personType);
-            	person.setLaPartygroupPersontype(personType);
+                person.setLaPartygroupPersontype(personType);
+            } else {
+                PersonType personType = registrationRecordsService.getPersonTypeById(10);
+                laParty.setLaPartygroupPersontype(personType);
+                person.setLaPartygroupPersontype(personType);
             }
-
 
             if (id != 0) {
-            	person.setPartyid(id);
-            }else
-            {
-            	laParty.setCreatedby(user_id.intValue());
-     			laParty.setCreateddate(new Date());
-     			//laParty.setLaPartygroupPersontype(personType);
-     			
-     			 person.setModifiedby(user_id.intValue());
-                 person.setModifieddate(new Date());
+                person.setPartyid(id);
+            } else {
+                laParty.setCreatedby(user_id.intValue());
+                laParty.setCreateddate(new Date());
+                //laParty.setLaPartygroupPersontype(personType);
+
+                person.setModifiedby(user_id.intValue());
+                person.setModifieddate(new Date());
             }
-            
+
             person.setFirstname(first_name);
             person.setMiddlename(middle_name);
             person.setLastname(last_name);
@@ -815,174 +786,151 @@ public class LandRecordsController {
             person.setCreatedby(user_id.intValue());
             person.setCreateddate(new Date());
             person.setContactno(mobile_number);
-            
+
             try {
-				ProjectArea obj=projectAreaDAO.findProjectAreaByProjectId(Integer.parseInt(project_name));
-				
-				person.setLaSpatialunitgroup1(obj.getLaSpatialunitgroup1());
-				person.setLaSpatialunitgroup2(obj.getLaSpatialunitgroup2());
-				person.setLaSpatialunitgroup3(obj.getLaSpatialunitgroup3());
-				person.setLaSpatialunitgroup4(obj.getLaSpatialunitgroup4());
-				
-				person.setLaSpatialunitgroupHierarchy1(obj.getLaSpatialunitgroupHierarchy1());
-				person.setLaSpatialunitgroupHierarchy2(obj.getLaSpatialunitgroupHierarchy2());
-				person.setLaSpatialunitgroupHierarchy3(obj.getLaSpatialunitgroupHierarchy3());
-				person.setLaSpatialunitgroupHierarchy4(obj.getLaSpatialunitgroupHierarchy4());
-				
-				
-				
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            
+                ProjectArea obj = projectAreaDAO.findProjectAreaByProjectId(Integer.parseInt(project_name));
+
+                person.setLaSpatialunitgroup1(obj.getLaSpatialunitgroup1());
+                person.setLaSpatialunitgroup2(obj.getLaSpatialunitgroup2());
+                person.setLaSpatialunitgroup3(obj.getLaSpatialunitgroup3());
+                person.setLaSpatialunitgroup4(obj.getLaSpatialunitgroup4());
+
+                person.setLaSpatialunitgroupHierarchy1(obj.getLaSpatialunitgroupHierarchy1());
+                person.setLaSpatialunitgroupHierarchy2(obj.getLaSpatialunitgroupHierarchy2());
+                person.setLaSpatialunitgroupHierarchy3(obj.getLaSpatialunitgroupHierarchy3());
+                person.setLaSpatialunitgroupHierarchy4(obj.getLaSpatialunitgroupHierarchy4());
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
             if (idTypeCode != 0) {
-            	IdType idType = registrationRecordsService.getIDTypeDetailsByID(idTypeCode);
+                IdType idType = registrationRecordsService.getIDTypeDetailsByID(idTypeCode);
                 person.setLaPartygroupIdentitytype(idType);
             } else {
                 person.setLaPartygroupIdentitytype(null);
             }
 
-
             if (genderid != 0) {
                 person.setGenderid(genderid);
             }
 
-          
             if (maritalid != 0) {
-            	  MaritalStatus maritalStatus = registrationRecordsService.getMaritalStatusByID(maritalid);
+                MaritalStatus maritalStatus = registrationRecordsService.getMaritalStatusByID(maritalid);
                 person.setLaPartygroupMaritalstatus(maritalStatus);
             }
 
-         
             //For updating in Attribute Values Table
             person = landRecordsService.editnatural(person);
-            
-			Long partyId = 0l;
-			try {
-							person = registrationRecordsService.saveNaturalPerson(person);
-				partyId = person.getPartyid();
-			} catch (Exception er) {
-				er.printStackTrace();
-				return false;
-			}
-			Status status = registrationRecordsService.getStatusById(1);
-			
-			 if (disputeId ==0){
-				 SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
-				 LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
-				  if (id != 0) {
-					  socialTenureRelationship=socialTenureRelationshipDao.getSocialTenureRelationshipByLandIdPartyIdandPersonTypeID(usin, id, 3);
-					  laExtTransactiondetail=socialTenureRelationship.getLaExtTransactiondetail();
-		            }else
-		            {
-		            	socialTenureRelationship = new SocialTenureRelationship();
-		            	 laExtTransactiondetail = new LaExtTransactiondetail();
-		            }
-				  
-				
-				
-				
-				socialTenureRelationship.setCreatedby(user_id.intValue());
-				socialTenureRelationship.setPartyid(partyId);
-				socialTenureRelationship.setLaPartygroupPersontype(registrationRecordsService.getPersonTypeById(3));
-				socialTenureRelationship.setCreateddate(new Date());
-				socialTenureRelationship.setIsactive(true);
-				socialTenureRelationship.setLandid(usin);
-				
-			
-				laExtTransactiondetail.setCreatedby(user_id.intValue());
-				laExtTransactiondetail.setCreateddate(new Date());
-				laExtTransactiondetail.setIsactive(true);
-				laExtTransactiondetail.setLaExtApplicationstatus(status);//new approved?
-				laExtTransactiondetail.setModuletransid(partyId.intValue());
-				laExtTransactiondetail.setRemarks("");
-				// laExtTransactiondetail.setLaExtPersonlandmappings(lstSocialTenureRelationships);
 
-				socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
-				
-				
-				try {
-					socialTenureRelationship =registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
-				} catch (Exception er) {
-					er.printStackTrace();
-					return false;
-				}
-				 
-			 }
-			  
-			
+            Long partyId = 0l;
+            try {
+                person = registrationRecordsService.saveNaturalPerson(person);
+                partyId = person.getPartyid();
+            } catch (Exception er) {
+                er.printStackTrace();
+                return false;
+            }
+            Status status = registrationRecordsService.getStatusById(1);
 
-           // Add person to disputing parties
- 
-            if (disputeId > 0 ) {
-            	LaExtDispute  dispute = laExtDisputeService.findLaExtDisputeByid((int)disputeId);
+            if (disputeId == 0) {
+                SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
+                LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+                if (id != 0) {
+                    socialTenureRelationship = socialTenureRelationshipDao.getSocialTenureRelationshipByLandIdPartyIdandPersonTypeID(usin, id, 3);
+                    laExtTransactiondetail = socialTenureRelationship.getLaExtTransactiondetail();
+                } else {
+                    socialTenureRelationship = new SocialTenureRelationship();
+                    laExtTransactiondetail = new LaExtTransactiondetail();
+                }
+
+                socialTenureRelationship.setCreatedby(user_id.intValue());
+                socialTenureRelationship.setPartyid(partyId);
+                socialTenureRelationship.setLaPartygroupPersontype(registrationRecordsService.getPersonTypeById(3));
+                socialTenureRelationship.setCreateddate(new Date());
+                socialTenureRelationship.setIsactive(true);
+                socialTenureRelationship.setLandid(usin);
+
+                laExtTransactiondetail.setCreatedby(user_id.intValue());
+                laExtTransactiondetail.setCreateddate(new Date());
+                laExtTransactiondetail.setIsactive(true);
+                laExtTransactiondetail.setLaExtApplicationstatus(status);//new approved?
+                laExtTransactiondetail.setModuletransid(partyId.intValue());
+                laExtTransactiondetail.setRemarks("");
+                // laExtTransactiondetail.setLaExtPersonlandmappings(lstSocialTenureRelationships);
+
+                socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
+
+                try {
+                    socialTenureRelationship = registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
+                } catch (Exception er) {
+                    er.printStackTrace();
+                    return false;
+                }
+
+            }
+
+            // Add person to disputing parties
+            if (disputeId > 0) {
+                LaExtDispute dispute = laExtDisputeService.findLaExtDisputeByid((int) disputeId);
                 if (dispute != null) {
-                	LaExtTransactiondetail laExtTransactiondetail1= new  LaExtTransactiondetail();
-                	LaExtDisputelandmapping objLaExtDisputelandmapping= new LaExtDisputelandmapping();
-                	 if (id != 0) {
-                		 objLaExtDisputelandmapping= laExtDisputelandmappingDAO.findLaExtDisputelandmappingByLandIdDisputeIdAndPartyId(usin, (int)disputeId, id);
-                		 laExtTransactiondetail1=objLaExtDisputelandmapping.getLaExtTransactiondetail();
-   		            }else
-   		            {
-   		            	laExtTransactiondetail1 = new LaExtTransactiondetail();
-   		            	objLaExtDisputelandmapping = new LaExtDisputelandmapping();
-   		            }
-                	 
-                	    laExtTransactiondetail1.setCreatedby(user_id.intValue());
-                	    laExtTransactiondetail1.setCreateddate(new Date());
-        				laExtTransactiondetail1.setIsactive(true);
-        				laExtTransactiondetail1.setLaExtApplicationstatus(status);//new approved?
-        				laExtTransactiondetail1.setModuletransid(partyId.intValue());
-        				laExtTransactiondetail1.setRemarks("");
-        				
-        				objLaExtDisputelandmapping.setPersontypeid(10);
-        				objLaExtDisputelandmapping.setComment("");
-        				objLaExtDisputelandmapping.setCreatedby(user_id.intValue());
-        				objLaExtDisputelandmapping.setCreateddate(new Date());
+                    LaExtTransactiondetail laExtTransactiondetail1 = new LaExtTransactiondetail();
+                    LaExtDisputelandmapping objLaExtDisputelandmapping = new LaExtDisputelandmapping();
+                    if (id != 0) {
+                        objLaExtDisputelandmapping = laExtDisputelandmappingDAO.findLaExtDisputelandmappingByLandIdDisputeIdAndPartyId(usin, (int) disputeId, id);
+                        laExtTransactiondetail1 = objLaExtDisputelandmapping.getLaExtTransactiondetail();
+                    } else {
+                        laExtTransactiondetail1 = new LaExtTransactiondetail();
+                        objLaExtDisputelandmapping = new LaExtDisputelandmapping();
+                    }
+
+                    laExtTransactiondetail1.setCreatedby(user_id.intValue());
+                    laExtTransactiondetail1.setCreateddate(new Date());
+                    laExtTransactiondetail1.setIsactive(true);
+                    laExtTransactiondetail1.setLaExtApplicationstatus(status);//new approved?
+                    laExtTransactiondetail1.setModuletransid(partyId.intValue());
+                    laExtTransactiondetail1.setRemarks("");
+
+                    objLaExtDisputelandmapping.setPersontypeid(10);
+                    objLaExtDisputelandmapping.setComment("");
+                    objLaExtDisputelandmapping.setCreatedby(user_id.intValue());
+                    objLaExtDisputelandmapping.setCreateddate(new Date());
 //        				objLaExtDisputelandmapping.setLaExtDisputetype(dispute.getLaExtDisputetype());
-        				objLaExtDisputelandmapping.setIsactive(true);
+                    objLaExtDisputelandmapping.setIsactive(true);
 //        				objLaExtDisputelandmapping.setLaExtDispute(dispute);
-        				objLaExtDisputelandmapping.setLandid(usin);
-        				objLaExtDisputelandmapping.setPartyid(partyId);
-        			   objLaExtDisputelandmapping.setLaExtTransactiondetail(laExtTransactiondetail1);
-                	 
-                	 
-        				try{
-        					
-        					laExtDisputelandmappingService.saveLaExtDisputelandmapping(objLaExtDisputelandmapping);
-        				}catch(Exception e)
-        				{
-        					e.printStackTrace();
-        					return false;
-        				}
-                	
+                    objLaExtDisputelandmapping.setLandid(usin);
+                    objLaExtDisputelandmapping.setPartyid(partyId);
+                    objLaExtDisputelandmapping.setLaExtTransactiondetail(laExtTransactiondetail1);
+
+                    try {
+
+                        laExtDisputelandmappingService.saveLaExtDisputelandmapping(objLaExtDisputelandmapping);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+
                 }
             }
 
-         
-
-         /*   try {
+            /*   try {
                 userDataService.updateNaturalPersonAttribValues(person, project_name);
             } catch (Exception e) {
                 logger.error(e);
             }*/
-
             return true;
 
         } catch (Exception e) {
             logger.error(e);
             return false;
         }
-		
-    
+
     }
 
     @RequestMapping(value = "/viewer/landrecords/updatenonnatural", method = RequestMethod.POST)
     @ResponseBody
-    public boolean updateNonNaturalPerson(HttpServletRequest request, HttpServletResponse response,Principal principal) {
+    public boolean updateNonNaturalPerson(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 
         Long id = 0L;
         String institute_name = "";
@@ -998,135 +946,112 @@ public class LandRecordsController {
         NonNaturalPerson nonPerson = new NonNaturalPerson();
         LaParty laParty = new LaParty();
         String username = principal.getName();
-		
+
         User userObj = userService.findByUniqueName(username);
-		Long user_id = userObj.getId();
-		Long partyId = 0l;
-		
-		
+        Long user_id = userObj.getId();
+        Long partyId = 0l;
+
         try {
             id = ServletRequestUtils.getRequiredLongParameter(request, "non_natural_key");
             long usin = ServletRequestUtils.getLongParameter(request, "nonnatural_usin", 0);
             institute_name = ServletRequestUtils.getRequiredStringParameter(request, "institution");
             address = ServletRequestUtils.getRequiredStringParameter(request, "address");
             phone_no = ServletRequestUtils.getRequiredStringParameter(request, "mobile_no");
-           // poc_id = ServletRequestUtils.getRequiredLongParameter(request, "poc_id");
-           // mobileGroupId = ServletRequestUtils.getRequiredStringParameter(request, "mobileGroupId");
-          //  length_nonnatural = ServletRequestUtils.getRequiredIntParameter(request, "nonnatual_length");
+            // poc_id = ServletRequestUtils.getRequiredLongParameter(request, "poc_id");
+            // mobileGroupId = ServletRequestUtils.getRequiredStringParameter(request, "mobileGroupId");
+            //  length_nonnatural = ServletRequestUtils.getRequiredIntParameter(request, "nonnatual_length");
             project_nonnatural = ServletRequestUtils.getRequiredStringParameter(request, "projectname_key2");
 
             group_type = ServletRequestUtils.getRequiredIntParameter(request, "group_type");
             nonPerson.setOrganizationname(institute_name);
             nonPerson.setIsactive(true);
             nonPerson.setContactno(phone_no);
-            
+
             PersonType personType = registrationRecordsService.getPersonTypeById(2);
             Status status = registrationRecordsService.getStatusById(1);
-            GroupType objGroupType= groupTypeDao.getGroupTypeById(group_type);
+            GroupType objGroupType = groupTypeDao.getGroupTypeById(group_type);
 
             nonPerson.setCreatedby(user_id.intValue());
-        	nonPerson.setCreateddate(new Date());
-        	nonPerson.setLaPartygroupPersontype(personType);
- 			
-        	
-        	
+            nonPerson.setCreateddate(new Date());
+            nonPerson.setLaPartygroupPersontype(personType);
+
             if (id != 0) {
-            	nonPerson.setPartyid(id);
-            }else
-            {
-            	
-            	nonPerson.setModifiedby(user_id.intValue());
-            	nonPerson.setModifieddate(new Date());
+                nonPerson.setPartyid(id);
+            } else {
+
+                nonPerson.setModifiedby(user_id.intValue());
+                nonPerson.setModifieddate(new Date());
             }
-            
-            
+
             nonPerson.setCreatedby(user_id.intValue());
-        	nonPerson.setModifieddate(new Date());
-        	nonPerson.setGroupType(objGroupType);
-        	
-        	
-        	
-        	  try {
-  				ProjectArea obj=projectAreaDAO.findProjectAreaByProjectId(Integer.parseInt(project_nonnatural));
-  				
-  				nonPerson.setLaSpatialunitgroup1(obj.getLaSpatialunitgroup1());
-  				nonPerson.setLaSpatialunitgroup2(obj.getLaSpatialunitgroup2());
-  				nonPerson.setLaSpatialunitgroup3(obj.getLaSpatialunitgroup3());
-  				nonPerson.setLaSpatialunitgroup4(obj.getLaSpatialunitgroup4());
-  				
-  				nonPerson.setLaSpatialunitgroupHierarchy1(obj.getLaSpatialunitgroupHierarchy1());
-  				nonPerson.setLaSpatialunitgroupHierarchy2(obj.getLaSpatialunitgroupHierarchy2());
-  				nonPerson.setLaSpatialunitgroupHierarchy3(obj.getLaSpatialunitgroupHierarchy3());
-  				nonPerson.setLaSpatialunitgroupHierarchy4(obj.getLaSpatialunitgroupHierarchy4());
-  				
-  				
-  			} catch (Exception e) {
-  				// TODO Auto-generated catch block
-  				e.printStackTrace();
-  			}
-        	  
-        	  
-        	  try {
+            nonPerson.setModifieddate(new Date());
+            nonPerson.setGroupType(objGroupType);
 
-          		nonPerson.setLaPartygroupPersontype(personType);
-          		nonPerson = landRecordsService.addNonNaturalPerson(nonPerson);
-          		partyId = nonPerson.getPartyid();
-          	} catch (Exception er) {
-          		er.printStackTrace();
-          		return false;
-          	}
+            try {
+                ProjectArea obj = projectAreaDAO.findProjectAreaByProjectId(Integer.parseInt(project_nonnatural));
 
-        	  
-        	  
-        	  
+                nonPerson.setLaSpatialunitgroup1(obj.getLaSpatialunitgroup1());
+                nonPerson.setLaSpatialunitgroup2(obj.getLaSpatialunitgroup2());
+                nonPerson.setLaSpatialunitgroup3(obj.getLaSpatialunitgroup3());
+                nonPerson.setLaSpatialunitgroup4(obj.getLaSpatialunitgroup4());
+
+                nonPerson.setLaSpatialunitgroupHierarchy1(obj.getLaSpatialunitgroupHierarchy1());
+                nonPerson.setLaSpatialunitgroupHierarchy2(obj.getLaSpatialunitgroupHierarchy2());
+                nonPerson.setLaSpatialunitgroupHierarchy3(obj.getLaSpatialunitgroupHierarchy3());
+                nonPerson.setLaSpatialunitgroupHierarchy4(obj.getLaSpatialunitgroupHierarchy4());
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                nonPerson.setLaPartygroupPersontype(personType);
+                nonPerson = landRecordsService.addNonNaturalPerson(nonPerson);
+                partyId = nonPerson.getPartyid();
+            } catch (Exception er) {
+                er.printStackTrace();
+                return false;
+            }
 
             // Create new right if non person is new
-        	  SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
-        	  LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
-        	  
-			  if (id != 0) {
-				  socialTenureRelationship=socialTenureRelationshipDao.getSocialTenureRelationshipByLandIdPartyIdandPersonTypeID(usin, id, 2);
-				  laExtTransactiondetail=socialTenureRelationship.getLaExtTransactiondetail();
-	            }else
-	            {
-	            	socialTenureRelationship = new SocialTenureRelationship();
-	            	laExtTransactiondetail = new LaExtTransactiondetail();
-	            }
-			  
-			
-			
-			
-			socialTenureRelationship.setCreatedby(user_id.intValue());
-			socialTenureRelationship.setPartyid(partyId);
-			socialTenureRelationship.setLaPartygroupPersontype(personType);
-			socialTenureRelationship.setCreateddate(new Date());
-			socialTenureRelationship.setIsactive(true);
-			socialTenureRelationship.setLandid(usin);
-			
-			
-			laExtTransactiondetail.setCreatedby(user_id.intValue());
-			laExtTransactiondetail.setCreateddate(new Date());
-			laExtTransactiondetail.setIsactive(true);
-			laExtTransactiondetail.setLaExtApplicationstatus(status);//new approved?
-			laExtTransactiondetail.setModuletransid(partyId.intValue());
-			laExtTransactiondetail.setRemarks("");
+            SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
+            LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
 
-			socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
-			
-			
-			try {
-				socialTenureRelationship =registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
-			} catch (Exception er) {
-				er.printStackTrace();
-				return false;
-			}
-			 
-		 
-        
-        	  
+            if (id != 0) {
+                socialTenureRelationship = socialTenureRelationshipDao.getSocialTenureRelationshipByLandIdPartyIdandPersonTypeID(usin, id, 2);
+                laExtTransactiondetail = socialTenureRelationship.getLaExtTransactiondetail();
+            } else {
+                socialTenureRelationship = new SocialTenureRelationship();
+                laExtTransactiondetail = new LaExtTransactiondetail();
+            }
+
+            socialTenureRelationship.setCreatedby(user_id.intValue());
+            socialTenureRelationship.setPartyid(partyId);
+            socialTenureRelationship.setLaPartygroupPersontype(personType);
+            socialTenureRelationship.setCreateddate(new Date());
+            socialTenureRelationship.setIsactive(true);
+            socialTenureRelationship.setLandid(usin);
+
+            laExtTransactiondetail.setCreatedby(user_id.intValue());
+            laExtTransactiondetail.setCreateddate(new Date());
+            laExtTransactiondetail.setIsactive(true);
+            laExtTransactiondetail.setLaExtApplicationstatus(status);//new approved?
+            laExtTransactiondetail.setModuletransid(partyId.intValue());
+            laExtTransactiondetail.setRemarks("");
+
+            socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetail);
+
+            try {
+                socialTenureRelationship = registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
+            } catch (Exception er) {
+                er.printStackTrace();
+                return false;
+            }
 
             //AttributeValues attributeValues=new AttributeValues();
-         /*   if (length_nonnatural > 0) {
+            /*   if (length_nonnatural > 0) {
                 for (int i = 0; i < length_nonnatural; i++) {
 
                     StringBuilder sb = new StringBuilder();
@@ -1142,14 +1067,12 @@ public class LandRecordsController {
                     }
                 }
             }*/
-
             //For Updating Non Natural in Attribute Vlaues
-           /* try {
+            /* try {
                 userDataService.updateNonNaturalPersonAttribValues(nonPerson, project_nonnatural);
             } catch (Exception e) {
                 logger.error(e);
             }*/
-
             return true;
 
         } catch (Exception e) {
@@ -1162,9 +1085,9 @@ public class LandRecordsController {
     @ResponseBody
     public String deleteDispute(@PathVariable Long id) {
         try {
-           // Dispute dispute = landRecordsService.getDispute(id);
-        	
-            LaExtDisputelandmapping   dispute=laExtDisputelandmappingDAO.findLaExtDisputelandmappingById(id.intValue());
+            // Dispute dispute = landRecordsService.getDispute(id);
+
+            LaExtDisputelandmapping dispute = laExtDisputelandmappingDAO.findLaExtDisputelandmappingById(id.intValue());
 
             if (dispute == null) {
                 return "Dispute not found.";
@@ -1181,7 +1104,6 @@ public class LandRecordsController {
 //            } else {
 //                return "Failed to delete dispute";
 //            }
-            
             return RESPONSE_OK;
 
         } catch (Exception e) {
@@ -1197,8 +1119,8 @@ public class LandRecordsController {
             long id = ServletRequestUtils.getRequiredLongParameter(request, "resolveDisputeId");
             String resolutionText = ServletRequestUtils.getRequiredStringParameter(request, "resolutionText");
 
-           // Dispute dispute = landRecordsService.getDispute(id);
-            LaExtDisputelandmapping   dispute=laExtDisputelandmappingDAO.findLaExtDisputelandmappingById((int) id);
+            // Dispute dispute = landRecordsService.getDispute(id);
+            LaExtDisputelandmapping dispute = laExtDisputelandmappingDAO.findLaExtDisputelandmappingById((int) id);
 
             if (dispute == null) {
                 return "Dispute not found.";
@@ -1212,13 +1134,11 @@ public class LandRecordsController {
 
             // Resolve dispute 
 //            dispute.setResolutionText(resolutionText);
-
 //            if (landRecordsService.resolveDispute(dispute)) {
 //                return RESPONSE_OK;
 //            } else {
 //                return "Failed to resolve dispute";
 //            }
-            
             return RESPONSE_OK;
 
         } catch (Exception e) {
@@ -1228,29 +1148,23 @@ public class LandRecordsController {
     }
 
     private String validateDisputeForDelete(LaExtDisputelandmapping dispute) {
-       // SpatialUnitTable parcel = landRecordsService.findSpatialUnitbyId((long)dispute.getId()).get(0);
+        // SpatialUnitTable parcel = landRecordsService.findSpatialUnitbyId((long)dispute.getId()).get(0);
         ClaimBasic parcel = spatialUnitService.getClaimsBasicByLandId(dispute.getLandid()).get(0);
-        
+
         // Allow delete only for parcels with new and referred statuses
-      /*  if (parcel.getStatus().getWorkflowStatusId() != Status.STATUS_NEW
+        /*  if (parcel.getStatus().getWorkflowStatusId() != Status.STATUS_NEW
                 && parcel.getStatus().getWorkflowStatusId() != Status.STATUS_REFERRED) {
             return "Disputes can not be managed for this claim";
         }*/
-        
-       
-
         // Allow delete only for parcels with new or disputed type
-       /* if (!parcel.getClaimType().getCode().toString().equalsIgnoreCase(ClaimType.CODE_NEW)
+        /* if (!parcel.getClaimType().getCode().toString().equalsIgnoreCase(ClaimType.CODE_NEW)
                 && !parcel.getClaimType().getCode().toString().equalsIgnoreCase(ClaimType.CODE_DISPUTED)) {
             return "Disputes can not be managed for this type of claims";
         }*/
-
-        
-        if (parcel.getClaimtypeid()!=3   && parcel.getClaimtypeid()!=1) {
+        if (parcel.getClaimtypeid() != 3 && parcel.getClaimtypeid() != 1) {
             return "Disputes can not be managed for this type of claims";
         }
-        
-        
+
         // Allow deletion only if ownership information exists
         List<SocialTenureRelationship> rights = landRecordsService.findAllSocialTenureByUsin(dispute.getLandid());
 
@@ -1279,110 +1193,96 @@ public class LandRecordsController {
 
     @RequestMapping(value = "/viewer/landrecords/updatedispute", method = RequestMethod.POST)
     @ResponseBody
-    public String updateDispute(HttpServletRequest request, HttpServletResponse response,Principal principal) {
-    	
-    	LaExtDispute objLaExtDispute = new LaExtDispute();
-    	String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
-		Long user_id = userObj.getId();
-		boolean disputedPerson = false;
-		boolean non_disputedPerson  = false;
-		
-		
+    public String updateDispute(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+
+        LaExtDispute objLaExtDispute = new LaExtDispute();
+        String username = principal.getName();
+        User userObj = userService.findByUniqueName(username);
+        Long user_id = userObj.getId();
+        boolean disputedPerson = false;
+        boolean non_disputedPerson = false;
+
         try {
             long usin = ServletRequestUtils.getRequiredLongParameter(request, "disputeUsin");
             int disputeTypeCode = ServletRequestUtils.getRequiredIntParameter(request, "cbxDisputeTypes");
             int disputestatus = ServletRequestUtils.getRequiredIntParameter(request, "Status");
-            
+
             String description = ServletRequestUtils.getRequiredStringParameter(request, "txtDisputeDescription");
 
             if (usin < 1) {
                 return "Spatial unit was not found";
             }
-            if(disputestatus==2){
-            List<LaExtDisputelandmapping> disputelandlst = laExtDisputelandmappingService.findLaExtDisputelandmappingListByLandId(usin);
-            for(LaExtDisputelandmapping obj: disputelandlst ){
-            	if(obj.getPersontypeid()== 10){
-            		disputedPerson=true;
-            	}
-            	else if(obj.getPersontypeid()== 3){
-            		non_disputedPerson= true;
-            	}
-            }
-            if(true){
-            for(LaExtDisputelandmapping obj: disputelandlst ){
-            	
-            	obj.setIsactive(false);
-            	laExtDisputelandmappingService.saveLaExtDisputelandmapping(obj);
-            	
-            	SocialTenureRelationship right = new SocialTenureRelationship();
-                right.setCreatedby(user_id.intValue());
-                right.setLandid(usin);
-                right.setPartyid(obj.getPartyid());
-                PersonType persontype = new PersonType();
-            	if(obj.getPersontypeid()== 10){
-            		persontype.setPersontypeid(10);
-            	}
-            	else if(obj.getPersontypeid()== 3){
-            		persontype.setPersontypeid(1);
-            	}
-                
-                
-                right.setLaPartygroupPersontype(persontype);
-                right.setLaExtTransactiondetail(obj.getLaExtTransactiondetail());
-                
-                long time= obj.getCreateddate().getTime();
-                right.setCreateddate(new Timestamp(time));
-                right.setIsactive(true);
-                
-                SocialTenureRelationship  socialTenurerelationship  = socialTenureRelationshipDao.saveSocialTenureRelationship(right);
-                
-                NaturalPerson personobj=null;
-                personobj=(NaturalPerson) laPartyDao.getPartyIdByID(socialTenurerelationship.getPartyid());
-                PersonType persontypeobj= new PersonType();
-                if(obj.getPersontypeid()== 10){
-                	persontypeobj.setPersontypeid(10);
-            	}
-            	else if(obj.getPersontypeid()== 3){
-            		persontypeobj.setPersontypeid(1);
-            	}
-                
-                
-                personobj.setLaPartygroupPersontype(persontypeobj);
-                naturalPersonDao.addNaturalPerson(personobj);
-            }
-            
-            ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(usin).get(0);
-            spatialUnit.setClaimtypeid(1);
-            claimBasicService.saveClaimBasicDAO(spatialUnit);
-          
+            if (disputestatus == 2) {
+                List<LaExtDisputelandmapping> disputelandlst = laExtDisputelandmappingService.findLaExtDisputelandmappingListByLandId(usin);
+                for (LaExtDisputelandmapping obj : disputelandlst) {
+                    if (obj.getPersontypeid() == 10) {
+                        disputedPerson = true;
+                    } else if (obj.getPersontypeid() == 3) {
+                        non_disputedPerson = true;
+                    }
+                }
+                if (true) {
+                    for (LaExtDisputelandmapping obj : disputelandlst) {
 
-            
-            if(usin>0){
-            	objLaExtDispute =laExtDisputeService.findLaExtDisputeByLandId( (new Long(usin).intValue()) );	
-            	objLaExtDispute.setLandid(usin);
-            	objLaExtDispute.setComment(description);
-            	objLaExtDispute.setStatus(disputestatus);
-            	objLaExtDispute.setDisputetypeid(disputeTypeCode);
-            	objLaExtDispute.setIsactive(false);
-            }
+                        obj.setIsactive(false);
+                        laExtDisputelandmappingService.saveLaExtDisputelandmapping(obj);
 
-            
-            laExtDisputeService.saveLaExtDispute(objLaExtDispute);
-            
-            return "true";
-            }
-            
-            
+                        SocialTenureRelationship right = new SocialTenureRelationship();
+                        right.setCreatedby(user_id.intValue());
+                        right.setLandid(usin);
+                        right.setPartyid(obj.getPartyid());
+                        PersonType persontype = new PersonType();
+                        if (obj.getPersontypeid() == 10) {
+                            persontype.setPersontypeid(10);
+                        } else if (obj.getPersontypeid() == 3) {
+                            persontype.setPersontypeid(1);
+                        }
+
+                        right.setLaPartygroupPersontype(persontype);
+                        right.setLaExtTransactiondetail(obj.getLaExtTransactiondetail());
+
+                        long time = obj.getCreateddate().getTime();
+                        right.setCreateddate(new Timestamp(time));
+                        right.setIsactive(true);
+
+                        SocialTenureRelationship socialTenurerelationship = socialTenureRelationshipDao.saveSocialTenureRelationship(right);
+
+                        NaturalPerson personobj = null;
+                        personobj = (NaturalPerson) laPartyDao.getPartyIdByID(socialTenurerelationship.getPartyid());
+                        PersonType persontypeobj = new PersonType();
+                        if (obj.getPersontypeid() == 10) {
+                            persontypeobj.setPersontypeid(10);
+                        } else if (obj.getPersontypeid() == 3) {
+                            persontypeobj.setPersontypeid(1);
+                        }
+
+                        personobj.setLaPartygroupPersontype(persontypeobj);
+                        naturalPersonDao.addNaturalPerson(personobj);
+                    }
+
+                    ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(usin).get(0);
+                    spatialUnit.setClaimtypeid(1);
+                    claimBasicService.saveClaimBasicDAO(spatialUnit);
+
+                    if (usin > 0) {
+                        objLaExtDispute = laExtDisputeService.findLaExtDisputeByLandId((new Long(usin).intValue()));
+                        objLaExtDispute.setLandid(usin);
+                        objLaExtDispute.setComment(description);
+                        objLaExtDispute.setStatus(disputestatus);
+                        objLaExtDispute.setDisputetypeid(disputeTypeCode);
+                        objLaExtDispute.setIsactive(false);
+                    }
+
+                    laExtDisputeService.saveLaExtDispute(objLaExtDispute);
+
+                    return "true";
+                }
+
                 return "False";
-                
-            
-            }
-            else {
-            	return "false";
-            }
 
-           
+            } else {
+                return "false";
+            }
 
         } catch (Exception e) {
             logger.error(e);
@@ -1395,7 +1295,6 @@ public class LandRecordsController {
 //    public boolean deleteDisputant(@PathVariable Long disputeId, @PathVariable Long partyId) {
 //        return landRecordsService.deleteDisputant(disputeId, partyId);
 //    }
-
     @RequestMapping(value = "/viewer/landrecords/updatetenure", method = RequestMethod.POST)
     @ResponseBody
     public boolean updateTenure(HttpServletRequest request, HttpServletResponse response) {
@@ -1465,7 +1364,6 @@ public class LandRecordsController {
 //                    if (tenureType > 0) {
 //                        ownershipRight.setShare_type(landRecordsService.findTenureType(tenureType));
 //                    }
-
 //                    if (parcel.getClaimType().getCode().equals(ClaimType.CODE_EXISTING)) {
 //                        ownershipRight.setCertNumber(certNumber);
 //                        if (!StringUtils.isEmpty(certDate)) {
@@ -1484,10 +1382,8 @@ public class LandRecordsController {
                     } else {
                         ownershipRight.getLaParty().getLaPartyPerson().getLaPartygroupRelationshiptype().setRelationshiptypeid(null);
                     }*/
-
 //                    ownershipRight.setJuridicalArea(juridicalArea);
 //                    ownershipRight.setTenureDuration(tenureDuration);
-
                     // Update/save tenure
                     try {
                         ownershipRight = landRecordsService.edittenure(ownershipRight);
@@ -1556,11 +1452,11 @@ public class LandRecordsController {
         String docName;
         String projectName;
         String recordationdate;
-        SourceDocument sourceDocument = new  SourceDocument();
-        
+        SourceDocument sourceDocument = new SourceDocument();
+
         String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
-		Long user_id = userObj.getId();
+        User userObj = userService.findByUniqueName(username);
+        Long user_id = userObj.getId();
 
         List<SourceDocument> sourceDocumentlist = new ArrayList();
 
@@ -1576,31 +1472,30 @@ public class LandRecordsController {
             recordationdate = ServletRequestUtils.getRequiredStringParameter(request, "recordationdate");
             partyid = ServletRequestUtils.getRequiredIntParameter(request, "personname");
 
-
             comments = ServletRequestUtils.getRequiredStringParameter(request, "remarkds");
 
             if (gid > 0) {
                 sourceDocumentlist = landRecordsService.findMultimediaByGid(new Long(usin));
             }
-            for(SourceDocument obj: sourceDocumentlist){
-            if(obj.getDocumentid().longValue()==gid.longValue()){
-            sourceDocument.setDocumentname(docName);
-            sourceDocument.setRemarks(comments);
-            sourceDocument.setLaSpatialunitLand(usin);
-            sourceDocument.setIsactive(true);
-            sourceDocument.setCreatedby(user_id.intValue());
-            sourceDocument.setCreateddate(obj.getCreateddate());
-            sourceDocument.setLaExtTransactiondetail(obj.getLaExtTransactiondetail());
-            sourceDocument.setDocumentlocation(obj.getDocumentlocation());
-            sourceDocument.setLaParty(obj.getLaParty());
-            sourceDocument.setRecordationdate(obj.getRecordationdate());
+            for (SourceDocument obj : sourceDocumentlist) {
+                if (obj.getDocumentid().longValue() == gid.longValue()) {
+                    sourceDocument.setDocumentname(docName);
+                    sourceDocument.setRemarks(comments);
+                    sourceDocument.setLaSpatialunitLand(usin);
+                    sourceDocument.setIsactive(true);
+                    sourceDocument.setCreatedby(user_id.intValue());
+                    sourceDocument.setCreateddate(obj.getCreateddate());
+                    sourceDocument.setLaExtTransactiondetail(obj.getLaExtTransactiondetail());
+                    sourceDocument.setDocumentlocation(obj.getDocumentlocation());
+                    sourceDocument.setLaParty(obj.getLaParty());
+                    sourceDocument.setRecordationdate(obj.getRecordationdate());
 
-            if (docType > 0) {
-                sourceDocument.setDocumenttypeid(docType);
-            } else {
-                sourceDocument.setDocumenttypeid(null);
-            }
-            	}
+                    if (docType > 0) {
+                        sourceDocument.setDocumenttypeid(docType);
+                    } else {
+                        sourceDocument.setDocumenttypeid(null);
+                    }
+                }
             }
             if (gid == 0) {
 //                // Save new document
@@ -1644,12 +1539,11 @@ public class LandRecordsController {
 //                    }
 //                }
             } else {
-            	sourceDocumentsDao.saveUploadedDocuments(sourceDocument);
+                sourceDocumentsDao.saveUploadedDocuments(sourceDocument);
             }
 
             //For Updating tenure in AttributeValues
 //            userDataService.updateMultimediaAttribValues(sourceDocument, projectName);
-
             return true;
         } catch (Exception e) {
             logger.error(e);
@@ -1714,18 +1608,17 @@ public class LandRecordsController {
     @RequestMapping(value = "/viewer/landrecords/tenureclass/", method = RequestMethod.GET)
     @ResponseBody
     public List<TenureClass> tenureclassList() {
-    	boolean flag =true;
-    	List<TenureClass> tenure = new ArrayList<TenureClass>();
-    	List<TenureClass> tenureobj = landRecordsService.findAllTenureClass();
-    	for(TenureClass obj: tenureobj){
-    		if(obj.getIsactive()== flag){
-    			tenure.add(obj);
-    		}
-    		else if(obj.getIsactive() != flag){
-    			
-    		}
-    	}
-    	
+        boolean flag = true;
+        List<TenureClass> tenure = new ArrayList<TenureClass>();
+        List<TenureClass> tenureobj = landRecordsService.findAllTenureClass();
+        for (TenureClass obj : tenureobj) {
+            if (obj.getIsactive() == flag) {
+                tenure.add(obj);
+            } else if (obj.getIsactive() != flag) {
+
+            }
+        }
+
         return tenure;
     }
 
@@ -1746,13 +1639,10 @@ public class LandRecordsController {
     public List<ProjectHamlet> findAllHamlet(@PathVariable String project) {
         return projectService.findHamletByProject(project);
     }
-    
+
 //    public List<Project> findAllProjects(@PathVariable String project){
 //    	
 //    }
-    
-    
-
     @RequestMapping(value = "/viewer/landrecords/occupancytype/", method = RequestMethod.GET)
     @ResponseBody
     public List<OccupancyType> OccTypeList() {
@@ -1893,29 +1783,22 @@ public class LandRecordsController {
     @RequestMapping(value = "/viewer/landrecords/disputes/{usin}", method = RequestMethod.GET)
     @ResponseBody
     public LaExtDisputeDTO getDisputes(@PathVariable long usin) {
-    	LaExtDispute objLaExtDispute=  laExtDisputeService.findLaExtDisputeByLandId((int)usin);
-    	LaExtDisputeDTO objLaExtDisputeDTO = new LaExtDisputeDTO();
-    	List<LaParty> lstLaParty= new ArrayList<LaParty>();
-    	if(null!=objLaExtDispute)
-    	{
-    			objLaExtDisputeDTO.setComment(objLaExtDispute.getComment());
-    			objLaExtDisputeDTO.setDisputeid(objLaExtDispute.getDisputeid());
-    			objLaExtDisputeDTO.setLandid(objLaExtDispute.getLandid());
-    			objLaExtDisputeDTO.setStatus(objLaExtDispute.getStatus());
-   		    	objLaExtDisputeDTO.setStatus(objLaExtDispute.getStatus());
-   		    	objLaExtDisputeDTO.setDisputetypeid(objLaExtDispute.getDisputetypeid());
-    			
-    	}
-    		
-    	   	return objLaExtDisputeDTO;
-    		
-    	}
-    	
- 
-    	
-    	
-    	
-    
+        LaExtDispute objLaExtDispute = laExtDisputeService.findLaExtDisputeByLandId((int) usin);
+        LaExtDisputeDTO objLaExtDisputeDTO = new LaExtDisputeDTO();
+        List<LaParty> lstLaParty = new ArrayList<LaParty>();
+        if (null != objLaExtDispute) {
+            objLaExtDisputeDTO.setComment(objLaExtDispute.getComment());
+            objLaExtDisputeDTO.setDisputeid(objLaExtDispute.getDisputeid());
+            objLaExtDisputeDTO.setLandid(objLaExtDispute.getLandid());
+            objLaExtDisputeDTO.setStatus(objLaExtDispute.getStatus());
+            objLaExtDisputeDTO.setStatus(objLaExtDispute.getStatus());
+            objLaExtDisputeDTO.setDisputetypeid(objLaExtDispute.getDisputetypeid());
+
+        }
+
+        return objLaExtDisputeDTO;
+
+    }
 
     @RequestMapping(value = "/viewer/landrecords/dispute/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -1928,58 +1811,62 @@ public class LandRecordsController {
     public List<DisputeType> getDisputeType() {
         return disputeTypeDao.findAll();
     }
-    
-    
+
     @RequestMapping(value = "/viewer/landrecords/disputestatus/", method = RequestMethod.GET)
     @ResponseBody
     public List<DisputeStatus> getDisputeStatus() {
         return disputeStatusDao.getAllDisputeStatus();
     }
 
-    
-
     @RequestMapping(value = "/viewer/landrecords/download/{id}", method = RequestMethod.GET)
     @ResponseBody
     public void download(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
-    	
         SourceDocument doc = landRecordsService.getDocumentbyGid(id);
-        String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation()
+        String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation()
                 + File.separator + id + "." + FileUtils.getFileExtension(doc.getDocumentname());
-        Path path = Paths.get(filepath);
+        dowloadDocument(filepath, response);
+    }
+    
+    @RequestMapping(value = "/viewer/landrecords/downloadBoundaryDoc/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public void downloadBoundaryPointDoc(@PathVariable Integer id, HttpServletRequest request, HttpServletResponse response) {
+        BoundaryPointDoc doc = boundaryService.getBoundaryPointDoc(id);
+        String filePath = FileUtils.getFilesFolder(request) + doc.getLocation();
+        dowloadDocument(filePath, response);
+    }
+
+    private void dowloadDocument(String filePath, HttpServletResponse response) {
+        Path path = Paths.get(filePath);
         try {
             byte[] data = Files.readAllBytes(path);
-
             response.setContentLength(data.length);
             OutputStream out = response.getOutputStream();
             out.write(data);
             out.flush();
             out.close();
-
         } catch (Exception e) {
             logger.error(e);
         }
     }
     
-    
     @RequestMapping(value = "/viewer/landrecords/download/{id}/{transactionid}/{Personusin}", method = RequestMethod.GET)
     @ResponseBody
-    public void PersonMultimediaShow(@PathVariable Long id,@PathVariable Long transactionid,@PathVariable Long Personusin,  HttpServletRequest request, HttpServletResponse response) {
-    	byte[] data =null;
-    	SourceDocument doc =null;
-    	if(transactionid ==0){
-    	SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(id, Personusin);
-    	 doc =  sourceDocumentsDao.findBypartyandtransid(id, socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
-    	}
-    	else{
-    	  doc =  sourceDocumentsDao.findBypartyandtransid(id, transactionid);
-    	  
-    	}
-    	 if(doc==null){
-    		 response.setContentLength(data.length);
-    	 }
-        String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation()
-                +"/"+ doc.getDocumentname();
-         filepath =  filepath.replace("\\mast\\..", "");
+    public void PersonMultimediaShow(@PathVariable Long id, @PathVariable Long transactionid, @PathVariable Long Personusin, HttpServletRequest request, HttpServletResponse response) {
+        byte[] data = null;
+        SourceDocument doc = null;
+        if (transactionid == 0) {
+            SocialTenureRelationship socialtenureobj = socialTenureRelationshipDAO.getSocialTenureObj(id, Personusin);
+            doc = sourceDocumentsDao.findBypartyandtransid(id, socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
+        } else {
+            doc = sourceDocumentsDao.findBypartyandtransid(id, transactionid);
+
+        }
+        if (doc == null) {
+            response.setContentLength(data.length);
+        }
+        String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation()
+                + "/" + doc.getDocumentname();
+        filepath = filepath.replace("\\mast\\..", "");
         Path path = Paths.get(filepath);
         try {
             data = Files.readAllBytes(path);
@@ -1994,27 +1881,24 @@ public class LandRecordsController {
         }
     }
 
-    
     @RequestMapping(value = "/viewer/landrecords/mediaavail/{id}/{transactionid}/{Personusin}", method = RequestMethod.GET)
     @ResponseBody
-    public boolean isPersonMultimediaexist(@PathVariable Long id,@PathVariable Long transactionid,@PathVariable Long Personusin,  HttpServletRequest request, HttpServletResponse response) {
-    	SourceDocument doc = null;
-    	if(transactionid==0){
-    		SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(id, Personusin);
-    		  doc =  sourceDocumentsDao.findBypartyandtransid(id, socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
-    	}
-    	else if(transactionid !=0){
-    	  doc =  sourceDocumentsDao.findBypartyandtransid(id, transactionid);
-    	 
-    	}
-    	if(doc==null){
-    		return false;
-    	 }
-       
+    public boolean isPersonMultimediaexist(@PathVariable Long id, @PathVariable Long transactionid, @PathVariable Long Personusin, HttpServletRequest request, HttpServletResponse response) {
+        SourceDocument doc = null;
+        if (transactionid == 0) {
+            SocialTenureRelationship socialtenureobj = socialTenureRelationshipDAO.getSocialTenureObj(id, Personusin);
+            doc = sourceDocumentsDao.findBypartyandtransid(id, socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
+        } else if (transactionid != 0) {
+            doc = sourceDocumentsDao.findBypartyandtransid(id, transactionid);
+
+        }
+        if (doc == null) {
+            return false;
+        }
+
         return true;
     }
 
-    
     @RequestMapping(value = "/viewer/landrecords/denialletter/{usin}", method = RequestMethod.GET)
     @ResponseBody
     public void getDenialLetter(@PathVariable Long usin, HttpServletRequest request, HttpServletResponse response) {
@@ -2033,14 +1917,14 @@ public class LandRecordsController {
             logger.error(e);
         }
     }
-    
+
     @RequestMapping(value = "/viewer/registrationdetails/viewdoc/{partyid}/{transactionid}", method = RequestMethod.GET)
     @ResponseBody
-    public void viewdocforTransaction(@PathVariable Long partyid,@PathVariable Long transactionid,  HttpServletRequest request, HttpServletResponse response) {
-    	 SourceDocument doc =  sourceDocumentsDao.findBypartyandtransid(partyid, transactionid);
-        String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation();
-                // +"/"+ doc.getDocumentname();
-         filepath =  filepath.replace("\\mast\\..", "");
+    public void viewdocforTransaction(@PathVariable Long partyid, @PathVariable Long transactionid, HttpServletRequest request, HttpServletResponse response) {
+        SourceDocument doc = sourceDocumentsDao.findBypartyandtransid(partyid, transactionid);
+        String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation();
+        // +"/"+ doc.getDocumentname();
+        filepath = filepath.replace("\\mast\\..", "");
         Path path = Paths.get(filepath);
         try {
             byte[] data = Files.readAllBytes(path);
@@ -2074,7 +1958,7 @@ public class LandRecordsController {
             logger.error(e);
         }
     }
-    
+
     @RequestMapping(value = "/viewer/landrecords/ccroformladm/{usin}", method = RequestMethod.GET)
     @ResponseBody
     public void getCcroFormladm(@PathVariable Long usin, HttpServletRequest request, HttpServletResponse response) {
@@ -2083,14 +1967,14 @@ public class LandRecordsController {
             if (claim != null) {
                 writeReport(reportsService.getCcroForms(claim.getProject(), usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
             }*/
-        	
-        	writeReport(reportsService.getCcroFormsLadm("", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
-        	
+
+            writeReport(reportsService.getCcroFormsLadm("", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
+
         } catch (Exception e) {
             logger.error(e);
         }
     }
-    
+
     @RequestMapping(value = "/viewer/landrecords/landverification/{usin}", method = RequestMethod.GET)
     @ResponseBody
     public void getlandverificationForm(@PathVariable Long usin, HttpServletRequest request, HttpServletResponse response) {
@@ -2099,26 +1983,25 @@ public class LandRecordsController {
             if (claim != null) {
                 writeReport(reportsService.getCcroForms(claim.getProject(), usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
             }*/
-        	
-        	writeReport(reportsService.getlandverificationForm("", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
-        	
+
+            writeReport(reportsService.getlandverificationForm("", usin, 1, 1, getApplicationUrl(request)), "CcroForm", response);
+
         } catch (Exception e) {
             logger.error(e);
         }
     }
 
-   /* @RequestMapping(value = "/viewer/landrecords/ccroforms/{projectName}/{startRecord}/{endRecord}", method = RequestMethod.GET)
+    /* @RequestMapping(value = "/viewer/landrecords/ccroforms/{projectName}/{startRecord}/{endRecord}", method = RequestMethod.GET)
     @ResponseBody
     public void getCcroForms(@PathVariable String projectName, @PathVariable int startRecord, @PathVariable int endRecord, HttpServletRequest request, HttpServletResponse response) {
         writeReport(reportsService.getCcroForms(projectName, 0L, startRecord, endRecord, getApplicationUrl(request)), "CcroForms", response);
     }*/
-    
     @RequestMapping(value = "/viewer/landrecords/ccroformsinbatch/{projectName}/{startRecord}/{endRecord}", method = RequestMethod.GET)
     @ResponseBody
     public void getCcroForms(@PathVariable String projectName, @PathVariable Long startRecord, @PathVariable Long endRecord, HttpServletRequest request, HttpServletResponse response) {
         writeReport(reportsService.getCcroFormsinbatch(projectName, 0L, startRecord, endRecord, getApplicationUrl(request)), "CcroForms", response);
     }
-    
+
     @RequestMapping(value = "/viewer/landrecords/landformsinbatch/{projectName}/{startRecord}/{endRecord}", method = RequestMethod.GET)
     @ResponseBody
     public void getLandForms(@PathVariable String projectName, @PathVariable Long startRecord, @PathVariable Long endRecord, HttpServletRequest request, HttpServletResponse response) {
@@ -2169,17 +2052,14 @@ public class LandRecordsController {
             return "Failed to check Village Council date.";
         }
     }
-    
+
     @RequestMapping(value = "/studio/landrecords/runtopology/{projectName}", method = RequestMethod.GET)
     @ResponseBody
     public String checkruntopologychecks(@PathVariable String projectName) {
-        try 
-        {
-            String project = landRecordsService.checkruntopologychecks(projectName);           
+        try {
+            String project = landRecordsService.checkruntopologychecks(projectName);
             return RESPONSE_OK;
-        }
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             logger.error(e);
             return "Failed to run topology checks";
         }
@@ -2229,10 +2109,10 @@ public class LandRecordsController {
             }
 
             String fileType = FileUtils.getFileExtension(doc.getDocumentname());
-           String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation() + File.separator + doc.getDocumentname();
+            String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation() + File.separator + doc.getDocumentname();
             //String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation() + File.separator + doc.getDocumentid() + "."+fileType;
 
-            		Path path = Paths.get(filepath);
+            Path path = Paths.get(filepath);
 
             if (!path.toFile().exists()) {
                 writeEmptyImage(request, response);
@@ -2253,10 +2133,10 @@ public class LandRecordsController {
             logger.error(e);
         }
     }
-    
+
     @RequestMapping(value = "/viewer/landrecords/personphotofortransaction/{transactionid}/{partyid}", method = RequestMethod.GET)
     @ResponseBody
-    public void getPersonPhotofortransaction(@PathVariable Long transactionid,@PathVariable Long partyid, HttpServletRequest request, HttpServletResponse response) {
+    public void getPersonPhotofortransaction(@PathVariable Long transactionid, @PathVariable Long partyid, HttpServletRequest request, HttpServletResponse response) {
         try {
             SourceDocument doc = landRecordsService.getdocumentByPersonfortransaction(transactionid, partyid);
             if (doc == null || !doc.getIsactive()) {
@@ -2265,7 +2145,7 @@ public class LandRecordsController {
             }
 
             // String fileType = FileUtils.getFileExtension(doc.getDocumentname());
-            String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation() + File.separator + doc.getDocumentname();
+            String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation() + File.separator + doc.getDocumentname();
             Path path = Paths.get(filepath);
 
             if (!path.toFile().exists()) {
@@ -2371,7 +2251,7 @@ public class LandRecordsController {
                     if (fileName.toLowerCase().contains("jpg")) {
                         String fileType = fileName.substring(fileName.indexOf(".") + 1, fileName.length()).toLowerCase();
                         String filepath = doc.get(i).getDocumentlocation() + File.separator + doc.get(i).getDocumentid() + "." + fileType;
-                        NaturalPerson naturalpersontmp = landRecordsService.naturalPersonById((long)doc.get(i).getLaParty().getLaPartygroupPersontype().getPersontypeid()).get(0);
+                        NaturalPerson naturalpersontmp = landRecordsService.naturalPersonById((long) doc.get(i).getLaParty().getLaPartygroupPersontype().getPersontypeid()).get(0);
                         naturalGid.remove(doc.get(i).getLaParty().getLaPartygroupPersontype().getPersontypeid());
                         String name = naturalpersontmp.getFirstname() + " " + naturalpersontmp.getMiddlename() + " " + naturalpersontmp.getLastname();
                         //doc.get(i).getPerson_gid();
@@ -2409,9 +2289,9 @@ public class LandRecordsController {
         if (socialtenuretmp.size() > 0) {
             if (socialtenuretmp.size() > 1) {
                 return 1;
-            } else if (socialtenuretmp.get(0).getLaPartygroupPersontype().getPersontypeid()== 1) {
+            } else if (socialtenuretmp.get(0).getLaPartygroupPersontype().getPersontypeid() == 1) {
                 return 0;
-            } else if (socialtenuretmp.get(0).getLaPartygroupPersontype().getPersontypeid()== 2) {
+            } else if (socialtenuretmp.get(0).getLaPartygroupPersontype().getPersontypeid() == 2) {
                 return 2;
             }
 
@@ -2450,7 +2330,7 @@ public class LandRecordsController {
         NaturalPerson naturaltmp = landRecordsService.naturalPersonById(naturalid).get(0);
         String name = naturaltmp.getFirstname() + " " + naturaltmp.getMiddlename() + " " + naturaltmp.getLastname();
         return name;*/
-    	return null;
+        return null;
 
     }
 
@@ -2487,7 +2367,7 @@ public class LandRecordsController {
 
         String loggeduser = principal.getName();
         User user = userService.findByUniqueName(loggeduser);
-        Integer  id = null;
+        Integer id = null;
         if (project != null) {
             id = project;
         }
@@ -2518,8 +2398,6 @@ public class LandRecordsController {
     public ProjectTemp list(@PathVariable String project) {
         return projectService.findProjectTempByName(project);
     }
-
-   
 
     @RequestMapping(value = "/viewer/landrecords/spatialfalse/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -2555,7 +2433,7 @@ public class LandRecordsController {
                 if (person != null && rights != null && rights.size() > 0) {
                     // Check person doesn't exist already
                     for (SocialTenureRelationship right : rights) {
-                        if (right.getPersonlandid() != null && (long)right.getLaPartygroupPersontype().getPersontypeid() == personId) {
+                        if (right.getPersonlandid() != null && (long) right.getLaPartygroupPersontype().getPersontypeid() == personId) {
                             return true;
                         }
                     }
@@ -2583,7 +2461,7 @@ public class LandRecordsController {
         ArrayList<SocialTenureRelationship> objtemp = new ArrayList<SocialTenureRelationship>();
         List<SocialTenureRelationship> obj = landRecordsService.showDeletedPerson(id);
         for (int i = 0; i < obj.size(); i++) {
-            if (obj.get(i).getPersonlandid()== 1) {
+            if (obj.get(i).getPersonlandid() == 1) {
                 objtemp.add(obj.get(i));
             }
         }
@@ -2793,16 +2671,16 @@ public class LandRecordsController {
                 }
 
                 String uploadFileName = null;
-                String outDirPath = FileUtils.getFielsFolder(request) + "resources" + File.separator + "documents" + File.separator + projectName + File.separator + "multimedia";
+                String outDirPath = FileUtils.getFilesFolder(request) + "resources" + File.separator + "documents" + File.separator + projectName + File.separator + "multimedia";
                 sourceDocument1.setDocumentname(originalFileName);
                 uploadFileName = ("resources/documents/" + projectName + "/multimedia");
 
                 sourceDocument1.setDocumentlocation(uploadFileName);
                 if (person_gid != 0) {
-                    sourceDocument1.getLaParty().getLaPartygroupPersontype().setPersontypeid((int)person_gid);
+                    sourceDocument1.getLaParty().getLaPartygroupPersontype().setPersontypeid((int) person_gid);
                 }
                 if (admin_id != 0) {
-                    sourceDocument1.getLaParty().getLaPartygroupPersontype().setPersontypeid((int)admin_id);;
+                    sourceDocument1.getLaParty().getLaPartygroupPersontype().setPersontypeid((int) admin_id);;
                 }
                 sourceDocument1.setDocumentname(document_name);
 //                sourceDocument1.setComments(document_comments);
@@ -3440,9 +3318,9 @@ public class LandRecordsController {
             errors.add("Failed to validate claim");
             return errors;
         }
-    */
-    	return null;
-    	}
+         */
+        return null;
+    }
 
     private String getPersonName(NaturalPerson person) {
         String name = "";
@@ -3516,7 +3394,7 @@ public class LandRecordsController {
 
     @RequestMapping(value = "/viewer/landrecords/updatepwi", method = RequestMethod.POST)
     @ResponseBody
-    public boolean updatepwi(HttpServletRequest request, HttpServletResponse response,Principal principal) {
+    public boolean updatepwi(HttpServletRequest request, HttpServletResponse response, Principal principal) {
         long Usin = 0;
         String name;
         String dob;
@@ -3527,22 +3405,22 @@ public class LandRecordsController {
         String firstName;
         String middleName;
         String lastName;
-        
+
         String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
-		Long user_id = userObj.getId();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SpatialUnitPersonWithInterest objSpatialUnitPersonWithInterest = null;
-      
+        User userObj = userService.findByUniqueName(username);
+        Long user_id = userObj.getId();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SpatialUnitPersonWithInterest objSpatialUnitPersonWithInterest = null;
+
         try {
             Usin = ServletRequestUtils.getRequiredLongParameter(request, "usin_kin");
             name = ServletRequestUtils.getRequiredStringParameter(request, "name_kin");
             id = ServletRequestUtils.getRequiredLongParameter(request, "id_kin");
             genderCode = ServletRequestUtils.getRequiredLongParameter(request, "poiGender");
-           relationshipType = ServletRequestUtils.getRequiredLongParameter(request, "poiRelType");
-            firstName= ServletRequestUtils.getRequiredStringParameter(request, "fname_kin");
-            middleName= ServletRequestUtils.getRequiredStringParameter(request, "mname_kin");
-            lastName= ServletRequestUtils.getRequiredStringParameter(request, "lname_kin");
+            relationshipType = ServletRequestUtils.getRequiredLongParameter(request, "poiRelType");
+            firstName = ServletRequestUtils.getRequiredStringParameter(request, "fname_kin");
+            middleName = ServletRequestUtils.getRequiredStringParameter(request, "mname_kin");
+            lastName = ServletRequestUtils.getRequiredStringParameter(request, "lname_kin");
             try {
                 dob = ServletRequestUtils.getRequiredStringParameter(request, "poiDob");
                 if (!StringUtils.isEmpty(dob)) {
@@ -3553,42 +3431,38 @@ public class LandRecordsController {
             }
 
             if (id != 0) {
-            	objSpatialUnitPersonWithInterest =spatialunitPersonwithinterestService.findSpatialUnitPersonWithInterestById(id);
-            }else
-            {
-            	
-            	objSpatialUnitPersonWithInterest = new SpatialUnitPersonWithInterest();
-    			
+                objSpatialUnitPersonWithInterest = spatialunitPersonwithinterestService.findSpatialUnitPersonWithInterestById(id);
+            } else {
+
+                objSpatialUnitPersonWithInterest = new SpatialUnitPersonWithInterest();
+
             }
 
             if (genderCode != 0) {
-            	objSpatialUnitPersonWithInterest.setGender((int)genderCode);
+                objSpatialUnitPersonWithInterest.setGender((int) genderCode);
             } else {
-            	objSpatialUnitPersonWithInterest.setGender(null);
+                objSpatialUnitPersonWithInterest.setGender(null);
             }
 
             if (relationshipType > 0) {
-            	objSpatialUnitPersonWithInterest.setRelation((int)relationshipType);
+                objSpatialUnitPersonWithInterest.setRelation((int) relationshipType);
             } else {
-            	objSpatialUnitPersonWithInterest.setRelation(null);
+                objSpatialUnitPersonWithInterest.setRelation(null);
             }
-            
+
             objSpatialUnitPersonWithInterest.setDob(dobDate);
-            
-            
-            try{
-            	
-            	ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(Usin).get(0);
-            	if(spatialUnit!=null){
-            		objSpatialUnitPersonWithInterest.setProjectnameid(spatialUnit.getProjectnameid().longValue());
-            	}
-            	
-           	 
-           }catch(Exception e)
-           {
-           	e.printStackTrace();
-           }
-            
+
+            try {
+
+                ClaimBasic spatialUnit = spatialUnitService.getClaimsBasicByLandId(Usin).get(0);
+                if (spatialUnit != null) {
+                    objSpatialUnitPersonWithInterest.setProjectnameid(spatialUnit.getProjectnameid().longValue());
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             objSpatialUnitPersonWithInterest.setFirstName(firstName);
             objSpatialUnitPersonWithInterest.setMiddleName(middleName);
             objSpatialUnitPersonWithInterest.setLastName(lastName);
@@ -3596,9 +3470,9 @@ public class LandRecordsController {
             objSpatialUnitPersonWithInterest.setCreateddate(new Date());
             objSpatialUnitPersonWithInterest.setLandid(Usin);
             objSpatialUnitPersonWithInterest.setIsactive(true);
-            
+
             spatialunitPersonwithinterestService.save(objSpatialUnitPersonWithInterest);
-         
+
             return true;
         } catch (Exception e) {
             logger.error(e);
@@ -3632,18 +3506,18 @@ public class LandRecordsController {
 
     @RequestMapping(value = "/viewer/landrecords/updatedeceased", method = RequestMethod.POST)
     @ResponseBody
-    public boolean updateDeceasedPerson(HttpServletRequest request, HttpServletResponse response,Principal principal) {
+    public boolean updateDeceasedPerson(HttpServletRequest request, HttpServletResponse response, Principal principal) {
         long Usin = 0;
         String firstname = "";
         String middlename = "";
         String lastname = "";
         long id = 0;
-        
+
         String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
-		
-		Long user_id = userObj.getId();
-		
+        User userObj = userService.findByUniqueName(username);
+
+        Long user_id = userObj.getId();
+
         LaParty laParty = new LaParty();
         SpatialunitDeceasedPerson spdeceased = new SpatialunitDeceasedPerson();
 
@@ -3657,15 +3531,13 @@ public class LandRecordsController {
             PersonType personType = registrationRecordsService.getPersonTypeById(8);
             if (id != 0) {
                 spdeceased.setPartyid(id);
-            }else
-            {
-            	
-            	
-    			laParty.setCreatedby(user_id.intValue());
-    			laParty.setCreateddate(new Date());
-    			laParty.setLaPartygroupPersontype(personType);
+            } else {
+
+                laParty.setCreatedby(user_id.intValue());
+                laParty.setCreateddate(new Date());
+                laParty.setLaPartygroupPersontype(personType);
             }
-            
+
             spdeceased.setFirstname(firstname);
             spdeceased.setMiddlename(middlename);
             spdeceased.setLastname(lastname);
@@ -3674,8 +3546,6 @@ public class LandRecordsController {
             spdeceased.setCreateddate(new Date());
             spdeceased.setLaPartygroupPersontype(personType);
             spdeceased.setIsactive(true);
-            
-            
 
             return landRecordsService.saveDeceasedPerson(spdeceased);
 
@@ -3837,91 +3707,81 @@ public class LandRecordsController {
         }
 
     }
-    
 
-    
     @RequestMapping(value = "/viewer/landrecords/spatialunit/{project}/{id}", method = RequestMethod.GET)
     @ResponseBody
     public List<SpatialUnitTemp> spatialUnitList(@PathVariable String project, @PathVariable Integer id) {
         return landRecordsService.findAllSpatialUnitTemp(project, id);
     }
     //for mapping
-    
-    
-   @RequestMapping(value = "/viewer/landrecords/spatialunit/landrecord/{project}/{startfrom}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/viewer/landrecords/spatialunit/landrecord/{project}/{startfrom}", method = RequestMethod.GET)
     @ResponseBody
-    public List<LaSpatialunitLand> spatialUnitList_p(@PathVariable String project, @PathVariable Integer startfrom,Principal principal) {
-	   Integer projectId=0;
-	   if(project.equalsIgnoreCase("default")){
-		   return null;
-	   }else{
-		   try{
-				 Project objproject=projectDAO.findByName(project);
-				 projectId= objproject.getProjectnameid();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-        return landRecordsService.findAllSpatialUnitTemp_P(projectId+"", startfrom);
-	   }
+    public List<LaSpatialunitLand> spatialUnitList_p(@PathVariable String project, @PathVariable Integer startfrom, Principal principal) {
+        Integer projectId = 0;
+        if (project.equalsIgnoreCase("default")) {
+            return null;
+        } else {
+            try {
+                Project objproject = projectDAO.findByName(project);
+                projectId = objproject.getProjectnameid();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return landRecordsService.findAllSpatialUnitTemp_P(projectId + "", startfrom);
+        }
     }
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/spatialunit/totalRecord/{project}", method = RequestMethod.GET)
-   @ResponseBody
-   public Integer totalRecords(@PathVariable String project) {
-	   Integer projectId=0;
-	   if(null==project){
-		   return 0;
-	   }else{
-		   try{
-				 Project objproject=projectDAO.findByName(project);
-				 projectId= objproject.getProjectnameid();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		   return landRecordsService.getTotalrecordByProject(projectId+"");   
-	   }
-       
-   }
-   
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/spatialunit/commune/{project}", method = RequestMethod.GET)
-   @ResponseBody
-   public List<Commune> getprojectCommune(@PathVariable String project) {
-	   
-	  List<Commune> lstcommune=new ArrayList<Commune>();
-	  List<ProjectArea> lst= projectAreaDAO.findByProjectName(project);
-	  
-	  if(lst.size()>0){
-		for(ProjectArea obj:lst)  {
-			Commune objc= new Commune();
-			objc.setCommuneid(obj.getLaSpatialunitgroupHierarchy4().getHierarchyid());
-			objc.setCommune(obj.getLaSpatialunitgroupHierarchy4().getNameEn());
-			lstcommune.add(objc);
-		}
-		  
-	  }
-	return lstcommune;
-   }
-   
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/search1count/{project}",method = RequestMethod.POST)
-   @ResponseBody
-   public Integer search1Count(HttpServletRequest request, HttpServletResponse response,  Principal principal, @PathVariable String project)
-   {
-     
-	   
-	   Integer claimType =0;
-	   Long appstatus=0l;
-	   Integer communeId =0;
-	   String transaction_id="";
-	   String parce_id="";
-	   Integer projectId=0;
-	   
-	   try {
-          /* try {
+
+    @RequestMapping(value = "/viewer/landrecords/spatialunit/totalRecord/{project}", method = RequestMethod.GET)
+    @ResponseBody
+    public Integer totalRecords(@PathVariable String project) {
+        Integer projectId = 0;
+        if (null == project) {
+            return 0;
+        } else {
+            try {
+                Project objproject = projectDAO.findByName(project);
+                projectId = objproject.getProjectnameid();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return landRecordsService.getTotalrecordByProject(projectId + "");
+        }
+
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/spatialunit/commune/{project}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Commune> getprojectCommune(@PathVariable String project) {
+
+        List<Commune> lstcommune = new ArrayList<Commune>();
+        List<ProjectArea> lst = projectAreaDAO.findByProjectName(project);
+
+        if (lst.size() > 0) {
+            for (ProjectArea obj : lst) {
+                Commune objc = new Commune();
+                objc.setCommuneid(obj.getLaSpatialunitgroupHierarchy4().getHierarchyid());
+                objc.setCommune(obj.getLaSpatialunitgroupHierarchy4().getNameEn());
+                lstcommune.add(objc);
+            }
+
+        }
+        return lstcommune;
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/search1count/{project}", method = RequestMethod.POST)
+    @ResponseBody
+    public Integer search1Count(HttpServletRequest request, HttpServletResponse response, Principal principal, @PathVariable String project) {
+
+        Integer claimType = 0;
+        Long appstatus = 0l;
+        Integer communeId = 0;
+        String transaction_id = "";
+        String parce_id = "";
+        Integer projectId = 0;
+
+        try {
+            /* try {
         	   claimType = ServletRequestUtils.getRequiredIntParameter(request, "claim_type");
            } catch (Exception e) {
                logger.error(e);
@@ -3932,59 +3792,53 @@ public class LandRecordsController {
            } catch (Exception e) {
                logger.error(e);
            }*/
-           
-           try {
-        	   communeId = ServletRequestUtils.getRequiredIntParameter(request, "community_id");
-           } catch (Exception e) {
-               logger.error(e);
-           }
-           
-           try {
-        	   transaction_id = ServletRequestUtils.getRequiredStringParameter(request, "transaction_id");
-           } catch (Exception e) {
-               logger.error(e);
-           }
-           try {
-        	   parce_id = ServletRequestUtils.getRequiredStringParameter(request, "parce_id");
-           } catch (Exception e) {
-               logger.error(e);
-           }
-           
-           try{
-				 Project objproject=projectDAO.findByName(project);
-				 projectId= objproject.getProjectnameid();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-           
-           return landRecordsService.searchCount(0l, 0, projectId+"",communeId+"",transaction_id,parce_id);
-           
-	   }catch(Exception e) {
-           logger.error(e);
-           return null;
-       }
-	   
-	   
-   
-   }
-   
-    
 
-   @RequestMapping(value = "/viewer/landrecords/search1/{project}/{startpos}" ,method = RequestMethod.POST)
-   @ResponseBody
-   public List<LaSpatialunitLand> searchSpatialUnit(HttpServletRequest request, HttpServletResponse response,  Principal principal, @PathVariable String project,@PathVariable Integer startpos)
-   {
-     
-	   Integer claimType =0;
-	   Long appstatus=0l;
-	   Integer communeId =0;
-	   String transaction_id="";
-	   String parce_id="";
-	   Integer projectId=0;
-	  
-	   
-	   try {
-          /* try {
+            try {
+                communeId = ServletRequestUtils.getRequiredIntParameter(request, "community_id");
+            } catch (Exception e) {
+                logger.error(e);
+            }
+
+            try {
+                transaction_id = ServletRequestUtils.getRequiredStringParameter(request, "transaction_id");
+            } catch (Exception e) {
+                logger.error(e);
+            }
+            try {
+                parce_id = ServletRequestUtils.getRequiredStringParameter(request, "parce_id");
+            } catch (Exception e) {
+                logger.error(e);
+            }
+
+            try {
+                Project objproject = projectDAO.findByName(project);
+                projectId = objproject.getProjectnameid();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return landRecordsService.searchCount(0l, 0, projectId + "", communeId + "", transaction_id, parce_id);
+
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
+
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/search1/{project}/{startpos}", method = RequestMethod.POST)
+    @ResponseBody
+    public List<LaSpatialunitLand> searchSpatialUnit(HttpServletRequest request, HttpServletResponse response, Principal principal, @PathVariable String project, @PathVariable Integer startpos) {
+
+        Integer claimType = 0;
+        Long appstatus = 0l;
+        Integer communeId = 0;
+        String transaction_id = "";
+        String parce_id = "";
+        Integer projectId = 0;
+
+        try {
+            /* try {
         	   claimType = ServletRequestUtils.getRequiredIntParameter(request, "claim_type");
            } catch (Exception e) {
                logger.error(e);
@@ -3995,557 +3849,501 @@ public class LandRecordsController {
            } catch (Exception e) {
                logger.error(e);
            }*/
-           
-           
-           try {
-        	   communeId = ServletRequestUtils.getRequiredIntParameter(request, "community_id");
-           } catch (Exception e) {
-               logger.error(e);
-           }
-           
-           try {
-        	   transaction_id = ServletRequestUtils.getRequiredStringParameter(request, "transaction_id");
-           } catch (Exception e) {
-               logger.error(e);
-           }
-           try {
-        	   parce_id = ServletRequestUtils.getRequiredStringParameter(request, "parce_id");
-           } catch (Exception e) {
-               logger.error(e);
-           }
-           
-           try{
-				 Project objproject=projectDAO.findByName(project);
-				 projectId= objproject.getProjectnameid();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-           
-           return landRecordsService.search(0l, 0, projectId+"", communeId+"", transaction_id, parce_id, startpos);
-           
-	   }catch(Exception e) {
-           logger.error(e);
-           return null;
-       }
-	   
-	   
-   
-   }
-   
-   
-   
-	@RequestMapping(value = "/viewer/landrecords/spatialunitbyworkflow/{project}/{startfrom}", method = RequestMethod.POST)
-	@ResponseBody
-	public List<LaSpatialunitLand> spatialUnitbyWorkflowList(HttpServletRequest request, HttpServletResponse response,@PathVariable String project, @PathVariable Integer startfrom,Principal principal) {
-   
-		int[] workflow_ids = null;
-		int[] claim_ids = null;
-		int[] status_ids = null;
-		int projectId=0;
-		
-		
-		try {
-			
-						
-						try {
-							workflow_ids = ServletRequestUtils.getRequiredIntParameters(request, "workflow");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-		
-		
-						try {
-							claim_ids = ServletRequestUtils.getRequiredIntParameters(request, "claimType");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-		
-					
-						try {
-							status_ids = ServletRequestUtils.getRequiredIntParameters(request, "statusType");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-						try{
-							 Project objproject=projectDAO.findByName(project);
-							 projectId= objproject.getProjectnameid();
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-						
-					
 
-			
-			return landRecordsService.getspatialUnitWorkFlowResult(workflow_ids, claim_ids, status_ids, startfrom, projectId+"");
-			
-		} catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-	
-	
-	@RequestMapping(value = "/viewer/landrecords/spatialunitbyworkflow/count/{project}", method = RequestMethod.POST)
-	@ResponseBody
-	public Integer spatialUnitbyWorkflowCount(HttpServletRequest request, HttpServletResponse response,@PathVariable String project, Principal principal) {
-   
-   
-		int[] workflow_ids = null;
-		int[] claim_ids = null;
-		int[] status_ids = null;
-		int projectId=0;
-		try {
-			
-			
-				
-				try {
-					workflow_ids = ServletRequestUtils.getRequiredIntParameters(request, "workflow");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+            try {
+                communeId = ServletRequestUtils.getRequiredIntParameter(request, "community_id");
+            } catch (Exception e) {
+                logger.error(e);
+            }
 
-			
+            try {
+                transaction_id = ServletRequestUtils.getRequiredStringParameter(request, "transaction_id");
+            } catch (Exception e) {
+                logger.error(e);
+            }
+            try {
+                parce_id = ServletRequestUtils.getRequiredStringParameter(request, "parce_id");
+            } catch (Exception e) {
+                logger.error(e);
+            }
 
-				try {
-					claim_ids = ServletRequestUtils.getRequiredIntParameters(request, "claimType");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+            try {
+                Project objproject = projectDAO.findByName(project);
+                projectId = objproject.getProjectnameid();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-			
-			
-				try {
-					status_ids = ServletRequestUtils.getRequiredIntParameters(request, "statusType");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			try{
-			 Project objproject=projectDAO.findByName(project);
-			 projectId= objproject.getProjectnameid();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-				
-			
-			return landRecordsService.spatialUnitWorkflowCount(workflow_ids,claim_ids, status_ids,projectId+"");
-			
-			
-		} catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
-		
-		
-		
-		
-		
-	}
-	
-	
-   
-   @RequestMapping(value = "/viewer/landrecords/parcelcountbytenure/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report1(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) 
-		   throws FileNotFoundException, IOException {
+            return landRecordsService.search(0l, 0, projectId + "", communeId + "", transaction_id, parce_id, startpos);
 
-	   Workbook wb = new HSSFWorkbook();
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
 
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Report_By_Tenure_Map_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
+    }
 
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
+    @RequestMapping(value = "/viewer/landrecords/spatialunitbyworkflow/{project}/{startfrom}", method = RequestMethod.POST)
+    @ResponseBody
+    public List<LaSpatialunitLand> spatialUnitbyWorkflowList(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable Integer startfrom, Principal principal) {
 
-	   List<Object> vertexLst = landRecordsService.findsummaryreport(project);
-	   String[] columnList = { "Commune_Name", "Parcels", "Total Percentage", "Total Area", "Average Area", "Certificate Issued" };
+        int[] workflow_ids = null;
+        int[] claim_ids = null;
+        int[] status_ids = null;
+        int projectId = 0;
 
-	   int rowCount = 0;
+        try {
 
-	   Row row = sheet.createRow(rowCount++);
+            try {
+                workflow_ids = ServletRequestUtils.getRequiredIntParameters(request, "workflow");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
+            try {
+                claim_ids = ServletRequestUtils.getRequiredIntParameters(request, "claimType");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-		   cell.setCellValue((String) header);
+            try {
+                status_ids = ServletRequestUtils.getRequiredIntParameters(request, "statusType");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-	   }
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
+            try {
+                Project objproject = projectDAO.findByName(project);
+                projectId = objproject.getProjectnameid();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   String id = (String) obj[0];
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
+            return landRecordsService.getspatialUnitWorkFlowResult(workflow_ids, claim_ids, status_ids, startfrom, projectId + "");
 
-				   String a = (String) obj[1].toString();
-				   Double dla=0.0;
-				   if(a!="")
-					   dla=Double.parseDouble(a);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dla);
-				  
-				   totala = totala + dla;
-				   
-				   String b = (String) obj[2].toString();
-				   Double dlb=0.0;
-				   if(b!="")
-					   dlb=Double.parseDouble(b);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlb);
-				   totalb = totalb + dlb;
-				   
-				   String c = (String) obj[3].toString();
-				   Double dlc=0.0;
-				   if(c!="")
-					   dlc=Double.parseDouble(c);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlc);
-				   totalc = totalc + dlc;
-				   
-				   
-				   String d = (String) obj[4].toString();
-				   Double dld=0.0;
-				   if(d!="")
-					   dld=Double.parseDouble(d);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dld);
-				   totald = totald + dld;
-				   
-				 
-				   String e = (String) obj[5].toString();
-				   Double dle=0.0;
-				   if(e!="")
-					   dle=Double.parseDouble(e);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dle);
-				   totale = totale + dle;
-				   
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-		   
-		   Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale };
-		   int columnCounttotal = 0;
-		   Row rowtotal = sheet.createRow(rowCount++);
-		   rowtotal = sheet.createRow(rowCount++);
-		   
-		  // for (Double footer : sumList) 
-			   for ( int i = 0; i < sumList.length; i++)
-		   {
-			   Cell cell = rowtotal.createCell(columnCounttotal++);
-			   if(i == 0.0)
-			   {
-				   cell.setCellValue(Totalstr);
-			   }
-			   else
-			   {
-				   cell.setCellValue((Double) sumList[i]);
-			   }
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
 
+    }
 
-		   }
-		   
+    @RequestMapping(value = "/viewer/landrecords/spatialunitbyworkflow/count/{project}", method = RequestMethod.POST)
+    @ResponseBody
+    public Integer spatialUnitbyWorkflowCount(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, Principal principal) {
 
+        int[] workflow_ids = null;
+        int[] claim_ids = null;
+        int[] status_ids = null;
+        int projectId = 0;
+        try {
 
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
+            try {
+                workflow_ids = ServletRequestUtils.getRequiredIntParameters(request, "workflow");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
+            try {
+                claim_ids = ServletRequestUtils.getRequiredIntParameters(request, "claimType");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
+            try {
+                status_ids = ServletRequestUtils.getRequiredIntParameters(request, "statusType");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedsummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report2(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
+            try {
+                Project objproject = projectDAO.findByName(project);
+                projectId = objproject.getProjectnameid();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-	   Workbook wb = new HSSFWorkbook();
+            return landRecordsService.spatialUnitWorkflowCount(workflow_ids, claim_ids, status_ids, projectId + "");
 
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Project_Detailed_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
 
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
+    }
 
-	   List<Object> vertexLst = landRecordsService.findprojectdetailedsummaryreport(project);
-	   String[] columnList = { "Tenure Type", "Gender", "Parcels",  "Total Percentage", "Total Area", "Average Area", "Certificate Issued" };
+    @RequestMapping(value = "/viewer/landrecords/parcelcountbytenure/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report1(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag)
+            throws FileNotFoundException, IOException {
 
-	   int rowCount = 0;
+        Workbook wb = new HSSFWorkbook();
 
-	   Row row = sheet.createRow(rowCount++);
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Report_By_Tenure_Map_register.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
 
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
 
-		   cell.setCellValue((String) header);
+        List<Object> vertexLst = landRecordsService.findsummaryreport(project);
+        String[] columnList = {"Commune_Name", "Parcels", "Total Percentage", "Total Area", "Average Area", "Certificate Issued"};
 
-	   }
-	   
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	   Double totalf = 0.0;
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
+        int rowCount = 0;
 
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   String id = (String) obj[0];
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
+        Row row = sheet.createRow(rowCount++);
 
-				   String a = (String) obj[1].toString();
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(a.toString());
-				   
-				   String b = (String) obj[2].toString();
-				   Double dlb=0.0;
-				   if(b!="")
-					   dlb=Double.parseDouble(b);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlb);
-				   totalb = totalb + dlb;
-				   
-				   String c = (String) obj[3].toString();
-				   Double dlc=0.0;
-				   if(c!="")
-					   dlc=Double.parseDouble(c);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlc);
-				   totalc = totalc + dlc;
-				   
-				   
-				   String d = (String) obj[4].toString();
-				   Double dld=0.0;
-				   if(d!="")
-					   dld=Double.parseDouble(d);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dld);
-				   totald = totald + dld;
-				   
-				 
-				   String e = (String) obj[5].toString();
-				   Double dle=0.0;
-				   if(e!="")
-					   dle=Double.parseDouble(e);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dle);
-				   totale = totale + dle;
-				   
-				   String f = (String) obj[6].toString();
-				   Double dlf=0.0;
-				   if(f!="")
-					   dlf=Double.parseDouble(f);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlf);
-				   totalf = totalf + dlf;
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-		   
-		   Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale, totalf };
-		   int columnCounttotal = 0;
-		   Row rowtotal = sheet.createRow(rowCount++);
-		   rowtotal = sheet.createRow(rowCount++);
-		   
-		  // for (Double footer : sumList) 
-			   for ( int i = 0; i < sumList.length; i++)
-		   {
-			   Cell cell = rowtotal.createCell(columnCounttotal++);
-			   if(i == 0.0)
-			   {
-				   cell.setCellValue(Totalstr);
-			   }
-			   else
-			   {
-				   cell.setCellValue((Double) sumList[i]);
-			   }
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
 
+            cell.setCellValue((String) header);
 
-		   }
-		   
+        }
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
 
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
 
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
+                    Object[] obj = (Object[]) vertexLst.get(i);
+                    String id = (String) obj[0];
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
 
+                    String a = (String) obj[1].toString();
+                    Double dla = 0.0;
+                    if (a != "") {
+                        dla = Double.parseDouble(a);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dla);
 
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
+                    totala = totala + dla;
 
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
+                    String b = (String) obj[2].toString();
+                    Double dlb = 0.0;
+                    if (b != "") {
+                        dlb = Double.parseDouble(b);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlb);
+                    totalb = totalb + dlb;
 
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedappstatussummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report5(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
+                    String c = (String) obj[3].toString();
+                    Double dlc = 0.0;
+                    if (c != "") {
+                        dlc = Double.parseDouble(c);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlc);
+                    totalc = totalc + dlc;
 
-	   Workbook wb = new HSSFWorkbook();
+                    String d = (String) obj[4].toString();
+                    Double dld = 0.0;
+                    if (d != "") {
+                        dld = Double.parseDouble(d);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dld);
+                    totald = totald + dld;
 
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Project_Application_Status_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
+                    String e = (String) obj[5].toString();
+                    Double dle = 0.0;
+                    if (e != "") {
+                        dle = Double.parseDouble(e);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dle);
+                    totale = totale + dle;
 
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
 
-	   List<Object> vertexLst = landRecordsService.findprojectapplicationstatussummaryreport(project);
-	   String[] columnList = { "New Application", "Approved application", "Rejected application",  "Pending application", "Registred application" };
+                }
+            }
 
-	   int rowCount = 0;
+            Double[] sumList = {0.0, totala, totalb, totalc, totald, totale};
+            int columnCounttotal = 0;
+            Row rowtotal = sheet.createRow(rowCount++);
+            rowtotal = sheet.createRow(rowCount++);
 
-	   Row row = sheet.createRow(rowCount++);
+            // for (Double footer : sumList) 
+            for (int i = 0; i < sumList.length; i++) {
+                Cell cell = rowtotal.createCell(columnCounttotal++);
+                if (i == 0.0) {
+                    cell.setCellValue(Totalstr);
+                } else {
+                    cell.setCellValue((Double) sumList[i]);
+                }
 
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
+            }
 
-		   cell.setCellValue((String) header);
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
-	   }
-	   
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	  
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
 
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   String id = obj[0].toString();
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
 
-				   /*String a = (String) obj[1].toString();
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedsummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report2(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag) throws FileNotFoundException, IOException {
+
+        Workbook wb = new HSSFWorkbook();
+
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Project_Detailed_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
+
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
+
+        List<Object> vertexLst = landRecordsService.findprojectdetailedsummaryreport(project);
+        String[] columnList = {"Tenure Type", "Gender", "Parcels", "Total Percentage", "Total Area", "Average Area", "Certificate Issued"};
+
+        int rowCount = 0;
+
+        Row row = sheet.createRow(rowCount++);
+
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
+
+            cell.setCellValue((String) header);
+
+        }
+
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
+        Double totalf = 0.0;
+
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
+
+                    Object[] obj = (Object[]) vertexLst.get(i);
+                    String id = (String) obj[0];
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
+
+                    String a = (String) obj[1].toString();
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(a.toString());
+
+                    String b = (String) obj[2].toString();
+                    Double dlb = 0.0;
+                    if (b != "") {
+                        dlb = Double.parseDouble(b);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlb);
+                    totalb = totalb + dlb;
+
+                    String c = (String) obj[3].toString();
+                    Double dlc = 0.0;
+                    if (c != "") {
+                        dlc = Double.parseDouble(c);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlc);
+                    totalc = totalc + dlc;
+
+                    String d = (String) obj[4].toString();
+                    Double dld = 0.0;
+                    if (d != "") {
+                        dld = Double.parseDouble(d);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dld);
+                    totald = totald + dld;
+
+                    String e = (String) obj[5].toString();
+                    Double dle = 0.0;
+                    if (e != "") {
+                        dle = Double.parseDouble(e);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dle);
+                    totale = totale + dle;
+
+                    String f = (String) obj[6].toString();
+                    Double dlf = 0.0;
+                    if (f != "") {
+                        dlf = Double.parseDouble(f);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlf);
+                    totalf = totalf + dlf;
+
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
+
+                }
+            }
+
+            Double[] sumList = {0.0, totala, totalb, totalc, totald, totale, totalf};
+            int columnCounttotal = 0;
+            Row rowtotal = sheet.createRow(rowCount++);
+            rowtotal = sheet.createRow(rowCount++);
+
+            // for (Double footer : sumList) 
+            for (int i = 0; i < sumList.length; i++) {
+                Cell cell = rowtotal.createCell(columnCounttotal++);
+                if (i == 0.0) {
+                    cell.setCellValue(Totalstr);
+                } else {
+                    cell.setCellValue((Double) sumList[i]);
+                }
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
+
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedappstatussummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report5(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag) throws FileNotFoundException, IOException {
+
+        Workbook wb = new HSSFWorkbook();
+
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Project_Application_Status_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
+
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
+
+        List<Object> vertexLst = landRecordsService.findprojectapplicationstatussummaryreport(project);
+        String[] columnList = {"New Application", "Approved application", "Rejected application", "Pending application", "Registred application"};
+
+        int rowCount = 0;
+
+        Row row = sheet.createRow(rowCount++);
+
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
+
+            cell.setCellValue((String) header);
+
+        }
+
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
+
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
+
+                    Object[] obj = (Object[]) vertexLst.get(i);
+                    String id = obj[0].toString();
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
+
+                    /*String a = (String) obj[1].toString();
 				   cell = row.createCell(columnCount++);
 				   cell.setCellValue(a.toString());*/
-				   
-				   String a = obj[1].toString();
-				   Double dla=0.0;
-				   if(a!="")
-					   dla=Double.parseDouble(a);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dla);
-				   totala = totala + dla;
-				   
-				   
-				   String b = obj[2].toString();
-				   Double dlb=0.0;
-				   if(b!="")
-					   dlb=Double.parseDouble(b);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlb);
-				   totalb = totalb + dlb;
-				   
-				   String c = obj[3].toString();
-				   Double dlc=0.0;
-				   if(c!="")
-					   dlc=Double.parseDouble(c);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlc);
-				   totalc = totalc + dlc;
-				   
-				   
-				   String d = obj[4].toString();
-				   Double dld=0.0;
-				   if(d!="")
-					   dld=Double.parseDouble(d);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dld);
-				   //totald = totald + dld;
-				   
-				 
-				   /*String e = obj[5].toString();
+                    String a = obj[1].toString();
+                    Double dla = 0.0;
+                    if (a != "") {
+                        dla = Double.parseDouble(a);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dla);
+                    totala = totala + dla;
+
+                    String b = obj[2].toString();
+                    Double dlb = 0.0;
+                    if (b != "") {
+                        dlb = Double.parseDouble(b);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlb);
+                    totalb = totalb + dlb;
+
+                    String c = obj[3].toString();
+                    Double dlc = 0.0;
+                    if (c != "") {
+                        dlc = Double.parseDouble(c);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlc);
+                    totalc = totalc + dlc;
+
+                    String d = obj[4].toString();
+                    Double dld = 0.0;
+                    if (d != "") {
+                        dld = Double.parseDouble(d);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dld);
+                    //totald = totald + dld;
+
+                    /*String e = obj[5].toString();
 				   Double dle=0.0;
 				   if(e!="")
 					   dle=Double.parseDouble(e);
 				   cell = row.createCell(columnCount++);
 				   cell.setCellValue(dle);
 				   totale = totale + dle;*/
-				   
-				  
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-		   
-		  /* Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale };
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
+
+                }
+            }
+
+            /* Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale };
 		   int columnCounttotal = 0;
 		   Row rowtotal = sheet.createRow(rowCount++);
 		   rowtotal = sheet.createRow(rowCount++);
@@ -4565,133 +4363,123 @@ public class LandRecordsController {
 
 
 		   }*/
-		   
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
 
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
 
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedtypestatussummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report6(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag) throws FileNotFoundException, IOException {
 
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
+        Workbook wb = new HSSFWorkbook();
 
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedtypestatussummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report6(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Project_Application_Type_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
 
-	   Workbook wb = new HSSFWorkbook();
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
 
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Project_Application_Type_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
+        List<Object> vertexLst = landRecordsService.findprojectapplicationtypesummaryreport(project);
+        String[] columnList = {"Disputed Application", "Existing Rights", "New Claim", "Unclaimed", "No Claim"};
 
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
+        int rowCount = 0;
 
-	   List<Object> vertexLst = landRecordsService.findprojectapplicationtypesummaryreport(project);
-	   String[] columnList = { "Disputed Application", "Existing Rights", "New Claim",  "Unclaimed", "No Claim" };
+        Row row = sheet.createRow(rowCount++);
 
-	   int rowCount = 0;
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
 
-	   Row row = sheet.createRow(rowCount++);
+            cell.setCellValue((String) header);
 
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
+        }
 
-		   cell.setCellValue((String) header);
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
 
-	   }
-	   
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	  
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
 
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   String id = obj[0].toString();
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
+                    Object[] obj = (Object[]) vertexLst.get(i);
+                    String id = obj[0].toString();
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
 
-				   /*String a = (String) obj[1].toString();
+                    /*String a = (String) obj[1].toString();
 				   cell = row.createCell(columnCount++);
 				   cell.setCellValue(a.toString());*/
-				   
-				   String a = obj[1].toString();
-				   Double dla=0.0;
-				   if(a!="")
-					   dla=Double.parseDouble(a);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dla);
-				   totala = totala + dla;
-				   
-				   
-				   String b = obj[2].toString();
-				   Double dlb=0.0;
-				   if(b!="")
-					   dlb=Double.parseDouble(b);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlb);
-				   totalb = totalb + dlb;
-				   
-				   String c = obj[3].toString();
-				   Double dlc=0.0;
-				   if(c!="")
-					   dlc=Double.parseDouble(c);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlc);
-				   totalc = totalc + dlc;
-				   
-				   
-				   String d = obj[4].toString();
-				   Double dld=0.0;
-				   if(d!="")
-					   dld=Double.parseDouble(d);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dld);
-				   //totald = totald + dld;
-				   
-				 
-				   /*String e = obj[5].toString();
+                    String a = obj[1].toString();
+                    Double dla = 0.0;
+                    if (a != "") {
+                        dla = Double.parseDouble(a);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dla);
+                    totala = totala + dla;
+
+                    String b = obj[2].toString();
+                    Double dlb = 0.0;
+                    if (b != "") {
+                        dlb = Double.parseDouble(b);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlb);
+                    totalb = totalb + dlb;
+
+                    String c = obj[3].toString();
+                    Double dlc = 0.0;
+                    if (c != "") {
+                        dlc = Double.parseDouble(c);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlc);
+                    totalc = totalc + dlc;
+
+                    String d = obj[4].toString();
+                    Double dld = 0.0;
+                    if (d != "") {
+                        dld = Double.parseDouble(d);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dld);
+                    //totald = totald + dld;
+
+                    /*String e = obj[5].toString();
 				   Double dle=0.0;
 				   if(e!="")
 					   dle=Double.parseDouble(e);
 				   cell = row.createCell(columnCount++);
 				   cell.setCellValue(dle);
 				   totale = totale + dle;*/
-				   
-				  
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-		   
-		  /* Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale };
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
+
+                }
+            }
+
+            /* Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale };
 		   int columnCounttotal = 0;
 		   Row rowtotal = sheet.createRow(rowCount++);
 		   rowtotal = sheet.createRow(rowCount++);
@@ -4711,838 +4499,691 @@ public class LandRecordsController {
 
 
 		   }*/
-		   
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
+
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedworkflowsummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report7(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag) throws FileNotFoundException, IOException {
+
+        Workbook wb = new HSSFWorkbook();
+
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Project_WorkFlow_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
+
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
+
+        List<Object> vertexLst = landRecordsService.findprojectworkflowsummaryreport(project);
+        String[] columnList = {"Parcel No", "Captured Time", "Processing Date", "Approval Date", "Certificate Date"};
+
+        int rowCount = 0;
+
+        Row row = sheet.createRow(rowCount++);
+
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
+
+            cell.setCellValue((String) header);
+
+        }
+
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
+
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
+
+                    Object[] obj = (Object[]) vertexLst.get(i);
+
+                    String id = obj[0].toString();
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
+
+                    if (obj[1] != null) {
+                        String a = obj[1].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(a);
+                    }
+
+                    if (obj[2] != null) {
+                        String b = obj[2].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(b);
+                    }
+
+                    if (obj[3] != null) {
+                        String c = obj[3].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(c);
+                    }
+
+                    if (obj[4] != null) {
+                        String d = obj[4].toString();
+                        Double dld = 0.0;
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(d);
+                    }
+
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
+
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
+
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedTenureTypesLandUnitSummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report8(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag) throws FileNotFoundException, IOException {
+
+        Workbook wb = new HSSFWorkbook();
+
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Project_Tenure_Types_LandUnit_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
+
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
+
+        List<Object> vertexLst = landRecordsService.findprojectTenureTypesLandUnitsummaryreport(project);
+        String[] columnList = {"Parcel No", "Owner", "Gender", "OwnershipType", "Age"};
+
+        int rowCount = 0;
+
+        Row row = sheet.createRow(rowCount++);
+
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
+
+            cell.setCellValue((String) header);
+
+        }
+
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
+
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
+
+                    Object[] obj = (Object[]) vertexLst.get(i);
+
+                    String id = obj[0].toString();
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
+
+                    if (obj[1] != null) {
+                        String a = obj[1].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(a);
+                    }
+
+                    if (obj[2] != null) {
+                        String b = obj[2].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(b);
+                    }
+
+                    if (obj[3] != null) {
+                        String c = obj[3].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(c);
+                    }
+
+                    if (obj[4] != null) {
+                        String d = obj[4].toString();
+                        Double dld = 0.0;
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(d);
+                    }
+
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
+
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
+
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedliberiafarmSummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void reportliberia(HttpServletRequest request, HttpServletResponse response, @PathVariable String project, @PathVariable String tag) throws FileNotFoundException, IOException {
+
+        Workbook wb = new HSSFWorkbook();
+
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Liberia_Farm_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
+
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
+
+        List<Object> vertexLst = landRecordsService.findLiberiaFarmummaryreport(project);
+        String[] columnList = {"Field ID", "Date of collection", "Data Collector", "Enterprise Group Name", "County", "District", "Clan Name", "Community Forest", "Name of Town",
+            "Resource Classification", "Resource SubClassification", "Size of Plot", "Type of Tenure", "Type of person", "Name", "POI - Yes/No", "Marital Status",
+            "Relationship", "Gender", "Ethnicity/Clan", "Resident", "DOB", "Mobile No", "Primary Crop", "Primary Crop date", "Primary Crop duration", "Secondary Crop", "Secondary Crop date", "Secondary Crop duration"};
+
+        int rowCount = 0;
+
+        Row row = sheet.createRow(rowCount++);
+
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
+
+            cell.setCellValue((String) header);
+
+        }
+
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
+
+                    Object[] obj = (Object[]) vertexLst.get(i);
+
+                    String id = obj[0].toString();
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
+
+                    if (obj[1] != null) {
+                        String a = obj[1].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(a);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[2] != null) {
+                        String b = obj[2].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(b);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[3] != null) {
+                        String c = obj[3].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(c);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[4] != null) {
+                        String d = obj[4].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(d);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[5] != null) {
+                        String e = obj[5].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(e);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[6] != null) {
+                        String f = obj[6].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(f);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[7] != null) {
+                        String g = obj[7].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(g);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[8] != null) {
+                        String h = obj[8].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(h);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[9] != null) {
+                        String ii = obj[9].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(ii);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[10] != null) {
+                        String j = obj[10].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(j);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[11] != null) {
+                        String k = obj[11].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(k);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[12] != null) {
+                        String l = obj[12].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(l);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[13] != null) {
+                        String m = obj[13].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(m);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[14] != null) {
+                        String n = obj[14].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(n);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[15] != null) {
+                        String o = obj[15].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(0);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[16] != null) {
+                        String p = obj[16].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(p);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[17] != null) {
+                        String q = obj[17].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(q);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[18] != null) {
+                        String r = obj[18].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(r);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[19] != null) {
+                        String s = obj[19].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(s);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[20] != null) {
+                        String t = obj[20].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(t);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[21] != null) {
+                        String u = obj[21].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(u);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[22] != null) {
+                        String v = obj[22].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(v);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[23] != null) {
+                        String w = obj[23].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(w);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[24] != null) {
+                        String x = obj[24].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(x);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[25] != null) {
+                        String y = obj[25].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(y);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[26] != null) {
+                        String z = obj[26].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(z);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[27] != null) {
+                        String z1 = obj[27].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(z1);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
+
+                    if (obj[28] != null) {
+                        String z2 = obj[28].toString();
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue(z2);
+                    } else {
+                        cell = row.createCell(columnCount++);
+                        cell.setCellValue("");
+                    }
 
 
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
-
-
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
-
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedworkflowsummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report7(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
-
-	   Workbook wb = new HSSFWorkbook();
-
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Project_WorkFlow_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
-
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
-
-	   List<Object> vertexLst = landRecordsService.findprojectworkflowsummaryreport(project);
-	   String[] columnList = { "Parcel No", "Captured Time", "Processing Date",  "Approval Date", "Certificate Date" };
-
-	   int rowCount = 0;
-
-	   Row row = sheet.createRow(rowCount++);
-
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
-
-		   cell.setCellValue((String) header);
-
-	   }
-	   
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	  
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
-
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   
-				   String id = obj[0].toString();
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
-
-				   if(obj[1] != null)
-				   {
-					   String a = obj[1].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(a);
-				   }
-				   
-				   if(obj[2] != null)
-				   {
-					   String b = obj[2].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(b);
-				   }
-				   
-				   if(obj[3] != null)
-				   {
-					   String c = obj[3].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(c);
-				   }
-				   
-				   if(obj[4] != null)
-				   {
-					   String d = obj[4].toString();
-					   Double dld=0.0;
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(d);
-				   }
-				   
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-
-
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
-
-
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
-
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedTenureTypesLandUnitSummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report8(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
-
-	   Workbook wb = new HSSFWorkbook();
-
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Project_Tenure_Types_LandUnit_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
-
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
-
-	   List<Object> vertexLst = landRecordsService.findprojectTenureTypesLandUnitsummaryreport(project);
-	   String[] columnList = { "Parcel No", "Owner", "Gender", "OwnershipType", "Age" };
-
-	   int rowCount = 0;
-
-	   Row row = sheet.createRow(rowCount++);
-
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
-
-		   cell.setCellValue((String) header);
-
-	   }
-	   
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	  
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
-
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   
-				   String id = obj[0].toString();
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
-
-				   if(obj[1] != null)
-				   {
-					   String a = obj[1].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(a);
-				   }
-				   
-				   if(obj[2] != null)
-				   {
-					   String b = obj[2].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(b);
-				   }
-				   
-				   if(obj[3] != null)
-				   {
-					   String c = obj[3].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(c);
-				   }
-				   
-				   if(obj[4] != null)
-				   {
-					   String d = obj[4].toString();
-					   Double dld=0.0;
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(d);
-				   }
-				   
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-
-
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
-
-
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
-
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedliberiafarmSummaryreport/{project}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void reportliberia(HttpServletRequest request,HttpServletResponse response,@PathVariable String project,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
-
-	   Workbook wb = new HSSFWorkbook();
-
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Liberia_Farm_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
-
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
-
-	   List<Object> vertexLst = landRecordsService.findLiberiaFarmummaryreport(project);
-	   String[] columnList = { "Field ID", "Date of collection", "Data Collector", "Enterprise Group Name", "County", "District", "Clan Name", "Community Forest", "Name of Town", 
-			   "Resource Classification", "Resource SubClassification", "Size of Plot", "Type of Tenure", "Type of person", "Name", "POI - Yes/No", "Marital Status",
-			   "Relationship", "Gender", "Ethnicity/Clan", "Resident", "DOB", "Mobile No", "Primary Crop", "Primary Crop date", "Primary Crop duration", "Secondary Crop", "Secondary Crop date","Secondary Crop duration"};
-
-	   int rowCount = 0;
-
-	   Row row = sheet.createRow(rowCount++);
-
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
-
-		   cell.setCellValue((String) header);
-
-	   }
-	   
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
-
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   
-				   String id = obj[0].toString();
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
-
-				   if(obj[1] != null)
-				   {
-					   String a = obj[1].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(a);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   if(obj[2] != null)
-				   {
-					   String b = obj[2].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(b);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   if(obj[3] != null)
-				   {
-					   String c = obj[3].toString();
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(c);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[4] != null)
-				   {
-					   String d = obj[4].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(d);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[5] != null)
-				   {
-					   String e = obj[5].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(e);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[6] != null)
-				   {
-					   String f = obj[6].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(f);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[7] != null)
-				   {
-					   String g = obj[7].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(g);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[8] != null)
-				   {
-					   String h = obj[8].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(h);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[9] != null)
-				   {
-					   String ii = obj[9].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(ii);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[10] != null)
-				   {
-					   String j = obj[10].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(j);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[11] != null)
-				   {
-					   String k = obj[11].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(k);
-				   }
-
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   if(obj[12] != null)
-				   {
-					   String l = obj[12].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(l);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[13] != null)
-				   {
-					   String m = obj[13].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(m);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[14] != null)
-				   {
-					   String n = obj[14].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(n);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[15] != null)
-				   {
-					   String o = obj[15].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(0);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[16] != null)
-				   {
-					   String p = obj[16].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(p);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[17] != null)
-				   {
-					   String q = obj[17].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(q);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   if(obj[18] != null)
-				   {
-					   String r = obj[18].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(r);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[19] != null)
-				   {
-					   String s = obj[19].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(s);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   
-				   if(obj[20] != null)
-				   {
-					   String t = obj[20].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(t);
-				   }
-
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-				   if(obj[21] != null)
-				   {
-					   String u = obj[21].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(u);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[22] != null)
-				   {
-					   String v = obj[22].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(v);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[23] != null)
-				   {
-					   String w = obj[23].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(w);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[24] != null)
-				   {
-					   String x = obj[24].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(x);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[25] != null)
-				   {
-					   String y = obj[25].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(y);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[26] != null)
-				   {
-					   String z = obj[26].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(z);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[27] != null)
-				   {
-					   String z1 = obj[27].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(z1);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				   if(obj[28] != null)
-				   {
-					   String z2 = obj[28].toString();					   
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue(z2);
-				   }
-				   else
-				   {
-					   cell = row.createCell(columnCount++);
-					   cell.setCellValue("");
-				   }
-				   
-
-				  /* if(obj[29] != null)
+                    /* if(obj[29] != null)
 				   {
 					   String z3 = obj[29].toString();					   
 					   cell = row.createCell(columnCount++);
 					   cell.setCellValue(z3);
 				   }*/
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
 
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
+                }
+            }
 
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
 
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
 
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
+    @RequestMapping(value = "/viewer/landrecords/projectdetailedsummaryreportForCommune/{communeid}/{tag}/{villageId}", method = RequestMethod.GET)
+    @ResponseBody
+    public void report3(HttpServletRequest request, HttpServletResponse response, @PathVariable String communeid, @PathVariable String tag) throws FileNotFoundException, IOException {
 
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/projectdetailedsummaryreportForCommune/{communeid}/{tag}/{villageId}", method = RequestMethod.GET)
-   @ResponseBody
-   public void report3(HttpServletRequest request,HttpServletResponse response,@PathVariable String communeid,@PathVariable String tag) throws FileNotFoundException, IOException 
-   {
+        Workbook wb = new HSSFWorkbook();
 
-	   Workbook wb = new HSSFWorkbook();
+        String filename = "";
+        if (tag.equalsIgnoreCase("NEW")) {
+            filename = "Project_Detailed_Summary_Report.xls";
+        } else if (tag.equalsIgnoreCase("REGISTERED")) {
+            filename = "Report_By_Tenure_Application_register.xls";
+        } else if (tag.equalsIgnoreCase("APFR")) {
+            filename = "Report_By_Tenure_APFR_register.xls";
+        }
 
-	   String filename="";
-	   if(tag.equalsIgnoreCase("NEW")){
-		   filename="Project_Detailed_Summary_Report.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("REGISTERED")){
-		   filename="Report_By_Tenure_Application_register.xls";
-	   }
-	   else if(tag.equalsIgnoreCase("APFR")){
-		   filename="Report_By_Tenure_APFR_register.xls";
-	   }
+        // Create a blank sheet
+        Sheet sheet = wb.createSheet("new sheet");
 
-	   // Create a blank sheet
-	   Sheet sheet = wb.createSheet("new sheet");
+        List<Object> vertexLst = landRecordsService.findprojectdetailedsummaryreportForCommune(communeid);
+        String[] columnList = {"Tenure Type", "Gender", "Commne Name", "Parcels", "Total Percentage", "Total Area", "Average Area", "Certificate Issued"};
 
-	   List<Object> vertexLst = landRecordsService.findprojectdetailedsummaryreportForCommune(communeid);
-	   String[] columnList = { "Tenure Type", "Gender", "Commne Name", "Parcels",  "Total Percentage", "Total Area", "Average Area", "Certificate Issued" };
+        int rowCount = 0;
 
-	   int rowCount = 0;
+        Row row = sheet.createRow(rowCount++);
 
-	   Row row = sheet.createRow(rowCount++);
+        int columnCount = 0;
+        for (String header : columnList) {
+            Cell cell = row.createCell(columnCount++);
 
-	   int columnCount = 0;
-	   for (String header : columnList) {
-		   Cell cell = row.createCell(columnCount++);
+            cell.setCellValue((String) header);
 
-		   cell.setCellValue((String) header);
+        }
 
-	   }
+        String Totalstr = "Total";
+        Double totala = 0.0;
+        Double totalb = 0.0;
+        Double totalc = 0.0;
+        Double totald = 0.0;
+        Double totale = 0.0;
+        Double totalf = 0.0;
+        Double totalg = 0.0;
+        try {
+            if (vertexLst != null) {
+                for (int i = 0; i < vertexLst.size(); i++) {
+                    row = sheet.createRow(rowCount++);
+                    columnCount = 0;
 
-	   String Totalstr = "Total";
-	   Double totala = 0.0;
-	   Double totalb = 0.0;
-	   Double totalc = 0.0;
-	   Double totald = 0.0;
-	   Double totale = 0.0;
-	   Double totalf = 0.0;
-	   Double totalg = 0.0;
-	   try {
-		   if(vertexLst!=null)
-			   for (int i = 0; i < vertexLst.size(); i++) {
-				   row = sheet.createRow(rowCount++);
-				   columnCount = 0;
+                    Object[] obj = (Object[]) vertexLst.get(i);
+                    String id = (String) obj[0];
+                    Cell cell = row.createCell(columnCount++);
+                    cell.setCellValue(id);
 
-				   Object[] obj = (Object[]) vertexLst.get(i);
-				   String id = (String) obj[0];
-				   Cell cell = row.createCell(columnCount++);
-				   cell.setCellValue(id);
+                    String a = (String) obj[1].toString();
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(a.toString());
 
-				   String a = (String) obj[1].toString();
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(a.toString());
-				   
-				   String b = (String) obj[2].toString();
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(b.toString());
-				   
-				   String c = (String) obj[3].toString();
-				   Double dlc=0.0;
-				   if(c!="")
-					   dlc=Double.parseDouble(c);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlc);
-				   totalc = totalc + dlc;
-				   
-				   
-				   String d = (String) obj[4].toString();
-				   Double dld=0.0;
-				   if(d!="")
-					   dld=Double.parseDouble(d);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dld);
-				   totald = totald + dld;
-				   
-				 
-				   String e = (String) obj[5].toString();
-				   Double dle=0.0;
-				   if(e!="")
-					   dle=Double.parseDouble(e);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dle);
-				   totale = totale + dle;
-				   
-				   String f = (String) obj[6].toString();
-				   Double dlf=0.0;
-				   if(f!="")
-					   dlf=Double.parseDouble(f);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlf);
-				   totalf = totalf + dlf;
-				   
-				   String g = (String) obj[6].toString();
-				   Double dlg=0.0;
-				   if(g!="")
-					   dlg=Double.parseDouble(g);
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue(dlg);
-				   totalg = totalg + dlg;
-				   
-				   cell = row.createCell(columnCount++);
-				   cell.setCellValue("");
-				   
-			   }
-		   
-		   Double[] sumList = { 0.0, totala, totalb, totalc, totald, totale, totalf , totalg  };
-		   int columnCounttotal = 0;
-		   Row rowtotal = sheet.createRow(rowCount++);
-		   rowtotal = sheet.createRow(rowCount++);
-		   
-		  // for (Double footer : sumList) 
-			   for ( int i = 0; i < sumList.length; i++)
-		   {
-			   Cell cell = rowtotal.createCell(columnCounttotal++);
-			   if(i == 0.0)
-			   {
-				   cell.setCellValue(Totalstr);
-			   }
-			   else
-			   {
-				   cell.setCellValue((Double) sumList[i]);
-			   }
+                    String b = (String) obj[2].toString();
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(b.toString());
 
+                    String c = (String) obj[3].toString();
+                    Double dlc = 0.0;
+                    if (c != "") {
+                        dlc = Double.parseDouble(c);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlc);
+                    totalc = totalc + dlc;
 
-		   }
-		   
+                    String d = (String) obj[4].toString();
+                    Double dld = 0.0;
+                    if (d != "") {
+                        dld = Double.parseDouble(d);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dld);
+                    totald = totald + dld;
 
+                    String e = (String) obj[5].toString();
+                    Double dle = 0.0;
+                    if (e != "") {
+                        dle = Double.parseDouble(e);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dle);
+                    totale = totale + dle;
 
-	   } catch (Exception e) {
-		   logger.error(e);
-	   }
+                    String f = (String) obj[6].toString();
+                    Double dlf = 0.0;
+                    if (f != "") {
+                        dlf = Double.parseDouble(f);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlf);
+                    totalf = totalf + dlf;
 
+                    String g = (String) obj[6].toString();
+                    Double dlg = 0.0;
+                    if (g != "") {
+                        dlg = Double.parseDouble(g);
+                    }
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue(dlg);
+                    totalg = totalg + dlg;
 
-	   response.setHeader("Content-Disposition", "attachment; filename="+filename);
-	   response.setContentType("application/xls");
-	   OutputStream out = response.getOutputStream();
+                    cell = row.createCell(columnCount++);
+                    cell.setCellValue("");
 
-	   wb.write(out);
-	   out.flush();
-	   out.close();
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/parcelhistory/{landid}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Object>  getParcelHistorybylandid(@PathVariable Long landid)
-	{
-	   	List<Object> object=new ArrayList<Object>(); 
-	   	Object objsaledetails = null;
-		Object objleasedetails = null; 
-		Object objmortagedetails = null;
-		Object objtransactiondetails = null;
-			
-	   	try 
-	   	{
-			objsaledetails= landRecordsService.getownerhistorydetails(landid);
-			objleasedetails= landRecordsService.getleasehistorydetails(landid);
-			objmortagedetails= landRecordsService.getmortagagedetails(landid);
-			objtransactiondetails= landRecordsService.gettransactiondetails(landid);
-			
+                }
+            }
+
+            Double[] sumList = {0.0, totala, totalb, totalc, totald, totale, totalf, totalg};
+            int columnCounttotal = 0;
+            Row rowtotal = sheet.createRow(rowCount++);
+            rowtotal = sheet.createRow(rowCount++);
+
+            // for (Double footer : sumList) 
+            for (int i = 0; i < sumList.length; i++) {
+                Cell cell = rowtotal.createCell(columnCounttotal++);
+                if (i == 0.0) {
+                    cell.setCellValue(Totalstr);
+                } else {
+                    cell.setCellValue((Double) sumList[i]);
+                }
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setContentType("application/xls");
+        OutputStream out = response.getOutputStream();
+
+        wb.write(out);
+        out.flush();
+        out.close();
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/parcelhistory/{landid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> getParcelHistorybylandid(@PathVariable Long landid) {
+        List<Object> object = new ArrayList<Object>();
+        Object objsaledetails = null;
+        Object objleasedetails = null;
+        Object objmortagedetails = null;
+        Object objtransactiondetails = null;
+
+        try {
+            objsaledetails = landRecordsService.getownerhistorydetails(landid);
+            objleasedetails = landRecordsService.getleasehistorydetails(landid);
+            objmortagedetails = landRecordsService.getmortagagedetails(landid);
+            objtransactiondetails = landRecordsService.gettransactiondetails(landid);
+
 //	   		List<OwnerHistoryForFetch> ownersaledetails= landRecordsService.getownerhistorydetails(landid);
 //	   	 for(OwnerHistoryForFetch obj: ownersaledetails){
 //	   		
@@ -5569,1015 +5210,1015 @@ public class LandRecordsController {
 ////			objleasedetails= landRecordsService.getownerhistorydetails(landid);
 ////			objmortagedetails= landRecordsService.getownerhistorydetails(landid);
 //			
-			object.add(objsaledetails);
-			object.add(objleasedetails);
-			object.add(objmortagedetails); 
-			object.add(objtransactiondetails);
-			return object;
-		} 
-	   	catch (Exception e)
-	   	{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-   
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/findsaledetailbytransid/{transactionid}", method = RequestMethod.GET)
- 	@ResponseBody
- 	public List<Object>  findsaledetailbyTransid(@PathVariable Long transactionid)
- 	{
- 	   	List<Object> object=new ArrayList<Object>(); 
- 	   LaExtTransactionHistory lasaleobj =null;
- 	   	//Object objsaledetails = null;
- 		Object newobjperson = null; 
- 		Object oldobjperson = null;
- 		/*Object objtransactiondetails = null;*/
- 			
- 	   	try 
- 	   	{
- 	   		
- 	   	lasaleobj = 	laExtTransactionHistorydao.getTransactionHistoryByTransId(transactionid.intValue());
- 			//objsaledetails= landRecordsService.getownerhistorydetails(landid);
- 	   
- 	 
- 	   NaturalPerson oldpersonobj = (NaturalPerson) laPartyDao.getPartyIdByID(lasaleobj.getOldownerid());
- 	  NaturalPerson newpersonobj = (NaturalPerson) laPartyDao.getPartyIdByID(lasaleobj.getNewownerid());
- 	  
- 	 Gender genderobj = Genderdao.getGenderById(oldpersonobj.getGenderid().longValue());
- 	oldpersonobj.setGender(genderobj.getGender_en());
- 	
- 	 Gender newgenderobj = Genderdao.getGenderById(newpersonobj.getGenderid().longValue());
- 	newpersonobj.setGender(newgenderobj.getGender_en());
- 	
- 	newobjperson =(Object) newpersonobj;
- 	oldobjperson =(Object) oldpersonobj;
- 			/*objmortagedetails= landRecordsService.getmortagagedetails(landid);
+            object.add(objsaledetails);
+            object.add(objleasedetails);
+            object.add(objmortagedetails);
+            object.add(objtransactiondetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/findsaledetailbytransid/{transactionid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> findsaledetailbyTransid(@PathVariable Long transactionid) {
+        List<Object> object = new ArrayList<Object>();
+        LaExtTransactionHistory lasaleobj = null;
+        //Object objsaledetails = null;
+        Object newobjperson = null;
+        Object oldobjperson = null;
+        /*Object objtransactiondetails = null;*/
+
+        try {
+
+            lasaleobj = laExtTransactionHistorydao.getTransactionHistoryByTransId(transactionid.intValue());
+            //objsaledetails= landRecordsService.getownerhistorydetails(landid);
+
+            NaturalPerson oldpersonobj = (NaturalPerson) laPartyDao.getPartyIdByID(lasaleobj.getOldownerid());
+            NaturalPerson newpersonobj = (NaturalPerson) laPartyDao.getPartyIdByID(lasaleobj.getNewownerid());
+
+            Gender genderobj = Genderdao.getGenderById(oldpersonobj.getGenderid().longValue());
+            oldpersonobj.setGender(genderobj.getGender_en());
+
+            Gender newgenderobj = Genderdao.getGenderById(newpersonobj.getGenderid().longValue());
+            newpersonobj.setGender(newgenderobj.getGender_en());
+
+            newobjperson = (Object) newpersonobj;
+            oldobjperson = (Object) oldpersonobj;
+            /*objmortagedetails= landRecordsService.getmortagagedetails(landid);
  			objtransactiondetails= landRecordsService.gettransactiondetails(landid);*/
-  			
- 			//object.add(objsaledetails);
- 			object.add(0, oldobjperson);
- 			object.add(1, newobjperson); 
- 			//object.add(objtransactiondetails);
- 			return object;
- 		} 
- 	   	catch (Exception e)
- 	   	{
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 			return null;
- 		}
- 	}
-   
-   @RequestMapping(value = "/viewer/landrecords/findleasedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
-  	@ResponseBody
-  	public List<Object>  findleasedetailbylandid(@PathVariable Long transactionid,@PathVariable Long landid)
-  	{
-  	   	List<Object> object=new ArrayList<Object>(); 
-  	   	//Object objsaledetails = null;
-  		Object objleasedetails = null; 
-  		Object objdocumentdetails = null;
-  		/*Object objtransactiondetails = null;*/
-  			
-  	   	try 
-  	   	{
-  			//objsaledetails= landRecordsService.getownerhistorydetails(landid);
-  			objleasedetails= landRecordsService.findleasedetailbylandid(transactionid,landid);
-  			objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
-  			/*objmortagedetails= landRecordsService.getmortagagedetails(landid);
+
+            //object.add(objsaledetails);
+            object.add(0, oldobjperson);
+            object.add(1, newobjperson);
+            //object.add(objtransactiondetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/findleasedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> findleasedetailbylandid(@PathVariable Long transactionid, @PathVariable Long landid) {
+        List<Object> object = new ArrayList<Object>();
+        //Object objsaledetails = null;
+        Object objleasedetails = null;
+        Object objdocumentdetails = null;
+        /*Object objtransactiondetails = null;*/
+
+        try {
+            //objsaledetails= landRecordsService.getownerhistorydetails(landid);
+            objleasedetails = landRecordsService.findleasedetailbylandid(transactionid, landid);
+            objdocumentdetails = landRecordsService.viewdocumentdetailbytransactioid(transactionid);
+            /*objmortagedetails= landRecordsService.getmortagagedetails(landid);
   			objtransactiondetails= landRecordsService.gettransactiondetails(landid);*/
-   			
-  			//object.add(objsaledetails);
-  			object.add(objleasedetails);
-  			object.add(objdocumentdetails); 
-  			//object.add(objtransactiondetails);
-  			return object;
-  		} 
-  	   	catch (Exception e)
-  	   	{
-  			// TODO Auto-generated catch block
-  			e.printStackTrace();
-  			return null;
-  		}
-  	}
-   
-   @RequestMapping(value = "/viewer/landrecords/findsurrenderleasedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
- 	@ResponseBody
- 	public List<Object>  findsurrenderleasedetailbylandid(@PathVariable Long transactionid,@PathVariable Long landid)
- 	{
- 	   	List<Object> object=new ArrayList<Object>(); 	   
- 		Object objleasedetails = null; 
- 		Object objdocumentdetails = null;
- 	   	try 
- 	   	{	
- 			objleasedetails= landRecordsService.findsurrenderleasedetailbylandid(transactionid,landid);
- 			objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
- 			object.add(objleasedetails);
- 			object.add(objdocumentdetails); 
- 			return object;
- 		} 
- 	   	catch (Exception e)
- 	   	{
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 			return null;
- 		}
- 	}
-   
-   @RequestMapping(value = "/viewer/landrecords/findmortagagedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
- 	@ResponseBody
- 	public List<Object>  findmortagagedetailbylandid(@PathVariable Long transactionid,@PathVariable Long landid)
- 	{
- 	   	List<Object> object=new ArrayList<Object>();  	   	
- 		Object objmortagedetails = null; 
- 		Object objdocumentdetails = null;
- 			
- 	   	try 
- 	   	{
- 		
- 	   	objmortagedetails= landRecordsService.findmortagagedetailbylandid(transactionid,landid);
- 	   objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
- 			object.add(objmortagedetails);
- 			object.add(objdocumentdetails); 
- 			//object.add(objmortagedetails); 
- 			//object.add(objtransactiondetails);
- 			return object;
- 		} 
- 	   	catch (Exception e)
- 	   	{
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 			return null;
- 		}
- 	}
-   
-   @RequestMapping(value = "/viewer/landrecords/findSurrendermortagagedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Object>  findSurrendermortagagedetailbylandid(@PathVariable Long transactionid,@PathVariable Long landid)
-	{
-	   	List<Object> object=new ArrayList<Object>();  	   	
-		Object objmortagedetails = null; 
-		Object objdocumentdetails = null;
-			
-	   	try 
-	   	{
-		
-	   	objmortagedetails= landRecordsService.findSurrendermortagagedetailbylandid(transactionid,landid);
-	   objdocumentdetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
-			object.add(objmortagedetails);
-			object.add(objdocumentdetails); 
-			//object.add(objmortagedetails); 
-			//object.add(objtransactiondetails);
-			return object;
-		} 
-	   	catch (Exception e)
-	   	{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-   
-   @RequestMapping(value = "/viewer/landrecords/viewdocumentdetail/{transactionid}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Object>  viewdocumentdetailbytransactioid(@PathVariable Long transactionid)
-	{
-	   	List<Object> object=new ArrayList<Object>();  	   	
-		Object objmortagedetails = null; 
-		
-			
-	   	try 
-	   	{
-		
-	   	objmortagedetails= landRecordsService.viewdocumentdetailbytransactioid(transactionid);
-			
-			object.add(objmortagedetails);
-			//object.add(objmortagedetails); 
-			//object.add(objtransactiondetails);
-			return object;
-		} 
-	   	catch (Exception e)
-	   	{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
 
-   
-   @RequestMapping(value = "/viewer/user", method = RequestMethod.GET)
-   @ResponseBody
-   public List<AllocateUser> getUserByIdAom() {
-   	return allocateUserDao.getAllocateUser();
-   }
-   
-   
+            //object.add(objsaledetails);
+            object.add(objleasedetails);
+            object.add(objdocumentdetails);
+            //object.add(objtransactiondetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-   @RequestMapping(value = "/viewer/landrecords/updateResource", method = RequestMethod.POST)
-   @ResponseBody
-   public boolean updateResouceAllocation(HttpServletRequest request, HttpServletResponse response,Principal principal) {
-	   
-	   String userId[] = null ;
-		String allocId[] = null;
+    @RequestMapping(value = "/viewer/landrecords/findsurrenderleasedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> findsurrenderleasedetailbylandid(@PathVariable Long transactionid, @PathVariable Long landid) {
+        List<Object> object = new ArrayList<Object>();
+        Object objleasedetails = null;
+        Object objdocumentdetails = null;
+        try {
+            objleasedetails = landRecordsService.findsurrenderleasedetailbylandid(transactionid, landid);
+            objdocumentdetails = landRecordsService.viewdocumentdetailbytransactioid(transactionid);
+            object.add(objleasedetails);
+            object.add(objdocumentdetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-		String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
+    @RequestMapping(value = "/viewer/landrecords/findmortagagedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> findmortagagedetailbylandid(@PathVariable Long transactionid, @PathVariable Long landid) {
+        List<Object> object = new ArrayList<Object>();
+        Object objmortagedetails = null;
+        Object objdocumentdetails = null;
 
-		Long created_by = userObj.getId();
-		Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
-		int applicationstatusid =1;
-		try {
-			userId = request.getParameterValues("userId");
-		} catch (Exception e) {
-			logger.error(e);
-		}
+        try {
 
-		try {
-			allocId = request.getParameterValues("hid_allocid");
-		} catch (Exception e) {
-			logger.error(e);
-		}
+            objmortagedetails = landRecordsService.findmortagagedetailbylandid(transactionid, landid);
+            objdocumentdetails = landRecordsService.viewdocumentdetailbytransactioid(transactionid);
+            object.add(objmortagedetails);
+            object.add(objdocumentdetails);
+            //object.add(objmortagedetails); 
+            //object.add(objtransactiondetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-		return  allocateUserDao.updateUserAllocation(userId, allocId,1l, created_by.intValue(), modifiedby.intValue(), applicationstatusid);
-   }
-   
-   @RequestMapping(value = "/viewer/landrecords/personsDataNew/{id}", method = RequestMethod.GET)
-   @ResponseBody
-   public List<NaturalPerson> getpersonsDataNew(HttpServletRequest request, @PathVariable Long id) {
-	   
-	   
-	   
-	   List<NaturalPerson> lstdata = new ArrayList<NaturalPerson>();
-	   
-  	 List<SocialTenureRelationship>  lst= new ArrayList<SocialTenureRelationship>();
-  	 lst= landRecordsService.findAllSocialTenureByUsin(id);
-  	 if(lst.size()>0)
-  	 {
-  		 for(SocialTenureRelationship obj:lst){
-  			 
-  			 if(obj.getLaPartygroupPersontype().getPersontypeid()== 1)
-  			 {
-  				lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
-  			 }
-  			  			 
-  		 }
-  	 }
-      return lstdata;
-  
-   }
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/Disputeperson/{id}", method = RequestMethod.GET)
-   @ResponseBody
-   public List<NaturalPerson> getDisputedperson(HttpServletRequest request, @PathVariable Long id) {
-	   
-	   
-	   
-	   List<NaturalPerson> lstdata = new ArrayList<NaturalPerson>();
-	   
-	   List<LaExtDisputelandmapping>  disputelandlst= new ArrayList<LaExtDisputelandmapping>();
-		disputelandlst= laExtDisputelandmappingService.findLaExtDisputelandmappingListByLandId(id);
-  	 if(disputelandlst.size()>0)
-  	 {
-  		for(LaExtDisputelandmapping obj:disputelandlst){
-			 
-			 if(obj.getPersontypeid()== 3)
-			 {
-				lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
-			 }
-			 if(obj.getPersontypeid()== 10)
-			 {
-				lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
-			 }
-			  			 
-		 }
-  	 }
-      return lstdata;
-  
-   }
-   
-   
-   
-   @RequestMapping(value = "/viewer/landrecords/NonNaturalpersonsDataNew/{id}", method = RequestMethod.GET)
-   @ResponseBody
-   public List<NonNaturalPerson> getNonNaturalpersonsDataNew(HttpServletRequest request, @PathVariable Long id) {
-	   
-	   
-	   
-	   List<NonNaturalPerson> lstdata = new ArrayList<NonNaturalPerson>();
-	   
-  	 List<SocialTenureRelationship>  lst= new ArrayList<SocialTenureRelationship>();
-  	 lst= landRecordsService.findAllSocialTenureByUsin(id);
-  	 if(lst.size()>0)
-  	 {
-  		 for(SocialTenureRelationship obj:lst){
-  			 
-  			 if(obj.getLaPartygroupPersontype().getPersontypeid()== 2)
-  			 {
-  				lstdata.add((NonNaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
-  			 }
-  			  			 
-  		 }
-  	 }
-      return lstdata;
-  
-   }
-   
-   
-   
-	@RequestMapping(value = "/viewer/landrecords/updateNaturalPersonDataForEdit", method = RequestMethod.POST)
-	@ResponseBody
-   public NaturalPerson updateNaturalPersonDataForEdit(HttpServletRequest request, HttpServletResponse response,Principal principal)
-	{
-		try 
-		{
-			Long personid = 0L;
-			String firstname = "";
-			String contactno ="";
-			String middlename =""; 
-			String lastname ="";
-			String address ="";			
-			String identityno ="";
-			String dateofbirth = "";
-			Integer Gender = 0;
-			Integer identitytypeid =0; 
-			Integer maritalstatusid = 0;
-			Integer educationlevelid = 0;
-			Integer transactionid = 0;
-			Long landid = 0L;
-			Integer persontypeid= 0;
-			 String username = principal.getName();
-		        User user = userService.findByUniqueName(username);
-		        Long userid = user.getId();
-		        String projectName = userDataService.getDefaultProjectByUserId(userid.intValue());
-		        Project project= projectDAO.findByName(projectName);
-                
-		        ProjectArea projectArea = projectService.getProjectArea(project.getName()).get(0);
-		
-			try{landid = ServletRequestUtils.getRequiredLongParameter(request, "landid");}catch(Exception e){}
-			try{transactionid=ServletRequestUtils.getRequiredIntParameter(request, "transactionid");}catch(Exception e){}
-			try{persontypeid=ServletRequestUtils.getRequiredIntParameter(request, "persontypeid");}catch(Exception e){}
-			try{contactno =ServletRequestUtils.getRequiredStringParameter(request, "contactno");}catch(Exception e){}
+    @RequestMapping(value = "/viewer/landrecords/findSurrendermortagagedetailbylandid/{transactionid}/{landid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> findSurrendermortagagedetailbylandid(@PathVariable Long transactionid, @PathVariable Long landid) {
+        List<Object> object = new ArrayList<Object>();
+        Object objmortagedetails = null;
+        Object objdocumentdetails = null;
 
-			try{personid = ServletRequestUtils.getRequiredLongParameter(request, "personid");}catch(Exception e){}
-			try{firstname =  ServletRequestUtils.getRequiredStringParameter(request, "firstname");}catch(Exception e){}
-			try{middlename =ServletRequestUtils.getRequiredStringParameter(request, "middlename");}catch(Exception e){}
-			try{lastname =ServletRequestUtils.getRequiredStringParameter(request, "lastname");}catch(Exception e){}
-			try{address =ServletRequestUtils.getRequiredStringParameter(request, "address");}catch(Exception e){}
-			try{identityno= ServletRequestUtils.getRequiredStringParameter(request, "identityno");}catch(Exception e){}
-			try{dateofbirth=ServletRequestUtils.getRequiredStringParameter(request, "dateofbirth");}catch(Exception e){}
-			try{educationlevelid = ServletRequestUtils.getRequiredIntParameter(request, "educationlevel");}catch(Exception e){}
-			
-			try{Gender=ServletRequestUtils.getRequiredIntParameter(request, "genderid");}catch(Exception e){}
-			try{identitytypeid=ServletRequestUtils.getRequiredIntParameter(request, "identitytypeid");}catch(Exception e){}
-			try{maritalstatusid=ServletRequestUtils.getRequiredIntParameter(request, "maritalstatusid");}catch(Exception e){}
-			
-			EducationLevel educationlevel =educationLevelDao.getEducationLevelBypk(educationlevelid);
-			NaturalPerson editednaturalperosn = (NaturalPerson) laPartyDao.getPartyIdByID(personid);
-			
-			// add new person for all claim types
-			
-			if(editednaturalperosn== null){     
-				LaExtTransactiondetail LaExtTransactionObj =null;
-				
-				
-				//If Unclaimed
-				if(transactionid==null || transactionid==0){
-					SocialTenureRelationship socialTenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipByLandId(landid);
-					if(null == socialTenureobj){
-						LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
-				laExtTransactiondetail.setCreatedby(userid.intValue());
-				laExtTransactiondetail.setCreateddate(new Date());
-				laExtTransactiondetail.setIsactive(true);
-				
-				Status status = registrationRecordsService.getStatusById(1);
-				
-				laExtTransactiondetail.setLaExtApplicationstatus(status);
-				laExtTransactiondetail.setModuletransid(1);
-				laExtTransactiondetail.setRemarks("");
-				laExtTransactiondetail.setProcessid(1l);
-				LaExtTransactionObj =laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
-					}
-					else{
-						LaExtTransactionObj = socialTenureobj.getLaExtTransactiondetail();
-					}
-				}
-				
-				
-				
-				NaturalPerson naturalperson= new NaturalPerson();
-				
-				IdType  idtype= new IdType();
-				idtype.setIdentitytypeid(identitytypeid);
-				
-				try{naturalperson.setFirstname(firstname);}catch(Exception e){}
-				try{naturalperson.setContactno(contactno);}catch(Exception e){}
-				try{naturalperson.setMiddlename(middlename);}catch(Exception e){}
-				try{naturalperson.setLastname(lastname);}catch(Exception e){}
-				try{naturalperson.setAddress(address);}catch(Exception e){}
-				try{naturalperson.setLaPartygroupIdentitytype(idtype);}catch(Exception e){}
-				try{naturalperson.setIdentityno(identityno);}catch(Exception e){}
-				try{naturalperson.setGenderid(Gender);}catch(Exception e){}
-				try{naturalperson.setLaPartygroupEducationlevel(educationlevel);}catch(Exception e){}
-				try{naturalperson.setCreatedby(userid.intValue());}catch(Exception e){}
-				try{naturalperson.setCreateddate(new Date());}catch(Exception e){}
-				naturalperson.setLaSpatialunitgroup1(projectArea.getLaSpatialunitgroup1());
-				naturalperson.setLaSpatialunitgroup3(projectArea.getLaSpatialunitgroup3());
-                 naturalperson.setLaSpatialunitgroup2(projectArea.getLaSpatialunitgroup2());
-                 naturalperson.setLaSpatialunitgroup4(projectArea.getLaSpatialunitgroup4());
-                 naturalperson.setLaSpatialunitgroup5(projectArea.getLaSpatialunitgroup5());
-                 naturalperson.setLaSpatialunitgroupHierarchy1(projectArea.getLaSpatialunitgroupHierarchy1());
-                 naturalperson.setLaSpatialunitgroupHierarchy2(projectArea.getLaSpatialunitgroupHierarchy2());
-                 naturalperson.setLaSpatialunitgroupHierarchy3(projectArea.getLaSpatialunitgroupHierarchy3());
-                 naturalperson.setLaSpatialunitgroupHierarchy4(projectArea.getLaSpatialunitgroupHierarchy4());
-                 naturalperson.setLaSpatialunitgroupHierarchy5(projectArea.getLaSpatialunitgroupHierarchy5());
-                 naturalperson.setIsactive(true);
-				PersonType laPartygroupPersontype = new PersonType();
-				laPartygroupPersontype.setPersontypeid(1);
-				try{naturalperson.setLaPartygroupPersontype(laPartygroupPersontype);}catch(Exception e){}
-		        try{ 
-		        		String[] datearr = dateofbirth.split("-");
-		        		
-		        		Long month = Long.parseLong(datearr[1])+1L;
-		        		String finaldob = datearr[0] +"-"+ month.toString() +"-"+datearr[2];
-						Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
-						naturalperson.setDateofbirth(date1);
-					}
-		        catch(Exception e){
-		        	e.printStackTrace();
-		        }
-		        MaritalStatus maritalstatus = new MaritalStatus();
-		        maritalstatus.setMaritalstatusid(maritalstatusid);
-		        try{naturalperson.setLaPartygroupMaritalstatus(maritalstatus);}catch(Exception e){}
-		        
-		        
-				NaturalPerson obj = naturalPersonDao.addNaturalPerson(naturalperson);
-				
-				   SocialTenureRelationship right = new SocialTenureRelationship();
-                   right.setCreatedby(userid.intValue());
-                   right.setLandid(landid);
-                   right.setPartyid(obj.getPartyid());
-                   right.setLaPartygroupPersontype(obj.getLaPartygroupPersontype());
-                   if(LaExtTransactionObj==null){
-                   LaExtTransactiondetail transobj= laExtTransactiondetailDao.getLaExtTransactiondetail(transactionid);
-                   right.setLaExtTransactiondetail(transobj);
-                   }
-                   else{
-                   right.setLaExtTransactiondetail(LaExtTransactionObj);
-                   }
-                   right.setIsactive(true);
-                   
-                   
-                   right.setCreateddate(new Date());
-                   
-                   SocialTenureRelationship  socialTenurerelationship  = socialTenureRelationshipDao.saveSocialTenureRelationship(right);
-				
-				return obj;
-			}
-			
-			
-		
-				
-				
-				
-			try{editednaturalperosn.setFirstname(firstname);}catch(Exception e){}
-			try{editednaturalperosn.setContactno(contactno);}catch(Exception e){}
-			try{editednaturalperosn.setMiddlename(middlename);}catch(Exception e){}
-			try{editednaturalperosn.setLastname(lastname);}catch(Exception e){}
-			try{editednaturalperosn.setAddress(address);}catch(Exception e){}
-			try{editednaturalperosn.getLaPartygroupIdentitytype().setIdentitytypeid(identitytypeid);}catch(Exception e){}
-			try{editednaturalperosn.setIdentityno(identityno);}catch(Exception e){}
-			try{editednaturalperosn.setGenderid(Gender);}catch(Exception e){}
-			try{editednaturalperosn.setLaPartygroupEducationlevel(educationlevel);}catch(Exception e){}
-	        try{ 
-	        		String[] datearr = dateofbirth.split("-");
-	        		
-	        		Long month = Long.parseLong(datearr[1])+1L;
-	        		String finaldob = datearr[0] +"-"+ month.toString() +"-"+datearr[2];
-					Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
-	        	 	editednaturalperosn.setDateofbirth(date1);
-				}
-	        catch(Exception e){
-	        	e.printStackTrace();
-	        }
-	        
-	        MaritalStatus maritalstatus = new MaritalStatus();
-	        maritalstatus.setMaritalstatusid(maritalstatusid);
-	        try{editednaturalperosn.setLaPartygroupMaritalstatus(maritalstatus);}catch(Exception e){}
-	        
-	        PersonType laPartygroupPersontype = new PersonType();
-	        if(persontypeid !=0){
-			laPartygroupPersontype.setPersontypeid(persontypeid);
-			try{editednaturalperosn.setLaPartygroupPersontype(laPartygroupPersontype);}catch(Exception e){}
-	        }
-	        
-	        
-			return landRecordsService.updateNaturalPersonDataForEdit(editednaturalperosn);
-		} 
-		catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
-	}
-   
-	
-	@RequestMapping(value = "/viewer/landrecords/updateResourceaoi", method = RequestMethod.POST)
-	   @ResponseBody
-	   public boolean updateResouceAoiName(HttpServletRequest request, HttpServletResponse response,Principal principal) {
+        try {
 
-		
-		String userId[] = null ;
-		String project="";
-		String username = principal.getName();
-		User userObj = userService.findByUniqueName(username);
+            objmortagedetails = landRecordsService.findSurrendermortagagedetailbylandid(transactionid, landid);
+            objdocumentdetails = landRecordsService.viewdocumentdetailbytransactioid(transactionid);
+            object.add(objmortagedetails);
+            object.add(objdocumentdetails);
+            //object.add(objmortagedetails); 
+            //object.add(objtransactiondetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-		Long created_by = userObj.getId();
-		Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
-		int applicationstatusid =1;
-		Long projectId=0l;
-		try {
-			userId = request.getParameterValues("userId");
-		} catch (Exception e) {
-			logger.error(e);
-		}
+    @RequestMapping(value = "/viewer/landrecords/viewdocumentdetail/{transactionid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> viewdocumentdetailbytransactioid(@PathVariable Long transactionid) {
+        List<Object> object = new ArrayList<Object>();
+        Object objmortagedetails = null;
 
-		String allocId[] = null;
-			
-		try {
-			allocId= ServletRequestUtils.getRequiredStringParameters(request, "hid_allocid");
-		} catch (Exception e) {
-			logger.error(e);
-		}
-		
-		try{
-			project=ServletRequestUtils.getRequiredStringParameter(request, "hid_projectID");
-			 Project objproject= projectDAO.findByName(project);
-			 projectId=objproject.getProjectnameid().longValue();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+        try {
 
-		  
-		
-		return  allocateUserDao.updateUserAllocation(userId, allocId, projectId, created_by.intValue(), modifiedby.intValue(), applicationstatusid);
-	   }
-	
-	@RequestMapping(value = "/viewer/landrecords/resourceinfo/{aoiid}", method = RequestMethod.GET)
-	   @ResponseBody
-	   public List<La_spatialunit_aoi> getResouceInfo(HttpServletRequest request, HttpServletResponse response,Principal principal, @PathVariable Long aoiid) {
-		   
-			String allocId[] = new String[1];
-			allocId[0]=aoiid+"";
-			try {
-				return  allocateUserDao.getResourceAllInfo(allocId);
-			} catch (Exception e) {
-				logger.error(e);
-				return  null;
-			}
+            objmortagedetails = landRecordsService.viewdocumentdetailbytransactioid(transactionid);
 
-			
-	   }
-	   
-	   @RequestMapping(value = "/viewer/upload/media/", method = RequestMethod.POST)
-	   @ResponseBody
-	   public String upload(MultipartHttpServletRequest request, HttpServletResponse response, Principal principal) {	
-			try {
-				
-				String userId[] = null ;
-				String project="";
-				String username = principal.getName();
-				User userObj = userService.findByUniqueName(username);
+            object.add(objmortagedetails);
+            //object.add(objmortagedetails); 
+            //object.add(objtransactiondetails);
+            return object;
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-				Long created_by = userObj.getId();
-				Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
+    @RequestMapping(value = "/viewer/user", method = RequestMethod.GET)
+    @ResponseBody
+    public List<AllocateUser> getUserByIdAom() {
+        return allocateUserDao.getAllocateUser();
+    }
 
-				Iterator<String> file = request.getFileNames();
-				
-				
-				Integer partyid =null;
-				partyid= ServletRequestUtils.getRequiredIntParameter(request, "partyid");
-				
-				Integer transid =null;
-				transid= ServletRequestUtils.getRequiredIntParameter(request, "transid");
-				
-				Long landid = 0L;
-				landid= ServletRequestUtils.getRequiredLongParameter(request, "landid");
-				
-				
-				byte[] document = null;
-				while(file.hasNext()) 
-				{
-					String fileName = file.next();
-					String projName="";
-					MultipartFile mpFile = request.getFile(fileName);
-					long size = mpFile.getSize();
-					String originalFileName = mpFile.getOriginalFilename();
-					SourceDocument objDocument = new SourceDocument();
-					
-					
+    @RequestMapping(value = "/viewer/landrecords/updateResource", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean updateResouceAllocation(HttpServletRequest request, HttpServletResponse response, Principal principal) {
 
-					if (originalFileName != "") {
-						document = mpFile.getBytes();
-					}
-			    	SourceDocument doc =  sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), transid.longValue());
-			    	if(doc==null){
-			    		//String filepath = "/storage/emulated/0/MAST/multimedia/" +originalFileName;
-			    		String filepath = FileUtils.getFielsFolder(request) +"/storage/emulated/0/MAST/multimedia/Parcel_Media";
-				        filepath =  filepath.replace("\\mast\\..", "");
-				        Path path = Paths.get(filepath);
-				        File existingdr =new File(filepath);
-				        boolean exist = existingdr.exists();
-						if (!exist) {
-							
-							boolean success = (new File(filepath)).mkdirs();
-							
-						}
-						
-				        try {
-				        	File serverFile = new File(existingdr + File.separator
-			                        + originalFileName);
-				            
-				            FileOutputStream uploadfile = new FileOutputStream(serverFile, false);
-							uploadfile.write(document);
-							uploadfile.flush();
-							uploadfile.close();
+        String userId[] = null;
+        String allocId[] = null;
 
-				        } catch (Exception e) {
-				            logger.error(e);
-				        }
-				        Outputformat outputformat = Outputformatdao.findByName("image"+"/" +FileUtils.getFileExtension(originalFileName));
-				        objDocument.setLaExtDocumentformat(outputformat);
-				        objDocument.setCreatedby(created_by.intValue());
-				        objDocument.setCreateddate(new Date());
-				        objDocument.setModifiedby(created_by.intValue());
-				        objDocument.setModifieddate(new Date());
-				        objDocument.setRecordationdate(new Date());
-				        objDocument.setRemarks("");
-				        objDocument.setDocumentlocation("/storage/emulated/0/MAST/multimedia/Parcel_Media");
-				        objDocument.setIsactive(true);
-				        objDocument.setLaSpatialunitLand(landid);
-				        objDocument.setLaParty(laPartyDao.getPartyListIdByID(partyid.longValue()).get(0));       
-				        objDocument.setLaExtTransactiondetail( laExtTransactiondetailDao.getLaExtTransactiondetail(transid));
-				        if(transid==0){
-				        	SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(partyid.longValue(), landid);
-					        objDocument.setLaExtTransactiondetail(socialtenureobj.getLaExtTransactiondetail());
+        String username = principal.getName();
+        User userObj = userService.findByUniqueName(username);
 
-				        }
-				        objDocument.setDocumentname(originalFileName);
-				        sourceDocumentsDao.saveUploadedDocuments(objDocument);
-						
+        Long created_by = userObj.getId();
+        Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
+        int applicationstatusid = 1;
+        try {
+            userId = request.getParameterValues("userId");
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
-			    	}
-			        String filepath = FileUtils.getFielsFolder(request) + doc.getDocumentlocation();
-			        filepath =  filepath.replace("\\mast\\..", "");
-			        Path path = Paths.get(filepath);
-			        File existingdr =new File(filepath);
+        try {
+            allocId = request.getParameterValues("hid_allocid");
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
-			        
-			        boolean exist = existingdr.exists();
-					if (!exist) {
-						
-						boolean success = (new File(filepath)).mkdirs();
-						
-					}
-					
-					
-			        try {
-			        	File serverFile = new File(existingdr + File.separator
-		                        + originalFileName);
-			            
-			            FileOutputStream uploadfile = new FileOutputStream(serverFile, false);
-						uploadfile.write(document);
-						uploadfile.flush();
-						uploadfile.close();
+        return allocateUserDao.updateUserAllocation(userId, allocId, 1l, created_by.intValue(), modifiedby.intValue(), applicationstatusid);
+    }
 
-			        } catch (Exception e) {
-			            logger.error(e);
-			        }
-			    
-			        objDocument= doc;
-			        objDocument.setDocumentname(originalFileName);
-			        sourceDocumentsDao.saveUploadedDocuments(objDocument);
-					
-					
-				 System.out.println("true");
+    @RequestMapping(value = "/viewer/landrecords/personsDataNew/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<NaturalPerson> getpersonsDataNew(HttpServletRequest request, @PathVariable Long id) {
 
-			} 
-				
-			}catch (Exception e) {
-				logger.error(e);
-			}		
-			return "Success";
-		}
+        List<NaturalPerson> lstdata = new ArrayList<NaturalPerson>();
 
-	   @RequestMapping(value = "/viewer/delete/media/", method = RequestMethod.POST)
-	   @ResponseBody
-	   public String delete(HttpServletRequest request, HttpServletResponse response, Principal principal) {	
-			try {
-				
-				String userId[] = null ;
-				String project="";
-				String username = principal.getName();
-				User userObj = userService.findByUniqueName(username);
+        List<SocialTenureRelationship> lst = new ArrayList<SocialTenureRelationship>();
+        lst = landRecordsService.findAllSocialTenureByUsin(id);
+        if (lst.size() > 0) {
+            for (SocialTenureRelationship obj : lst) {
 
-				Long created_by = userObj.getId();
-				Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
+                if (obj.getLaPartygroupPersontype().getPersontypeid() == 1) {
+                    lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+                }
 
-				SourceDocument doc = null;
-				
-				
-				Integer partyid =null;
-				partyid= ServletRequestUtils.getRequiredIntParameter(request, "partyid");
-				
-				Integer transid =null;
-				transid= ServletRequestUtils.getRequiredIntParameter(request, "transid");
-				
-				Long landid = 0L;
-				landid= ServletRequestUtils.getRequiredLongParameter(request, "landid");
-				if(transid==0){
-					SocialTenureRelationship socialtenureobj =socialTenureRelationshipDAO.getSocialTenureObj(partyid.longValue(), landid);
-					doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
-				}
-				else{
-				 doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), transid.longValue());
-				}
-				doc.setIsactive(false);
-				
-				sourceDocumentsDao.saveUploadedDocuments(doc);
-				
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
-			return "success";
-				
-	   }
-				
-		
-	   @RequestMapping(value = "/viewer/landrecords/updateParcelNumberSplit/{parcelid}", method = RequestMethod.GET)
-	   @ResponseBody
-	   public String  updateSplitParcel(HttpServletRequest request, HttpServletResponse response,Principal principal, @PathVariable Long parcelid) {
-		   String username = principal.getName();
-			User userObj = userService.findByUniqueName(username);
-			Long user_id = userObj.getId();
-		   List<SocialTenureRelationship> lstSocialTenureRelationshipNatural = new ArrayList<SocialTenureRelationship>();	
-		   List<SocialTenureRelationship> lstSocialTenureRelationshipNonNatural = new ArrayList<SocialTenureRelationship>();	
-		   
-		   
-		   try {
-			ClaimBasic objClaimBasic =spatialUnitService.getClaimsBasicByLandId(parcelid).get(0);
-			   long parentLandId=objClaimBasic.getOldlandid();
-			   Status status = registrationRecordsService.getStatusById(1);
-			   if(parentLandId>0){
-				   lstSocialTenureRelationshipNatural=socialTenureRelationshipDao.getSocialTenureRelationshipBylandID(parentLandId);
+            }
+        }
+        return lstdata;
 
-				   if(null!=lstSocialTenureRelationshipNatural && lstSocialTenureRelationshipNatural.size()>0){
+    }
 
-					   LaExtTransactiondetail laExtTransactiondetailNatural = new LaExtTransactiondetail(); 
-					   laExtTransactiondetailNatural.setCreatedby(1);
-					   laExtTransactiondetailNatural.setCreateddate(new Date());
-					   laExtTransactiondetailNatural.setIsactive(true);
-					   laExtTransactiondetailNatural.setLaExtApplicationstatus(status);//new approved?
-					   laExtTransactiondetailNatural.setModuletransid(1);
-					   laExtTransactiondetailNatural.setRemarks("");
+    @RequestMapping(value = "/viewer/landrecords/Disputeperson/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<NaturalPerson> getDisputedperson(HttpServletRequest request, @PathVariable Long id) {
 
+        List<NaturalPerson> lstdata = new ArrayList<NaturalPerson>();
 
-					   for(SocialTenureRelationship obj:lstSocialTenureRelationshipNatural){
-						   SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
-						   socialTenureRelationship.setCreatedby(user_id.intValue());
-						   socialTenureRelationship.setPartyid(obj.getPartyid());
-						   socialTenureRelationship.setLaPartygroupPersontype(obj.getLaPartygroupPersontype());
-						   socialTenureRelationship.setCreateddate(new Date());
-						   socialTenureRelationship.setIsactive(true);
-						   socialTenureRelationship.setLandid(parcelid);
-						   socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetailNatural);
-						   try {
-							   socialTenureRelationship =registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
-						   } catch (Exception er) {
-							   er.printStackTrace();
-							   return "Error";
+        List<LaExtDisputelandmapping> disputelandlst = new ArrayList<LaExtDisputelandmapping>();
+        disputelandlst = laExtDisputelandmappingService.findLaExtDisputelandmappingListByLandId(id);
+        if (disputelandlst.size() > 0) {
+            for (LaExtDisputelandmapping obj : disputelandlst) {
 
-						   }
+                if (obj.getPersontypeid() == 3) {
+                    lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+                }
+                if (obj.getPersontypeid() == 10) {
+                    lstdata.add((NaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+                }
 
-					   }
-				   }
-				   lstSocialTenureRelationshipNonNatural= socialTenureRelationshipDao.getSocialTenureRelationshipBylandIDAndPartyID(parentLandId);
+            }
+        }
+        return lstdata;
 
-				   if(null!=lstSocialTenureRelationshipNonNatural && lstSocialTenureRelationshipNonNatural.size()>0){
+    }
 
+    @RequestMapping(value = "/viewer/landrecords/NonNaturalpersonsDataNew/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<NonNaturalPerson> getNonNaturalpersonsDataNew(HttpServletRequest request, @PathVariable Long id) {
 
-					   LaExtTransactiondetail laExtTransactiondetailNon = new LaExtTransactiondetail(); 
-					   laExtTransactiondetailNon.setCreatedby(1);
-					   laExtTransactiondetailNon.setCreateddate(new Date());
-					   laExtTransactiondetailNon.setIsactive(true);
-					   laExtTransactiondetailNon.setLaExtApplicationstatus(status);//new approved?
-					   laExtTransactiondetailNon.setModuletransid(1);
-					   laExtTransactiondetailNon.setRemarks("");
+        List<NonNaturalPerson> lstdata = new ArrayList<NonNaturalPerson>();
 
-					   for(SocialTenureRelationship obj:lstSocialTenureRelationshipNonNatural){
-						   SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
-						   socialTenureRelationship.setCreatedby(user_id.intValue());
-						   socialTenureRelationship.setPartyid(obj.getPartyid());
-						   socialTenureRelationship.setLaPartygroupPersontype(obj.getLaPartygroupPersontype());
-						   socialTenureRelationship.setCreateddate(new Date());
-						   socialTenureRelationship.setIsactive(true);
-						   socialTenureRelationship.setLandid(parcelid);
-						   socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetailNon);
-						   try {
-							   socialTenureRelationship =registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
-						   } catch (Exception er) {
-							   er.printStackTrace();
-							   return "Error";
+        List<SocialTenureRelationship> lst = new ArrayList<SocialTenureRelationship>();
+        lst = landRecordsService.findAllSocialTenureByUsin(id);
+        if (lst.size() > 0) {
+            for (SocialTenureRelationship obj : lst) {
 
-						   }
+                if (obj.getLaPartygroupPersontype().getPersontypeid() == 2) {
+                    lstdata.add((NonNaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+                }
 
-					   }
+            }
+        }
+        return lstdata;
 
-				   }
+    }
 
+    @RequestMapping(value = "/viewer/landrecords/updateNaturalPersonDataForEdit", method = RequestMethod.POST)
+    @ResponseBody
+    public NaturalPerson updateNaturalPersonDataForEdit(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+        try {
+            Long personid = 0L;
+            String firstname = "";
+            String contactno = "";
+            String middlename = "";
+            String lastname = "";
+            String address = "";
+            String identityno = "";
+            String dateofbirth = "";
+            Integer Gender = 0;
+            Integer identitytypeid = 0;
+            Integer maritalstatusid = 0;
+            Integer educationlevelid = 0;
+            Integer transactionid = 0;
+            Long landid = 0L;
+            Integer persontypeid = 0;
+            String username = principal.getName();
+            User user = userService.findByUniqueName(username);
+            Long userid = user.getId();
+            String projectName = userDataService.getDefaultProjectByUserId(userid.intValue());
+            Project project = projectDAO.findByName(projectName);
 
+            ProjectArea projectArea = projectService.getProjectArea(project.getName()).get(0);
 
-			   }
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
-			return "Error";
-		}
-		   
-		   int length = 9;
-			String str = "";
-			for(int i=0;i<length-parcelid.toString().length(); i++){
-				str = str+"0";
-			}
-			 
-			
-		   return "New Parcel created with ParcelId: " +str+""+parcelid; 
-		   
-		   
-		
-			
-	   }
-	   
-	   @RequestMapping(value = "/viewer/landrecords/checkShareType/{id}", method = RequestMethod.GET)
-	    @ResponseBody
-	    public String landsharetype(@PathVariable Long id) {
-		  
-		   String data ="true";
-		  List<ClaimBasic> claimBasicobj =  spatialUnitService.getClaimsBasicByLandId(id);
-		 List<SocialTenureRelationship> socialtenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipBylandID(claimBasicobj.get(0).getLandid());
-		  if(socialtenureobj.size() <= 1 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==6){
-			  data = "You cant't add more than 1-person for Single Tenancy";
-			  return "You cant't add more than 1-person for single Tenancy";
-		  }
-		  else  if(socialtenureobj.size() >= 2 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==7){
-			  data = "You cant't add more than 2-person for Joint Tenancy";
-			  return "You cant't add more than 2-person for Joint Tenancy";
-		  }
-		  else  if(socialtenureobj.size() >= 0 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==8){
-			  return "true";
-		  }
-		  else  if(socialtenureobj.size() >= 0 && socialtenureobj.size() < 1 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid()==9){
-			  return "true";
-		  }
-		  else{ 
-	        return  data;
-		  }
-	    }
-	   
-	   
-	   @RequestMapping(value = "/viewer/landrecords/aquisitiontype/", method = RequestMethod.GET)
-	    @ResponseBody
-	    public List<AcquisitionType> getAquisitionList(Principal principal) {
-	        return  spatialUnitService.getAcquisitionTypes();
+            try {
+                landid = ServletRequestUtils.getRequiredLongParameter(request, "landid");
+            } catch (Exception e) {
+            }
+            try {
+                transactionid = ServletRequestUtils.getRequiredIntParameter(request, "transactionid");
+            } catch (Exception e) {
+            }
+            try {
+                persontypeid = ServletRequestUtils.getRequiredIntParameter(request, "persontypeid");
+            } catch (Exception e) {
+            }
+            try {
+                contactno = ServletRequestUtils.getRequiredStringParameter(request, "contactno");
+            } catch (Exception e) {
+            }
 
-	    }
-	  
-	   
-	    @RequestMapping(value = "/viewer/landrecords/landcorrectionreport/{transid}/{usin}", method = RequestMethod.GET)
-	    @ResponseBody
-	    public List<Object> getDataCorrectionRep(@PathVariable Long transid,@PathVariable Long usin,  HttpServletRequest request, HttpServletResponse response, Principal principal ) {
+            try {
+                personid = ServletRequestUtils.getRequiredLongParameter(request, "personid");
+            } catch (Exception e) {
+            }
+            try {
+                firstname = ServletRequestUtils.getRequiredStringParameter(request, "firstname");
+            } catch (Exception e) {
+            }
+            try {
+                middlename = ServletRequestUtils.getRequiredStringParameter(request, "middlename");
+            } catch (Exception e) {
+            }
+            try {
+                lastname = ServletRequestUtils.getRequiredStringParameter(request, "lastname");
+            } catch (Exception e) {
+            }
+            try {
+                address = ServletRequestUtils.getRequiredStringParameter(request, "address");
+            } catch (Exception e) {
+            }
+            try {
+                identityno = ServletRequestUtils.getRequiredStringParameter(request, "identityno");
+            } catch (Exception e) {
+            }
+            try {
+                dateofbirth = ServletRequestUtils.getRequiredStringParameter(request, "dateofbirth");
+            } catch (Exception e) {
+            }
+            try {
+                educationlevelid = ServletRequestUtils.getRequiredIntParameter(request, "educationlevel");
+            } catch (Exception e) {
+            }
 
+            try {
+                Gender = ServletRequestUtils.getRequiredIntParameter(request, "genderid");
+            } catch (Exception e) {
+            }
+            try {
+                identitytypeid = ServletRequestUtils.getRequiredIntParameter(request, "identitytypeid");
+            } catch (Exception e) {
+            }
+            try {
+                maritalstatusid = ServletRequestUtils.getRequiredIntParameter(request, "maritalstatusid");
+            } catch (Exception e) {
+            }
 
-	    	List<Object> object=new ArrayList<Object>(); 
-	    	Object objlanddetails = null;
-	    	Object objpersondetails = null; 
-	    	Object objpoidetails = null;
-	    	Object objnonnaturalpersondetails = null;
-	    	Object objdocs = null;
-	    	Object signdocs = null;
+            EducationLevel educationlevel = educationLevelDao.getEducationLevelBypk(educationlevelid);
+            NaturalPerson editednaturalperosn = (NaturalPerson) laPartyDao.getPartyIdByID(personid);
 
-	    	try 
-	    	{
-	    		objlanddetails= landRecordsService.getDataCorrectionReport(transid, usin);
-	    		object.add(objlanddetails);
+            // add new person for all claim types
+            if (editednaturalperosn == null) {
+                LaExtTransactiondetail LaExtTransactionObj = null;
 
-	    	}catch(Exception e){
-	    		e.printStackTrace(); 
-	    	}
-	    	try 
-	    	{
-	    		objpoidetails= landRecordsService.getDataCorrectionReportPOI(transid, usin);
-	    		object.add(objpoidetails);
+                //If Unclaimed
+                if (transactionid == null || transactionid == 0) {
+                    SocialTenureRelationship socialTenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipByLandId(landid);
+                    if (null == socialTenureobj) {
+                        LaExtTransactiondetail laExtTransactiondetail = new LaExtTransactiondetail();
+                        laExtTransactiondetail.setCreatedby(userid.intValue());
+                        laExtTransactiondetail.setCreateddate(new Date());
+                        laExtTransactiondetail.setIsactive(true);
 
-	    	}catch(Exception e){
-	    		e.printStackTrace(); 
-	    	}
-	    	
-	    	try 
-	    	{
-	    		objpersondetails= landRecordsService.getDataCorrectionPersonsReport(transid, usin);
-	    		object.add(objpersondetails);
+                        Status status = registrationRecordsService.getStatusById(1);
 
-	    	}catch(Exception e){
-	    		e.printStackTrace(); 
-	    	}
-	    	
-	    	try 
-	    	{
-	    		List<SourceDocument> doc =   sourcedocdao.findSourceDocumentByLandIdandTransactionid(usin, transid.intValue());
-	    		
-		    	objdocs = (Object) doc;
-		    	object.add(objdocs);
+                        laExtTransactiondetail.setLaExtApplicationstatus(status);
+                        laExtTransactiondetail.setModuletransid(1);
+                        laExtTransactiondetail.setRemarks("");
+                        laExtTransactiondetail.setProcessid(1l);
+                        LaExtTransactionObj = laExtTransactiondetailDao.addLaExtTransactiondetail(laExtTransactiondetail);
+                    } else {
+                        LaExtTransactionObj = socialTenureobj.getLaExtTransactiondetail();
+                    }
+                }
 
-	    	}catch(Exception e){
-	    		e.printStackTrace(); 
-	    	}
-	    	
-	    	try 
-	    	{
-	    		 String username = principal.getName();
-			        User user = userService.findByUniqueName(username);
-			        Long userid = user.getId();
-			        String projectName = userDataService.getDefaultProjectByUserId(userid.intValue());
-			        Project project= projectDAO.findByName(projectName);
-	                
-			        ProjectArea projectArea = projectService.getProjectArea(project.getName()).get(0);
-	    		
-			        signdocs = (Object) projectArea;
-		    	object.add(signdocs);
+                NaturalPerson naturalperson = new NaturalPerson();
 
-	    	}catch(Exception e){
-	    		e.printStackTrace(); 
-	    	}
+                IdType idtype = new IdType();
+                idtype.setIdentitytypeid(identitytypeid);
 
-	 	   try {
-			List<NonNaturalPerson> lstdata = new ArrayList<>();
-			   
-			 List<SocialTenureRelationship>  lst= new ArrayList<SocialTenureRelationship>();
-				 lst= landRecordsService.findAllSocialTenureByUsin(usin);
-			  	 if(lst.size()>0)
-			  	 {
-			  		 for(SocialTenureRelationship obj:lst){
-			  			 
-			  			 if(obj.getLaPartygroupPersontype().getPersontypeid()== 2)
-			  			 {
-			  				lstdata.add((NonNaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
-			  			 }
-			  			  			 
-			  		 }
-			  	 }
-			  	objnonnaturalpersondetails =(Object) lstdata;
-			  	object.add(objnonnaturalpersondetails);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    	
-	    	return object;
-	    }
-	    
-	    @RequestMapping(value = "/viewer/landrecords/landPOI/{transid}/{usin}", method = RequestMethod.GET)
-	    @ResponseBody
-	    public List<PoiReport> getPOI(@PathVariable Long transid,@PathVariable Long usin,  HttpServletRequest request, HttpServletResponse response, Principal principal ) {
+                try {
+                    naturalperson.setFirstname(firstname);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setContactno(contactno);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setMiddlename(middlename);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setLastname(lastname);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setAddress(address);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setLaPartygroupIdentitytype(idtype);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setIdentityno(identityno);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setGenderid(Gender);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setLaPartygroupEducationlevel(educationlevel);
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setCreatedby(userid.intValue());
+                } catch (Exception e) {
+                }
+                try {
+                    naturalperson.setCreateddate(new Date());
+                } catch (Exception e) {
+                }
+                naturalperson.setLaSpatialunitgroup1(projectArea.getLaSpatialunitgroup1());
+                naturalperson.setLaSpatialunitgroup3(projectArea.getLaSpatialunitgroup3());
+                naturalperson.setLaSpatialunitgroup2(projectArea.getLaSpatialunitgroup2());
+                naturalperson.setLaSpatialunitgroup4(projectArea.getLaSpatialunitgroup4());
+                naturalperson.setLaSpatialunitgroup5(projectArea.getLaSpatialunitgroup5());
+                naturalperson.setLaSpatialunitgroupHierarchy1(projectArea.getLaSpatialunitgroupHierarchy1());
+                naturalperson.setLaSpatialunitgroupHierarchy2(projectArea.getLaSpatialunitgroupHierarchy2());
+                naturalperson.setLaSpatialunitgroupHierarchy3(projectArea.getLaSpatialunitgroupHierarchy3());
+                naturalperson.setLaSpatialunitgroupHierarchy4(projectArea.getLaSpatialunitgroupHierarchy4());
+                naturalperson.setLaSpatialunitgroupHierarchy5(projectArea.getLaSpatialunitgroupHierarchy5());
+                naturalperson.setIsactive(true);
+                PersonType laPartygroupPersontype = new PersonType();
+                laPartygroupPersontype.setPersontypeid(1);
+                try {
+                    naturalperson.setLaPartygroupPersontype(laPartygroupPersontype);
+                } catch (Exception e) {
+                }
+                try {
+                    String[] datearr = dateofbirth.split("-");
 
-	    
-	    	return landRecordsService.getDataCorrectionReportPOI(transid, usin);
-	    
-	    }
-	    @RequestMapping(value = "/viewer/landrecords/farmreport/{usin}/{projectId}", method = RequestMethod.GET)
-	    @ResponseBody
-	    public List<Object> getFarmReport(@PathVariable Long usin,@PathVariable Integer projectId,  HttpServletRequest request, HttpServletResponse response, Principal principal ) {
-	    	
-	    	
-	    	
-	    	List<Object> lstobject=new ArrayList<Object>(); 
-	    	Object objframdetails = null;
-	    	Object objpiodetails = null; 
-	    	
-	    	objframdetails= landRecordsService.getFarmReportByLandId(usin);
-	    	lstobject.add(objframdetails);
-	    	
-	    	objpiodetails=resourceCustomAttributesdao.getResourcePoiDataBylandId(projectId, usin.intValue());
-	    	lstobject.add(objpiodetails);
-	    	
-	    	return lstobject;
-	    }
-	    
+                    Long month = Long.parseLong(datearr[1]) + 1L;
+                    String finaldob = datearr[0] + "-" + month.toString() + "-" + datearr[2];
+                    Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
+                    naturalperson.setDateofbirth(date1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                MaritalStatus maritalstatus = new MaritalStatus();
+                maritalstatus.setMaritalstatusid(maritalstatusid);
+                try {
+                    naturalperson.setLaPartygroupMaritalstatus(maritalstatus);
+                } catch (Exception e) {
+                }
 
-   
-	    
-	    
+                NaturalPerson obj = naturalPersonDao.addNaturalPerson(naturalperson);
+
+                SocialTenureRelationship right = new SocialTenureRelationship();
+                right.setCreatedby(userid.intValue());
+                right.setLandid(landid);
+                right.setPartyid(obj.getPartyid());
+                right.setLaPartygroupPersontype(obj.getLaPartygroupPersontype());
+                if (LaExtTransactionObj == null) {
+                    LaExtTransactiondetail transobj = laExtTransactiondetailDao.getLaExtTransactiondetail(transactionid);
+                    right.setLaExtTransactiondetail(transobj);
+                } else {
+                    right.setLaExtTransactiondetail(LaExtTransactionObj);
+                }
+                right.setIsactive(true);
+
+                right.setCreateddate(new Date());
+
+                SocialTenureRelationship socialTenurerelationship = socialTenureRelationshipDao.saveSocialTenureRelationship(right);
+
+                return obj;
+            }
+
+            try {
+                editednaturalperosn.setFirstname(firstname);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setContactno(contactno);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setMiddlename(middlename);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setLastname(lastname);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setAddress(address);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.getLaPartygroupIdentitytype().setIdentitytypeid(identitytypeid);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setIdentityno(identityno);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setGenderid(Gender);
+            } catch (Exception e) {
+            }
+            try {
+                editednaturalperosn.setLaPartygroupEducationlevel(educationlevel);
+            } catch (Exception e) {
+            }
+            try {
+                String[] datearr = dateofbirth.split("-");
+
+                Long month = Long.parseLong(datearr[1]) + 1L;
+                String finaldob = datearr[0] + "-" + month.toString() + "-" + datearr[2];
+                Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(finaldob);
+                editednaturalperosn.setDateofbirth(date1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            MaritalStatus maritalstatus = new MaritalStatus();
+            maritalstatus.setMaritalstatusid(maritalstatusid);
+            try {
+                editednaturalperosn.setLaPartygroupMaritalstatus(maritalstatus);
+            } catch (Exception e) {
+            }
+
+            PersonType laPartygroupPersontype = new PersonType();
+            if (persontypeid != 0) {
+                laPartygroupPersontype.setPersontypeid(persontypeid);
+                try {
+                    editednaturalperosn.setLaPartygroupPersontype(laPartygroupPersontype);
+                } catch (Exception e) {
+                }
+            }
+
+            return landRecordsService.updateNaturalPersonDataForEdit(editednaturalperosn);
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/updateResourceaoi", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean updateResouceAoiName(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+
+        String userId[] = null;
+        String project = "";
+        String username = principal.getName();
+        User userObj = userService.findByUniqueName(username);
+
+        Long created_by = userObj.getId();
+        Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
+        int applicationstatusid = 1;
+        Long projectId = 0l;
+        try {
+            userId = request.getParameterValues("userId");
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        String allocId[] = null;
+
+        try {
+            allocId = ServletRequestUtils.getRequiredStringParameters(request, "hid_allocid");
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        try {
+            project = ServletRequestUtils.getRequiredStringParameter(request, "hid_projectID");
+            Project objproject = projectDAO.findByName(project);
+            projectId = objproject.getProjectnameid().longValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return allocateUserDao.updateUserAllocation(userId, allocId, projectId, created_by.intValue(), modifiedby.intValue(), applicationstatusid);
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/resourceinfo/{aoiid}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<La_spatialunit_aoi> getResouceInfo(HttpServletRequest request, HttpServletResponse response, Principal principal, @PathVariable Long aoiid) {
+
+        String allocId[] = new String[1];
+        allocId[0] = aoiid + "";
+        try {
+            return allocateUserDao.getResourceAllInfo(allocId);
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
+
+    }
+
+    @RequestMapping(value = "/viewer/upload/media/", method = RequestMethod.POST)
+    @ResponseBody
+    public String upload(MultipartHttpServletRequest request, HttpServletResponse response, Principal principal) {
+        try {
+
+            String userId[] = null;
+            String project = "";
+            String username = principal.getName();
+            User userObj = userService.findByUniqueName(username);
+
+            Long created_by = userObj.getId();
+            Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
+
+            Iterator<String> file = request.getFileNames();
+
+            Integer partyid = null;
+            partyid = ServletRequestUtils.getRequiredIntParameter(request, "partyid");
+
+            Integer transid = null;
+            transid = ServletRequestUtils.getRequiredIntParameter(request, "transid");
+
+            Long landid = 0L;
+            landid = ServletRequestUtils.getRequiredLongParameter(request, "landid");
+
+            byte[] document = null;
+            while (file.hasNext()) {
+                String fileName = file.next();
+                String projName = "";
+                MultipartFile mpFile = request.getFile(fileName);
+                long size = mpFile.getSize();
+                String originalFileName = mpFile.getOriginalFilename();
+                SourceDocument objDocument = new SourceDocument();
+
+                if (originalFileName != "") {
+                    document = mpFile.getBytes();
+                }
+                SourceDocument doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), transid.longValue());
+                if (doc == null) {
+                    //String filepath = "/storage/emulated/0/MAST/multimedia/" +originalFileName;
+                    String filepath = FileUtils.getFilesFolder(request) + "/storage/emulated/0/MAST/multimedia/Parcel_Media";
+                    filepath = filepath.replace("\\mast\\..", "");
+                    Path path = Paths.get(filepath);
+                    File existingdr = new File(filepath);
+                    boolean exist = existingdr.exists();
+                    if (!exist) {
+
+                        boolean success = (new File(filepath)).mkdirs();
+
+                    }
+
+                    try {
+                        File serverFile = new File(existingdr + File.separator
+                                + originalFileName);
+
+                        FileOutputStream uploadfile = new FileOutputStream(serverFile, false);
+                        uploadfile.write(document);
+                        uploadfile.flush();
+                        uploadfile.close();
+
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
+                    Outputformat outputformat = Outputformatdao.findByName("image" + "/" + FileUtils.getFileExtension(originalFileName));
+                    objDocument.setLaExtDocumentformat(outputformat);
+                    objDocument.setCreatedby(created_by.intValue());
+                    objDocument.setCreateddate(new Date());
+                    objDocument.setModifiedby(created_by.intValue());
+                    objDocument.setModifieddate(new Date());
+                    objDocument.setRecordationdate(new Date());
+                    objDocument.setRemarks("");
+                    objDocument.setDocumentlocation("/storage/emulated/0/MAST/multimedia/Parcel_Media");
+                    objDocument.setIsactive(true);
+                    objDocument.setLaSpatialunitLand(landid);
+                    objDocument.setLaParty(laPartyDao.getPartyListIdByID(partyid.longValue()).get(0));
+                    objDocument.setLaExtTransactiondetail(laExtTransactiondetailDao.getLaExtTransactiondetail(transid));
+                    if (transid == 0) {
+                        SocialTenureRelationship socialtenureobj = socialTenureRelationshipDAO.getSocialTenureObj(partyid.longValue(), landid);
+                        objDocument.setLaExtTransactiondetail(socialtenureobj.getLaExtTransactiondetail());
+
+                    }
+                    objDocument.setDocumentname(originalFileName);
+                    sourceDocumentsDao.saveUploadedDocuments(objDocument);
+
+                }
+                String filepath = FileUtils.getFilesFolder(request) + doc.getDocumentlocation();
+                filepath = filepath.replace("\\mast\\..", "");
+                Path path = Paths.get(filepath);
+                File existingdr = new File(filepath);
+
+                boolean exist = existingdr.exists();
+                if (!exist) {
+
+                    boolean success = (new File(filepath)).mkdirs();
+
+                }
+
+                try {
+                    File serverFile = new File(existingdr + File.separator
+                            + originalFileName);
+
+                    FileOutputStream uploadfile = new FileOutputStream(serverFile, false);
+                    uploadfile.write(document);
+                    uploadfile.flush();
+                    uploadfile.close();
+
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+
+                objDocument = doc;
+                objDocument.setDocumentname(originalFileName);
+                sourceDocumentsDao.saveUploadedDocuments(objDocument);
+
+                System.out.println("true");
+
+            }
+
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return "Success";
+    }
+
+    @RequestMapping(value = "/viewer/delete/media/", method = RequestMethod.POST)
+    @ResponseBody
+    public String delete(HttpServletRequest request, HttpServletResponse response, Principal principal) {
+        try {
+
+            String userId[] = null;
+            String project = "";
+            String username = principal.getName();
+            User userObj = userService.findByUniqueName(username);
+
+            Long created_by = userObj.getId();
+            Long modifiedby = created_by;// As discussed with rajendra sir modified by also same as created by
+
+            SourceDocument doc = null;
+
+            Integer partyid = null;
+            partyid = ServletRequestUtils.getRequiredIntParameter(request, "partyid");
+
+            Integer transid = null;
+            transid = ServletRequestUtils.getRequiredIntParameter(request, "transid");
+
+            Long landid = 0L;
+            landid = ServletRequestUtils.getRequiredLongParameter(request, "landid");
+            if (transid == 0) {
+                SocialTenureRelationship socialtenureobj = socialTenureRelationshipDAO.getSocialTenureObj(partyid.longValue(), landid);
+                doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), socialtenureobj.getLaExtTransactiondetail().getTransactionid().longValue());
+            } else {
+                doc = sourceDocumentsDao.findBypartyandtransid(partyid.longValue(), transid.longValue());
+            }
+            doc.setIsactive(false);
+
+            sourceDocumentsDao.saveUploadedDocuments(doc);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "success";
+
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/updateParcelNumberSplit/{parcelid}", method = RequestMethod.GET)
+    @ResponseBody
+    public String updateSplitParcel(HttpServletRequest request, HttpServletResponse response, Principal principal, @PathVariable Long parcelid) {
+        String username = principal.getName();
+        User userObj = userService.findByUniqueName(username);
+        Long user_id = userObj.getId();
+        List<SocialTenureRelationship> lstSocialTenureRelationshipNatural = new ArrayList<SocialTenureRelationship>();
+        List<SocialTenureRelationship> lstSocialTenureRelationshipNonNatural = new ArrayList<SocialTenureRelationship>();
+
+        try {
+            ClaimBasic objClaimBasic = spatialUnitService.getClaimsBasicByLandId(parcelid).get(0);
+            long parentLandId = objClaimBasic.getOldlandid();
+            Status status = registrationRecordsService.getStatusById(1);
+            if (parentLandId > 0) {
+                lstSocialTenureRelationshipNatural = socialTenureRelationshipDao.getSocialTenureRelationshipBylandID(parentLandId);
+
+                if (null != lstSocialTenureRelationshipNatural && lstSocialTenureRelationshipNatural.size() > 0) {
+
+                    LaExtTransactiondetail laExtTransactiondetailNatural = new LaExtTransactiondetail();
+                    laExtTransactiondetailNatural.setCreatedby(1);
+                    laExtTransactiondetailNatural.setCreateddate(new Date());
+                    laExtTransactiondetailNatural.setIsactive(true);
+                    laExtTransactiondetailNatural.setLaExtApplicationstatus(status);//new approved?
+                    laExtTransactiondetailNatural.setModuletransid(1);
+                    laExtTransactiondetailNatural.setRemarks("");
+
+                    for (SocialTenureRelationship obj : lstSocialTenureRelationshipNatural) {
+                        SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
+                        socialTenureRelationship.setCreatedby(user_id.intValue());
+                        socialTenureRelationship.setPartyid(obj.getPartyid());
+                        socialTenureRelationship.setLaPartygroupPersontype(obj.getLaPartygroupPersontype());
+                        socialTenureRelationship.setCreateddate(new Date());
+                        socialTenureRelationship.setIsactive(true);
+                        socialTenureRelationship.setLandid(parcelid);
+                        socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetailNatural);
+                        try {
+                            socialTenureRelationship = registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
+                        } catch (Exception er) {
+                            er.printStackTrace();
+                            return "Error";
+
+                        }
+
+                    }
+                }
+                lstSocialTenureRelationshipNonNatural = socialTenureRelationshipDao.getSocialTenureRelationshipBylandIDAndPartyID(parentLandId);
+
+                if (null != lstSocialTenureRelationshipNonNatural && lstSocialTenureRelationshipNonNatural.size() > 0) {
+
+                    LaExtTransactiondetail laExtTransactiondetailNon = new LaExtTransactiondetail();
+                    laExtTransactiondetailNon.setCreatedby(1);
+                    laExtTransactiondetailNon.setCreateddate(new Date());
+                    laExtTransactiondetailNon.setIsactive(true);
+                    laExtTransactiondetailNon.setLaExtApplicationstatus(status);//new approved?
+                    laExtTransactiondetailNon.setModuletransid(1);
+                    laExtTransactiondetailNon.setRemarks("");
+
+                    for (SocialTenureRelationship obj : lstSocialTenureRelationshipNonNatural) {
+                        SocialTenureRelationship socialTenureRelationship = new SocialTenureRelationship();
+                        socialTenureRelationship.setCreatedby(user_id.intValue());
+                        socialTenureRelationship.setPartyid(obj.getPartyid());
+                        socialTenureRelationship.setLaPartygroupPersontype(obj.getLaPartygroupPersontype());
+                        socialTenureRelationship.setCreateddate(new Date());
+                        socialTenureRelationship.setIsactive(true);
+                        socialTenureRelationship.setLandid(parcelid);
+                        socialTenureRelationship.setLaExtTransactiondetail(laExtTransactiondetailNon);
+                        try {
+                            socialTenureRelationship = registrationRecordsService.saveSocialTenureRelationship(socialTenureRelationship);
+                        } catch (Exception er) {
+                            er.printStackTrace();
+                            return "Error";
+
+                        }
+
+                    }
+
+                }
+
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+            return "Error";
+        }
+
+        int length = 9;
+        String str = "";
+        for (int i = 0; i < length - parcelid.toString().length(); i++) {
+            str = str + "0";
+        }
+
+        return "New Parcel created with ParcelId: " + str + "" + parcelid;
+
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/checkShareType/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public String landsharetype(@PathVariable Long id) {
+
+        String data = "true";
+        List<ClaimBasic> claimBasicobj = spatialUnitService.getClaimsBasicByLandId(id);
+        List<SocialTenureRelationship> socialtenureobj = socialTenureRelationshipDao.getSocialTenureRelationshipBylandID(claimBasicobj.get(0).getLandid());
+        if (socialtenureobj.size() <= 1 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid() == 6) {
+            data = "You cant't add more than 1-person for Single Tenancy";
+            return "You cant't add more than 1-person for single Tenancy";
+        } else if (socialtenureobj.size() >= 2 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid() == 7) {
+            data = "You cant't add more than 2-person for Joint Tenancy";
+            return "You cant't add more than 2-person for Joint Tenancy";
+        } else if (socialtenureobj.size() >= 0 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid() == 8) {
+            return "true";
+        } else if (socialtenureobj.size() >= 0 && socialtenureobj.size() < 1 && claimBasicobj.get(0).getLaRightLandsharetype().getLandsharetypeid() == 9) {
+            return "true";
+        } else {
+            return data;
+        }
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/aquisitiontype/", method = RequestMethod.GET)
+    @ResponseBody
+    public List<AcquisitionType> getAquisitionList(Principal principal) {
+        return spatialUnitService.getAcquisitionTypes();
+
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/landcorrectionreport/{transid}/{usin}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> getDataCorrectionRep(@PathVariable Long transid, @PathVariable Long usin, HttpServletRequest request, HttpServletResponse response, Principal principal) {
+
+        List<Object> object = new ArrayList<Object>();
+        Object objlanddetails = null;
+        Object objpersondetails = null;
+        Object objpoidetails = null;
+        Object objnonnaturalpersondetails = null;
+        Object objdocs = null;
+        Object signdocs = null;
+
+        try {
+            objlanddetails = landRecordsService.getDataCorrectionReport(transid, usin);
+            object.add(objlanddetails);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            objpoidetails = landRecordsService.getDataCorrectionReportPOI(transid, usin);
+            object.add(objpoidetails);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            objpersondetails = landRecordsService.getDataCorrectionPersonsReport(transid, usin);
+            object.add(objpersondetails);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            List<SourceDocument> doc = sourcedocdao.findSourceDocumentByLandIdandTransactionid(usin, transid.intValue());
+
+            objdocs = (Object) doc;
+            object.add(objdocs);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String username = principal.getName();
+            User user = userService.findByUniqueName(username);
+            Long userid = user.getId();
+            String projectName = userDataService.getDefaultProjectByUserId(userid.intValue());
+            Project project = projectDAO.findByName(projectName);
+
+            ProjectArea projectArea = projectService.getProjectArea(project.getName()).get(0);
+
+            signdocs = (Object) projectArea;
+            object.add(signdocs);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            List<NonNaturalPerson> lstdata = new ArrayList<>();
+
+            List<SocialTenureRelationship> lst = new ArrayList<SocialTenureRelationship>();
+            lst = landRecordsService.findAllSocialTenureByUsin(usin);
+            if (lst.size() > 0) {
+                for (SocialTenureRelationship obj : lst) {
+
+                    if (obj.getLaPartygroupPersontype().getPersontypeid() == 2) {
+                        lstdata.add((NonNaturalPerson) laPartyDao.getPartyIdByID(obj.getPartyid()));
+                    }
+
+                }
+            }
+            objnonnaturalpersondetails = (Object) lstdata;
+            object.add(objnonnaturalpersondetails);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return object;
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/landPOI/{transid}/{usin}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<PoiReport> getPOI(@PathVariable Long transid, @PathVariable Long usin, HttpServletRequest request, HttpServletResponse response, Principal principal) {
+
+        return landRecordsService.getDataCorrectionReportPOI(transid, usin);
+
+    }
+
+    @RequestMapping(value = "/viewer/landrecords/farmreport/{usin}/{projectId}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Object> getFarmReport(@PathVariable Long usin, @PathVariable Integer projectId, HttpServletRequest request, HttpServletResponse response, Principal principal) {
+
+        List<Object> lstobject = new ArrayList<Object>();
+        Object objframdetails = null;
+        Object objpiodetails = null;
+
+        objframdetails = landRecordsService.getFarmReportByLandId(usin);
+        lstobject.add(objframdetails);
+
+        objpiodetails = resourceCustomAttributesdao.getResourcePoiDataBylandId(projectId, usin.intValue());
+        lstobject.add(objpiodetails);
+
+        return lstobject;
+    }
+
 }

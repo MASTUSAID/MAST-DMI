@@ -16,196 +16,186 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="la_ext_resource_documentdetails")
-public class ResourceSourceDocument  implements Serializable {
+@Table(name = "la_ext_resource_documentdetails")
+public class ResourceSourceDocument implements Serializable {
 
-/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-//    private static final long serialVersionUID = 1L;
-    
-	@Id
-	@SequenceGenerator(name="pk_la_ext_resource_documentdetails",sequenceName="la_ext_resource_documentdetails_documentid_seq", allocationSize=1) 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="pk_la_ext_resource_documentdetails") 
-    @Column(name="documentid")
-	private Long documentid;
+    @Id
+    @SequenceGenerator(name = "pk_la_ext_resource_documentdetails", sequenceName = "la_ext_resource_documentdetails_documentid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pk_la_ext_resource_documentdetails")
+    @Column(name = "documentid")
+    private Long documentid;
 
-    @Column(name="createdby")
-	private Integer createdby;
+    @Column(name = "createdby")
+    private Integer createdby;
 
     @Temporal(TemporalType.DATE)
-	private Date createddate;
+    private Date createddate;
 
-    @Column(name="documentlocation")
-	private String documentlocation;
+    @Column(name = "documentlocation")
+    private String documentlocation;
 
-    @Column(name="documentname")
-	private String documentname;
+    @Column(name = "documentname")
+    private String documentname;
 
-    @Column(name="isactive")
-	private Boolean isactive;
+    @Column(name = "isactive")
+    private Boolean isactive;
 
-    @Column(name="modifiedby")
-	private Integer modifiedby;
+    @Column(name = "modifiedby")
+    private Integer modifiedby;
 
     @Temporal(TemporalType.DATE)
-	private Date modifieddate;
-    
-    @Column(name="remarks")
-	private String remarks;
-    
+    private Date modifieddate;
+
+    @Column(name = "remarks")
+    private String remarks;
+
     @Temporal(TemporalType.DATE)
-	private Date recordationdate;
-    
-    @Column(name="documenttypeid")
+    private Date recordationdate;
+
+    @Column(name = "documenttypeid")
     private Integer documenttypeid;
 
-	//bi-directional many-to-one association to LaExtDocumentformat
-	
-	@Column(name="documentformatid")
-	private Integer laExtDocumentformat;
+    //bi-directional many-to-one association to LaExtDocumentformat
+    @Column(name = "documentformatid")
+    private Integer laExtDocumentformat;
 
-	//bi-directional many-to-one association to LaExtTransactiondetail
-	
-	@Column(name="transactionid")
-	private Integer laExtTransactiondetail;
+    //bi-directional many-to-one association to LaExtTransactiondetail
+    @Column(name = "transactionid")
+    private Integer laExtTransactiondetail;
 
-	//bi-directional many-to-one association to LaParty
-	
-	@Column(name="partyid")
-	private Integer laParty;
+    //bi-directional many-to-one association to LaParty
+    @Column(name = "partyid")
+    private Integer laParty;
 
-	//bi-directional many-to-one association to LaSpatialunitLand
+    //bi-directional many-to-one association to LaSpatialunitLand
 //	@ManyToOne
-	@Column(name="landid")
-	private Long laSpatialunitLand;
-	
-	public ResourceSourceDocument(){
-		
-	}
+    @Column(name = "landid")
+    private Long laSpatialunitLand;
 
-	public Long getDocumentid() {
-		return documentid;
-	}
+    public ResourceSourceDocument() {
 
-	public void setDocumentid(Long documentid) {
-		this.documentid = documentid;
-	}
+    }
 
-	public Integer getCreatedby() {
-		return createdby;
-	}
+    public Long getDocumentid() {
+        return documentid;
+    }
 
-	public void setCreatedby(Integer createdby) {
-		this.createdby = createdby;
-	}
+    public void setDocumentid(Long documentid) {
+        this.documentid = documentid;
+    }
 
-	public Date getCreateddate() {
-		return createddate;
-	}
+    public Integer getCreatedby() {
+        return createdby;
+    }
 
-	public void setCreateddate(Date createddate) {
-		this.createddate = createddate;
-	}
+    public void setCreatedby(Integer createdby) {
+        this.createdby = createdby;
+    }
 
-	public String getDocumentlocation() {
-		return documentlocation;
-	}
+    public Date getCreateddate() {
+        return createddate;
+    }
 
-	public void setDocumentlocation(String documentlocation) {
-		this.documentlocation = documentlocation;
-	}
+    public void setCreateddate(Date createddate) {
+        this.createddate = createddate;
+    }
 
-	public String getDocumentname() {
-		return documentname;
-	}
+    public String getDocumentlocation() {
+        return documentlocation;
+    }
 
-	public void setDocumentname(String documentname) {
-		this.documentname = documentname;
-	}
+    public void setDocumentlocation(String documentlocation) {
+        this.documentlocation = documentlocation;
+    }
 
-	public Boolean getIsactive() {
-		return isactive;
-	}
+    public String getDocumentname() {
+        return documentname;
+    }
 
-	public void setIsactive(Boolean isactive) {
-		this.isactive = isactive;
-	}
+    public void setDocumentname(String documentname) {
+        this.documentname = documentname;
+    }
 
-	public Integer getModifiedby() {
-		return modifiedby;
-	}
+    public Boolean getIsactive() {
+        return isactive;
+    }
 
-	public void setModifiedby(Integer modifiedby) {
-		this.modifiedby = modifiedby;
-	}
+    public void setIsactive(Boolean isactive) {
+        this.isactive = isactive;
+    }
 
-	public Date getModifieddate() {
-		return modifieddate;
-	}
+    public Integer getModifiedby() {
+        return modifiedby;
+    }
 
-	public void setModifieddate(Date modifieddate) {
-		this.modifieddate = modifieddate;
-	}
+    public void setModifiedby(Integer modifiedby) {
+        this.modifiedby = modifiedby;
+    }
 
-	public String getRemarks() {
-		return remarks;
-	}
+    public Date getModifieddate() {
+        return modifieddate;
+    }
 
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
-	}
+    public void setModifieddate(Date modifieddate) {
+        this.modifieddate = modifieddate;
+    }
 
-	public Date getRecordationdate() {
-		return recordationdate;
-	}
+    public String getRemarks() {
+        return remarks;
+    }
 
-	public void setRecordationdate(Date recordationdate) {
-		this.recordationdate = recordationdate;
-	}
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
-	public Integer getDocumenttypeid() {
-		return documenttypeid;
-	}
+    public Date getRecordationdate() {
+        return recordationdate;
+    }
 
-	public void setDocumenttypeid(Integer documenttypeid) {
-		this.documenttypeid = documenttypeid;
-	}
+    public void setRecordationdate(Date recordationdate) {
+        this.recordationdate = recordationdate;
+    }
 
-	public Integer getLaExtDocumentformat() {
-		return laExtDocumentformat;
-	}
+    public Integer getDocumenttypeid() {
+        return documenttypeid;
+    }
 
-	public void setLaExtDocumentformat(Integer laExtDocumentformat) {
-		this.laExtDocumentformat = laExtDocumentformat;
-	}
+    public void setDocumenttypeid(Integer documenttypeid) {
+        this.documenttypeid = documenttypeid;
+    }
 
-	public Integer getLaExtTransactiondetail() {
-		return laExtTransactiondetail;
-	}
+    public Integer getLaExtDocumentformat() {
+        return laExtDocumentformat;
+    }
 
-	public void setLaExtTransactiondetail(Integer laExtTransactiondetail) {
-		this.laExtTransactiondetail = laExtTransactiondetail;
-	}
+    public void setLaExtDocumentformat(Integer laExtDocumentformat) {
+        this.laExtDocumentformat = laExtDocumentformat;
+    }
 
-	public Integer getLaParty() {
-		return laParty;
-	}
+    public Integer getLaExtTransactiondetail() {
+        return laExtTransactiondetail;
+    }
 
-	public void setLaParty(Integer laParty) {
-		this.laParty = laParty;
-	}
+    public void setLaExtTransactiondetail(Integer laExtTransactiondetail) {
+        this.laExtTransactiondetail = laExtTransactiondetail;
+    }
 
-	public Long getLaSpatialunitLand() {
-		return laSpatialunitLand;
-	}
+    public Integer getLaParty() {
+        return laParty;
+    }
 
-	public void setLaSpatialunitLand(Long laSpatialunitLand) {
-		this.laSpatialunitLand = laSpatialunitLand;
-	}
-	
-	
+    public void setLaParty(Integer laParty) {
+        this.laParty = laParty;
+    }
+
+    public Long getLaSpatialunitLand() {
+        return laSpatialunitLand;
+    }
+
+    public void setLaSpatialunitLand(Long laSpatialunitLand) {
+        this.laSpatialunitLand = laSpatialunitLand;
+    }
 
 }

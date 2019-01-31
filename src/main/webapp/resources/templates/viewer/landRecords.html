@@ -5,7 +5,8 @@
 
     $(function () {
         $("#tab-natural").tabs();
-    });id="claim_type"
+    });
+    id = "claim_type"
 
     $(function () {
         $("#tab-nonnatural").tabs();
@@ -31,15 +32,15 @@
             dateFormat: "yy-mm-dd"
         });
     });
-    $(function(){
-        $("#neighbor_north,#neighbor_east,#neighbor_west,#neighbor_south,#tenureclass_id,#tenure_type,#tenureDuration,#existing_use,#proposed_use").on('change',function () {
+    $(function () {
+        $("#neighbor_north,#neighbor_east,#neighbor_west,#neighbor_south,#tenureclass_id,#tenure_type,#tenureDuration,#existing_use,#proposed_use").on('change', function () {
             $(this).addClass('addBg');
             $("#parcelsavebutton").prop("disabled", false).show();
-           
+
         });
     })
 </script>
-	
+
 
 
 <div class="container-fluid">
@@ -52,7 +53,7 @@
             <div class="tab-pane " id="land-records">
                 <div class="project-details">
                     <div class="project-details-label">
-                       
+
                     </div>
                 </div>
 
@@ -60,25 +61,25 @@
                     <form id="landrecordsform" action="" onsubmit="return false;">
                         <table class="filter-details"  class="no-sort">
                             <tr>
-                              
-								<td>
+
+                                <td>
                                     <label>Community </label>
                                     <select name="community_id" id="community_id" class="input-medium">
                                     </select>
                                 </td>
-								
-                                 <td>
+
+                                <td>
                                     <label>Transaction Id</label> 
                                     <input type="text" name="transaction_id" id="transaction_id" onkeypress="return checkNumber(event)" value="" class="input-medium">
                                 </td>
-								
-								<td>
+
+                                <td>
                                     <label>Parcel ID</label>
                                     <input type="text" name="parce_id" id="parce_id" value="" onkeypress="return checkNumber(event)" class="input-medium">
                                 </td>
-								
-                               
-							
+
+
+
                                 <td>
                                     <button class="btn1 v-top-18" onclick="javascript:search();">Search</button>
                                     <button class="btn v-top-24" onclick="clearSearch();">Clear</button>
@@ -90,243 +91,243 @@
                 </div>
 
                 <div class="">
-				
-				<form id="updatebyWorkflow" class="cmxform" action="" onsubmit="return false;">
-							    <input type="hidden" name="type" id="type" value="">
-				<div id="vtab" class="vtab">
 
-							<ul id="workflowDiv">
-								<li class="login selected "><span class="langchange" key="Workflow_Summary">Workflow Summary</span>&nbsp;</li>
-									
+                    <form id="updatebyWorkflow" class="cmxform" action="" onsubmit="return false;">
+                        <input type="hidden" name="type" id="type" value="">
+                        <div id="vtab" class="vtab">
 
-
-
-								<div id="workflow-accordion" style="text-align: left;" class="ui-accordion ui-widget ui-helper-reset ui-accordion-icons" role="tablist">
-								  <h3>
-										<a href="#"><span id="new" class="langchange" key="New">Workflow Stage </span></a>
-									</h3>
-
-									<div id="newBody" title=""
-										style="min-height: 175px; overflow: hidden">
-										<ul>
-										<li>
-                                  <input type="checkbox" id="select_all"  /> <span class="langchange" key="Select_All">Select All</span></li></ul>
-										<ul id="newtbl" class="tblStyle" cellpadding="0"
-											cellspacing="0">
-
-										</ul>
-
-                            
-
-									</div>
-									
-
-									<h3>
-										<a href="#"><span id="existing" class="langchange"
-											key="Existing">Transaction Type</span></a>
-									</h3>
-
-									<div id="newBody" title=""
-										style="min-height: 175px; overflow: hidden">
-										<ul>
-										<li>
-										<input type="checkbox" id="select_all_tt"  /> <span class="langchange" key="select_all_tt">Select All</span></li></ul>
-
-										<ul id="newtb2" class="tblStyle" cellpadding="0"
-											cellspacing="0">
-
-										</ul>
-                                
-
-
-									</div>
-									
-									
-									<h3>
-										<a href="#"><span id="existing" class="langchange"
-											key="Existing">Application Status</span></a>
-									</h3>
-
-									<div id="newBody" title=""
-										style="min-height: 175px; overflow: hidden">
-										<ul>
-										<li>
-										 <input type="checkbox" id="select_all_as"  /> <span class="langchange" key="select_all_as">Select All</span></li></ul>
-
-										<ul id="newtb3" class="tblStyle" cellpadding="0"
-											cellspacing="0">
-
-										</ul>
-
-
-									</div>
-									
-  								
-								
-									
-
-								</div>
+                            <ul id="workflowDiv">
+                                <li class="login selected "><span class="langchange" key="Workflow_Summary">Workflow Summary</span>&nbsp;</li>
 
 
 
 
-							
-								
-                            <button class="btn1 langchange" style="margin-top: 5px; margin-right: 5px; float:right " onclick="javascript:clearFilter();" key="Filter">Clear</button>   
-	                        <button class="btn1 langchange" style="margin-top: 5px; margin-right: 5px; float:right"  onclick="javascript:updatespatialwork();" key="Filter">Filter</button>
-                            
-							</ul>
+                                <div id="workflow-accordion" style="text-align: left;" class="ui-accordion ui-widget ui-helper-reset ui-accordion-icons" role="tablist">
+                                    <h3>
+                                        <a href="#"><span id="new" class="langchange" key="New">Workflow Stage </span></a>
+                                    </h3>
+
+                                    <div id="newBody" title=""
+                                         style="min-height: 175px; overflow: hidden">
+                                        <ul>
+                                            <li>
+                                                <input type="checkbox" id="select_all"  /> <span class="langchange" key="Select_All">Select All</span></li></ul>
+                                        <ul id="newtbl" class="tblStyle" cellpadding="0"
+                                            cellspacing="0">
+
+                                        </ul>
 
 
 
-
-
-
-
-							<div>
-
-
-					<table class="tablesorter" id="landRecordsTable" cellpadding="0" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th class="no-sort">Transaction Id</th>
-                                <th class="no-sort">Parcel No</th>
-                                <th class="no-sort">Transaction  Type</th>
-                                <th class="no-sort">Land Occupant</th>
-								<th class="no-sort">Workflow Stage</th>
-								<th class="no-sort">Occupancy/Tenure Type</th>
-								<th class="no-sort">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="landRecordsRowData">
-                        </tbody>
-
-                         <tfoot>
-                            <tr class="tblFooter" id="landrecords_pagerDiv">
-                                <td colspan="9">
-                                    <div id="spatialunitDiv">
-                                        <a href="javascript:previousRecords();"><img
-                                                class="img-prev" src="resources/images/studio/previous.png"
-                                                title="Previous" /></a> 
-                                        <input type="text" readonly="readonly"
-                                               name="records_from" id="records_from" value=""
-                                               class="input-medium"> To <input type="text"
-                                               name="records_to" id="records_to" value=""
-                                               class="input-medium" readonly="readonly"> Of <input
-                                               type="text" name="records_all" id="records_all" value=""
-                                               class="input-medium" readonly="readonly"><a
-                                               href="javascript:nextRecords();">
-                                            <img class="img-next"
-                                                 src="resources/images/studio/next.png" title="Next">
-                                        </a>
                                     </div>
-                                </td>
-                            </tr>
-                        </tfoot> 
-						
-						
-							
-                    </table>
 
-							</div>
-						</div>
-				</form>
-				
-                    
-		
+
+                                    <h3>
+                                        <a href="#"><span id="existing" class="langchange"
+                                                          key="Existing">Transaction Type</span></a>
+                                    </h3>
+
+                                    <div id="newBody" title=""
+                                         style="min-height: 175px; overflow: hidden">
+                                        <ul>
+                                            <li>
+                                                <input type="checkbox" id="select_all_tt"  /> <span class="langchange" key="select_all_tt">Select All</span></li></ul>
+
+                                        <ul id="newtb2" class="tblStyle" cellpadding="0"
+                                            cellspacing="0">
+
+                                        </ul>
+
+
+
+                                    </div>
+
+
+                                    <h3>
+                                        <a href="#"><span id="existing" class="langchange"
+                                                          key="Existing">Application Status</span></a>
+                                    </h3>
+
+                                    <div id="newBody" title=""
+                                         style="min-height: 175px; overflow: hidden">
+                                        <ul>
+                                            <li>
+                                                <input type="checkbox" id="select_all_as"  /> <span class="langchange" key="select_all_as">Select All</span></li></ul>
+
+                                        <ul id="newtb3" class="tblStyle" cellpadding="0"
+                                            cellspacing="0">
+
+                                        </ul>
+
+
+                                    </div>
+
+
+
+
+
+                                </div>
+
+
+
+
+
+
+                                <button class="btn1 langchange" style="margin-top: 5px; margin-right: 5px; float:right " onclick="javascript:clearFilter();" key="Filter">Clear</button>   
+                                <button class="btn1 langchange" style="margin-top: 5px; margin-right: 5px; float:right"  onclick="javascript:updatespatialwork();" key="Filter">Filter</button>
+
+                            </ul>
+
+
+
+
+
+
+
+                            <div>
+
+
+                                <table class="tablesorter" id="landRecordsTable" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th class="no-sort">Transaction Id</th>
+                                            <th class="no-sort">Parcel No</th>
+                                            <th class="no-sort">Transaction  Type</th>
+                                            <th class="no-sort">Land Occupant</th>
+                                            <th class="no-sort">Workflow Stage</th>
+                                            <th class="no-sort">Occupancy/Tenure Type</th>
+                                            <th class="no-sort">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="landRecordsRowData">
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr class="tblFooter" id="landrecords_pagerDiv">
+                                            <td colspan="9">
+                                                <div id="spatialunitDiv">
+                                                    <a href="javascript:previousRecords();"><img
+                                                            class="img-prev" src="resources/images/studio/previous.png"
+                                                            title="Previous" /></a> 
+                                                    <input type="text" readonly="readonly"
+                                                           name="records_from" id="records_from" value=""
+                                                           class="input-medium"> To <input type="text"
+                                                           name="records_to" id="records_to" value=""
+                                                           class="input-medium" readonly="readonly"> Of <input
+                                                           type="text" name="records_all" id="records_all" value=""
+                                                           class="input-medium" readonly="readonly"><a
+                                                           href="javascript:nextRecords();">
+                                                        <img class="img-next"
+                                                             src="resources/images/studio/next.png" title="Next">
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot> 
+
+
+
+                                </table>
+
+                            </div>
+                        </div>
+                    </form>
+
+
+
 
                     <script id="landRecordsAttrTemplate" type="text/x-jquery-tmpl">
-					
-					
+
+
                         <tr id='${landid}'>
-						
+
                         <td>
-                         ${transactionid}
+                        ${transactionid}
                         </td>
                         <td>
                         ${landnostrwithzero}
                         </td> 
                         <td>
                         ${claimtype_en}
-                                              
+
                         </td>                     
-                        
+
                         <td>
-						${firstname} ${lastname}
-						</td>     						
-                       
-                       
-                         <td>
-						${workflowstatus}
-						</td>      						
-                       
-                         <td>
-						${shareType}
-						</td>      						
-                       
+                        ${firstname} ${lastname}
+                        </td>     						
 
 
                         <td>
-						
-						 <div class="single-drop-down"> 
-						 <div class="topnav"> <a href="#" onclick="Actionfill(${landid},${workflowstatusid},${transactionid}, '${landnostrwithzero}','${claimtypeid}');" class="signin"><span key="Action" class="langchange">Action</span></a> 
-						 <div class="containerDiv" id='${landid}_land' > 
-						 </div> 
-						 </div>   
-						 </div>
-			
+                        ${workflowstatus}
+                        </td>      						
+
+                        <td>
+                        ${shareType}
+                        </td>      						
+
+
+
+                        <td>
+
+                        <div class="single-drop-down"> 
+                        <div class="topnav"> <a href="#" onclick="Actionfill(${landid},${workflowstatusid},${transactionid}, '${landnostrwithzero}','${claimtypeid}');" class="signin"><span key="Action" class="langchange">Action</span></a> 
+                        <div class="containerDiv" id='${landid}_land' > 
+                        </div> 
+                        </div>   
+                        </div>
+
                         </td>
                         </tr>
                     </script>
                 </div>
             </div>
 
-           
-           <div id="attribute-dialog-form" title="Update User Define parcel Number" style="display: none;">
+
+            <div id="attribute-dialog-form" title="Update User Define parcel Number" style="display: none;">
                 <form class="cmxform" id="addAttributeformID" action="" onsubmit="return false;">
                     <fieldset>
                         <input type="hidden" name="primeryky" id="primeryky" value="">
-						<table style="width: 100%" id="" class="landrecords22 ">
-                                        <tr>
-                                            <td>
-                                                <label >Country</label>
-                                                <input class="selectlang" name="hierarchy1" type="text" id="hierarchy1"  readonly />
-                                            </td>
-										 </tr>
-										
-								        <tr>										
-                                            <td>
-                                                <label >Region </label> 
-                                                <input class="selectlang" name="hierarchy2" type="text" id="hierarchy2" readonly  />
-                                            </td>
-                                            
-										</tr>
-	
-										<tr>			
-	                                         <td> 
-                                                <label >Province</label> 
-												 <input class="selectlang" name="hierarchy3" type="text" id="hierarchy3" readonly />
-                                            </td>
-											
-										</tr>
+                        <table style="width: 100%" id="" class="landrecords22 ">
+                            <tr>
+                                <td>
+                                    <label >Country</label>
+                                    <input class="selectlang" name="hierarchy1" type="text" id="hierarchy1"  readonly />
+                                </td>
+                            </tr>
 
-                                         <tr>										
-											<td>
-                                                <label >Parcel Number</label> 
-                                                 <input class="selectlang" name="parcelId" type="text" id="parcelId" />
-                                            </td>
-                                        </tr>
-										
-									
-                                        
-											
-											
-                                    </table>
-									
-                        
+                            <tr>										
+                                <td>
+                                    <label >Region </label> 
+                                    <input class="selectlang" name="hierarchy2" type="text" id="hierarchy2" readonly  />
+                                </td>
+
+                            </tr>
+
+                            <tr>			
+                                <td> 
+                                    <label >Province</label> 
+                                    <input class="selectlang" name="hierarchy3" type="text" id="hierarchy3" readonly />
+                                </td>
+
+                            </tr>
+
+                            <tr>										
+                                <td>
+                                    <label >Parcel Number</label> 
+                                    <input class="selectlang" name="parcelId" type="text" id="parcelId" />
+                                </td>
+                            </tr>
+
+
+
+
+
+                        </table>
+
+
                     </fieldset>
                 </form>
             </div>
@@ -346,22 +347,22 @@
                     </fieldset>
                 </form>
             </div>
-			
-			
-			<div id="approveInfo-dialog-form" title="WorkFlow" style="display: none;">
+
+
+            <div id="approveInfo-dialog-form" title="WorkFlow" style="display: none;">
                 <form class="cmxform" id="aworkflowformID" action="" onsubmit="return false;">
                     <div id="approveInfoDiv"></div>
-					<fieldset>
-							<label> <span class="langchange" style="color:black" key="Comments">Comments</span> <span
-								id="commentOption"></span></label>
-							<textarea name="commentsStatusWorkflow" id="commentsStatusWorkflow"
-								style="width: 96%; height: 63px;"></textarea>
-							
-						</fieldset>
+                    <fieldset>
+                        <label> <span class="langchange" style="color:black" key="Comments">Comments</span> <span
+                                id="commentOption"></span></label>
+                        <textarea name="commentsStatusWorkflow" id="commentsStatusWorkflow"
+                                  style="width: 96%; height: 63px;"></textarea>
+
+                    </fieldset>
                 </form>
             </div>
-			
-			
+
+
 
             <div id="editattribute-dialog-form" title="Edit Attribute" style="display: none;">
 
@@ -398,17 +399,17 @@
                                     </div>
 
                                     <table style="width: 100%" id="tableGeneralAttributes" class="landrecords22 ">
-                                    
-                                   
-                                   
-                                    <tr>
-                                    <td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">General</label></h3></td>
-                                    </tr>
-                                  
-                                   
-                                  
+
+
+
+                                        <tr>
+                                            <td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">General</label></h3></td>
+                                        </tr>
+
+
+
                                         <tr id="rowClaimNumber">
-                                       
+
                                             <td>
                                                 <label >Claim Number</label>
                                                 <input type="text" name="claimNumber" id="claimNumber" value="" class="text ui-widget-content ui-corner-all" readonly>
@@ -419,115 +420,115 @@
                                             </td>
                                             <td>
                                                 <label >Claim Type</label> 
-												<select name="claimStatus" id="claimStatus" class="gendisable" readonly></select>
+                                                <select name="claimStatus" id="claimStatus" class="gendisable" readonly></select>
                                             </td>
-											
+
                                         </tr>
-                                        
-                                     
-                                   
-                                    <tr>
-                                    <td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">Tenure</label></h3></td>
-                                    </tr>
-                                   
-                                         <tr>
-                                         
-                                          <td>
+
+
+
+                                        <tr>
+                                            <td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">Tenure</label></h3></td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td>
                                                 <label>Aquisition Type</label>
                                                 <select name="aquisition_id" id="aquisition_id"></select>
                                             </td>
-                                           
-                                        
-                                          <td>
+
+
+                                            <td>
                                                 <label>Tenure Type</label> 
                                                 <select name="tenure_type" id="tenure_type" class="read-tenure"></select> 
                                             </td>
-											<td>
+                                            <td>
                                                 <label>Length of Occupancy (years)</label> 
                                                 <input type="text" name="tenureDuration" id="tenureDuration" class="text ui-widget-content ui-corner-all read-tenure">
                                             </td>
-										 
+
                                             <td>
                                                 <label>Type of Right</label>
                                                 <select name="tenureclass_id" id="tenureclass_id"></select>
                                             </td>
-                                           
-											
-											
+
+
+
                                         </tr>
-                                        
-                                         <tr>
-                                    <td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">Property</label></h3></td>
-                                    </tr>
-                                  
-										
-									
+
                                         <tr>
-                                        
-                                         	<td>
+                                            <td class="borderedBottom" colspan="4"> <h3><label class="no-margin-bottom">Property</label></h3></td>
+                                        </tr>
+
+
+
+                                        <tr>
+
+                                            <td>
                                                 <label >Area</label> 
                                                 <input type="text" name="area" id="area" class="text ui-widget-content ui-corner-all justread">
-												
+
                                             </td> 
-                                        	<td>
+                                            <td>
                                                 <label >Land Type</label> 
                                                 <select name="land_type" id="land_type" class="gendisable"></select>
                                             </td>
-                                           
-										    <td>
+
+                                            <td>
                                                 <label>Neighbour North</label>
                                                 <input type="text" name="neighbor_north" id="neighbor_north" class="text ui-widget-content ui-corner-all justread">
                                             </td>
-											
-											
-											
+
+
+
                                         </tr>
                                         <tr>
-                                        <td>
-                                        </td>
-                                        	<td>
+                                            <td>
+                                            </td>
+                                            <td>
                                                 <label >Existing Use</label> 
                                                 <select name="existing_use" id="existing_use" class="gendisable"></select>
                                             </td>
-                                        
+
                                             <td>
                                                 <label>Neighbour South</label>
                                                 <input type="text" name="neighbor_south" id="neighbor_south" class="text ui-widget-content ui-corner-all justread">
                                             </td>
-                                           
-                                       </tr>
-                                       <tr>
-                                        <td>
-                                        </td>
-                                       		<td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td>
                                                 <label >Proposed Use</label> 
                                                 <select name="proposed_use" id="proposed_use" class="gendisable"></select>
-												
+
                                             </td>
-                                        	<td>
+                                            <td>
                                                 <label>Neighbour East</label>
                                                 <input type="text" name="neighbor_east" id="neighbor_east" class="text ui-widget-content ui-corner-all justread">
                                             </td>
-											
-                                            </tr>
-                                       
-										
-										<tr>
+
+                                        </tr>
+
+
+                                        <tr>
                                             <td>
-                                              </td>
-                                           
-                                             <td>
-                                              </td>
-                                       
-                                             <td>
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
                                                 <label>Neighbour West</label>
                                                 <input type="text" name="neighbor_west" id="neighbor_west" class="text ui-widget-content ui-corner-all justread">
                                             </td>
-											
-											
+
+
                                         </tr>
-											
-											
+
+
                                     </table>
 
                                     <div>
@@ -536,146 +537,146 @@
                                         </button> -->
                                     </div>
                                 </div>
-								<!-- Tenure info -->
-								 <div style="margin: 0 10px;">
-							
-								 </div>
-								
+                                <!-- Tenure info -->
+                                <div style="margin: 0 10px;">
+
+                                </div>
+
                             </div>
                         </div>
 
-                      
+
                         <div id="tabs-2c">
-						<div class="row-fluid" style="margin-top: 10px;">
-						<div>Person(Owner)
-						<button id="addPersonbutton" onclick="javascript:CheckSharetype();">
-                                          AddPerson
-                                        </button>
-						</div>
+                            <div class="row-fluid" style="margin-top: 10px;">
+                                <div>Person(Owner)
+                                    <button id="addPersonbutton" onclick="javascript:CheckSharetype();">
+                                        AddPerson
+                                    </button>
+                                </div>
                                 <div class="hidenatTable">
-                                                                      
+
                                     <div id="personsEditingGrid1"></div>
-                                    
-                                    
+
+
                                     <div>
-                                    <!-- <button id="addPersonbutton" onclick="javascript:CheckSharetype();">
-                                          AddPerson
-                                        </button> -->
-                                        </div>
+                                        <!-- <button id="addPersonbutton" onclick="javascript:CheckSharetype();">
+                                              AddPerson
+                                            </button> -->
                                     </div>
-                       </div>
-							
-							<div class="row-fluid">
-							<div>Non Natural Person(Owner)</div>
-                                  <div id="personsEditingGrid2"></div>
+                                </div>
                             </div>
-							
-						<div>Person of interest
-						 <button id="addPoi" onclick="javascript:addPOI();">
-                                          AddPOI
-                                        </button>
-                                        </div>
+
+                            <div class="row-fluid">
+                                <div>Non Natural Person(Owner)</div>
+                                <div id="personsEditingGrid2"></div>
+                            </div>
+
+                            <div>Person of interest
+                                <button id="addPoi" onclick="javascript:addPOI();">
+                                    AddPOI
+                                </button>
+                            </div>
                             <div class="row-fluid ">
-                            <div id="personsEditingGrid"></div>
-                            
-                             <div>
-                                   <!--  <button id="addPoi" onclick="javascript:addPOI();">
-                                          AddPOI
-                                        </button> -->
-                                        </div>
+                                <div id="personsEditingGrid"></div>
+
+                                <div>
+                                    <!--  <button id="addPoi" onclick="javascript:addPOI();">
+                                           AddPOI
+                                         </button> -->
+                                </div>
 
                             </div>
-							 <div class="row-fluid ">
-						
+                            <div class="row-fluid ">
+
                             </div>
                         </div>
 
-						<div id="tabDisputes">
-							<div class="row-fluid ">
-							
-								<div>Disputes</div>
-								<div class="hidenatTable">
+                        <div id="tabDisputes">
+                            <div class="row-fluid ">
 
-									<div id="DisputesGrid"></div>
-								</div>
+                                <div>Disputes</div>
+                                <div class="hidenatTable">
 
-								<div>Disputed Person</div>
-								<div class="hidenatTable">
+                                    <div id="DisputesGrid"></div>
+                                </div>
 
-									<div id="DisputesPersonGrid"></div>
-								</div>
+                                <div>Disputed Person</div>
+                                <div class="hidenatTable">
 
-
-							</div>
-						</div>
+                                    <div id="DisputesPersonGrid"></div>
+                                </div>
 
 
-
-						<div id="tabs-4">
-
-
-							<div class="row-fluid">
-							
-								<div >
-								<table style="width: 100%; margin-bottom: 23px;">
-								<tr>
-								<td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">Persons</label></h3></td></tr>
-								</table></div>
-								<div class="hidemulTable">
-								
-									<table id="multimediaTable" class="table table-bordered">
-										<thead>
-											<tr>
-												<th>First Name</th>
-												<th>Middle Name</th>
-												<th>Last name</th>
-												<!-- <th>Address</th>
-												<th>Dob</th> -->
-												<th>View</th>
-												<th>Browse</th>
-												<th>Delete</th>
-												
-											</tr>
-										</thead>
-										<tbody id="multimediaRowData">
-
-										</tbody>
-									</table>
-
-								</div>
-								
-								<div >
-								<table style="width: 100%; margin-bottom: 23px;">
-								<tr>
-								<td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">General Multi-media</label></h3></td></tr>
-								</table></div>
-								<div class="hidemulTable">
-								
-									<table id="genmultimediaTable" class="table table-bordered">
-										<thead>
-											<tr>
-												<th>First Name</th>
-												<th>Middle Name</th>
-												<th>Last name</th>
-												<!-- <th>Address</th>
-												<th>Dob</th> -->
-												<th>View</th>
-												<th>Browse</th>
-												<th>Delete</th>
-												
-											</tr>
-										</thead>
-										<tbody id="genmultimediaRowData">
-
-										</tbody>
-									</table>
-
-								</div>
-							</div>
-						</div>
+                            </div>
+                        </div>
 
 
-					</div>
+
+                        <div id="tabs-4">
+
+
+                            <div class="row-fluid">
+
+                                <div >
+                                    <table style="width: 100%; margin-bottom: 23px;">
+                                        <tr>
+                                            <td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">Persons</label></h3></td></tr>
+                                    </table></div>
+                                <div class="hidemulTable">
+
+                                    <table id="multimediaTable" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>First Name</th>
+                                                <th>Middle Name</th>
+                                                <th>Last name</th>
+                                                <!-- <th>Address</th>
+                                                <th>Dob</th> -->
+                                                <th>View</th>
+                                                <th>Browse</th>
+                                                <th>Delete</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="multimediaRowData">
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <div >
+                                    <table style="width: 100%; margin-bottom: 23px;">
+                                        <tr>
+                                            <td class="borderedBottom" colspan="4"><h3><label class="no-margin-bottom">General Multi-media</label></h3></td></tr>
+                                    </table></div>
+                                <div class="hidemulTable">
+
+                                    <table id="genmultimediaTable" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>First Name</th>
+                                                <th>Middle Name</th>
+                                                <th>Last name</th>
+                                                <!-- <th>Address</th>
+                                                <th>Dob</th> -->
+                                                <th>View</th>
+                                                <th>Browse</th>
+                                                <th>Delete</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="genmultimediaRowData">
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
                 </form>
             </div>
 
@@ -685,7 +686,7 @@
                         <ul>
                             <li><a href="#tabs-1">Main</a></li>
                             <li><a href="#tabPersonPhoto">Photo</a></li>
-                           <!--  <li><a href="#tabs-2">Custom</a></li> -->
+                            <!--  <li><a href="#tabs-2">Custom</a></li> -->
                         </ul>
 
                         <form class="cmxform" id="editNaturalPersonformID" action="" onsubmit="return false;">
@@ -717,7 +718,7 @@
                                         <tr>
                                             <td>
                                                 <label id="subtypehide">Address</label>
-											    <input type="text" name="address" id="address" class="text ui-widget-content ui-corner-all justread">
+                                                <input type="text" name="address" id="address" class="text ui-widget-content ui-corner-all justread">
                                             </td>
                                             <td>
                                                 <label>Identification type</label>
@@ -730,27 +731,27 @@
                                         </tr>
 
                                         <tr>
-                                                        <td>
-                                                            <label>Gender</label>
-                                                            <select name="gender" class="justdisable" style="width:110px" id="gender"></select>
-                                                        </td>
-                                             
+                                            <td>
+                                                <label>Gender</label>
+                                                <select name="gender" class="justdisable" style="width:110px" id="gender"></select>
+                                            </td>
 
-                                           
+
+
                                             <td>
                                                 <label>Date of birth</label>
                                                 <input type="text" name="dob" id="dob" class="text ui-widget-content ui-corner-all justread">
                                             </td>
-											
-											<td>
+
+                                            <td>
                                                 <label>Marital Status</label>
                                                 <select name="marital_status" id="marital_status" class="justdisable"></select>
                                             </td>
-											
+
                                         </tr>
 
                                         <tr>
-                                          
+
                                             <td>
                                                 <label>Mobile Number</label>
                                                 <input type="text" name="mobile_natural" id="mobile_natural" class="text ui-widget-content ui-corner-all justread">
@@ -855,7 +856,7 @@
                 </form>
             </div>
 
-        
+
 
             <div id="deceased-dialog-form" title="Deceased Person" style="display: none;">
                 <form class="cmxform landrecords22" id="editdeceasedformID" action="" onsubmit="return false;">
@@ -941,55 +942,55 @@
                 </fieldset>
             </div>
 
-			<div id="commentsDialog" title="Workflow Comments History" class="">
-		<fieldset>
-			<table class="amendbeforeAfterTable" style="display: none;"
-				id="commentsTable">
-				<thead>
-					<tr>
-						<th class="langchange">Username</th>
-						<th class="langchange">Modification
-							Date</th>
-						<th class="langchange">Application Stage</th>
-						<th class="langchange">Workflow Stage</th>
-						<th class="langchange">Comments</th>
-					</tr>
-				</thead>
-				<tbody id="commentsHistoryTableBody">
-				</tbody>
-			</table>
-		</fieldset>
-	</div>
-	<script id="commentstemplate" type="text/x-jquery-tmpl">
- <tr> 
-<td>
-	${user.username}
-  </td>                                                                       
-  <td>
-${createddate}
-	
-  </td>
+            <div id="commentsDialog" title="Workflow Comments History" class="">
+                <fieldset>
+                    <table class="amendbeforeAfterTable" style="display: none;"
+                           id="commentsTable">
+                        <thead>
+                            <tr>
+                                <th class="langchange">Username</th>
+                                <th class="langchange">Modification
+                                    Date</th>
+                                <th class="langchange">Application Stage</th>
+                                <th class="langchange">Workflow Stage</th>
+                                <th class="langchange">Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commentsHistoryTableBody">
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+            <script id="commentstemplate" type="text/x-jquery-tmpl">
+                <tr> 
+                <td>
+                ${user.username}
+                </td>                                                                       
+                <td>
+                ${createddate}
 
-<td>
-			{{if status}}  
-			${status.applicationstatus_en}
-			{{/if}}
-			
-	
-</td>
-  
-  <td>
-			{{if workflow}}  
-			${workflow.workflowEn}
-			{{/if}}
+                </td>
 
-  </td>
+                <td>
+                {{if status}}  
+                ${status.applicationstatus_en}
+                {{/if}}
 
-<td>
-${comments}
-</td>
- </tr>
-</script>
+
+                </td>
+
+                <td>
+                {{if workflow}}  
+                ${workflow.workflowEn}
+                {{/if}}
+
+                </td>
+
+                <td>
+                ${comments}
+                </td>
+                </tr>
+            </script>
             <script id="naturalpersonTemplate" type="text/x-jquery-tmpl">
                 <tr>
                 <td>
@@ -1000,18 +1001,18 @@ ${comments}
                 </td>        
 
                 <td>
-    			 {{if (laParty.genderid==1)}} Male {{/if}}
+                {{if (laParty.genderid==1)}} Male {{/if}}
                 {{if (laParty.genderid==2)}} Female {{/if}}
-				 {{if (laParty.genderid==2)}} Other {{/if}}
-    
+                {{if (laParty.genderid==2)}} Other {{/if}}
+
                 </td>
 
                 <td>
                 {{if (laPartygroupPersontype)}}  ${laPartygroupPersontype.persontypeEn} {{/if}}
 
                 </td>    
-                
-              
+
+
                 <td align="center">
                 <a href="javascript:editNaturalData(${laParty.partyid},false);"><img src="resources/images/studio/edit.png" title="Edit" /></a>
                 </td>
@@ -1033,7 +1034,7 @@ ${comments}
                 </tr>
             </script>
 
-            
+
 
             <script id="non_naturalpersonTemplate" type="text/x-jquery-tmpl">
                 <tr>
@@ -1042,10 +1043,10 @@ ${comments}
                 ${laParty.organizationname}
                 </td>
                 <td>
-                 {{if (laPartygroupPersontype)}}  ${laPartygroupPersontype.persontypeEn} {{/if}}
+                {{if (laPartygroupPersontype)}}  ${laPartygroupPersontype.persontypeEn} {{/if}}
 
                 </td>
-                
+
                 <td>
                 ${laParty.contactno}
                 </td>  
@@ -1055,10 +1056,10 @@ ${comments}
                 <td align="center">
                 <a href="javascript:deleteNonNatural('${laParty.partyid}','${laParty.organizationname}' );"><img src="resources/images/studio/delete.png" title="Delete" /></a>
                 </td>
-				 <td align="center">
+                <td align="center">
                 <a href="javascript:editNaturalData(${laParty.partyid},true);"><img src="resources/images/studio/doc_view.png" title="View" /></a>
                 </td>
-				
+
                 </td>
                 <td align="center">
                 <a href="javascript:NonnaturalPersonImage('${laParty.partyid}',0);"><img src="resources/images/studio/uploadImage.png" title="Upload Image" /></a>
@@ -1066,7 +1067,7 @@ ${comments}
                 <td align="center">
                 <a href="javascript:NonnaturalPersonDeleteImage('${laParty.partyid}','${laParty.firstname}');"><img src="resources/images/studio/deleteImage.png" title="Delete Image" /></a>
                 </td>	
-               
+
                 </tr>
             </script>
 
@@ -1101,15 +1102,15 @@ ${comments}
                 </td>			
                 </tr>
             </script>
-            
-   
-            
-             <script id="naturalpersonmediaTemplate_add" type="text/x-jquery-tmpl">
+
+
+
+            <script id="naturalpersonmediaTemplate_add" type="text/x-jquery-tmpl">
                 <tr>
                 <td>
                 ${firstname}
                 </td>
-				<td>
+                <td>
                 ${middlename}
                 </td>    
                 <td>
@@ -1117,18 +1118,18 @@ ${comments}
                 </td>        
 
                 <td align="center" >
-               <a href="javascript:viewMultimediaByTransid('${partyid}');"><img src="resources/images/studio/document-image-view.png" title="View Document" /></a>
+                <a href="javascript:viewMultimediaByTransid('${partyid}');"><img src="resources/images/studio/document-image-view.png" title="View Document" /></a>
                 </td>
-				<td class="project_cell_adjust styleForm">		
-				<input name="file2"  type="file" id="mediafileUpload${partyid}" />
+                <td class="project_cell_adjust styleForm">		
+                <input name="file2"  type="file" id="mediafileUpload${partyid}" />
 
-						<button value="Submit" onclick="uploadMediaFile('${partyid}');">Upload</button>
-						
-				</td >
-				<td>		
-				<button value="Submit" onclick="deleteMediaFile('${partyid}');">Delete</button>		
-				</td >
-				
+                <button value="Submit" onclick="uploadMediaFile('${partyid}');">Upload</button>
+
+                </td >
+                <td>		
+                <button value="Submit" onclick="deleteMediaFile('${partyid}');">Delete</button>		
+                </td >
+
 
                 </tr>
             </script>
@@ -1187,28 +1188,28 @@ ${comments}
                 <td>
                 ${firstName}
                 </td> 
-               
-			   <td>
+
+                <td>
                 ${middleName}
                 </td> 
-				
-				<td>
-                ${lastName}
-                </td> 
-				
-				<td>
-                ${lastName}
-                </td> 
-				
-				<td>
-                ${lastName}
-                </td> 
-				
-				<td>
+
+                <td>
                 ${lastName}
                 </td> 
 
-				
+                <td>
+                ${lastName}
+                </td> 
+
+                <td>
+                ${lastName}
+                </td> 
+
+                <td>
+                ${lastName}
+                </td> 
+
+
                 <td align="center">
                 <a href="javascript:editnxtTokin('${id}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
                 </td>
@@ -1234,7 +1235,7 @@ ${comments}
                 ${lastname}
                 </td>        
 
-				    
+
 
                 <td align="center">
                 <a href="javascript:editDeceasedPerson('${partyid}');"><img src="resources/images/studio/edit.png" title="Edit" /></a>
@@ -1248,69 +1249,69 @@ ${comments}
                 </td>	
                 </tr>
             </script>
-            
-            	<script id="workFlowTemplate" type="text/x-jquery-tmpl">
-                       <li ><input type="checkbox" id="${workflowid}" name="workflow" value="${workflowid}" class="roleCheckbox"/>${workflowEn}</li>
-               </script>
-	
-	            	<script id="TransactionTemplate" type="text/x-jquery-tmpl">
-                       <li ><input type="checkbox" id="${code}" name="claimType" value="${code}" class="roleCheckboxTrans"/>${name}</li>
-               </script>
 
-			   
-			    <script id="AppstatusTemplate" type="text/x-jquery-tmpl">
-                       <li ><input type="checkbox" id="${workflowStatusId}" name="statusType" value="${workflowStatusId}" class="roleCheckboxStatus"/>${workflowStatus}</li>
-               </script>
+            <script id="workFlowTemplate" type="text/x-jquery-tmpl">
+                <li ><input type="checkbox" id="${workflowid}" name="workflow" value="${workflowid}" class="roleCheckbox"/>${workflowEn}</li>
+            </script>
 
-			   
-			   
-	
-	<script type="text/javascript">
-		$(document).ready(function() {
+            <script id="TransactionTemplate" type="text/x-jquery-tmpl">
+                <li ><input type="checkbox" id="${code}" name="claimType" value="${code}" class="roleCheckboxTrans"/>${name}</li>
+            </script>
 
-			$('#select_all').on('click', function() {
-				if ($(this).is(':checked')) {
-					$('.roleCheckbox').each(function() {
-						this.checked = true;
-					});
-				} else {
-					$('.roleCheckbox').each(function() {
-						this.checked = false;
-					});
-				}
-			})
-			
-			
-			$('#select_all_tt').on('click', function() {
-				if ($(this).is(':checked')) {
-					$('.roleCheckboxTrans').each(function() {
-						this.checked = true;
-					});
-				} else {
-					$('.roleCheckboxTrans').each(function() {
-						this.checked = false;
-					});
-				}
-			})
-			
-			
-			
-			$('#select_all_as').on('click', function() {
-				if ($(this).is(':checked')) {
-					$('.roleCheckboxStatus').each(function() {
-						this.checked = true;
-					});
-				} else {
-					$('.roleCheckboxStatus').each(function() {
-						this.checked = false;
-					});
-				}
-			})
 
-		});
-	</script>
+            <script id="AppstatusTemplate" type="text/x-jquery-tmpl">
+                <li ><input type="checkbox" id="${workflowStatusId}" name="statusType" value="${workflowStatusId}" class="roleCheckboxStatus"/>${workflowStatus}</li>
+            </script>
 
-	
+
+
+
+            <script type="text/javascript">
+                $(document).ready(function () {
+
+                    $('#select_all').on('click', function () {
+                        if ($(this).is(':checked')) {
+                            $('.roleCheckbox').each(function () {
+                                this.checked = true;
+                            });
+                        } else {
+                            $('.roleCheckbox').each(function () {
+                                this.checked = false;
+                            });
+                        }
+                    })
+
+
+                    $('#select_all_tt').on('click', function () {
+                        if ($(this).is(':checked')) {
+                            $('.roleCheckboxTrans').each(function () {
+                                this.checked = true;
+                            });
+                        } else {
+                            $('.roleCheckboxTrans').each(function () {
+                                this.checked = false;
+                            });
+                        }
+                    })
+
+
+
+                    $('#select_all_as').on('click', function () {
+                        if ($(this).is(':checked')) {
+                            $('.roleCheckboxStatus').each(function () {
+                                this.checked = true;
+                            });
+                        } else {
+                            $('.roleCheckboxStatus').each(function () {
+                                this.checked = false;
+                            });
+                        }
+                    })
+
+                });
+            </script>
+
+
 
 
             <script type="text/javascript">
