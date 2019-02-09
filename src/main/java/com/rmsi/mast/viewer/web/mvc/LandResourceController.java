@@ -35,6 +35,7 @@ import com.rmsi.mast.studio.dao.ResourceCustomAttributesDAO;
 import com.rmsi.mast.studio.dao.UserDAO;
 import com.rmsi.mast.studio.domain.AttributeMasterResourcePOI;
 import com.rmsi.mast.studio.domain.AttributeOptions;
+import com.rmsi.mast.studio.domain.Boundary;
 import com.rmsi.mast.studio.domain.BoundaryPoint;
 import com.rmsi.mast.studio.domain.BoundaryPointDoc;
 import com.rmsi.mast.studio.domain.CustomAttributes;
@@ -51,6 +52,7 @@ import com.rmsi.mast.studio.mobile.dao.ResourceAttributeValuesDAO;
 import com.rmsi.mast.studio.mobile.dao.SpatialUnitResourceLineDao;
 import com.rmsi.mast.viewer.service.BoundaryService;
 import com.rmsi.mast.viewer.service.ResourceAttributeValuesService;
+import java.util.Calendar;
 import org.apache.log4j.Logger;
 
 @Controller
@@ -91,12 +93,12 @@ public class LandResourceController {
 
     @Autowired
     BoundaryService boundaryService;
-    
+
     @Autowired
     ProjectRegionDAO projectRegion;
-    
+
     private static final Logger logger = Logger.getLogger(LandResourceController.class);
-    
+
     @RequestMapping(value = "/viewer/resource/allAttribue/{landid}/{projectId}", method = RequestMethod.GET)
     @ResponseBody
     public Map<Integer, List<ResourceAttributeValues>> getAllResourceAttribute(@PathVariable Integer projectId, @PathVariable Integer landid) {
@@ -1401,32 +1403,35 @@ public class LandResourceController {
     public BoundaryPoint getBoundaryPoint(@PathVariable Integer id) {
         return boundaryService.getBoundaryPoint(id);
     }
-    
+
     @RequestMapping(value = "/viewer/resource/saveBoundaryPoint", method = RequestMethod.POST)
     @ResponseBody
-    public boolean saveBoundaryPoint(HttpServletRequest request) {
+    public boolean saveBoundaryPoint(HttpServletRequest request, Principal principal) {
         try {
             int id = ServletRequestUtils.getIntParameter(request, "hPointId", 0);
-            if(id == 0){
-               return false; 
-            }
-            BoundaryPoint point = boundaryService.getBoundaryPoint(id);
-            
-            if(point == null){
+            if (id == 0) {
                 return false;
             }
-            
+            BoundaryPoint point = boundaryService.getBoundaryPoint(id);
+
+            if (point == null) {
+                return false;
+            }
+
+            User user = userdao.findByName(principal.getName());
             int villageId = ServletRequestUtils.getIntParameter(request, "cbxPointVillageId", 0);
             String featureType = ServletRequestUtils.getStringParameter(request, "txtPointFeatureType", null);
             String featureDescription = ServletRequestUtils.getStringParameter(request, "txtPointFeatureDescription", null);
-            
-            if(villageId > 0){
+
+            if (villageId > 0) {
                 point.setNeighborVillageId(villageId);
             } else {
                 point.setNeighborVillageId(null);
             }
             point.setFeatureType(featureType);
             point.setFeatureDescription(featureDescription);
+            point.setModifiedBy((int)user.getId());
+            point.setModifyDate(Calendar.getInstance().getTime());
             
             boundaryService.saveBoundaryPoint(point);
             return true;
@@ -1436,22 +1441,74 @@ public class LandResourceController {
             return false;
         }
     }
-    
+
     @RequestMapping(value = "/viewer/resource/getBoundaryPointDocs/{pointId}", method = RequestMethod.GET)
     @ResponseBody
     public List<BoundaryPointDoc> getBoundaryPointDocs(@PathVariable Integer pointId) {
         return boundaryService.getBoundaryPointDocs(pointId);
     }
-    
+
     @RequestMapping(value = "/viewer/resource/deleteBoundaryPointDoc/{id}", method = RequestMethod.GET)
     @ResponseBody
     public boolean deleteBoundaryPointDoc(@PathVariable Integer id) {
         return boundaryService.deleteBoundaryPointDoc(id);
     }
-    
+
     @RequestMapping(value = "/viewer/resource/getProjectVillages/{projectId}", method = RequestMethod.GET)
     @ResponseBody
     public List<ProjectRegion> getProjectVillages(@PathVariable Integer projectId) {
         return projectRegion.getVillagesByProject(projectId);
+    }
+
+    @RequestMapping(value = "/viewer/resource/saveBoundary", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean saveBoundary(HttpServletRequest request, Principal principal) {
+        try {
+            int id = ServletRequestUtils.getIntParameter(request, "hVillageBoundaryId", 0);
+            User user = userdao.findByName(principal.getName());
+            
+            Boundary boundary;
+            Date currentDate = Calendar.getInstance().getTime();
+            
+            if (id > 0) {
+                boundary = boundaryService.getBoundary(id);
+
+                if (boundary == null) {
+                    return false;
+                }
+            } else {
+                boundary = new Boundary();
+                String geom = ServletRequestUtils.getStringParameter(request, "hVillageBoundaryGeom", null);
+                int projectId = ServletRequestUtils.getIntParameter(request, "hVillageBoundaryProjectId", 0);
+                
+                if(geom == null || projectId < 1){
+                    return false;
+                }
+                
+                boundary.setGeometry(geom);
+                boundary.setProjectId(projectId);
+                boundary.setSurveyDate(currentDate);
+                boundary.setIsactive(true);
+                boundary.setCreatedBy((int)user.getId());
+                boundary.setCreateDate(currentDate);
+            }
+            
+            String leaderName = ServletRequestUtils.getStringParameter(request, "txtVillageLeader", null);
+            int villageQuarters = ServletRequestUtils.getIntParameter(request, "txtVillageQuarters", 0);
+            int villagePopulation = ServletRequestUtils.getIntParameter(request, "txtVillagePopulation", 0);
+            
+            boundary.setVillageLeader(leaderName);
+            boundary.setQuartersNum(villageQuarters);
+            boundary.setPopulation(villagePopulation);
+            boundary.setModifiedBy((int)user.getId());
+            boundary.setModifyDate(Calendar.getInstance().getTime());
+
+            boundaryService.saveBoundary(boundary);
+            return true;
+        } catch (Exception e) {
+            logger.error(e);
+            e.printStackTrace();
+            return false;
+        }
     }
 }

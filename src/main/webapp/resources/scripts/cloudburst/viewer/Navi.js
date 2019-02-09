@@ -10,7 +10,7 @@ var region_list = null;
 var project_list = null;
 var projectVillages = null;
 var boundaryPointDialog;
-var boundaryFeature = null;
+var villageBoundaryDialog;
 
 var landtypeid = [
     {"id": "1", "value": "Flat/Plain"},
@@ -330,11 +330,20 @@ Cloudburst.Navi = function (_map) {
     });
 };
 
-
 function mapInfoClick(evt) {
-    var isBoundaryPoint = false;
+    var isBoundary = false;
+    if (user_ist === null) {
+        jQuery.ajax({
+            url: STUDIO_URL + "user/info",
+            async: false,
+            success: function (data) {
+                user_ist = data;
+            }
+        });
+    }
+
     map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-        if (layer.get('name') === L_BOUNDARY_POINTS) {
+        if (layer.get('name').toLowerCase() === L_BOUNDARY_POINTS.toLowerCase() && !isBoundary) {
             if (projectVillages === null) {
                 $.ajax({
                     url: "resource/getProjectVillages/" + Global.PROJECT_ID,
@@ -406,32 +415,38 @@ function mapInfoClick(evt) {
             if (pointDocs !== null && pointDocs.length > 0) {
                 $("#templateBoundaryPointDocs").tmpl(pointDocs).appendTo("#bodyBoundaryPointDocs");
             }
+            $("#txtPointSurveyor").val(getUserFullName(feature.get("created_by")));
+            $("#txtPointSurveyDate").val($.datepicker.formatDate('yy-mm-dd', new Date(feature.get("create_date"))));
 
             // Disable/enable save button
-            if (feature.get("approved")) {
+            var editingEnabled = true;
+            if ($("#li-editing").css("display") === "none") {
+                editingEnabled = false;
+            }
+
+            if (feature.get("approved") || feature.get("project_id") !== Global.PROJECT_ID || !editingEnabled) {
                 $("#btnSaveBoundaryPoint").prop("disabled", true).hide();
+                $("#cbxPointVillageId").prop("disabled", true);
+                $("#txtPointFeatureType").prop("disabled", true);
+                $("#txtPointFeatureDescription").prop("disabled", true);
             } else {
                 $("#btnSaveBoundaryPoint").prop("disabled", false).show();
+                $("#cbxPointVillageId").prop("disabled", false);
+                $("#txtPointFeatureType").prop("disabled", false);
+                $("#txtPointFeatureDescription").prop("disabled", false);
             }
-            boundaryFeature = feature;
-            isBoundaryPoint = true;
+            isBoundary = true;
+        } else if (layer.get('name').toLowerCase() === L_BOUNDARY.toLowerCase() && !isBoundary) {
+            openVillageBoundaryDialog(feature, null, function () {
+                layer.getSource().clear();
+            });
+            isBoundary = true;
         }
     });
 
-    if (isBoundaryPoint) {
+    if (isBoundary) {
         return;
     }
-
-    if (user_ist === null) {
-        jQuery.ajax({
-            url: STUDIO_URL + "user/info",
-            async: false,
-            success: function (data) {
-                user_ist = data;
-            }
-        });
-    }
-
 //    jQuery.ajax({
 //        url: STUDIO_URL + "region/info",
 //        async: false,
@@ -671,8 +686,49 @@ function mapInfoClick(evt) {
     });
 }
 
+function getUserFullName(id) {
+    if (user_ist === null) {
+        return null;
+    }
+
+    var userName = null;
+
+    $.each(user_ist, function (idx, user) {
+        if (user.id === id) {
+            userName = user.name;
+            return false;
+        }
+    });
+
+    return userName;
+}
+
 function viewBoundaryPointDoc(id) {
     window.open("landrecords/downloadBoundaryDoc/" + id, 'popUp', 'height=500,width=950,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,titlebar=no,menubar=no,status=no,replace=false');
+}
+
+function saveVillageBoundary() {
+    var result = false;
+    $.ajax({
+        type: 'POST',
+        async: false,
+        url: "resource/saveBoundary",
+        data: $("#formVillageBoundary").serialize(),
+        success: function (response) {
+            if (response) {
+                jAlert('Village boundary has been saved successfully', 'Info');
+                // Update feature attributes
+                villageBoundaryDialog.dialog("destroy");
+                result = true;
+            } else {
+                jAlert("Failed to save village boundary", "Error");
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            jAlert("Failed to save village boundary", "Error");
+        }
+    });
+    return result;
 }
 
 function saveBoundaryPoint() {
@@ -683,11 +739,7 @@ function saveBoundaryPoint() {
         success: function (result) {
             if (result) {
                 jAlert('Boundary  point information has been updated successfully', 'Info');
-                // Update feature attributes
-                boundaryFeature.set("neighbor_village_id", $("#cbxPointVillageId").val());
-                boundaryFeature.set("feature_type", $("#txtPointFeatureType").val());
-                boundaryFeature.set("feature_description", $("#txtPointFeatureDescription").val());
-
+                getLayerByAliesName(TYPE_BOUNDARY_POINTS).getSource().clear();
                 boundaryPointDialog.dialog("destroy");
             } else {
                 jAlert("Failed to save boundary point", "Error");
@@ -697,6 +749,81 @@ function saveBoundaryPoint() {
             jAlert("Failed to save boundary point", "Error");
         }
     });
+}
+
+function openVillageBoundaryDialog(feature, closeCallBack, saveCallback) {
+    // Show dialog
+    villageBoundaryDialog = $("#boundary-dialog").dialog({
+        autoOpen: false,
+        height: 380,
+        width: 600,
+        closed: false,
+        cache: false,
+        resizable: false,
+        modal: true,
+        close: function () {
+            villageBoundaryDialog.dialog("destroy");
+            if (closeCallBack !== null && typeof closeCallBack !== 'undefined') {
+                closeCallBack();
+            }
+        },
+        buttons: [
+            {
+                text: "Close",
+                click: function () {
+                    villageBoundaryDialog.dialog("destroy");
+                    if (closeCallBack !== null && typeof closeCallBack !== 'undefined') {
+                        closeCallBack();
+                    }
+                }
+            },
+            {
+                text: "Save",
+                "id": "btnSaveVillageBoundary",
+                click: function () {
+                    if (saveVillageBoundary(feature)) {
+                        if (saveCallback !== null && typeof saveCallback !== 'undefined') {
+                            saveCallback();
+                        }
+                    }
+                }
+            }
+        ]
+    });
+
+    villageBoundaryDialog.dialog("open");
+
+    // Fill in the fields
+    var format = new ol.format.WKT();
+    $("#hVillageBoundaryId").val(feature.get("id"));
+    $("#hVillageBoundaryProjectId").val(feature.get("project_id"));
+    $("#hVillageBoundaryGeom").val(format.writeGeometry(feature.getGeometry()));
+    $('#txtBoundaryDistrict').val(Global.PROJECT_AREA.laSpatialunitgroupHierarchy3.name);
+    $('#txtBoundaryClan').val(Global.PROJECT_AREA.laSpatialunitgroupHierarchy4.name);
+    $('#txtBoundaryVillage').val(Global.PROJECT_AREA.laSpatialunitgroupHierarchy5.name);
+    $("#txtVillageLeader").val(feature.get("village_leader"));
+    $("#txtVillageQuarters").val(feature.get("quarters_num"));
+    $("#txtVillagePopulation").val(feature.get("population"));
+    $("#txtBoundaryCreateDate").val($.datepicker.formatDate('yy-mm-dd', new Date(feature.get("survey_date"))));
+    $("#txtBoundarySize").val(formatArea(feature.getGeometry()));
+
+    // Disable/enable save button
+    var editingEnabled = true;
+    if ($("#li-editing").css("display") === "none") {
+        editingEnabled = false;
+    }
+    
+    if (feature.get("approved") || feature.get("project_id") !== Global.PROJECT_ID || !editingEnabled) {
+        $("#btnSaveVillageBoundary").prop("disabled", true).hide();
+        $("#txtVillageLeader").prop("disabled", true);
+        $("#txtVillageQuarters").prop("disabled", true);
+        $("#txtVillagePopulation").prop("disabled", true);
+    } else {
+        $("#btnSaveVillageBoundary").prop("disabled", false).show();
+        $("#txtVillageLeader").prop("disabled", false);
+        $("#txtVillageQuarters").prop("disabled", false);
+        $("#txtVillagePopulation").prop("disabled", false);
+    }
 }
 
 function myCallback(evt) {
@@ -731,7 +858,7 @@ var onResponse = function (response) {
 
         alert(jQuery("#infoDetails").html());
     });
-}
+};
 
 Cloudburst.Navi.prototype.toggle = function () {
     if ($('#navtoolbar').dialog('isOpen')) {

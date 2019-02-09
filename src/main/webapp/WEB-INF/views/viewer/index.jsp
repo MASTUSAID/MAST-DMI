@@ -1017,6 +1017,16 @@
                                 <textarea id="txtPointFeatureDescription" rows="2" name="txtPointFeatureDescription" class="text ui-widget-content ui-corner-all" style="width:97%" value=""></textarea>
                             </td>
                         </tr>
+                        <tr>
+                            <td>
+                                <label>Surveyor:</label>
+                                <input type="text" name="txtPointSurveyor" id="txtPointSurveyor" disabled="disabled" class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:90%" />
+                            </td>
+                            <td>
+                                <label>Date of Survey:</label>
+                                <input type="text" name="txtPointSurveyDate" id="txtPointSurveyDate" disabled="disabled" class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:95%" />
+                            </td>
+                        </tr>
                     </table>
                     <br />
                     <h3>Photos</h3>
@@ -1053,6 +1063,69 @@
             </tr>
         </script>
 
+        <div id="boundary-dialog" title="Village Boundary" style="display: none;">
+            <form class="cmxform" id="formVillageBoundary" action="" onsubmit="return false;">
+                <div style="padding: 10px;">
+                    <table style="width: 100%;">
+                        <tr style="padding-bottom: 10px;">
+                            <td style="padding-bottom: 10px;">
+                                <label>District:</label>
+                                <input type="text" name="txtBoundaryDistrict" id="txtBoundaryDistrict" class="text ui-widget-content ui-corner-all" disabled="disabled" style="padding: 4px 6px;width:85%" />
+                                <br />
+                            </td>
+                            <td style="padding-bottom: 10px;">
+                                <label>Clan:</label>
+                                <input type="text" name="txtBoundaryClan" id="txtBoundaryClan" class="text ui-widget-content ui-corner-all" disabled="disabled" style="padding: 4px 6px;width:85%" />
+                                <br />
+                            </td>
+                            <td style="padding-bottom: 10px;">
+                                <label>Village:</label>
+                                <input type="text" name="txtBoundaryVillage" id="txtBoundaryVillage" class="text ui-widget-content ui-corner-all" disabled="disabled" style="padding: 4px 6px;width:85%" />
+                                <br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom: 10px;">
+                                <label>Village Leader:</label>
+                                <input type="text" name="txtVillageLeader" id="txtVillageLeader" class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:85%" />
+                            </td>
+                            <td style="padding-bottom: 10px;">
+                                <label>Number of Quarters:</label>
+                                <input type="text" name="txtVillageQuarters" id="txtVillageQuarters" maxlength="3"
+                                       onkeypress="return restrictInputInteger(event);" ondrop="return false;" onpaste="return false;"
+                                       class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:85%" />
+                            </td>
+                            <td style="padding-bottom: 10px;">
+                                <label>Population:</label>
+                                <input type="text" name="txtVillagePopulation" id="txtVillagePopulation" maxlength="6"
+                                       onkeypress="return restrictInputInteger(event);" ondrop="return false;" onpaste="return false;"
+                                       class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:85%" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom: 10px;">
+                                <label>Boundary Creation Date:</label>
+                                <input type="text" name="txtBoundaryCreateDate" id="txtBoundaryCreateDate" 
+                                       class="text ui-widget-content ui-corner-all" disabled="disabled" style="padding: 4px 6px;width:85%" />
+                                <br />
+                            </td>
+                            <td style="padding-bottom: 10px;">
+                                <label>Size:</label>
+                                <input type="text" name="txtBoundarySize" id="txtBoundarySize" class="text ui-widget-content ui-corner-all" disabled="disabled" style="padding: 4px 6px;width:85%" />
+                                <br />
+                            </td>
+                            <td style="padding-bottom: 10px;">
+                                <br />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="hidden" name="hVillageBoundaryId" id="hVillageBoundaryId" value="" />
+                <input type="hidden" name="hVillageBoundaryGeom" id="hVillageBoundaryGeom" value="" />
+                <input type="hidden" name="hVillageBoundaryProjectId" id="hVillageBoundaryProjectId" value="" />
+            </form>
+        </div>
+        
         <div id="footer"></div>
 
 

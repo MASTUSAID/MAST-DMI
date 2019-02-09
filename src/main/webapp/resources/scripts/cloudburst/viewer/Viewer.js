@@ -13,6 +13,7 @@ var arr_Layers = [];
 var displayInLayerMgr = {};
 var projectName = null;
 Global.PROJECT_ID = null;
+Global.PROJECT_AREA = null;
 var projectId = null; // for old version backward compatibility
 var osm_map;
 var Bing_Road;
@@ -23,8 +24,11 @@ var _projectExtent;
 var extent = ol.proj.transformExtent([35.739998, -7.900000999970367, 35.83000249996666, -7.82], "EPSG:4326", "EPSG:3857");
 var bounds = [34.9655456095934, -8.57657546620732,
     35.9042312577367, -7.83167176245347];
-var TYPE_BPUNDARY_POINTS = "Boundary_points"
-var L_BOUNDARY_POINTS = "Mast:" + TYPE_BPUNDARY_POINTS;
+var TYPE_BOUNDARY_POINTS = "Boundary_Points"
+var L_BOUNDARY_POINTS = "Mast:" + TYPE_BOUNDARY_POINTS;
+
+var TYPE_BOUNDARY = "Village_Boundary"
+var L_BOUNDARY = "Mast:" + TYPE_BOUNDARY;
 
 Cloudburst.loadMap = function (mapdiv, options, callback) {
     _projectExtent = "";
@@ -49,8 +53,10 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
         success: function (data) {
             projectName = data.name;
             Global.PROJECT_ID = data.projectnameid;
+            Global.PROJECT_AREA = data.projectArea[0];
+
             projectId = data.projectnameid;
-            
+
             _projectExtent = data.maxextent;
             DisclaimerMsg = (lang == 'en') ? data.disclaimer : $._('home_page_disclaimer_info');
 
@@ -89,18 +95,19 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         if (baseLayerName == "Google_Streets") {
                             var Google_Streets = new ol.layer.Tile({
                                 source: new ol.source.TileImage({
-                                    url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0',
+                                    url: 'http://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
                                     projection: "EPSG:3857",
                                     crossOrigin: 'null',
                                 })
-                            });
+                            })
                             arr_Layers.push(Google_Streets);
                         }
 
                         if (baseLayerName == "Google_Physical") {
+
                             Google_Streets = new ol.layer.Tile({
                                 source: new ol.source.TileImage({
-                                    url: 'http://maps.google.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i375060738!3m9!2spl!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0',
+                                    url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
                                     projection: "EPSG:3857",
                                     crossOrigin: 'null',
                                 })
@@ -109,20 +116,10 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         }
 
                         if (baseLayerName == "Google_Satellite") {
-                            Google_Streets = new ol.layer.Tile({
-                                source: new ol.source.TileImage({
-                                    url: 'http://khm{0-3}.googleapis.com/kh?v=742&hl=pl&&x={x}&y={y}&z={z}',
-                                    projection: "EPSG:3857",
-                                    crossOrigin: 'null',
-                                })
-                            });
-                            arr_Layers.push(Google_Streets);
-                        }
 
-                        if (baseLayerName == "Google_Hybrid") {
                             Google_Streets = new ol.layer.Tile({
                                 source: new ol.source.TileImage({
-                                    url: 'http://khm{0-3}.googleapis.com/kh?v=742&hl=pl&&x={x}&y={y}&z={z}',
+                                    url: 'http://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
                                     projection: "EPSG:3857",
                                     crossOrigin: 'null',
                                 })
@@ -130,7 +127,21 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                             arr_Layers.push(Google_Streets);
                         }
 
+                        if (baseLayerName == "Google_Hybrid") {
+
+                            Google_Streets = new ol.layer.Tile({
+                                source: new ol.source.TileImage({
+                                    url: 'http://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
+                                    projection: "EPSG:3857",
+                                    crossOrigin: 'null',
+                                })
+                            })
+                            arr_Layers.push(Google_Streets);
+
+                        }
+
                         if (baseLayerName == "Bing_Road") {
+
                             Bing_Road = new ol.layer.Tile({
                                 title: 'Bing Maps road',
                                 type: 'base',
@@ -142,9 +153,11 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                 crossOrigin: 'null',
                             })
                             arr_Layers.push(Bing_Road);
+
                         }
 
                         if (baseLayerName == "Bing_Aerial") {
+
                             Bing_Aerial = new ol.layer.Tile({
                                 title: 'Bing Maps aerial',
                                 type: 'base',
@@ -154,19 +167,23 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                     key: '123'
                                 }),
                                 crossOrigin: 'null',
-                            });
+                            })
                             arr_Layers.push(Bing_Aerial);
+
                         }
 
                         if (baseLayerName == "Open_Street_Map") {
+
                             osm_map = new ol.layer.Tile({
                                 source: new ol.source.OSM(),
                                 crossOrigin: 'null',
                             }),
                                     arr_Layers.push(osm_map);
+
                         }
 
                         if (baseLayerName == "MapQuest_OSM") {
+
                             MapQuest_OSM = new ol.layer.Tile({
                                 style: 'Aerial',
                                 visible: false,
@@ -175,6 +192,7 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                             }),
                                     arr_Layers.push(MapQuest_OSM);
                         }
+
                         break;
                     }
 
@@ -210,7 +228,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         color: '#f00',
                         width: 2
                     })
-
                 });
 
                 var boundaryPointStyle = new ol.style.Style({
@@ -230,6 +247,20 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         stroke: new ol.style.Stroke({
                             color: 'green', width: 2
                         })
+                    })
+                });
+
+                var villageBorderStyle = new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: '#ff6e00',
+                        width: 3
+                    })
+                });
+
+                var neighborVillageBorderStyle = new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: '#ffd800',
+                        width: 2
                     })
                 });
 
@@ -358,11 +389,19 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                 return highlightStyle2;
                         }
 
-                        if (feature.id_.split('.')[0] == TYPE_BPUNDARY_POINTS) {
+                        if (feature.id_.split('.')[0].toLowerCase() == TYPE_BOUNDARY_POINTS.toLowerCase()) {
                             if (feature.values_.project_id === Global.PROJECT_ID) {
                                 return boundaryPointStyle;
                             } else {
                                 return neighborBoundaryPointStyle;
+                            }
+                        }
+
+                        if (feature.id_.split('.')[0] == TYPE_BOUNDARY) {
+                            if (feature.values_.project_id === Global.PROJECT_ID) {
+                                return villageBorderStyle;
+                            } else {
+                                return neighborVillageBorderStyle;
                             }
                         }
 
@@ -409,7 +448,7 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                     $(this).ColorPickerSetColor(this.value);
                 });
             }
-            
+
             map = new ol.Map({
                 layers: arr_Layers,
                 controls: [
@@ -520,7 +559,7 @@ jQuery(document).ready(function () {
         var resourceRecords = new resource("resource");
         hideMapComponents();
     });
-    
+
     // Load projects list
     $.ajax({
         url: "landrecords/allprojects/",

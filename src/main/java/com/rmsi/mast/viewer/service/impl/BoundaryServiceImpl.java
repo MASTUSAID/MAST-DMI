@@ -1,7 +1,9 @@
 package com.rmsi.mast.viewer.service.impl;
 
+import com.rmsi.mast.studio.dao.BoundaryDao;
 import com.rmsi.mast.studio.dao.BoundaryPointDao;
 import com.rmsi.mast.studio.dao.BoundaryPointDocDao;
+import com.rmsi.mast.studio.domain.Boundary;
 import com.rmsi.mast.studio.domain.BoundaryPoint;
 import com.rmsi.mast.studio.domain.BoundaryPointDoc;
 import com.rmsi.mast.viewer.service.BoundaryService;
@@ -17,6 +19,9 @@ public class BoundaryServiceImpl implements BoundaryService {
     @Autowired
     BoundaryPointDao boundaryPointDao;
 
+    @Autowired
+    BoundaryDao boundaryDao;
+    
     @Autowired
     BoundaryPointDocDao boundaryPointDocDao;
 
@@ -46,5 +51,16 @@ public class BoundaryServiceImpl implements BoundaryService {
     @Override
     public boolean deleteBoundaryPointDoc(Integer id) {
         return boundaryPointDocDao.delete(id);
+    }
+
+    @Override
+    public Boundary getBoundary(Integer id) {
+        return boundaryDao.getBoundary(id);
+    }
+
+    @Transactional
+    @Override
+    public Boundary saveBoundary(Boundary boundary) {
+        return boundaryDao.save(boundary);
     }
 }

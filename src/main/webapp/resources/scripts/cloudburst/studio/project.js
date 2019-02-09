@@ -696,46 +696,7 @@ var saveProject = function () {
     });
 
     if ($("#projectForm").valid()) {
-		
-        // if (adjList.length >= 2) {
-            // if (!$('#temporaryHamletDiv').is(':empty')) {
-                // if (jQuery('#active').val() == "") {
-                    // jQuery('#active').val("false");
-                // }
 
-                // if (jQuery('#cosmetic').val() == "") {
-                    // jQuery('#cosmetic').val("false");
-                // }
-
-                // if ($("#chkDisclaimer").attr('checked')) {
-                    // if (!$('#Disclaimer').val()) {
-                        // jAlert('Enter Disclaimer ', 'Project');
-                        // return;
-                    // }
-                // }
-
-                // if (!jQuery("#chkDisclaimer").attr('checked')) {
-                    // $('#Disclaimer').val("");
-                // }
-
-                // if (jQuery('#addedLayerGroupList option').size() > 0) {
-                    // jQuery("#addedLayerGroupList option").attr("selected", "selected");
-                    // saveProjectData();
-                // }
-
-                // if ($('.userCheckbox').filter(":checked").length > 0) {
-                    // saveProjectData();
-                // } else {
-                    // jAlert('Select atleast one user Form Assign user section ', 'Project');
-                // }
-            // } else {
-                // jAlert("Add atleast one hamlet");
-            // }
-        // } else {
-            // jAlert("Add atleast two adjudicator");
-            // checkAdjEdit = true;
-        // }
-    	
     	saveProjectData();
 		
     }

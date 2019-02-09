@@ -37,21 +37,21 @@
                                                                     <img src="resources/images/viewer/navi/select-polygon.png" />
                                                     </button>
                         </td>-->
-						<!--
-                        <td>
-                            <button id="selectUndo" title="Undo" 
-                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
-                                <img src="resources/images/viewer/toolbar/undo.png" />
-                            </button>
-                        </td>
-                        <td>
-                            <button id="selectRedo" title="Redo" 
-                                    class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
-                                <img src="resources/images/viewer/toolbar/redo.png" />
-                            </button>
-                        </td>
-						
-						-->
+                        <!--
+<td>
+    <button id="selectUndo" title="Undo" 
+            class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+        <img src="resources/images/viewer/toolbar/undo.png" />
+    </button>
+</td>
+<td>
+    <button id="selectRedo" title="Redo" 
+            class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
+        <img src="resources/images/viewer/toolbar/redo.png" />
+    </button>
+</td>
+                        
+                        -->
                         <td>
                             <button id="selectSave" title="Save" 
                                     class=" fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right">
@@ -63,15 +63,22 @@
             </div>         
             <!--end:suboptions-->
 
-            
+
             <!--start:suboptions-->
             <div id="subcelladjustedit" class="subcelladjust blueSwitch">
                 <div class="editing-options-m">
-                    <a id="options1-s-t" href="#">Edit</a>
+                    Edit
                 </div>	
                 <div id="options1-s-d" class="search-options-b">					
                     <table cellpadding="1" cellspacing="1">
                         <tr>
+                            <td>
+                                <button  id="btnCreateNewPolygon" title="Create"
+                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
+                                         aria-describedby="ui-tooltip-11">
+                                    <img src="resources/images/viewer/navi/polygonselectsmall.png">
+                                </button>
+                            </td>
                             <td>
                                 <button  id="move" title="Move"
                                          class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
@@ -79,45 +86,15 @@
                                     <img src="resources/images/viewer/navi/move.png">
                                 </button>
                             </td>
-                            <!--<td>
-                               <button class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
-                                    id="line" oldtitle="Line" aria-describedby="ui-tooltip-11">
-                                            <img src="resources/images/viewer/navi/split-line.png">
-                                    </button>
-                            </td>
                             <td>
-                               <button class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
-                                    id="polygon" oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
-                                            <img src="resources/images/viewer/navi/split-polygon.png">
-                                    </button>
-                            </td>
-                            <td>
-                                <button id="resize" title="Resize"
-                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
-                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
-                                    <img src="resources/images/viewer/navi/resizable.png">
-                                </button>
-                            </td>
-							-->
-                            <td>
-							
+
                                 <button id="reshape" title="Reshape"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
-                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
+                                        aria-describedby="ui-tooltip-11">
                                     <img src="resources/images/viewer/navi/reshape.png">
                                 </button>
                             </td>
-							<!--
-                            <td>
-							
-							
-                                <button id="rotate" title="Rotate" 
-                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
-                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
-                                    <img src="resources/images/viewer/navi/rotate.png">
-                                </button>
-                            </td>
-							-->
+     
                             <td>
                                 <button id="removeFeature" title="Remove Feature"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
@@ -129,9 +106,9 @@
                     </table>
                 </div>
             </div> 
-		
-		
-		<!--start:suboptions-->
+
+
+            <!--start:suboptions-->
             <div id="subcelladjustcreate" class="subcelladjust blueSwitch">
                 <div class="editing-options-m">
                     <a id="options-s-t" href="#">Parcel Split</a>
@@ -139,7 +116,7 @@
                 <div id="options-s-d" class="search-options-b">					
                     <table cellpadding="1" cellspacing="1">
                         <tr>
-                             <td>
+                            <td>
                                 <button id="point" title="Point"
                                         class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
                                         oldtitle="Point" aria-describedby="ui-tooltip-11">
@@ -153,119 +130,62 @@
                                     <img src="resources/images/viewer/navi/lineselectsmall.png">
                                 </button>
                             </td>
-                           <!--  <td>
-                                <button id="polygon" title="Polygon"
-                                        class="fg-button ui-state-default1 ui-priority-primary1 ui-corner-left ui-corner-right" 
-                                        oldtitle="Polygon Hole" aria-describedby="ui-tooltip-11">
-                                    <img src="resources/images/viewer/navi/polygonselectsmall.png">
-                                </button>
-                            </td> -->
                         </tr>
                     </table>
                 </div>
             </div>
-            <!--end:suboptions-->
-			
-			
-			
-			<!--
-            <div class="subcelladjust blueSwitch" style="display:none;">
-                <div class="editing-options-m">
-                    <a id="options3-s-t" href="#">Selection Settings</a>
-                </div>	
-                <div id="options3-s-d">
-                    <table width="100%" cellpadding="1" cellspacing="1">
-                        <tr>
-                            <td width="45%" align="left" class="weightfont">
-                                Tolerance
-                            </td>
-                            <td width="10%">&nbsp;</td>
-                            <td width="45%" align="left" class="weightfont">
-                                Maximum features                                  
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  align="left">
-                                <input id="edit_tolerance" type="text" class="value_tolerance" value="5"/>
-                            </td>
-                            <td >&nbsp;</td>
-                            <td  align="left">
-                                <input id="max_features" type="text" class="value_one" value="10" />                                   
-                            </td>
-                        </tr>
-                        <tr><td class="spacer" ></td></tr>
-                        <tr>
-                            <td colspan="3" class="weightfont">
-                                Selection Mode                                    
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">
-                                <select id="selectionMode" class="value_pointmp" onchange="updateSelectionMode();">
-                                    <option value="single">Create New Selection Set</option>
-                                    <option value="multiple">Add to Current Selection Set</option>							 
-
-                                </select>                                
-                            </td>
-                        </tr>
-                    </table>          
-                </div>			
-            </div>   
-			
-			-->
-
             <!--end:suboptions-->
 
             <!--start:suboptions-->
-			<!--
-            <div class="subcelladjust blueSwitch">
-                <div class="editing-options-m">
-                    <a id="options4-s-t" href="#">Snap Settings</a>
-                </div>	
-                <div id="options4-s-d"> 
+            <!--
+<div class="subcelladjust blueSwitch">
+    <div class="editing-options-m">
+        <a id="options4-s-t" href="#">Snap Settings</a>
+    </div>	
+    <div id="options4-s-d"> 
+        <table width="100%" cellpadding="1" cellspacing="1">
+            <tr>
+                <td width="45%" align="left" class="weightfont">
+                    <span id="snap_tolerance">Tolerance</span>
+                </td>
+                <td width="10%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td  align="left">
+                    <input id="edit_tolerance_two" type="text" class="value_tolerance" value="10" />
+                </td>
+                <td >&nbsp;</td>
+            </tr>
+            <tr><td class="spacer" ></td></tr>
+            <tr>
+                <td colspan="3">
                     <table width="100%" cellpadding="1" cellspacing="1">
                         <tr>
-                            <td width="45%" align="left" class="weightfont">
-                                <span id="snap_tolerance">Tolerance</span>
-                            </td>
-                            <td width="10%">&nbsp;</td>
+                            <td width="2%"><input type="checkbox" onClick="toggleSnap(this);" checked /></td>
+                            <td width="98%" class="snappad" id="snap_feature">Snap to Closest Feature</td>
                         </tr>
                         <tr>
-                            <td  align="left">
-                                <input id="edit_tolerance_two" type="text" class="value_tolerance" value="10" />
-                            </td>
-                            <td >&nbsp;</td>
+                            <td width="2%"><input type="checkbox" value="node" class="cls-snap" onClick="toggleSnapAttr(this);" checked /></td>
+                            <td width="98%" class="snappad" id="snap_node">Snap to Nodes</td>
                         </tr>
-                        <tr><td class="spacer" ></td></tr>
                         <tr>
-                            <td colspan="3">
-                                <table width="100%" cellpadding="1" cellspacing="1">
-                                    <tr>
-                                        <td width="2%"><input type="checkbox" onClick="toggleSnap(this);" checked /></td>
-                                        <td width="98%" class="snappad" id="snap_feature">Snap to Closest Feature</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="2%"><input type="checkbox" value="node" class="cls-snap" onClick="toggleSnapAttr(this);" checked /></td>
-                                        <td width="98%" class="snappad" id="snap_node">Snap to Nodes</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="2%"><input type="checkbox" value="vertex" class="cls-snap" onClick="toggleSnapAttr(this);" checked /></td>
-                                        <td width="98%" class="snappad" id="snap_vertice" >Snap to Vertices</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="2%"><input type="checkbox" value="edge" class="cls-snap" onClick="toggleSnapAttr(this);" checked /></td>
-                                        <td width="98%" class="snappad" id="snap_edge" >Snap to Edges</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr> 
+                            <td width="2%"><input type="checkbox" value="vertex" class="cls-snap" onClick="toggleSnapAttr(this);" checked /></td>
+                            <td width="98%" class="snappad" id="snap_vertice" >Snap to Vertices</td>
+                        </tr>
+                        <tr>
+                            <td width="2%"><input type="checkbox" value="edge" class="cls-snap" onClick="toggleSnapAttr(this);" checked /></td>
+                            <td width="98%" class="snappad" id="snap_edge" >Snap to Edges</td>
+                        </tr>
                     </table>
-                </div>
-                
-            </div>
-			-->
+                </td>
+            </tr> 
+        </table>
+    </div>
+    
+</div>
+            -->
 
-			</div>
+        </div>
     </div>      
     <!--end:suboptions-->
 </div>		
