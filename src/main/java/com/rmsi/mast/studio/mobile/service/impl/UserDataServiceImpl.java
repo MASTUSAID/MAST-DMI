@@ -544,7 +544,7 @@ public class UserDataServiceImpl implements UserDataService {
 //                }
               
                 
-            	spatialUnit.setArea( Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
+            	spatialUnit.setArea(geomConverter.getArea(prop.getCoordinates()));
                 serverPropId = spatialUnitDao.addSpatialUnit(spatialUnit).getLandid();
                 spatialUnitDao.clear();
                 
@@ -2401,7 +2401,7 @@ public class UserDataServiceImpl implements UserDataService {
                 
                 setReourcePolygonPropAttibutes(spatialUnit, prop);
                 try {
-                	spatialUnit.setArea( Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
+                	spatialUnit.setArea(geomConverter.getArea(prop.getCoordinates()));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

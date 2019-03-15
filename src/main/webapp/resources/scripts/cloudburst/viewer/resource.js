@@ -1527,7 +1527,7 @@ function getFarmReport(land_id, projectId, geomType)
                                     vectorSource.addFeatures(features);
                                     extent = vectorSource.getExtent();
                                     var cqlFilter = 'landid=' + fieldVal;
-                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;INCLUDE;landid=" + fieldVal + ";";
+                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;INCLUDE;landid=" + fieldVal + ";";
 
 
 

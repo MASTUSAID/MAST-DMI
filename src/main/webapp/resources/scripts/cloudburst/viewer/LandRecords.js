@@ -2015,7 +2015,7 @@ function callback_function(features, landId) {
         }
     });
 
-    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + landId + ";";
+    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + landId + ";";
 
     $("#mapImageId_" + landId).empty();
     $("#mapImageId_" + landId).append('<img  src=' + url1 + '>')
@@ -4056,8 +4056,8 @@ function FetchdataCorrectionReport(trans_id, land_id, workflowid)
                                         }
                                     });
 
-                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + _extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
-                                    var url2 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=600&height=350&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
+                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + _extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
+                                    var url2 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=600&height=350&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
 
 
 
@@ -4350,8 +4350,8 @@ function FetchdataCorrectionReport(trans_id, land_id, workflowid)
                                         }
                                     });
 
-                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + _extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
-                                    var url2 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=600&height=350&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
+                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + _extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
+                                    var url2 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=600&height=350&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
 
                                     jQuery('#mapImageId').empty();
                                     jQuery('#mapImageId').append('<img  src=' + url1 + '>');
@@ -4690,7 +4690,7 @@ function _generateFinalLandForm(trans_id, land_id)
                                         }
                                     });
 
-                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
+                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
 
                                     jQuery('#mapImageId01').empty();
                                     jQuery('#mapImageId01').append('<img  src=' + url1 + '>');
@@ -4946,7 +4946,7 @@ function _generateFinalLandForm(trans_id, land_id)
                                         }
                                     });
 
-                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&styles=&format_options=layout:getMap&FORMAT=image/png&REQUEST=GetMap&layers=Mast:LBR_district,Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
+                                    var url1 = "http://" + location.host + "/geoserver/wms?" + "bbox=" + extent + "&FORMAT=image/png&REQUEST=GetMap&layers=Mast:vertexlabel,Mast:la_spatialunit_land&width=245&height=243&srs=EPSG:4326" + "&CQL_FILTER;;INCLUDE;INCLUDE;landid=" + fieldVal + ";";
 
 
                                     jQuery('#mapImageId01').empty();

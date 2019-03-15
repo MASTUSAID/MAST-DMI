@@ -340,16 +340,10 @@ public class MobileDataController {
                         .getSurveyAttributesByProjectId(projobj));
 //
 //                // Add Project Spatial Data
-                configurationData.put("SpatialData", spatialDataService
-                        .getProjectSpatialDataByProjectId(projobj.getProjectnameid()));
-
-//                // Add List of Adjudicator
-//                configurationData.put("Adjudicator", surveyProjectAttribute
-//                        .getProjectAdjudicatorByProjectId(projectId));
-//
-//                // Add List of Hamlet
-//                configurationData.put("Hamlet", surveyProjectAttribute
-//                        .getProjectHamletsByProjectId(projectId));
+                List<ProjectSpatialData> spatialData  = spatialDataService.getProjectSpatialDataByProjectId(projobj.getProjectnameid());
+                if(spatialData != null){
+                    configurationData.put("SpatialData", spatialData);
+                }
 
 //                 Add List of claim types
                 configurationData.put("ClaimType", spatialUnitService.getClaimTypes());

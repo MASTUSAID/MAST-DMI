@@ -283,7 +283,7 @@ var showToolButtons = function (_roles) {
     var toolbuttons = $("#toolbar button");
     var visiblebuttons = null;
     var visiblebuttonsArr = new Array();
-    var role_id = _roles.id;
+    var role_id = _roles.userRole[0].roleBean.roleid;
     // var role_array = _roles.split(",");
     // var role_array=[];
     // role_array.push(_roles.roles[0].name);

@@ -96,7 +96,7 @@ public class GeometryConversion {
     }
     
     
-    public String getArea(String wkt) {
+    public double getArea(String wkt) {
     	String[] coord = wkt.split(",");
     	List<Coordinate>  lstcoordinate = new ArrayList<Coordinate>();
         try {
@@ -124,11 +124,8 @@ public class GeometryConversion {
         double area = polygonJts.getArea();
         double areaMeter = area * (Math.pow(111319.9, 2)) *Math.cos(Math.toRadians(tmpJtsPoints.get(0).y));
         double areaAcer=areaMeter* 0.00024710538149159;
-        DecimalFormat df = new DecimalFormat("#.##");
         
-        System.out.println(Double.parseDouble(df.format(areaAcer)));
-       //  double final_area=Double.parseDouble(df.format(areaMeter))
-        return df.format(areaAcer);
+        return areaAcer;
         
   }
 
