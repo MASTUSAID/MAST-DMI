@@ -24,4 +24,6 @@ public interface ProjectRegionDAO extends GenericDAO<Project, Long> {
     List<ProjectRegion> findAllProjectRegion();
     
     List<ProjectRegion> getVillagesByProject(int id);
+    
+    List<ProjectRegion> getProjectNeighborVillages(int id);
 }

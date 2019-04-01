@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <title>Boundary Map</title>
+
+        <link rel="stylesheet" href="../scripts/openlayers/theme/default/ol.css" type="text/css" />
+        <link rel="stylesheet" href="../scripts/openlayers/theme/default/style.css" type="text/css" />
+        <link rel="stylesheet" href="../scripts/openlayers/theme/default/google.css" type="text/css" />
+        <link rel="stylesheet" href="../scripts/jquery-ui-1.12.1/jquery-ui.min.css" type="text/css" />
+        <link rel="stylesheet" href="../styles/font-awesome.min.css" type="text/css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="http://maps.google.com/maps/api/js?v=3.5&amp;sensor=false"></script>
+        <script src="../scripts/openlayers/ol-debug.js"></script>
+        <script src="../scripts/openlayers/proj4.js"></script>
+        <script src="../scripts/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+        <script src="../scripts/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <script src="../scripts/jquery-tmpl/jquery.tmpl.min.js"></script>
+        <script src="../scripts/cloudburst/viewer/BoundaryPrint.js"></script>
+
+        <style>
+            body{
+                background-color: #fff !important;
+                margin: 0px !important;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                padding: 0px 10px 0px 10px;
+                font-size: 14px;
+                line-height: 1.42857143;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            .mapHeader{
+                text-align: center;
+                background-color: #0066cc;
+                margin-bottom: 10px;
+            }
+
+            .mapHeaderLabel{
+                padding: 5px;
+                font-weight: bold;
+                font-size: 20pt;
+                color: #fff !important;
+            }
+
+            .mapDiv{
+                width: 18cm;
+                height: 10cm;
+                border: #888 solid 2px;
+                margin: 0 auto !important;
+            }
+
+            .print-button{
+                position: fixed;
+                top: 7px;
+                left: 35px;
+                z-index: 1000;
+            }
+
+            .legendBlock {
+                background-color: #BEE8FF;
+                border: 2px solid #000;
+                padding: 5px;
+            }
+
+            table.coordsTable {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            table.coordsTable thead td {
+                font-weight: bold;
+                background-color: #6C96CD;
+                color: #fff !important;
+            }
+
+            table.coordsTable thead td {
+                border: 1px solid #000;
+            }
+
+            table.coordsTable, table.coordsTable tbody td {
+                border: 1px solid black;
+            }
+
+            table.coordsTable th, table.coordsTable td {
+                padding: 1px;
+                text-align: left;
+            }
+
+            table.coordsTable tr:nth-child(even) {
+                background-color: #BEE8FF;
+            }
+
+            table.coordsTable tr:nth-child(odd) {
+                background-color: #EEF8FF;
+            }
+
+            .circle {
+                background: #000;
+                border: 2px solid #fff;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                float:left;
+                margin-right: 5px;
+            }
+
+            .boundary {
+                border: 3px solid #FF5500;
+                width: 30px;
+                height: 15px;
+                float: left;
+                margin-right: 5px;
+                margin-left: 15px;
+            }
+
+            #scaleBarLabelsTable {
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 7px;
+            } 
+
+            #scaleBarTable {
+                margin: 0 auto;
+            } 
+
+            #scaleBarLabelsTable tr td{
+                width: 1cm !important;
+            }
+
+            #scaleBarTable tr td{
+                border: 1px solid #000;
+                height: 10px;
+                font-size: 1px;
+                width: 1cm !important;
+                background-color: #000;
+            }
+
+            #scaleBarTable tr td:nth-child(even){
+                background-color: #fff;
+            }
+
+            .gridCoord {
+                position: absolute; 
+                background-color: #000; 
+                font-size: 1px;
+            }
+
+            .gridCoordLabel {
+                position: absolute; 
+            }
+
+            .gridCoordLabelRight {
+                writing-mode: tb-rl;
+            }
+            
+            label{
+                font-weight: bold;
+            }
+            
+            .vspave {
+                height: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="content">
+            <button id="btnPrint" class="ui-button ui-widget ui-corner-all print-button" style="display: none;" onclick="javascript:printMap();">
+                Print when map is ready
+            </button>
+
+            <div class="mapHeader" style="display: none;">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 20%;text-align: left;padding-left: 7px;">
+                            <image id="coatOfArms" />
+                        </td>
+                        <td style="width: 80%;">
+                            <span class="mapHeaderLabel"><span id="lblVillageName"></span> Village Boundary Map<br /> Area = </span>
+                        </td>
+                        <td style="width: 20%;padding-right: 7px;">
+                            <image id="usaidLogo" style="background-color: #fff;" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="mapContainer" style="float:left; margin: 0px auto !important; position: relative; display: none;">
+                <img id="imgNorth" style="position: absolute;z-index: 100000;" />
+                <div id="hTopCoords" style="position: relative;clear: both;"></div>
+                <div id="vLeftCoords" style="margin: 0px;float: left;position: relative;"></div>
+                <div id="map" class="mapDiv" style="margin: 0px;float: left;"></div>
+                <div id="vRightCoords" style="margin: 0px;float: left;position: relative;"></div>
+                <div id="hBottomCoords" style="position: relative; clear: both;"></div>
+            </div>
+            <div id="legend" style="float:left; display: none;padding-left: 10px;">
+                <div class="legendBlock">
+                    District: <span style="font-weight: bold;" id="lblDistrictName"></span><br />
+                    Clan: <span style="font-weight: bold;" id="lblClanName"></span><br />
+                    Village Leader: <span style="font-weight: bold;" id="lblVillageLeader"></span><br />
+                    Number of Quarters: <span style="font-weight: bold;" id="lblQuartersNum"></span><br />
+                    Population: <span style="font-weight: bold;" id="lblPopulation"></span>
+                    <p></p>
+                    
+                    <div class="smallText">
+                        Unit: degree<br />
+                        Geodetic CRS: WGS 84<br />
+                        Datum: World Geodetic System 1984<br />
+                        Ellipsoid: WGS 84<br />
+                        Prime meridian: Greenwich 
+                        <p></p>
+                        <div style="text-align: center;">
+                            <b>Scale <span id="lblScale"></span></b>
+                            <table id="scaleBarLabelsTable">
+                                <tr>
+                                    <td><span id="lblScale1"></span></td><td><span id="lblScale2"></span></td>
+                                    <td><span id="lblScale3"></span></td><td><span id="lblScale4"></span></td>
+                                    <td><span id="lblScale5"></span></td>
+                                </tr>
+                            </table>
+                            <table id="scaleBarTable">
+                                <tr>
+                                    <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                                </tr>
+                            </table>
+                            <span id="lblScaleUnits"></span>
+                        </div>
+                        <p></p>
+                        <div class="circle"></div> <span style="float: left;">Beacon</span>
+                        <div class="boundary"></div> <span style="float: left;">Boundary</span>
+                        <br />
+                    </div>
+                </div>
+                <div class="legendBlock" style="margin-top: 7px;">
+                    <table class="coordsTable" id="tableCoords">
+                        <thead>
+                            <tr>
+                                <td>
+                                    Beacon #
+                                </td>
+                                <td>
+                                    X
+                                </td>
+                                <td>
+                                    Y
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <p></p>
+                    <div class="smallText">
+                        MAST - <b><span id="lblToday"></span></b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mapParamsDialog" title="Map Parameters" style="display: none;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top;">
+                        <label>Layers:</label>
+                        <div class="vspave"></div>
+                        <input type="checkbox" value="googleAreal" /> Google Satellite
+                        <br />
+                        <div id="pnlUserLayers"></div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top;">
+                        <label>Paper Size:</label>
+                        <div class="vspave"></div>
+                        <select id="paperSize" style="width: 100px;">
+                            <option value="a4" selected="selected">A4</option>
+                            <option value="a3">A3</option>
+                            <option value="a2">A2</option>
+                            <option value="a1">A1</option>
+                            <option value="a0">A0</option>
+                        </select>
+                        <br /><br />
+                        <label>Orientation</label>
+                        <div class="vspave"></div>
+                        <input type="radio" name="orientation" value="portrait" /> Portrait
+                        <br />
+                        <input type="radio" name="orientation" value="landscape" checked = "checked" /> Landscape
+                        <br /><br />
+                        <label>Print All Points</label>
+                        <div class="vspave"></div>
+                        <input type="checkbox" name="printAll" id="printAll" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

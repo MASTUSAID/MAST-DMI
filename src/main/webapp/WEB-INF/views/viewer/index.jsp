@@ -20,7 +20,6 @@
     try {
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        System.out.println("User is: " + user.getUsername());
         principal = user.getUsername();
         java.util.Collection<org.springframework.security.core.GrantedAuthority> authorities = user.getAuthorities();
 
@@ -1007,18 +1006,6 @@
                                 <select name="cbxPointVillageId" id="cbxPointVillageId" style="width:95%;"></select>
                             </td>
                             <td>
-                                <label>Feature Type:</label>
-                                <input type="text" name="txtPointFeatureType" id="txtPointFeatureType" class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:95%" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <label>Feature Description:</label>
-                                <textarea id="txtPointFeatureDescription" rows="2" name="txtPointFeatureDescription" class="text ui-widget-content ui-corner-all" style="width:97%" value=""></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <label>Surveyor:</label>
                                 <input type="text" name="txtPointSurveyor" id="txtPointSurveyor" disabled="disabled" class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:90%" />
                             </td>
@@ -1027,14 +1014,33 @@
                                 <input type="text" name="txtPointSurveyDate" id="txtPointSurveyDate" disabled="disabled" class="text ui-widget-content ui-corner-all" style="padding: 4px 6px;width:95%" />
                             </td>
                         </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Feature Type:</label>
+                                <select name="cbxPointFeatureType" id="cbxPointFeatureType" style="padding: 4px 6px;width:88%;"></select>
+                            </td>
+                            <td colspan="2">
+                                <label>Feature Description:</label>
+                                <textarea id="txtPointFeatureDescription" rows="1" name="txtPointFeatureDescription" class="text ui-widget-content ui-corner-all" style="width:97%" value=""></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <label>Confidence Level:</label>
+                                <select name="cbxPointConfidenceLevel" id="cbxPointConfidenceLevel" style="width:95%;"></select>
+                            </td>
+                            <td colspan="2">
+                                <label>Verified:</label> 
+                                <input type="checkbox" id="chbxVerified" name="chbxVerified" style="margin-bottom: 10px; vertical-align: sub;" />
+                            </td>
+                        </tr>
                     </table>
-                    <br />
+
                     <h3>Photos</h3>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Description</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -1049,17 +1055,14 @@
 
         <script id="templateBoundaryPointDocs" type="text/x-jquery-tmpl">
             <tr>
-                <td>
-                    \${name}
-                </td>
-                <td>
-                    \${remarks}
-                </td>
-                <td align="center">
-                    <a href="javascript:viewBoundaryPointDoc(\${id});">
-                        <img src="resources/images/studio/document-image-view.png" title="View Photo" />
-                    </a>
-                </td>	
+            <td>
+            \${name}
+            </td>
+            <td align="center">
+            <a href="javascript:viewBoundaryPointDoc(\${id});">
+            <img src="resources/images/studio/document-image-view.png" title="View Photo" />
+            </a>
+            </td>	
             </tr>
         </script>
 
@@ -1125,7 +1128,7 @@
                 <input type="hidden" name="hVillageBoundaryProjectId" id="hVillageBoundaryProjectId" value="" />
             </form>
         </div>
-        
+
         <div id="footer"></div>
 
 

@@ -1,11 +1,13 @@
 package com.rmsi.mast.studio.mobile.service;
 
 import com.rmsi.mast.studio.domain.AcquisitionType;
+import com.rmsi.mast.studio.domain.BoundaryFeatureType;
 
 import java.util.List;
 
 import com.rmsi.mast.studio.domain.Citizenship;
 import com.rmsi.mast.studio.domain.ClaimType;
+import com.rmsi.mast.studio.domain.ConfidenceLevel;
 import com.rmsi.mast.studio.domain.DisputeType;
 import com.rmsi.mast.studio.domain.DocumentType;
 import com.rmsi.mast.studio.domain.Gender;
@@ -203,4 +205,8 @@ public interface SpatialUnitService {
     DocumentType getDocumentTypeByAttributeOptionId(int optId);
     
     List<ClaimBasic> getClaimsBasicByLandId(Long landid) ;
+    
+    List<ConfidenceLevel> getConfidenceLevels();
+    
+    List<BoundaryFeatureType> getBoundaryFeatureTypes();
 }

@@ -1,5 +1,4 @@
 var Global = Global || {};
-
 var project = null;
 var baseLayers = [];
 var cosmeticStatus = false;
@@ -14,6 +13,7 @@ var displayInLayerMgr = {};
 var projectName = null;
 Global.PROJECT_ID = null;
 Global.PROJECT_AREA = null;
+Global.PROJECT = null;
 var projectId = null; // for old version backward compatibility
 var osm_map;
 var Bing_Road;
@@ -26,19 +26,14 @@ var bounds = [34.9655456095934, -8.57657546620732,
     35.9042312577367, -7.83167176245347];
 var TYPE_BOUNDARY_POINTS = "Boundary_Points"
 var L_BOUNDARY_POINTS = "Mast:" + TYPE_BOUNDARY_POINTS;
-
 var TYPE_BOUNDARY = "Village_Boundary"
 var L_BOUNDARY = "Mast:" + TYPE_BOUNDARY;
-
 Cloudburst.loadMap = function (mapdiv, options, callback) {
     _projectExtent = "";
     windowResize();
-
     $('#_loader').hide();
     $('#maptips').hide();
-
     project = options.project;
-
     var projection = new ol.proj.Projection({
         code: 'EPSG:4326',
         units: 'degrees',
@@ -52,14 +47,12 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
         async: true,
         success: function (data) {
             projectName = data.name;
+            Global.PROJECT = data;
             Global.PROJECT_ID = data.projectnameid;
             Global.PROJECT_AREA = data.projectArea[0];
-
             projectId = data.projectnameid;
-
             _projectExtent = data.maxextent;
             DisclaimerMsg = (lang == 'en') ? data.disclaimer : $._('home_page_disclaimer_info');
-
             if (data.active) {
                 cookieProjectName = data.name + '|' + user;
                 if (DisclaimerMsg) {
@@ -67,7 +60,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         $('#DisclaimerDiv').css("visibility", "visible");
                         $("#hidProjectName").val(data.name);
                         $('#DisclaimerMsgDiv').html(DisclaimerMsg);
-
                         $("#DisclaimerDiv").dialog({
                             width: '520',
                             minHeight: '100',
@@ -84,14 +76,12 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                 }
 
                 var apiKey = "AqTGBsziZHIJYYxgivLBf0hVdrAk9mWO5cQcb8Yux8sW5M8c8opEC2lZqKR1ZZXf";
-
                 //base layer buttons
                 if (data.projectBaselayers.length > 0) {
 
                     for (_i = 0; _i < data.projectBaselayers.length; _i++) {
 
                         baseLayerName = data.projectBaselayers[_i].baselayers.baselayerEn;
-
                         if (baseLayerName == "Google_Streets") {
                             var Google_Streets = new ol.layer.Tile({
                                 source: new ol.source.TileImage({
@@ -137,7 +127,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                 })
                             })
                             arr_Layers.push(Google_Streets);
-
                         }
 
                         if (baseLayerName == "Bing_Road") {
@@ -153,7 +142,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                 crossOrigin: 'null',
                             })
                             arr_Layers.push(Bing_Road);
-
                         }
 
                         if (baseLayerName == "Bing_Aerial") {
@@ -169,7 +157,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                 crossOrigin: 'null',
                             })
                             arr_Layers.push(Bing_Aerial);
-
                         }
 
                         if (baseLayerName == "Open_Street_Map") {
@@ -179,7 +166,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                 crossOrigin: 'null',
                             }),
                                     arr_Layers.push(osm_map);
-
                         }
 
                         if (baseLayerName == "MapQuest_OSM") {
@@ -229,17 +215,86 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         width: 2
                     })
                 });
-
-                var boundaryPointStyle = new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 5,
-                        fill: new ol.style.Fill({color: '#FFFF00'}),
-                        stroke: new ol.style.Stroke({
-                            color: 'red', width: 2
+                var boundaryPointStyle = function (feature) {
+                    if (feature.get("confidence_level") === 1) {
+                        // Conflict
+                        return new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({color: '#FFFF00'}),
+                                stroke: new ol.style.Stroke({
+                                    color: 'red', width: 2
+                                }),
+                                points: 3,
+                                radius: 7,
+                                angle: 0
+                            })
+                        });
+                    } else if (feature.get("confidence_level") === 2) {
+                        // Medium conflict
+                        return new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({color: '#FFFF00'}),
+                                stroke: new ol.style.Stroke({
+                                    color: 'red', width: 2
+                                }),
+                                points: 4,
+                                radius: 6,
+                                angle: Math.PI / 4
+                            })
+                        });
+                    }
+                    // Default
+                    return new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 5,
+                            fill: new ol.style.Fill({color: '#FFFF00'}),
+                            stroke: new ol.style.Stroke({
+                                color: 'red', width: 2
+                            })
                         })
-                    })
-                });
-
+                    });
+                };
+                
+                var verifiedBoundaryPointStyle = function (feature) {
+                    if (feature.get("confidence_level") === 1) {
+                        // Conflict
+                        return new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({color: '#FFFFFF'}),
+                                stroke: new ol.style.Stroke({
+                                    color: 'red', width: 2
+                                }),
+                                points: 3,
+                                radius: 7,
+                                angle: 0
+                            })
+                        });
+                    } else if (feature.get("confidence_level") === 2) {
+                        // Medium conflict
+                        return new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({color: '#FFFFFF'}),
+                                stroke: new ol.style.Stroke({
+                                    color: 'red', width: 2
+                                }),
+                                points: 4,
+                                radius: 6,
+                                angle: Math.PI / 4
+                            })
+                        });
+                    }
+                    // Default
+                    return new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 5,
+                            fill: new ol.style.Fill({color: '#FFFFFF'}),
+                            stroke: new ol.style.Stroke({
+                                color: 'red', width: 2
+                            })
+                        })
+                    });
+                };
+                
                 var neighborBoundaryPointStyle = new ol.style.Style({
                     image: new ol.style.Circle({
                         radius: 5,
@@ -249,50 +304,61 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         })
                     })
                 });
-
                 var villageBorderStyle = new ol.style.Style({
                     stroke: new ol.style.Stroke({
                         color: '#ff6e00',
                         width: 3
                     })
                 });
-
+                var villageBorderStyles = [
+                    new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: '#ff6e00',
+                            width: 3
+                        })
+                    }),
+                    new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 5,
+                            fill: new ol.style.Fill({
+                                color: 'red'
+                            })
+                        }),
+                        geometry: function (feature) {
+                            var coordinates = feature.getGeometry().getCoordinates()[0];
+                            return new ol.geom.MultiPoint(coordinates);
+                        }
+                    })
+                ];
                 var neighborVillageBorderStyle = new ol.style.Style({
                     stroke: new ol.style.Stroke({
                         color: '#ffd800',
                         width: 2
                     })
                 });
-
                 var highlightStyle1 = new ol.style.Style({
                     stroke: new ol.style.Stroke({
                         color: '#FFFF00',
                         width: 2
                     })
                 });
-
                 var highlightStyle2 = new ol.style.Style({
                     stroke: new ol.style.Stroke({
                         color: '#3333FF',
                         width: 2
                     })
                 });
-
                 var highlightStyle3 = new ol.style.Style({
                     stroke: new ol.style.Stroke({
                         color: '#800080',
                         width: 2
                     })
                 });
-
                 // wms wfs load start
                 for (var i = data.projectLayergroups.length - 1; i >= 0; i--) {
                     var lg = data.projectLayergroups[i].layergroupBean;
-
                     for (var j = lg.layerLayergroups.length - 1; j >= 0; j--) {
                         var lyr = lg.layerLayergroups[j].layers;
-
-
                         $.ajax({
                             url: STUDIO_URL + "layer/" + lyr.alias + "?" + token,
                             async: false,
@@ -323,7 +389,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                     _wms.set('url', data.url);
                                     _wms.set('selectable', false);
                                     arr_Layers.push(_wms);
-
                                 } else if (data.layertype.description == 'Tilecache') {
 
 
@@ -343,7 +408,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                         crossOrigin: 'null',
                                         strategy: ol.loadingstrategy.bbox
                                     });
-
                                     var wms_vector = new ol.layer.Vector({
                                         name: data.name,
                                         style: styleFunction,
@@ -353,7 +417,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                                     wms_vector.set('url', data.url);
                                     wms_vector.set('selectable', true);
                                     arr_Layers.push(wms_vector);
-
                                 }
                             }
                         });
@@ -391,7 +454,11 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
 
                         if (feature.id_.split('.')[0].toLowerCase() == TYPE_BOUNDARY_POINTS.toLowerCase()) {
                             if (feature.values_.project_id === Global.PROJECT_ID) {
-                                return boundaryPointStyle;
+                                if (feature.values_.verified) {
+                                    return verifiedBoundaryPointStyle(feature);
+                                } else {
+                                    return boundaryPointStyle(feature);
+                                }
                             } else {
                                 return neighborBoundaryPointStyle;
                             }
@@ -399,7 +466,7 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
 
                         if (feature.id_.split('.')[0] == TYPE_BOUNDARY) {
                             if (feature.values_.project_id === Global.PROJECT_ID) {
-                                return villageBorderStyle;
+                                return villageBorderStyles;
                             } else {
                                 return neighborVillageBorderStyle;
                             }
@@ -424,7 +491,6 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
 
                     }
                 });
-
                 $(".colorpicker").css("z-index", 9999);
                 $('#changeBgColor').ColorPicker({
                     onSubmit: function (
@@ -471,19 +537,16 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                 })
 
             });
-
             var array = _projectExtent.split(',');
             var myextent = ol.proj.transformExtent(
                     array,
                     "EPSG:4326", "EPSG:4326"
                     );
-
             map.getView().fit(myextent, map.getSize());
-            maploaded(map);   // this is method callback
+            maploaded(map); // this is method callback
         }
     });
 };
-
 var windowResize = function () {
     var windowHeight = $(window).height();
     var headerHeight = $("#header").height();
@@ -492,11 +555,9 @@ var windowResize = function () {
     $("#map").height(adjustedWinHeight - 160);
     $("#sidebar").height(adjustedWinHeight - 180);
 };
-
 jQuery(document).ready(function () {
     $("#mainTabs").tabs();
     $.ajaxSetup({cache: false});
-
     $("#tab1").click(function (event) {
         $('#sidebar').show();
         $('#collapse').show();
@@ -522,8 +583,6 @@ jQuery(document).ready(function () {
                 $("#selectProjectsForWorkFlowSummary").empty();
                 $("#selectProjectsForTenureTypesLandUnitsSummary").empty();
                 $("#selectProjectsForLiberaFarmSummary").empty();
-
-
                 $("#selectProjectsForSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForDetailSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForDetailSummaryForCommune").append($("<option></option>").attr("value", "").text("Select Project"));
@@ -532,7 +591,6 @@ jQuery(document).ready(function () {
                 $("#selectProjectsForWorkFlowSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForTenureTypesLandUnitsSummary").append($("<option></option>").attr("value", "").text("Select Project"));
                 $("#selectProjectsForLiberaFarmSummary").append($("<option></option>").attr("value", "").text("Select Project"));
-
                 $.each(data, function (i, projectName) {
                     $("#selectProjectsForSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
                     $("#selectProjectsForDetailSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
@@ -542,15 +600,12 @@ jQuery(document).ready(function () {
                     $("#selectProjectsForWorkFlowSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
                     $("#selectProjectsForTenureTypesLandUnitsSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
                     $("#selectProjectsForLiberaFarmSummary").append($("<option></option>").attr("value", projectName.projectnameid).text(projectName.name));
-
                 });
-
             }
         });
         $("#reportsAccordion").accordion();
         $("#selectProjects").val(activeProject);
     });
-
     $("#tab5").click(function (event) {
         var registrationRecords = new RegistrationRecords("registrationRecords");
         hideMapComponents();
@@ -559,7 +614,6 @@ jQuery(document).ready(function () {
         var resourceRecords = new resource("resource");
         hideMapComponents();
     });
-
     // Load projects list
     $.ajax({
         url: "landrecords/allprojects/",
@@ -572,10 +626,8 @@ jQuery(document).ready(function () {
             });
         }
     });
-
     var landRecords = new LandRecords("landRecords");
 });
-
 function hideMapComponents() {
     $('#sidebar').hide();
     $('#collapse').hide();

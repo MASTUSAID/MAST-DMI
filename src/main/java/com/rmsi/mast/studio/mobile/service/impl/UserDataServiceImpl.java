@@ -532,7 +532,7 @@ public class UserDataServiceImpl implements UserDataService {
 //                	spatialUnit.setNeighborWest("9999");
 //                }
 
-                spatialUnit.setArea(Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
+                spatialUnit.setArea(geomConverter.getArea(prop.getCoordinates()));
                 serverPropId = spatialUnitDao.addSpatialUnit(spatialUnit).getLandid();
                 spatialUnitDao.clear();
 
@@ -1767,7 +1767,9 @@ public class UserDataServiceImpl implements UserDataService {
                 point.setModifyDate(new Date());
                 point.setNeighborVillageId(prop.getVillageId());
                 point.setProjectId(Integer.parseInt(projectName));
-
+                point.setConfidenceLevel(prop.getConfidenceLevel());
+                point.setVerified(false);
+                
                 serverPointId = boundaryPointDao.save(point).getId();
                 boundaryPointDao.clear();
 
@@ -1853,7 +1855,7 @@ public class UserDataServiceImpl implements UserDataService {
 
                     setReourcePolygonPropAttibutes(spatialUnit, prop);
                     try {
-                        spatialUnit.setArea(Double.parseDouble(geomConverter.getArea(prop.getCoordinates())));
+                        spatialUnit.setArea(geomConverter.getArea(prop.getCoordinates()));
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();

@@ -31,6 +31,11 @@ public class BoundaryServiceImpl implements BoundaryService {
     public BoundaryPoint getBoundaryPoint(Integer id) {
         return boundaryPointDao.getPoint(id);
     }
+    
+    @Override
+    public List<BoundaryPoint> getBoundaryPointsByProject(int projectId){
+        return boundaryPointDao.getPointsByProject(projectId);
+    }
 
     @Transactional
     @Override

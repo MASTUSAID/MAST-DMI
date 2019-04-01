@@ -43,8 +43,10 @@ public class Property implements Serializable {
     private Dispute dispute;
 
     private Integer villageId;
-    private String featureType;
+    private Integer featureType;
     private String featureDescription;
+    private Integer confidenceLevel;
+    private String confidenceDescription;
     
     public Property() {
         super();
@@ -309,11 +311,11 @@ public class Property implements Serializable {
         this.villageId = villageId;
     }
 
-    public String getFeatureType() {
+    public Integer getFeatureType() {
         return featureType;
     }
 
-    public void setFeatureType(String featureType) {
+    public void setFeatureType(Integer featureType) {
         this.featureType = featureType;
     }
 
@@ -323,5 +325,21 @@ public class Property implements Serializable {
 
     public void setFeatureDescription(String featureDescription) {
         this.featureDescription = featureDescription;
+    }
+
+    public Integer getConfidenceLevel() {
+        return confidenceLevel;
+    }
+
+    public void setConfidenceLevel(Integer confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
+    }
+
+    public String getConfidenceDescription() {
+        return confidenceDescription;
+    }
+
+    public void setConfidenceDescription(String confidenceDescription) {
+        this.confidenceDescription = confidenceDescription;
     }
 }

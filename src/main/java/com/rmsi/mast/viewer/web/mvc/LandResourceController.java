@@ -36,8 +36,10 @@ import com.rmsi.mast.studio.dao.UserDAO;
 import com.rmsi.mast.studio.domain.AttributeMasterResourcePOI;
 import com.rmsi.mast.studio.domain.AttributeOptions;
 import com.rmsi.mast.studio.domain.Boundary;
+import com.rmsi.mast.studio.domain.BoundaryFeatureType;
 import com.rmsi.mast.studio.domain.BoundaryPoint;
 import com.rmsi.mast.studio.domain.BoundaryPointDoc;
+import com.rmsi.mast.studio.domain.ConfidenceLevel;
 import com.rmsi.mast.studio.domain.CustomAttributes;
 import com.rmsi.mast.studio.domain.Project;
 import com.rmsi.mast.studio.domain.ProjectRegion;
@@ -47,6 +49,8 @@ import com.rmsi.mast.studio.domain.ResourcePOIAttributeValues;
 import com.rmsi.mast.studio.domain.User;
 import com.rmsi.mast.studio.domain.fetch.ResourceDetails;
 import com.rmsi.mast.studio.mobile.dao.AttributeOptionsDao;
+import com.rmsi.mast.studio.mobile.dao.BoundaryFeatureTypeDao;
+import com.rmsi.mast.studio.mobile.dao.ConfidenceLevelDao;
 import com.rmsi.mast.studio.mobile.dao.CustomAttributesDAO;
 import com.rmsi.mast.studio.mobile.dao.ResourceAttributeValuesDAO;
 import com.rmsi.mast.studio.mobile.dao.SpatialUnitResourceLineDao;
@@ -96,7 +100,13 @@ public class LandResourceController {
 
     @Autowired
     ProjectRegionDAO projectRegion;
+    
+    @Autowired
+    ConfidenceLevelDao confidenceLevelDao;
 
+    @Autowired
+    BoundaryFeatureTypeDao boundaryFeatureTypeDao;
+    
     private static final Logger logger = Logger.getLogger(LandResourceController.class);
 
     @RequestMapping(value = "/viewer/resource/allAttribue/{landid}/{projectId}", method = RequestMethod.GET)
@@ -1403,6 +1413,12 @@ public class LandResourceController {
     public BoundaryPoint getBoundaryPoint(@PathVariable Integer id) {
         return boundaryService.getBoundaryPoint(id);
     }
+    
+    @RequestMapping(value = "/viewer/resource/getBoundaryPointsByProject/{projectId}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<BoundaryPoint> getBoundaryPointsByProject(@PathVariable Integer projectId) {
+        return boundaryService.getBoundaryPointsByProject(projectId);
+    }
 
     @RequestMapping(value = "/viewer/resource/saveBoundaryPoint", method = RequestMethod.POST)
     @ResponseBody
@@ -1420,14 +1436,22 @@ public class LandResourceController {
 
             User user = userdao.findByName(principal.getName());
             int villageId = ServletRequestUtils.getIntParameter(request, "cbxPointVillageId", 0);
-            String featureType = ServletRequestUtils.getStringParameter(request, "txtPointFeatureType", null);
+            int featureType = ServletRequestUtils.getIntParameter(request, "cbxPointFeatureType", 0);
             String featureDescription = ServletRequestUtils.getStringParameter(request, "txtPointFeatureDescription", null);
-
+            int confidenceLevel = ServletRequestUtils.getIntParameter(request, "cbxPointConfidenceLevel", 0);
+            boolean verified = ServletRequestUtils.getBooleanParameter(request, "chbxVerified", false);
+            
             if (villageId > 0) {
                 point.setNeighborVillageId(villageId);
             } else {
                 point.setNeighborVillageId(null);
             }
+            if (confidenceLevel > 0) {
+                point.setConfidenceLevel(confidenceLevel);
+            } else {
+                point.setConfidenceLevel(null);
+            }
+            point.setVerified(verified);
             point.setFeatureType(featureType);
             point.setFeatureDescription(featureDescription);
             point.setModifiedBy((int)user.getId());
@@ -1459,7 +1483,31 @@ public class LandResourceController {
     public List<ProjectRegion> getProjectVillages(@PathVariable Integer projectId) {
         return projectRegion.getVillagesByProject(projectId);
     }
+    
+    @RequestMapping(value = "/viewer/resource/getProjectNeighborVillages/{projectId}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ProjectRegion> getProjectNeighborVillages(@PathVariable Integer projectId) {
+        return projectRegion.getProjectNeighborVillages(projectId);
+    }
 
+    @RequestMapping(value = "/viewer/resource/getBoundary/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Boundary getBoundary(@PathVariable Integer id) {
+        return boundaryService.getBoundary(id);
+    }
+    
+    @RequestMapping(value = "/viewer/resource/getConfidenceLevels", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ConfidenceLevel> getConfidenceLevels() {
+        return confidenceLevelDao.getAll();
+    }
+    
+    @RequestMapping(value = "/viewer/resource/getFeatureTypes", method = RequestMethod.GET)
+    @ResponseBody
+    public List<BoundaryFeatureType> getFeatureTypes() {
+        return boundaryFeatureTypeDao.getAll();
+    }
+    
     @RequestMapping(value = "/viewer/resource/saveBoundary", method = RequestMethod.POST)
     @ResponseBody
     public boolean saveBoundary(HttpServletRequest request, Principal principal) {

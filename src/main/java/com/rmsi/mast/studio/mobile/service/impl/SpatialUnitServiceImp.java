@@ -35,14 +35,17 @@ import com.rmsi.mast.studio.mobile.dao.SoilQualityValuesDao;
 import com.rmsi.mast.studio.mobile.dao.TenureClassDao;
 import com.rmsi.mast.studio.mobile.dao.hibernate.SpatialUnitHibernateDao;
 import com.rmsi.mast.studio.mobile.service.SpatialUnitService;
-import com.rmsi.mast.studio.util.GeometryConversion;
 import com.rmsi.mast.studio.dao.ClaimTypeDao;
 import com.rmsi.mast.studio.dao.DisputeTypeDao;
 import com.rmsi.mast.studio.dao.DocumentTypeDao;
 import com.rmsi.mast.studio.domain.AcquisitionType;
+import com.rmsi.mast.studio.domain.BoundaryFeatureType;
+import com.rmsi.mast.studio.domain.ConfidenceLevel;
 import com.rmsi.mast.studio.domain.DisputeType;
 import com.rmsi.mast.studio.domain.DocumentType;
 import com.rmsi.mast.studio.domain.fetch.ClaimBasic;
+import com.rmsi.mast.studio.mobile.dao.BoundaryFeatureTypeDao;
+import com.rmsi.mast.studio.mobile.dao.ConfidenceLevelDao;
 
 @Service
 public class SpatialUnitServiceImp implements SpatialUnitService {
@@ -85,15 +88,21 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
 
     @Autowired
     ClaimTypeDao claimTypeDAO;
-    
+
     @Autowired
     DisputeTypeDao disputeTypeDao;
-    
+
     @Autowired
     AcquisitionTypeDao acquisitionTypeDao;
-    
+
     @Autowired
     DocumentTypeDao documentTypeDao;
+
+    @Autowired
+    ConfidenceLevelDao confidenceLevelDao;
+    
+    @Autowired
+    BoundaryFeatureTypeDao boundaryFeatureTypeDao;
     
     @Override
     public List<SpatialUnit> getSpatialUnitDataByProjectId(String projectId) {
@@ -147,7 +156,7 @@ public class SpatialUnitServiceImp implements SpatialUnitService {
     public SpatialUnit getSpatialUnitByUsin(long usin) {
 
 //        return spatialUnitDao.getSpatialUnitByUsin(usin);
-return null;
+        return null;
     }
 
     @Override
@@ -208,34 +217,34 @@ return null;
     public List<ClaimType> getClaimTypes() {
         return claimTypeDAO.findAll();
     }
-    
+
     @Override
     public ClaimType getClaimTypeById(String code) {
         return claimTypeDAO.findById(code, true);
     }
-    
+
     @Override
-    public List<DisputeType> getDisputeTypes(){
+    public List<DisputeType> getDisputeTypes() {
         return disputeTypeDao.findAll();
     }
-    
+
     @Override
-    public DisputeType getDisputeTypeById(int code){
+    public DisputeType getDisputeTypeById(int code) {
         return disputeTypeDao.findById(code, true);
     }
-    
+
     @Override
-    public List<AcquisitionType> getAcquisitionTypes(){
+    public List<AcquisitionType> getAcquisitionTypes() {
         return acquisitionTypeDao.findAll();
     }
-    
+
     @Override
-    public AcquisitionType getAcquisitionTypeByAttributeOptionId(int optId){
+    public AcquisitionType getAcquisitionTypeByAttributeOptionId(int optId) {
         return acquisitionTypeDao.getTypeByAttributeOptionId(optId);
     }
-    
+
     @Override
-    public DocumentType getDocumentTypeByAttributeOptionId(int optId){
+    public DocumentType getDocumentTypeByAttributeOptionId(int optId) {
         return documentTypeDao.getTypeByAttributeOptionId(optId);
     }
 
@@ -248,15 +257,25 @@ return null;
     public List<TenureClass> getTenureClasses() {
         return tenureClassDao.findAll();
     }
-    
+
     @Override
-    public List<Gender> getGenders(){
+    public List<Gender> getGenders() {
         return genderDao.findAll();
     }
 
-	@Override
-	public List<ClaimBasic> getClaimsBasicByLandId(Long landid) {
-		
-		return spatialUnitDao.getClaimsBasicByLandId(landid);
-	}
+    @Override
+    public List<ClaimBasic> getClaimsBasicByLandId(Long landid) {
+
+        return spatialUnitDao.getClaimsBasicByLandId(landid);
+    }
+    
+    @Override
+    public List<ConfidenceLevel> getConfidenceLevels(){
+        return confidenceLevelDao.findAll();
+    }
+    
+    @Override
+    public List<BoundaryFeatureType> getBoundaryFeatureTypes(){
+        return boundaryFeatureTypeDao.findAll();
+    }
 }

@@ -333,8 +333,16 @@ Cloudburst.Editing = function (_map, _searchdiv, selectedLayer) {
         $("#subcelladjustedit button").bind("click", function (e) {
             featureState = "";
             var _layer = getLayerByAliesName($("#edit_layer").val());
-            var snapSource = _layer.getSource();
 
+            var snapSource = _layer.getSource();
+            
+            if (_layer.get('aname') === TYPE_BOUNDARY) {
+                var pointsLayer = getLayerByAliesName(TYPE_BOUNDARY_POINTS);
+                if (pointsLayer) {
+                    snapSource = pointsLayer.getSource();
+                }
+            }
+            
             clearEditTool();
             if (intraction_draw != null)
                 map.removeInteraction(intraction_draw);
@@ -368,10 +376,6 @@ Cloudburst.Editing = function (_map, _searchdiv, selectedLayer) {
                     mergeFeatures();
                     break;
                 case 'btnCreateNewPolygon':
-                    var pointsLayer = getLayerByAliesName(TYPE_BOUNDARY_POINTS);
-                    if (pointsLayer) {
-                        snapSource = pointsLayer.getSource();
-                    }
                     modifyMode('create');
                     break;
                 default:
@@ -478,7 +482,7 @@ function onEditLayerChange() {
 
                 if (featureType_ === TYPE_BOUNDARY) {
                     $("#subcelladjustcreate").hide();
-                    $("#removeFeature").hide();
+                    //$("#removeFeature").hide();
                     objLayer.getSource().on('addfeature', function (ft) {
                         showHideCreatePolygon();
                     });
@@ -508,9 +512,15 @@ function onEditLayerChange() {
 }
 
 function showHideCreatePolygon() {
-    if (objLayer.getSource().getFeatures().length > 0) {
-        $("#btnCreateNewPolygon").hide();
-    } else {
+    if (featureType_ === TYPE_BOUNDARY) {
+        if (objLayer.getSource().getFeatures().length > 0) {
+            for (var i = 0; i < objLayer.getSource().getFeatures().length; i++) {
+                if (objLayer.getSource().getFeatures()[i].values_.project_id === Global.PROJECT_ID) {
+                    $("#btnCreateNewPolygon").hide();
+                    return;
+                }
+            }
+        }
         $("#btnCreateNewPolygon").show();
     }
 }
@@ -636,7 +646,8 @@ function modifyMode(mode) {
                 feature.id_ = TYPE_BOUNDARY + '.-1';
                 feature.set('id', -1);
                 feature.set('project_id', Global.PROJECT_ID);
-                feature.set('survey_date', $.datepicker.formatDate('yy-mm-dd', new Date()));
+                feature.set('survey_date', new Date());
+                feature.set('create_date', new Date());
 
                 //intraction_draw.finishDrawing();
 
@@ -702,7 +713,6 @@ deleteInteraction.getFeatures().on('add', function (e) {
         updateArr = [];
         updateArr.push(newFeature);
         saveEdit();
-
     } else {
         map.removeInteraction(deleteInteraction);
         deleteInteraction.getFeatures().clear();
@@ -742,6 +752,8 @@ function saveEdit() {
         if (selectedFeaturesEdit != null)
             selectedFeaturesEdit.clear();
         vectorSource.clear();
+
+        showHideCreatePolygon();
 
         if (_flagSplit) {
             var result = formatWFS.readTransactionResponse(response);

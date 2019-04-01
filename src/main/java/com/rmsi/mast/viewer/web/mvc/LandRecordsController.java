@@ -115,6 +115,7 @@ import com.rmsi.mast.studio.domain.fetch.PersonAdministrator;
 import com.rmsi.mast.studio.domain.fetch.PersonForEditing;
 import com.rmsi.mast.studio.domain.fetch.PoiReport;
 import com.rmsi.mast.studio.domain.fetch.ProjectDetails;
+import com.rmsi.mast.studio.domain.fetch.ProjectLocation;
 import com.rmsi.mast.studio.domain.fetch.ProjectTemp;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTable;
 import com.rmsi.mast.studio.domain.fetch.SpatialUnitTemp;
@@ -2988,337 +2989,8 @@ public class LandRecordsController {
         }
     }
 
-    private List<String> validateClaim(SpatialUnitTable claim, boolean validateStatus) {/*
-        List<String> errors = new ArrayList<>();
-
-        try {
-            if (claim == null) {
-                errors.add("Claim was not found");
-                return errors;
-            }
-
-            long usin = claim.getUsin();
-
-            // Check claim type
-            if (!claim.getClaimType().getCode().toString().equalsIgnoreCase(ClaimType.CODE_NEW)
-                    && !claim.getClaimType().getCode().toString().equalsIgnoreCase(ClaimType.CODE_EXISTING)) {
-                errors.add("This type of claim cannot be validated.");
-                return errors;
-            }
-
-            // Check claim status
-            if (validateStatus) {
-                if (claim.getStatus().getWorkflowStatusId() != Status.STATUS_NEW && claim.getStatus().getWorkflowStatusId() != Status.STATUS_REFERRED) {
-                    errors.add("Claim with status \"" + claim.getStatus().getWorkflowStatus() + "\" cannot be validated");
-                    return errors;
-                }
-            }
-
-            // UKA Number
-            if (claim.getStatus().getWorkflowStatusId() == Status.STATUS_VALIDATED && StringUtils.isEmpty(claim.getPropertyno())) {
-                errors.add("UKA number must be assigned");
-                return errors;
-            }
-
-            // Check for any disputes
-            List<Dispute> disputes = landRecordsService.getDisputes(usin);
-            if (disputes != null && disputes.size() > 0) {
-                for (Dispute dispute : disputes) {
-//                    if (dispute.getStatus().getCode() == DisputeStatus.STATUS_ACTIVE) {
-//                        errors.add("There are unresolved disputes found. You have to resolve them first.");
-//                        return errors;
-//                    }
-                }
-            }
-
-            // Validate rights
-            List<SocialTenureRelationship> rights = landRecordsService.findAllSocialTenureByUsin(usin);
-            if (rights == null || rights.size() < 1) {
-                errors.add("No ownership rights found");
-                return errors;
-            }
-
-            // Check general properties
-            if (claim.getExistingUse() == null) {
-                errors.add("Select Existing land use");
-            }
-            if (claim.getProposedUse() == null) {
-                errors.add("Select Proposed land use");
-            }
-
-            // Get deceased persons
-            List<SpatialunitDeceasedPerson> deceasedPersons = landRecordsService.findDeceasedPersonByUsin(usin);
-
-            // Check rights
-            int owners = 0;
-            int admins = 0;
-            int guardians = 0;
-            int nonNatural = 0;
-            boolean hasRepresentative = false;
-
-//            for (SocialTenureRelationship right : rights) {
-//                if (right.getPersonlandid() != null) {
-//                    if (right.getLaPartygroupPersontype().getPersontypeid() != PersonType.TYPE_NATURAL) {
-//                        nonNatural += 1;
-//                        NonNaturalPerson nonPerson = (NonNaturalPerson) right.getPerson_gid();
-//                        if (nonPerson.getPoc_gid() != null && nonPerson.getPoc_gid() > 0) {
-//                            hasRepresentative = true;
-//                        }
-//                    } else {
-//                        NaturalPerson person = (NaturalPerson) right.getPerson_gid();
-//                        if (person.getPersonSubType() != null) {
-//                            if (person.getPersonSubType().getPerson_type_gid() == PersonType.TYPE_ADMINISTRATOR) {
-//                                admins += 1;
-//                            }
-//                            if (person.getPersonSubType().getPerson_type_gid() == PersonType.TYPE_OWNER) {
-//                                owners += 1;
-//                            }
-//                            if (person.getPersonSubType().getPerson_type_gid() == PersonType.TYPE_GUARDIAN) {
-//                                guardians += 1;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-
-            int i = 0;
-
-            for (SocialTenureRelationship right : rights) {
-                // Validate only first right, considering that all others must be the same
-                if (i == 0) {
-//                    if (right.getTenureclassId() == null) {
-//                        errors.add("Enter type of right.");
-//                    }
-
-                    if (right.getLaSpatialunitLand().getLaRightLandsharetype() == null) {
-                        errors.add("Select tenure type");
-                    }
-
-                    // For existing claims
-//                    if (claim.getClaimType().getCode().equalsIgnoreCase(ClaimType.CODE_EXISTING)) {
-//                        if (right.getJuridicalArea() == null || right.getJuridicalArea() == 0) {
-//                            errors.add("Enter Juridical area more than 0");
-//                        }
-//                    }
-
-                    if (right.getLaPartygroupPersontype().getPersontypeid() == null) {
-                        errors.add("Add at least 1 person");
-                    }
-
-                    // Check share type
-                    if (right.getLaSpatialunitLand().getLaRightLandsharetype()!= null) {
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() != ShareType.SHARE_INSTITUTION && nonNatural > 0) {
-                            errors.add("Only natural persons are allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                        }
-
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_SINGLE) {
-                            // Only 1 natural person is allowed
-                            if (owners == 0) {
-                                errors.add("Add owner");
-                            }
-                            if (owners > 1) {
-                                errors.add("Only 1 owner is allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (admins > 0) {
-                                errors.add("Administrators are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (guardians > 0) {
-                                errors.add("Guardians are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                        }
-
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_ADMINISTRATOR) {
-                            // 1 or many owners, max 2 admins and deceased person
-                            if (deceasedPersons == null || deceasedPersons.size() < 0) {
-                                errors.add("Add deceased person");
-                            }
-                            if (admins == 0) {
-                                errors.add("Add at least 1 administrator");
-                            }
-                            if (admins > 2) {
-                                errors.add("Maximum 2 administrators are allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (guardians > 0) {
-                                errors.add("Guardians are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                        }
-
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_GUARDIAN) {
-                            // 1 or many owners (minors), max 2 guardians
-                            if (owners == 0) {
-                                errors.add("Add at least 1 owner (minor)");
-                            }
-                            if (guardians == 0) {
-                                errors.add("Add at least 1 guardian");
-                            }
-                            if (guardians > 2) {
-                                errors.add("Maximum 2 guardians are allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (admins > 0) {
-                                errors.add("Administrators are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                        }
-
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_MULTIPLE_COMMON) {
-                            // At least 2 owners 
-                            if (owners < 2) {
-                                errors.add("Add at least 2 owners");
-                            }
-                            if (admins > 0) {
-                                errors.add("Administrators are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (guardians > 0) {
-                                errors.add("Guardians are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                        }
-
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_MULTIPLE_JOINT) {
-                            // 2 owners 
-                            if (owners == 0) {
-                                errors.add("Add 2 owners");
-                            }
-                            if (owners > 2) {
-                                errors.add("Maximum 2 owners are allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (admins > 0) {
-                                errors.add("Administrators are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (guardians > 0) {
-                                errors.add("Guardians are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                        }
-
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_INSTITUTION) {
-                            // 1 non natural person should be 
-                            if (nonNatural == 0) {
-                                errors.add("Add 1 Non Natural person");
-                            }
-                            if (nonNatural > 1) {
-                                errors.add("Maximum 1 Non Natural person is allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (!hasRepresentative) {
-                                errors.add("One representative person has to be added");
-                            }
-                            if (owners > 0) {
-                                errors.add("Natural persons as owners are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (admins > 0) {
-                                errors.add("Administrators are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                            if (guardians > 0) {
-                                errors.add("Guardians are not allowed for " + right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn());
-                            }
-                        }
-                    }
-                }
-
-                i += 1;
-
-                // Check person
-                if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn() != null && right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() != null) {
-
-                    NonNaturalPerson nonPerson = null;
-                    NaturalPerson person = null;
-
-//                    if (right.getPerson_gid().getPerson_type_gid().getPerson_type_gid() != PersonType.TYPE_NATURAL) {
-//                        nonPerson = (NonNaturalPerson) right.getPerson_gid();
-//                        if (nonPerson.getPoc_gid() != null && nonPerson.getPoc_gid() > 0) {
-//                            person = (NaturalPerson) landRecordsService.findPersonGidById(nonPerson.getPoc_gid());
-//                        }
-//                    } else {
-//                        person = (NaturalPerson) right.getPerson_gid();
-//                    }
-
-                    // Validate non natural
-                    if (nonPerson != null) {
-                        if (StringUtils.isEmpty(nonPerson.getOrganizationname())) {
-                            errors.add("Enter Non Natural person name");
-                        }
-//                        if (StringUtils.isEmpty(nonPerson.getAddress())) {
-//                            errors.add("Enter Non Natural person address");
-//                        }
-                        if (nonPerson.getLaPartygroupIdentitytype() == null) {
-                            errors.add("Select type of Non Natural person");
-                        }
-                    }
-
-                    // Validate natural
-                    if (person != null) {
-                        if (StringUtils.isEmpty(person.getFirstname())) {
-                            errors.add("Enter first name for " + getPersonName(person));
-                        }
-                        if (StringUtils.isEmpty(person.getLastname())) {
-                            errors.add("Enter last name for " + getPersonName(person));
-                        }
-//                        if (person.getPersonSubType() == null && right.getShare_type().getGid() != ShareType.SHARE_INSTITUTION) {
-//                            errors.add("Select owner type for " + getPersonName(person));
-//                        }
-                        if (person.getPersonid() == null) {
-                            errors.add("Select ID type for " + getPersonName(person));
-                        }
-                        if (StringUtils.isEmpty(person.getIdentityno())) {
-                            errors.add("Enter ID number for " + getPersonName(person));
-                        }
-                        if (person.getGenderid() == null) {
-                            errors.add("Select gender for " + getPersonName(person));
-                        }
-                        if (person.getDateofbirth() == null) {
-                            errors.add("Enter date of birth for " + getPersonName(person));
-                        }
-//                        if (person.getCitizenship_id() == null) {
-//                            errors.add("Select citizenship for " + getPersonName(person));
-//                        }
-                        if (person.getLaPartygroupMaritalstatus() == null) {
-                            errors.add("Select marital status for " + getPersonName(person));
-                        }
-
-                        // Check share size
-                        if (right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_MULTIPLE_COMMON
-                                && person.getLaPartygroupIdentitytype() != null 
-                                && person.getLaParty().getLaPartygroupPersontype().getPersontypeid() == PersonType.TYPE_OWNER){
-                                //&& StringUtils.isEmpty(person.getLaParty().getLaExtPersonlandmappings().get(0).getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn())) {
-                           		//@@ vishal && StringUtils.isEmpty(person.getLaParty().getLaExtPersonlandmappings().get(0).getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeEn())) {
-                            errors.add("Enter share size for " + getPersonName(person));
-                        }
-
-                        // Check age
-                        int age = 0;
-
-                        // Give priority to dob to calculate age
-                        if (person.getDateofbirth() != null) {
-                            age = DateUtils.getAge(person.getDateofbirth());
-                        }
-//                        } else {
-//                            age = person.getAge();
-//                        }
-
-                        if (person.getLaPartygroupIdentitytype() != null && person.getLaParty().getLaPartygroupPersontype().getPersontypeid() == PersonType.TYPE_OWNER
-                                && right.getLaSpatialunitLand().getLaRightLandsharetype().getLandsharetypeid() == ShareType.SHARE_GUARDIAN) {
-                            if (age > 17) {
-                                errors.add(getPersonName(person) + " age must be less than 18 years");
-                            }
-                        } else if (age < 18 || age > 110) {
-                            errors.add(getPersonName(person) + " age must be between 18 and 110 years");
-                        }
-
-                        // Check person photo
-                        //SourceDocument photo = landRecordsService.getdocumentByPerson(person.getPersonid());
-                        if (photo == null) {
-                            errors.add("Add photo for " + getPersonName(person));
-                        }
-                    }
-                }
-            }
-
-            return errors;
-
-        } catch (Exception e) {
-            logger.error(e);
-            errors.clear();
-            errors.add("Failed to validate claim");
-            return errors;
-        }
-         */
+    private List<String> validateClaim(SpatialUnitTable claim, boolean validateStatus) {
+        
         return null;
     }
 
@@ -3349,6 +3021,8 @@ public class LandRecordsController {
             return null;
         }
     }
+    
+    
 
     @RequestMapping(value = "/viewer/landrecords/updatehamlet/{project}", method = RequestMethod.POST)
     @ResponseBody
@@ -3380,6 +3054,12 @@ public class LandRecordsController {
         }
     }
 
+    @RequestMapping(value = "/viewer/landrecords/getProjectLocation/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ProjectLocation getProjectLocation(@PathVariable Integer id) {
+        return projectService.getProjectLocation(id);
+    }
+    
     @RequestMapping(value = "/viewer/landrecords/personwithinterest/{usin}", method = RequestMethod.GET)
     @ResponseBody
     public List<SpatialunitPersonwithinterest> nxtTokin(@PathVariable Long usin) {

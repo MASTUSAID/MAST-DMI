@@ -331,7 +331,7 @@ public class MobileDataController {
                 configurationData.put("SpatialData", spatialDataService
                         .getProjectSpatialDataByProjectId(projobj.getProjectnameid()));
 
-                configurationData.put("Villages", projectRegion.getVillagesByProject(projobj.getProjectnameid()));
+                configurationData.put("Villages", projectRegion.getProjectNeighborVillages(projobj.getProjectnameid()));
 
 //                 Add List of claim types
                 configurationData.put("ClaimType", spatialUnitService.getClaimTypes());
@@ -344,6 +344,12 @@ public class MobileDataController {
 
                 // Add List of right types
                 configurationData.put("RightType", spatialUnitService.getTenureClasses());
+                
+                // Add List of confidence level
+                configurationData.put("ConfidenceLevel", spatialUnitService.getConfidenceLevels());
+                
+                // Add List of feature types
+                configurationData.put("FeatureType", spatialUnitService.getBoundaryFeatureTypes());
 
                 // Add List of genders
                 configurationData.put("Genders", spatialUnitService.getGenders());
@@ -826,7 +832,7 @@ public class MobileDataController {
                     if (null != sourcedocument && sourcedocument.size() > 0) {
                         for (int j = 0; j < sourcedocument.size(); j++) {
                             if (null != sourcedocument.get(j)) {
-                                document.setLaParty(lapartydao.getPartyIdByID(socialtenurerelationship.get(j + 1).getPartyid()));
+                                document.setLaParty(lapartydao.getPartyIdByID(socialtenurerelationship.get(0).getPartyid()));
                             }
                         }
                     }
@@ -845,7 +851,7 @@ public class MobileDataController {
                         for (int j = 0; j < sourcedocument.size(); j++) {
                             if (null != sourcedocument.get(j)) {
                                 document.setLaParty(lapartydao
-                                        .getPartyIdByID(disputelandmapping.get(j + 1)
+                                        .getPartyIdByID(disputelandmapping.get(0)
                                                 .getPartyid()));
                             }
                         }

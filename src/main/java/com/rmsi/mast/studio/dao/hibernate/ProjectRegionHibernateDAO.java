@@ -138,4 +138,21 @@ public class ProjectRegionHibernateDAO extends GenericHibernateDAO<Project, Long
         }
         return null;
     }
+
+    @Override
+    public List<ProjectRegion> getProjectNeighborVillages(int id) {
+        try {
+            String q = "select v.hierarchyid, v.uperhierarchyid, v.isactive, v.name, v.name_en, v.code, null as spatialunitgroupid "
+                    + "from la_spatialunitgroup_hierarchy v "
+                    + "where v.hierarchyid in (select village_id from la_ext_project_neighbor_villages where project_id = :projectId) and v.isactive = true and v.spatialunitgroupid = 5 order by v.name";
+
+            Query query = getEntityManager().createNativeQuery(q, ProjectRegion.class);
+            query.setParameter("projectId", id);
+
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

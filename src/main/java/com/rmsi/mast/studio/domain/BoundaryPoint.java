@@ -32,7 +32,7 @@ public class BoundaryPoint implements Serializable {
     private Integer neighborVillageId;
     
     @Column(name = "feature_type")
-    private String featureType;
+    private Integer featureType;
 
     @Column(name = "feature_description")
     private String featureDescription;
@@ -59,6 +59,15 @@ public class BoundaryPoint implements Serializable {
     
     @Column
     private boolean approved;
+    
+    @Column
+    private boolean verified;
+    
+    @Column(name = "confidence_level")
+    private Integer confidenceLevel;
+    
+    @Column(name = "confidence_desc")
+    private String confidenceDescription;
     
     public BoundaryPoint() {
 
@@ -88,11 +97,11 @@ public class BoundaryPoint implements Serializable {
         this.neighborVillageId = neighborVillageId;
     }
 
-    public String getFeatureType() {
+    public Integer getFeatureType() {
         return featureType;
     }
 
-    public void setFeatureType(String featureType) {
+    public void setFeatureType(Integer featureType) {
         this.featureType = featureType;
     }
 
@@ -158,5 +167,29 @@ public class BoundaryPoint implements Serializable {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public Integer getConfidenceLevel() {
+        return confidenceLevel;
+    }
+
+    public void setConfidenceLevel(Integer confidenceLevel) {
+        this.confidenceLevel = confidenceLevel;
+    }
+
+    public String getConfidenceDescription() {
+        return confidenceDescription;
+    }
+
+    public void setConfidenceDescription(String confidenceDescription) {
+        this.confidenceDescription = confidenceDescription;
     }
 }

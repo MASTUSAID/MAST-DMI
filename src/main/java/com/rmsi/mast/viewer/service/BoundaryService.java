@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface BoundaryService {
     BoundaryPoint getBoundaryPoint(Integer id);
+    List<BoundaryPoint> getBoundaryPointsByProject(int projectId);
     BoundaryPoint saveBoundaryPoint(BoundaryPoint point);
     List<BoundaryPointDoc> getBoundaryPointDocs(Integer pointId);
     BoundaryPointDoc getBoundaryPointDoc(Integer id);
