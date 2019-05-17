@@ -254,7 +254,7 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         })
                     });
                 };
-                
+
                 var verifiedBoundaryPointStyle = function (feature) {
                     if (feature.get("confidence_level") === 1) {
                         // Conflict
@@ -294,7 +294,7 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                         })
                     });
                 };
-                
+
                 var neighborBoundaryPointStyle = new ol.style.Style({
                     image: new ol.style.Circle({
                         radius: 5,
@@ -423,6 +423,31 @@ Cloudburst.loadMap = function (mapdiv, options, callback) {
                     }
                 }
 
+                // Add GFW layers
+                var d = new Date();
+                d.setMonth(d.getMonth() - 3);
+                
+                var gladLayer = new ol.layer.Tile({
+                    name: "glad",
+                    source: new ol.source.XYZ({
+                        url: 'http://production-api.globalforestwatch.org/v1/true-color-tiles/glad/{z}/{x}/{y}?startDate=' + d.toISOString().split('T')[0],
+                        opaque: false
+                    })
+                });
+                gladLayer.set('aname', "glad");
+                
+                var forestLossLayer = new ol.layer.Tile({
+                    name: "forestloss",
+                    source: new ol.source.XYZ({
+                        url: 'http://production-api.globalforestwatch.org/v1/true-color-tiles/loss/{z}/{x}/{y}?thresh=75&startYear=' + (d.getFullYear() - 1) + '&endYear=' + d.getFullYear(),
+                        opaque: false
+                    })
+                });
+                forestLossLayer.set('aname', "forestloss");
+               
+                arr_Layers.push(gladLayer);
+                arr_Layers.push(forestLossLayer);
+                
                 function styleFunction(feature, resolution) {
                     if (feature.id_) {
                         if (feature.id_.split('.')[0] == "la_spatialunit_land") {

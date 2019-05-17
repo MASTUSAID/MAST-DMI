@@ -57,6 +57,62 @@
 			</tr>
 			
 		</tbody>
+        
+                <tbody id="gfwBody">
+			<tr>
+				<th id="gfw" class="rowhead" > GFW </th>
+				
+				<th class="rowhead">
+				<span class="layer_legent_check">
+					<input type="checkbox" id="grpVisibility__gfw" name="grpVisibility__gfw" 
+					value="gfw" onClick="manageLyrGrp(this);" /> 
+				</span>
+				</th>
+			</tr>
+			
+			<tr>
+				<td   width="100%" class=" rowcolor" colspan="2">
+					<table width="100%">
+						<tr id="tr-gfw">
+							<td id='td-gfw' width="100%">
+								<table width="100%" cellspacing="1" cellpadding="1">
+									<tr>
+										<td width="71%" class="leftshift" id="glad">GLAD</td> 
+										<td class="layerwidth_cross">&nbsp;</td>
+										<td>
+										  <div class="slider-c"></div>
+										</td>
+										
+										<td align="center" class="layer-td-one">	
+										<input type="checkbox" id="Visibility__glad" name="Visibility" class="overlays"
+										value="glad" checked onClick="manageLayer(this);"/> 
+										</td>
+										
+									</tr>
+                                                                        <tr>
+										<td width="71%" class="leftshift" id="forestloss">Forest Loss</td> 
+										<td class="layerwidth_cross">&nbsp;</td>
+										<td>
+										  <div class="slider-c"></div>
+										</td>
+										
+										<td align="center" class="layer-td-one">	
+										<input type="checkbox" id="Visibility__forestloss" name="Visibility" class="overlays"
+										value="forestloss" checked onClick="manageLayer(this);"/> 
+										</td>
+										
+									</tr>
+								</table>
+							</td>
+							
+							
+						</tr>
+					</table>
+				</td>
+			</tr>
+			
+		</tbody>
+        
 		{{each(i,layergroupList) $item.projectLayergroup}}  
 		<tbody>
 			
